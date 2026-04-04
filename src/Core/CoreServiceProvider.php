@@ -12,9 +12,8 @@ class CoreServiceProvider implements ServiceProvider
 {
     /** @var array<class-string<\PersianKit\Contracts\ModuleInterface>> */
     private array $featureModules = [
-        // Will be populated as modules are built:
-        // \PersianKit\Modules\DateConversion\DateConversionModule::class,
-        // \PersianKit\Modules\DigitConversion\DigitConversionModule::class,
+        \PersianKit\Modules\DigitConversion\DigitConversionModule::class,
+        \PersianKit\Modules\DateConversion\DateConversionModule::class,
         // \PersianKit\Modules\CharNormalization\CharNormalizationModule::class,
         // \PersianKit\Modules\AdminFont\AdminFontModule::class,
         // \PersianKit\Modules\ZWNJEditor\ZWNJEditorModule::class,

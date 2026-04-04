@@ -26,4 +26,10 @@ if (file_exists($wpTestsDir . '/includes/functions.php')) {
     if (!defined('ABSPATH')) {
         define('ABSPATH', '/');
     }
+
+    // Load scoped packages autoloader for unit tests.
+    $packagesAutoload = dirname(__DIR__) . '/packages/autoload.php';
+    if (file_exists($packagesAutoload)) {
+        require_once $packagesAutoload;
+    }
 }
