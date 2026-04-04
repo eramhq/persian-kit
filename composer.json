@@ -1,0 +1,58 @@
+{
+    "name": "persian-kit/persian-kit",
+    "description": "A modular Persian (Farsi) language toolkit for WordPress",
+    "type": "wordpress-plugin",
+    "license": "GPL-2.0-or-later",
+    "authors": [
+        {
+            "name": "Navid Kashani"
+        }
+    ],
+    "require": {
+        "php": ">=8.1",
+        "morilog/jalali": "^3.0"
+    },
+    "require-dev": {
+        "veronalabs/wp-scoper": "^1.2.4",
+        "phpunit/phpunit": "^10.0",
+        "brain/monkey": "^2.6",
+        "mockery/mockery": "^1.6"
+    },
+    "autoload": {
+        "psr-4": {
+            "PersianKit\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "PersianKit\\Tests\\": "tests/"
+        }
+    },
+    "extra": {
+        "wp-scoper": {
+            "namespace_prefix": "PersianKit\\Dependencies",
+            "packages": [
+                "morilog/jalali"
+            ],
+            "target_directory": "packages",
+            "delete_vendor_packages": false,
+            "exclude_directories": [
+                "views",
+                "resources",
+                "public"
+            ]
+        }
+    },
+    "scripts": {
+        "test": "phpunit --testdox"
+    },
+    "config": {
+        "platform-check": false,
+        "platform": {
+            "php": "8.1"
+        },
+        "allow-plugins": {
+            "veronalabs/wp-scoper": true
+        }
+    }
+}
