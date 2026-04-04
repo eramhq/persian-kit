@@ -28,6 +28,11 @@ $isEnabled = !empty($moduleSettings['enabled']);
     </div>
 
     <div class="persian-kit-module__settings" x-show="enabled" x-collapse>
-        <!-- Module-specific settings will be rendered here by each module -->
+        <?php
+        $settingsView = $module->settingsView();
+        if ($settingsView !== null) {
+            \PersianKit\Components\View::load($settingsView, ['moduleSettings' => $moduleSettings]);
+        }
+        ?>
     </div>
 </div>

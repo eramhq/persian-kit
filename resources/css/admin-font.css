@@ -1,0 +1,27 @@
+@font-face {
+    font-family: 'Vazirmatn';
+    src: url('../fonts/vazirmatn/Vazirmatn[wght].woff2') format('woff2-variations');
+    font-weight: 100 900;
+    font-style: normal;
+    font-display: swap;
+}
+
+body,
+#wpcontent,
+#wpbody,
+.wrap,
+#adminmenu,
+.wp-submenu,
+#wp-toolbar,
+.notice,
+.postbox,
+.wp-editor-area,
+input,
+select,
+textarea,
+button,
+.button,
+.components-text-control__input,
+.components-select-control__input {
+    font-family: var(--pk-admin-font), -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen-Sans, Ubuntu, Cantarell, 'Helvetica Neue', sans-serif;
+}

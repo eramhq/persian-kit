@@ -26,4 +26,9 @@ abstract class AbstractModule implements ModuleInterface
     {
         return $this->settings->module(static::key(), $key, $default);
     }
+
+    public function settingsView(): ?string
+    {
+        return null;
+    }
 }

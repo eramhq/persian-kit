@@ -3,8 +3,10 @@
 namespace PersianKit\Service\Installation;
 
 use PersianKit\Core\SettingsManager;
-use PersianKit\Modules\DigitConversion\DigitConversionModule;
+use PersianKit\Modules\AdminFont\AdminFontModule;
 use PersianKit\Modules\DateConversion\DateConversionModule;
+use PersianKit\Modules\DigitConversion\DigitConversionModule;
+use PersianKit\Modules\ZWNJEditor\ZWNJEditorModule;
 
 defined('ABSPATH') || exit;
 
@@ -14,10 +16,10 @@ class InstallManager
     private static array $modules = [
         DigitConversionModule::class,
         DateConversionModule::class,
+        AdminFontModule::class,
+        ZWNJEditorModule::class,
         // Future modules will be added here as they are built:
-        // \PersianKit\Modules\AdminFont\AdminFontModule::class,
         // \PersianKit\Modules\CharNormalization\CharNormalizationModule::class,
-        // \PersianKit\Modules\ZWNJEditor\ZWNJEditorModule::class,
         // \PersianKit\Modules\Utilities\UtilitiesModule::class,
     ];
 

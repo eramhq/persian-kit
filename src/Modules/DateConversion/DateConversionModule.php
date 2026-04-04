@@ -30,6 +30,11 @@ class DateConversionModule extends AbstractModule
         });
     }
 
+    public function settingsView(): ?string
+    {
+        return 'admin/partials/date-conversion-settings';
+    }
+
     public function boot(ServiceContainer $container): void
     {
         $filters = $container->get(DateFilters::class);

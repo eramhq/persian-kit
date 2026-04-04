@@ -22,6 +22,13 @@ class AssetManager
 
     private function enqueueSettings(): void
     {
+        wp_enqueue_style(
+            'persian-kit-admin',
+            PERSIAN_KIT_URL . 'public/css/admin.css',
+            [],
+            PERSIAN_KIT_VERSION
+        );
+
         wp_enqueue_script(
             'persian-kit-admin',
             PERSIAN_KIT_URL . 'public/js/admin.min.js',
