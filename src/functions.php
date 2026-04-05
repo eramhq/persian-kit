@@ -2,6 +2,7 @@
 
 use PersianKit\Modules\DigitConversion\DigitConverter;
 use PersianKit\Modules\DateConversion\JalaliFormatter;
+use PersianKit\Modules\CharNormalization\CharNormalizer;
 
 defined('ABSPATH') || exit;
 
@@ -28,4 +29,15 @@ function pk_date(string $format, int|string $timestamp = '', ?\DateTimeZone $tim
 function pk_gregorian_date(string $format, int|string $timestamp = '', ?\DateTimeZone $timezone = null): string
 {
     return JalaliFormatter::gregorianFormat($format, $timestamp, $timezone);
+}
+
+function pk_normalize_persian(string $text): string
+{
+    static $normalizer = null;
+
+    if ($normalizer === null) {
+        $normalizer = new CharNormalizer();
+    }
+
+    return $normalizer->normalize($text);
 }
