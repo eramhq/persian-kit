@@ -4,3 +4,4 @@
 /public/
 .DS_Store
 .phpunit.result.cache
+/dist

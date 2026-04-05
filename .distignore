@@ -1,0 +1,35 @@
+# Version control
+.git
+.gitignore
+.gitkeep
+
+# This file itself
+.distignore
+
+# Hidden config files
+.editorconfig
+.phpunit.result.cache
+
+# Dev config
+phpunit.xml.dist
+
+# Source assets (built output is in public/)
+resources/
+
+# Dev tooling
+node_modules/
+package.json
+package-lock.json
+vite.config.entries.mjs
+scripts/
+
+# Composer dev (scoped packages/ replaces vendor/)
+vendor/
+composer.json
+composer.lock
+
+# Tests
+tests/
+
+# Build output dir
+dist/

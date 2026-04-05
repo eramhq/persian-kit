@@ -11,7 +11,8 @@
         "build:copy": "node scripts/copy-assets.mjs",
         "build:scripts": "ENTRY=admin vite build -c vite.config.entries.mjs",
         "build:sass": "sass resources/scss/admin.scss:public/css/admin.css resources/scss/frontend.scss:public/css/frontend.css --style=compressed --no-source-map",
-        "build:pot": "wp i18n make-pot . languages/persian-kit.pot --slug=persian-kit --domain=persian-kit"
+        "build:pot": "wp i18n make-pot . languages/persian-kit.pot --slug=persian-kit --domain=persian-kit --skip-js --exclude=packages,tests",
+        "dist": "bash scripts/dist.sh"
     },
     "dependencies": {
         "alpinejs": "^3.14"
