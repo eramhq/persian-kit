@@ -17,7 +17,7 @@ class CoreServiceProvider implements ServiceProvider
         \PersianKit\Modules\CharNormalization\CharNormalizationModule::class,
         \PersianKit\Modules\AdminFont\AdminFontModule::class,
         \PersianKit\Modules\ZWNJEditor\ZWNJEditorModule::class,
-        // \PersianKit\Modules\Utilities\UtilitiesModule::class,
+        \PersianKit\Modules\Utilities\UtilitiesModule::class,
     ];
 
     public function register(ServiceContainer $container): void

@@ -8,6 +8,7 @@ use PersianKit\Modules\DateConversion\DateConversionModule;
 use PersianKit\Modules\DigitConversion\DigitConversionModule;
 use PersianKit\Modules\ZWNJEditor\ZWNJEditorModule;
 use PersianKit\Modules\CharNormalization\CharNormalizationModule;
+use PersianKit\Modules\Utilities\UtilitiesModule;
 
 defined('ABSPATH') || exit;
 
@@ -20,8 +21,7 @@ class InstallManager
         CharNormalizationModule::class,
         AdminFontModule::class,
         ZWNJEditorModule::class,
-        // Future modules will be added here as they are built:
-        // \PersianKit\Modules\Utilities\UtilitiesModule::class,
+        UtilitiesModule::class,
     ];
 
     public static function activate(bool $networkWide): void
