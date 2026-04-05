@@ -9,6 +9,11 @@ use PersianKit\Modules\Utilities\PhoneNumber;
 use PersianKit\Modules\Utilities\CardNumber;
 use PersianKit\Modules\Utilities\Iban;
 use PersianKit\Modules\Utilities\NumberToWords;
+use PersianKit\Modules\Utilities\NumberFormatter;
+use PersianKit\Modules\Utilities\LegalId;
+use PersianKit\Modules\Utilities\Script;
+use PersianKit\Modules\Utilities\TimeAgo;
+use PersianKit\Modules\Utilities\OrdinalNumber;
 use PersianKit\Modules\Utilities\Slug;
 
 defined('ABSPATH') || exit;
@@ -77,4 +82,49 @@ function pk_number_to_words(int|float $number): string
 function pk_slug(string $text): string
 {
     return Slug::generate($text);
+}
+
+function pk_number_format(int|float|string $number, string $separator = ','): string
+{
+    return NumberFormatter::withSeparators($number, $separator);
+}
+
+function pk_validate_legal_id(string $id): ValidationResult
+{
+    return LegalId::validate($id);
+}
+
+function pk_is_persian(string $text, bool $complex = false): bool
+{
+    return Script::isPersian($text, $complex);
+}
+
+function pk_has_persian(string $text, bool $complex = false): bool
+{
+    return Script::hasPersian($text, $complex);
+}
+
+function pk_is_arabic(string $text): bool
+{
+    return Script::isArabic($text);
+}
+
+function pk_has_arabic(string $text): bool
+{
+    return Script::hasArabic($text);
+}
+
+function pk_time_ago(int|string|\DateTimeInterface $timestamp, ?int $now = null, bool $persianDigits = true): string
+{
+    return TimeAgo::format($timestamp, $now, $persianDigits);
+}
+
+function pk_ordinal_word(int $n): string
+{
+    return OrdinalNumber::toWord($n);
+}
+
+function pk_ordinal_short(int $n, string $digits = 'persian'): string
+{
+    return OrdinalNumber::toShort($n, $digits);
 }
