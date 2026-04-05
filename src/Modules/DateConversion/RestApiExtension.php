@@ -19,7 +19,7 @@ class RestApiExtension
             register_rest_field($postType, 'date_jalali', [
                 'get_callback' => [$this, 'getDateJalali'],
                 'schema'       => [
-                    'type'        => 'string',
+                    'type'        => ['string', 'null'],
                     'description' => 'Jalali (Shamsi) date in ISO format.',
                     'context'     => ['view', 'embed'],
                     'readonly'    => true,
@@ -29,7 +29,7 @@ class RestApiExtension
             register_rest_field($postType, 'date_modified_jalali', [
                 'get_callback' => [$this, 'getModifiedDateJalali'],
                 'schema'       => [
-                    'type'        => 'string',
+                    'type'        => ['string', 'null'],
                     'description' => 'Jalali (Shamsi) modified date in ISO format.',
                     'context'     => ['view', 'embed'],
                     'readonly'    => true,
@@ -38,18 +38,20 @@ class RestApiExtension
         }
     }
 
-    public function getDateJalali(array $post): string
+    public function getDateJalali(array $post): ?string
     {
-        return $this->formatIsoJalali($post['date_gmt'] ?? $post['date']);
+        $timestamp = $post['date_gmt'] ?? $post['date'] ?? null;
+        return $timestamp ? $this->formatIsoJalali($timestamp) : null;
     }
 
-    public function getModifiedDateJalali(array $post): string
+    public function getModifiedDateJalali(array $post): ?string
     {
-        return $this->formatIsoJalali($post['modified_gmt'] ?? $post['modified']);
+        $timestamp = $post['modified_gmt'] ?? $post['modified'] ?? null;
+        return $timestamp ? $this->formatIsoJalali($timestamp) : null;
     }
 
     private function formatIsoJalali(string $timestamp): string
     {
-        return JalaliFormatter::format('Y-m-d', $timestamp) . 'T' . JalaliFormatter::format('H:i:s', $timestamp);
+        return JalaliFormatter::format('Y-m-d\TH:i:s', $timestamp);
     }
 }
