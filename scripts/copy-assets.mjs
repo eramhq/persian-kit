@@ -5,11 +5,11 @@ import { fileURLToPath } from 'node:url';
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 
 const copies = [
-    // Vazirmatn variable font (Arabic subset covers Persian)
-    {
-        src: 'node_modules/@fontsource-variable/vazirmatn/files/vazirmatn-arabic-wght-normal.woff2',
-        dest: 'public/fonts/vazirmatn/Vazirmatn[wght].woff2',
-    },
+    // Vazirmatn variable font subsets (arabic, latin, latin-ext)
+    ...['arabic', 'latin', 'latin-ext'].map(subset => ({
+        src: `node_modules/@fontsource-variable/vazirmatn/files/vazirmatn-${subset}-wght-normal.woff2`,
+        dest: `public/fonts/vazirmatn/vazirmatn-${subset}-wght-normal.woff2`,
+    })),
     // Admin CSS (settings page styles)
     {
         src: 'resources/css/admin.css',
