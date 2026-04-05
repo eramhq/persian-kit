@@ -19,7 +19,7 @@ $tehMarbuta = !empty($moduleSettings['teh_marbuta']);
         >
         <?php esc_html_e('Convert Arabic Teh Marbuta (ة) to Persian Heh (ه)', 'persian-kit'); ?>
     </label>
-    <p class="description" style="color: #d63638;">
+    <p class="description persian-kit-warning">
         <?php esc_html_e(
             'Warning: This may corrupt Arabic or Quranic text. Only enable if your content is exclusively Persian.',
             'persian-kit'
@@ -27,13 +27,15 @@ $tehMarbuta = !empty($moduleSettings['teh_marbuta']);
     </p>
 </div>
 
-<div class="persian-kit-setting-row" x-data="persianKitNormalize()" style="margin-top: 1.5em;">
-    <h4 style="margin: 0 0 0.5em;"><?php esc_html_e('Batch Normalization', 'persian-kit'); ?></h4>
+<hr class="persian-kit-setting-separator">
+
+<div class="persian-kit-setting-row" x-data="persianKitNormalize()">
+    <h4 class="persian-kit-setting-row__title"><?php esc_html_e('Batch Normalization', 'persian-kit'); ?></h4>
     <p class="description" style="margin-bottom: 1em;">
         <?php esc_html_e('Normalize Arabic characters in existing posts. New posts are normalized automatically on save.', 'persian-kit'); ?>
     </p>
 
-    <div style="display: flex; gap: 0.5em; align-items: center; margin-bottom: 0.5em;">
+    <div class="persian-kit-batch-actions">
         <button
             type="button"
             class="button"
@@ -57,7 +59,7 @@ $tehMarbuta = !empty($moduleSettings['teh_marbuta']);
             href="#"
             @click.prevent="restart()"
             x-show="isResuming && !running"
-            style="margin-left: 0.5em;"
+            class="persian-kit-batch-restart"
         >
             <?php esc_html_e('Start Over', 'persian-kit'); ?>
         </a>
@@ -65,7 +67,7 @@ $tehMarbuta = !empty($moduleSettings['teh_marbuta']);
 
     <!-- Status Table -->
     <template x-if="counts !== null">
-        <table class="widefat fixed" style="max-width: 400px; margin-bottom: 1em;">
+        <table class="widefat fixed persian-kit-status-table">
             <thead>
                 <tr>
                     <th><?php esc_html_e('Post Type', 'persian-kit'); ?></th>
@@ -84,18 +86,18 @@ $tehMarbuta = !empty($moduleSettings['teh_marbuta']);
     </template>
 
     <!-- Progress -->
-    <p x-show="running" style="color: #2271b1;">
-        <span class="spinner is-active" style="float: none; margin: 0 4px 0 0;"></span>
+    <p x-show="running" class="persian-kit-progress">
+        <span class="spinner is-active"></span>
         <span x-text="progressText"></span>
     </p>
 
     <!-- Done -->
-    <div x-show="done" class="notice notice-success inline" style="padding: 0.5em 1em;">
+    <div x-show="done" class="notice notice-success inline">
         <p x-text="doneText"></p>
     </div>
 
     <!-- Error -->
-    <div x-show="error" class="notice notice-error inline" style="padding: 0.5em 1em;">
+    <div x-show="error" class="notice notice-error inline">
         <p x-text="error"></p>
     </div>
 </div>

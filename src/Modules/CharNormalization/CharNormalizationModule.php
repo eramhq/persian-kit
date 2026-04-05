@@ -14,6 +14,16 @@ class CharNormalizationModule extends AbstractModule
         return 'char_normalization';
     }
 
+    public static function label(): string
+    {
+        return __('Character Normalization', 'persian-kit');
+    }
+
+    public static function description(): string
+    {
+        return __('Normalizes Arabic characters (Yeh, Kaf) to Persian', 'persian-kit');
+    }
+
     public static function defaults(): array
     {
         return ['enabled' => true, 'teh_marbuta' => false];

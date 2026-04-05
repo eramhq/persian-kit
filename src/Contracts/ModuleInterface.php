@@ -10,6 +10,10 @@ interface ModuleInterface
 {
     public static function key(): string;
 
+    public static function label(): string;
+
+    public static function description(): string;
+
     public static function defaults(): array;
 
     public function register(ServiceContainer $container): void;

@@ -17,6 +17,16 @@ abstract class AbstractModule implements ModuleInterface
         $this->settings = $settings;
     }
 
+    public static function label(): string
+    {
+        return static::key();
+    }
+
+    public static function description(): string
+    {
+        return '';
+    }
+
     public function isEnabled(): bool
     {
         return (bool) $this->settings->module(static::key(), 'enabled', false);

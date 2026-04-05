@@ -14,6 +14,16 @@ class UtilitiesModule extends AbstractModule
         return 'utilities';
     }
 
+    public static function label(): string
+    {
+        return __('Utilities', 'persian-kit');
+    }
+
+    public static function description(): string
+    {
+        return __('Persian slug, validation, and formatting tools', 'persian-kit');
+    }
+
     public static function defaults(): array
     {
         return ['enabled' => true];

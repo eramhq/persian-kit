@@ -14,6 +14,16 @@ class DateConversionModule extends AbstractModule
         return 'date_conversion';
     }
 
+    public static function label(): string
+    {
+        return __('Date Conversion', 'persian-kit');
+    }
+
+    public static function description(): string
+    {
+        return __('Converts Gregorian dates to Jalali (Shamsi)', 'persian-kit');
+    }
+
     public static function defaults(): array
     {
         return ['enabled' => true, 'global_conversion' => false];

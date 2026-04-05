@@ -14,6 +14,16 @@ class ZWNJEditorModule extends AbstractModule
         return 'zwnj_editor';
     }
 
+    public static function label(): string
+    {
+        return __('ZWNJ Editor Support', 'persian-kit');
+    }
+
+    public static function description(): string
+    {
+        return __('Adds half-space keyboard shortcut to editors', 'persian-kit');
+    }
+
     public static function defaults(): array
     {
         return ['enabled' => true];

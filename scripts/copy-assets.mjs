@@ -10,6 +10,11 @@ const copies = [
         src: 'node_modules/@fontsource-variable/vazirmatn/files/vazirmatn-arabic-wght-normal.woff2',
         dest: 'public/fonts/vazirmatn/Vazirmatn[wght].woff2',
     },
+    // Admin CSS (settings page styles)
+    {
+        src: 'resources/css/admin.css',
+        dest: 'public/css/admin.css',
+    },
     // Admin font CSS
     {
         src: 'resources/css/admin-font.css',

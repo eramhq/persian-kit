@@ -8,8 +8,11 @@
 
 defined('ABSPATH') || exit;
 ?>
-<div class="wrap" x-data="{ activeTab: null }">
+<div class="wrap persian-kit-wrap">
     <h1><?php esc_html_e('Persian Kit', 'persian-kit'); ?></h1>
+    <p class="persian-kit-page-description">
+        <?php esc_html_e('Enable or disable modules and configure their settings.', 'persian-kit'); ?>
+    </p>
 
     <?php if (isset($_GET['updated'])) : ?>
         <div class="notice notice-success is-dismissible">
@@ -25,14 +28,18 @@ defined('ABSPATH') || exit;
             <?php foreach ($modules as $moduleData) : ?>
                 <?php
                 \PersianKit\Components\View::load('admin/partials/module-toggle', [
-                    'moduleKey'      => $moduleData['key'],
-                    'module'         => $moduleData['instance'],
-                    'moduleSettings' => $moduleData['settings'],
+                    'moduleKey'         => $moduleData['key'],
+                    'moduleLabel'       => $moduleData['label'],
+                    'moduleDescription' => $moduleData['description'],
+                    'module'            => $moduleData['instance'],
+                    'moduleSettings'    => $moduleData['settings'],
                 ]);
                 ?>
             <?php endforeach; ?>
         </div>
 
-        <?php submit_button(__('Save Settings', 'persian-kit')); ?>
+        <div class="persian-kit-footer">
+            <?php submit_button(__('Save Settings', 'persian-kit')); ?>
+        </div>
     </form>
 </div>

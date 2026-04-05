@@ -1,0 +1,183 @@
+/* Persian Kit — Admin Settings */
+
+:root {
+    --pk-color-primary: #2271b1;
+    --pk-color-danger: #d63638;
+    --pk-color-border: #c3c4c7;
+    --pk-color-bg: #fff;
+    --pk-color-toggle-off: #c3c4c7;
+    --pk-color-toggle-on: #2271b1;
+    --pk-radius: 4px;
+    --pk-toggle-width: 40px;
+    --pk-toggle-height: 22px;
+    --pk-toggle-knob: 16px;
+    --pk-toggle-offset: 3px;
+}
+
+/* Page wrapper */
+.persian-kit-wrap {
+    max-width: 800px;
+}
+
+.persian-kit-wrap .persian-kit-page-description {
+    margin-bottom: 1.5em;
+    color: #646970;
+}
+
+/* Module card */
+.persian-kit-module {
+    background: var(--pk-color-bg);
+    border: 1px solid var(--pk-color-border);
+    border-radius: var(--pk-radius);
+    margin-bottom: 1em;
+}
+
+/* Module header — flex row */
+.persian-kit-module__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px;
+}
+
+.persian-kit-module__info {
+    flex: 1;
+    min-width: 0;
+}
+
+.persian-kit-module__name {
+    display: block;
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 1.4;
+    color: #1d2327;
+}
+
+.persian-kit-module__description {
+    display: block;
+    font-size: 13px;
+    color: #646970;
+    margin-top: 2px;
+}
+
+/* Toggle switch */
+.persian-kit-module__toggle {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    cursor: pointer;
+    flex-shrink: 0;
+    margin-inline-start: 16px;
+}
+
+.persian-kit-module__toggle input[type="checkbox"] {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+    border: 0;
+}
+
+.persian-kit-module__toggle-track {
+    display: inline-block;
+    width: var(--pk-toggle-width);
+    height: var(--pk-toggle-height);
+    background: var(--pk-color-toggle-off);
+    border-radius: calc(var(--pk-toggle-height) / 2);
+    position: relative;
+}
+
+.persian-kit-module__toggle-track::after {
+    content: "";
+    position: absolute;
+    top: var(--pk-toggle-offset);
+    inset-inline-start: var(--pk-toggle-offset);
+    width: var(--pk-toggle-knob);
+    height: var(--pk-toggle-knob);
+    background: var(--pk-color-bg);
+    border-radius: 50%;
+}
+
+/* Toggle ON state */
+.persian-kit-module__toggle input[type="checkbox"]:checked + .persian-kit-module__toggle-track {
+    background: var(--pk-color-toggle-on);
+}
+
+.persian-kit-module__toggle input[type="checkbox"]:checked + .persian-kit-module__toggle-track::after {
+    inset-inline-start: calc(var(--pk-toggle-width) - var(--pk-toggle-knob) - var(--pk-toggle-offset));
+}
+
+/* Focus visible */
+.persian-kit-module__toggle input[type="checkbox"]:focus-visible + .persian-kit-module__toggle-track {
+    outline: 2px solid var(--pk-color-primary);
+    outline-offset: 2px;
+}
+
+/* Settings area */
+.persian-kit-module__settings {
+    border-top: 1px solid var(--pk-color-border);
+    padding: 16px;
+}
+
+.persian-kit-module__settings .persian-kit-setting-row + .persian-kit-setting-row {
+    margin-top: 1em;
+}
+
+/* Warning text */
+.persian-kit-wrap .persian-kit-warning {
+    color: var(--pk-color-danger);
+}
+
+/* Setting separator */
+.persian-kit-setting-separator {
+    border: none;
+    border-top: 1px solid var(--pk-color-border);
+    margin: 1.5em 0;
+}
+
+/* Setting row title */
+.persian-kit-setting-row__title {
+    margin: 0 0 0.5em;
+}
+
+/* Batch actions */
+.persian-kit-batch-actions {
+    display: flex;
+    gap: 0.5em;
+    align-items: center;
+    margin-bottom: 0.5em;
+}
+
+.persian-kit-batch-restart {
+    margin-inline-start: 0.5em;
+}
+
+/* Status table */
+.persian-kit-status-table {
+    max-width: 400px;
+    margin-bottom: 1em;
+}
+
+/* Progress */
+.persian-kit-progress {
+    color: var(--pk-color-primary);
+}
+
+.persian-kit-progress .spinner {
+    float: none;
+    margin: 0 4px 0 0;
+}
+
+/* Inline notices inside settings */
+.persian-kit-module__settings .notice.inline {
+    padding: 0.5em 1em;
+}
+
+/* Footer */
+.persian-kit-footer {
+    margin-top: 1em;
+}

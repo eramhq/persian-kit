@@ -14,6 +14,16 @@ class DigitConversionModule extends AbstractModule
         return 'digit_conversion';
     }
 
+    public static function label(): string
+    {
+        return __('Digit Conversion', 'persian-kit');
+    }
+
+    public static function description(): string
+    {
+        return __('Converts English/Arabic digits to Persian in content', 'persian-kit');
+    }
+
     public static function defaults(): array
     {
         return ['enabled' => true];

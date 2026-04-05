@@ -19,7 +19,7 @@ $globalConversion = !empty($moduleSettings['global_conversion']);
         >
         <?php esc_html_e('Global date conversion (wp_date hook)', 'persian-kit'); ?>
     </label>
-    <p class="description" style="color: #d63638;">
+    <p class="description persian-kit-warning">
         <?php esc_html_e(
             'May cause Jalali dates in structured data (JSON-LD). Only enable if your theme doesn\'t use standard template tags.',
             'persian-kit'

@@ -55,9 +55,11 @@ class AdminPage
         foreach ($this->modules as $module) {
             $key = $module::key();
             $moduleData[] = [
-                'key'      => $key,
-                'instance' => $module,
-                'settings' => $this->settings->module($key),
+                'key'         => $key,
+                'label'       => $module::label(),
+                'description' => $module::description(),
+                'instance'    => $module,
+                'settings'    => $this->settings->module($key),
             ];
         }
 
