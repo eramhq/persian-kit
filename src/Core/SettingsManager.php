@@ -30,7 +30,7 @@ class SettingsManager
     public function updateModule(string $moduleKey, array $values): void
     {
         $settings = $this->load();
-        $settings[$moduleKey] = array_merge($settings[$moduleKey] ?? [], $values);
+        $settings[$moduleKey] = $values;
         $this->save($settings);
     }
 
