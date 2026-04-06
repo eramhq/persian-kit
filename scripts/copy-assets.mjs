@@ -50,6 +50,11 @@ const copies = [
         src: 'resources/js/gutenberg-jalali-panel.js',
         dest: 'public/js/gutenberg-jalali-panel.js',
     },
+    // WooCommerce admin Jalali date fields
+    {
+        src: 'resources/js/woocommerce-date-fields.js',
+        dest: 'public/js/woocommerce-date-fields.js',
+    },
     // Gutenberg Jalali date editor styles
     {
         src: 'resources/css/gutenberg-jalali.css',

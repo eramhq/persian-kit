@@ -15,6 +15,7 @@ const requiredOutputs = [
     'public/js/jalali.js',
     'public/js/text-editor-zwnj.js',
     'public/js/tinymce-zwnj.js',
+    'public/js/woocommerce-date-fields.js',
     'public/fonts/vazirmatn/vazirmatn-arabic-wght-normal.woff2',
     'public/fonts/vazirmatn/vazirmatn-latin-wght-normal.woff2',
     'public/fonts/vazirmatn/vazirmatn-latin-ext-wght-normal.woff2',

@@ -21,7 +21,7 @@ class WooCommerceModule extends AbstractModule
 
     public static function description(): string
     {
-        return __('Adds Jalali tools for WooCommerce admin screens when WooCommerce is active', 'persian-kit');
+        return __('Adds Jalali date tools for WooCommerce screens and customer-facing dates when WooCommerce is active', 'persian-kit');
     }
 
     public static function defaults(): array
@@ -34,6 +34,15 @@ class WooCommerceModule extends AbstractModule
         $container->register(WooOrderMonthFilter::class, function () {
             return new WooOrderMonthFilter();
         });
+        $container->register(WooAdminDateFields::class, function () {
+            return new WooAdminDateFields();
+        });
+        $container->register(WooPostedDateNormalizer::class, function () {
+            return new WooPostedDateNormalizer();
+        });
+        $container->register(WooDateDisplayFilter::class, function () {
+            return new WooDateDisplayFilter();
+        });
     }
 
     public function boot(ServiceContainer $container): void
@@ -43,6 +52,9 @@ class WooCommerceModule extends AbstractModule
         }
 
         $container->get(WooOrderMonthFilter::class)->register();
+        $container->get(WooAdminDateFields::class)->register();
+        $container->get(WooPostedDateNormalizer::class)->register();
+        $container->get(WooDateDisplayFilter::class)->register();
     }
 
     private function supportsWooCommerce(): bool

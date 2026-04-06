@@ -28,4 +28,22 @@ class WooDateHelperTest extends TestCase
     {
         $this->assertSame('فروردین ۱۴۰۵', WooDateHelper::toPersianDigits('فروردین 1405'));
     }
+
+    public function test_normalize_digits_converts_persian_and_arabic_digit_sets(): void
+    {
+        $this->assertSame('1405-01-02', WooDateHelper::normalizeDigits('۱۴۰۵-٠١-۰۲'));
+    }
+
+    public function test_normalize_date_input_for_woo_save_converts_valid_jalali_date(): void
+    {
+        $this->assertSame('2026-03-21', WooDateHelper::normalizeDateInputForWooSave('1405-01-01'));
+        $this->assertSame('2026-03-21', WooDateHelper::normalizeDateInputForWooSave('۱۴۰۵-۰۱-۰۱'));
+    }
+
+    public function test_normalize_date_input_for_woo_save_leaves_gregorian_and_unknown_values_untouched(): void
+    {
+        $this->assertSame('2026-03-21', WooDateHelper::normalizeDateInputForWooSave('2026-03-21'));
+        $this->assertSame('foo', WooDateHelper::normalizeDateInputForWooSave('foo'));
+        $this->assertSame('1405-13-01', WooDateHelper::normalizeDateInputForWooSave('1405-13-01'));
+    }
 }
