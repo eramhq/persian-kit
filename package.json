@@ -5,9 +5,11 @@
     "type": "module",
     "scripts": {
         "dev": "ENTRY=admin vite build -c vite.config.entries.mjs --watch",
-        "build": "npm run build:copy && npm run build:scripts",
+        "clean:public": "rm -rf public/css public/js public/fonts",
+        "build": "npm run clean:public && npm run build:copy && npm run build:scripts && npm run build:verify",
         "build:copy": "node scripts/copy-assets.mjs",
         "build:scripts": "ENTRY=admin vite build -c vite.config.entries.mjs",
+        "build:verify": "node scripts/verify-build.mjs",
         "build:pot": "wp i18n make-pot . languages/persian-kit.pot --slug=persian-kit --domain=persian-kit --skip-js --exclude=packages,tests",
         "dist": "bash scripts/dist.sh"
     },

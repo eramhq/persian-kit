@@ -23,6 +23,7 @@ class DateFiltersTest extends TestCase
                 default => '',
             };
         });
+        Functions\when('is_admin')->justReturn(false);
     }
 
     protected function tearDown(): void
