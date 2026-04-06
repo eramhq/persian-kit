@@ -25,7 +25,6 @@
 
     var isDispatching = false;
     var isInjecting = false;
-    var lastDateKey = '';
     /** Tracks whether the schedule popover is open, to skip DOM queries in subscribe. */
     var popoverOpen = false;
     /** Active content observer, disconnected when popover closes. */
@@ -75,26 +74,30 @@
 
     // ── A. Label Override ────────────────────────
 
+    var labelUpdateQueued = false;
+
     function updateLabel() {
-        if (isDispatching) return;
+        if (isDispatching || labelUpdateQueued) return;
+        labelUpdateQueued = true;
 
-        var info = getStoreDate();
-        var key = info.isFloating ? '__floating__' : (info.date || '');
-        if (key === lastDateKey) return;
-        lastDateKey = key;
-
-        // Run after React's synchronous render
         setTimeout(function () {
+            labelUpdateQueued = false;
+
             var btn = document.querySelector('.editor-post-schedule__dialog-toggle');
             if (!btn) return;
 
+            var info = getStoreDate();
+            var expected;
             if (info.isFloating || !info.date) {
-                btn.textContent = 'هم‌اکنون';
+                expected = 'هم‌اکنون';
             } else {
                 var d = new Date(info.date);
-                if (!isNaN(d.getTime())) {
-                    btn.textContent = jalaliLabel(d);
-                }
+                if (isNaN(d.getTime())) return;
+                expected = jalaliLabel(d);
+            }
+
+            if (btn.textContent !== expected) {
+                btn.textContent = expected;
             }
         }, 0);
     }
@@ -222,14 +225,6 @@
 
         setTimeout(function () {
             isDispatching = false;
-            lastDateKey = iso;
-            var btn = document.querySelector('.editor-post-schedule__dialog-toggle');
-            if (btn) {
-                var d = new Date(iso);
-                if (!isNaN(d.getTime())) {
-                    btn.textContent = jalaliLabel(d);
-                }
-            }
         }, 0);
     }
 
