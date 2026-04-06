@@ -70,6 +70,18 @@ class CharNormalizationModuleTest extends TestCase
         $this->assertSame('admin/partials/char-normalization-settings', $module->settingsView());
     }
 
+    public function test_sanitize_settings_sets_missing_checkbox_to_false(): void
+    {
+        $module = $this->makeModule();
+
+        $this->assertSame([
+            'enabled'     => true,
+            'teh_marbuta' => false,
+        ], $module->sanitizeSettings([
+            'enabled' => true,
+        ]));
+    }
+
     /**
      * Register + boot the module with a mocked container.
      */

@@ -94,7 +94,7 @@ class AdminPage
             // Toggle: if checkbox not present, module is disabled
             $values['enabled'] = isset($values['enabled']);
 
-            $this->settings->updateModule($key, $values);
+            $this->settings->updateModule($key, $module->sanitizeSettings($values));
         }
 
         wp_safe_redirect(

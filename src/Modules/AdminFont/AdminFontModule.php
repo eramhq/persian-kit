@@ -43,6 +43,17 @@ class AdminFontModule extends AbstractModule
         return 'admin/partials/admin-font-settings';
     }
 
+    public function sanitizeSettings(array $values): array
+    {
+        $font = is_string($values['font'] ?? null) ? strtolower(trim($values['font'])) : '';
+        $allowedFonts = ['vazirmatn'];
+
+        return [
+            'enabled' => !empty($values['enabled']),
+            'font'    => in_array($font, $allowedFonts, true) ? $font : 'vazirmatn',
+        ];
+    }
+
     public function enqueueFont(): void
     {
         wp_enqueue_style(

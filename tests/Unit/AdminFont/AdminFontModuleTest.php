@@ -126,4 +126,17 @@ class AdminFontModuleTest extends TestCase
         $this->assertStringContainsString('--pk-admin-font', $capturedCss);
         $this->assertStringContainsString('Vazirmatn', $capturedCss);
     }
+
+    public function test_sanitize_settings_falls_back_to_known_font(): void
+    {
+        $module = $this->makeModule();
+
+        $this->assertSame([
+            'enabled' => true,
+            'font'    => 'vazirmatn',
+        ], $module->sanitizeSettings([
+            'enabled' => true,
+            'font'    => 'unknown-font',
+        ]));
+    }
 }

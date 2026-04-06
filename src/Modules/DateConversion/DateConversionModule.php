@@ -49,6 +49,14 @@ class DateConversionModule extends AbstractModule
         return 'admin/partials/date-conversion-settings';
     }
 
+    public function sanitizeSettings(array $values): array
+    {
+        return [
+            'enabled'           => !empty($values['enabled']),
+            'global_conversion' => !empty($values['global_conversion']),
+        ];
+    }
+
     public function boot(ServiceContainer $container): void
     {
         $filters = $container->get(DateFilters::class);

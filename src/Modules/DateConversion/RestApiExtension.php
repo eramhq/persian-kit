@@ -52,6 +52,6 @@ class RestApiExtension
 
     private function formatIsoJalali(string $timestamp): string
     {
-        return JalaliFormatter::format('Y-m-d\TH:i:s', $timestamp);
+        return JalaliFormatter::format('Y-m-d', $timestamp) . 'T' . JalaliFormatter::format('H:i:s', $timestamp);
     }
 }

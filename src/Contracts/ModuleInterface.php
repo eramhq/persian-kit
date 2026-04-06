@@ -16,6 +16,8 @@ interface ModuleInterface
 
     public static function defaults(): array;
 
+    public function sanitizeSettings(array $values): array;
+
     public function register(ServiceContainer $container): void;
 
     public function boot(ServiceContainer $container): void;
