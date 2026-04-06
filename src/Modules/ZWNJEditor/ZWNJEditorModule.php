@@ -21,7 +21,7 @@ class ZWNJEditorModule extends AbstractModule
 
     public static function description(): string
     {
-        return __('Adds half-space keyboard shortcuts to the Classic Editor and Block Editor', 'persian-kit');
+        return __('Adds a half-space keyboard shortcut to the Classic Editor and Block Editor', 'persian-kit');
     }
 
     public static function defaults(): array

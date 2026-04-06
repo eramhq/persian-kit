@@ -9,7 +9,9 @@
     }
 
     function insertZwnjAtCursor() {
-        var textarea = document.getElementById('content');
+        var textarea = document.activeElement && document.activeElement.id === 'content'
+            ? document.activeElement
+            : document.getElementById('content');
         if (!textarea) {
             return;
         }
@@ -31,12 +33,11 @@
             return;
         }
 
-        var isCtrlShift2 = (e.ctrlKey || e.metaKey) && e.shiftKey && e.keyCode === 50;
         var isShiftSpace = e.shiftKey && e.keyCode === 32 && !e.ctrlKey && !e.metaKey && !e.altKey;
 
-        if (isCtrlShift2 || isShiftSpace) {
+        if (isShiftSpace) {
             e.preventDefault();
             insertZwnjAtCursor();
         }
-    });
+    }, true);
 })();

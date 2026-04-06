@@ -4,11 +4,10 @@
     var ZWNJ = '\u200C';
 
     function isShortcut(event) {
-        var isCtrlShift2 = (event.ctrlKey || event.metaKey) && event.shiftKey && (event.key === '2' || event.keyCode === 50);
         var isShiftSpace = event.shiftKey && !event.ctrlKey && !event.metaKey && !event.altKey
             && (event.key === ' ' || event.code === 'Space' || event.keyCode === 32);
 
-        return isCtrlShift2 || isShiftSpace;
+        return isShiftSpace;
     }
 
     function isEditableTarget(target) {
@@ -26,6 +25,40 @@
         }
 
         return !!target.closest('[contenteditable="true"]');
+    }
+
+    function getSelectionEditableTarget() {
+        var selection = window.getSelection ? window.getSelection() : null;
+        if (!selection || selection.rangeCount === 0) {
+            return null;
+        }
+
+        var node = selection.anchorNode;
+        if (!node) {
+            return null;
+        }
+
+        if (node.nodeType === Node.TEXT_NODE) {
+            node = node.parentElement;
+        }
+
+        if (!node || typeof node.closest !== 'function') {
+            return null;
+        }
+
+        return node.closest('[contenteditable="true"]');
+    }
+
+    function getEditableTarget(target) {
+        if (isEditableTarget(target)) {
+            return target;
+        }
+
+        if (isEditableTarget(document.activeElement)) {
+            return document.activeElement;
+        }
+
+        return getSelectionEditableTarget();
     }
 
     function dispatchInput(target) {
@@ -69,17 +102,19 @@
     }
 
     document.addEventListener('keydown', function (event) {
-        if (event.defaultPrevented || event.isComposing || !isShortcut(event) || !isEditableTarget(event.target)) {
+        var editableTarget = getEditableTarget(event.target);
+
+        if (event.defaultPrevented || event.isComposing || !isShortcut(event) || !editableTarget) {
             return;
         }
 
         event.preventDefault();
 
-        if (event.target.tagName === 'TEXTAREA' || event.target.tagName === 'INPUT') {
-            insertIntoField(event.target);
+        if (editableTarget.tagName === 'TEXTAREA' || editableTarget.tagName === 'INPUT') {
+            insertIntoField(editableTarget);
             return;
         }
 
-        insertIntoContentEditable(event.target);
-    });
+        insertIntoContentEditable(editableTarget);
+    }, true);
 })();
