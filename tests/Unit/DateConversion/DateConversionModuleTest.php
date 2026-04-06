@@ -55,4 +55,26 @@ class DateConversionModuleTest extends TestCase
             'global_conversion' => '1',
         ]));
     }
+
+    public function test_abstract_sanitize_settings_drops_unknown_keys(): void
+    {
+        $manager = Mockery::mock(SettingsManager::class);
+        $manager->shouldReceive('module')->andReturn([]);
+
+        $module = new class($manager) extends DateConversionModule {
+            public function sanitizeSettings(array $values): array
+            {
+                return parent::sanitizeSettings($values);
+            }
+        };
+
+        $this->assertSame([
+            'enabled'           => true,
+            'global_conversion' => false,
+        ], $module->sanitizeSettings([
+            'enabled'           => true,
+            'global_conversion' => false,
+            'unexpected'        => 'value',
+        ]));
+    }
 }

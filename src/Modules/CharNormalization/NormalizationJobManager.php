@@ -26,7 +26,8 @@ class NormalizationJobManager
 
         $state = $this->getState();
         $cursor = $this->migrator->getCursor();
-        $isResuming = $cursor > 0;
+        $wasRunning = ($state['status'] ?? '') === 'running';
+        $isResuming = $cursor > 0 || $wasRunning;
 
         if (($state['status'] ?? '') !== 'running') {
             $state = [
@@ -62,7 +63,7 @@ class NormalizationJobManager
 
         return [
             'cursor'      => $this->migrator->getCursor(),
-            'is_resuming' => true,
+            'is_resuming' => $isResuming,
             'counts'      => $state['counts'] ?? [],
             'job'         => $state,
             'has_more'    => $result->hasMore,

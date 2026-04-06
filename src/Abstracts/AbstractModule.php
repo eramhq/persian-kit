@@ -44,6 +44,11 @@ abstract class AbstractModule implements ModuleInterface
 
     public function sanitizeSettings(array $values): array
     {
-        return array_replace(static::defaults(), $values);
+        $defaults = static::defaults();
+
+        return array_replace(
+            $defaults,
+            array_intersect_key($values, $defaults)
+        );
     }
 }

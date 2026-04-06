@@ -63,6 +63,7 @@ class NormalizationJobManagerTest extends TestCase
         $this->assertSame(50, $state['batch_size']);
         $this->assertSame(['post' => 2], $state['counts']);
         $this->assertTrue($result['has_more']);
+        $this->assertFalse($result['is_resuming']);
         $this->assertSame(5, $state['processed']);
         $this->assertSame(2, $state['modified']);
         $this->assertSame('running', $this->options[NormalizationJobManager::STATE_OPTION]['status']);
@@ -94,6 +95,7 @@ class NormalizationJobManagerTest extends TestCase
         $this->assertSame(6, $state['modified']);
         $this->assertSame(15, $state['last_id']);
         $this->assertTrue($result['has_more']);
+        $this->assertTrue($result['is_resuming']);
     }
 
     public function test_run_batch_marks_job_completed_and_clears_cursor(): void
@@ -123,5 +125,6 @@ class NormalizationJobManagerTest extends TestCase
         $this->assertSame(1, $state['modified']);
         $this->assertSame(3, $state['last_id']);
         $this->assertFalse($result['has_more']);
+        $this->assertTrue($result['is_resuming']);
     }
 }
