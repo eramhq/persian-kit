@@ -45,7 +45,11 @@ class CharNormalizationModule extends AbstractModule
         });
 
         $container->register(NormalizationRestController::class, function (ServiceContainer $c) {
-            return new NormalizationRestController($c->get(BatchMigrator::class));
+            return new NormalizationRestController($c->get(NormalizationJobManager::class));
+        });
+
+        $container->register(NormalizationJobManager::class, function (ServiceContainer $c) {
+            return new NormalizationJobManager($c->get(BatchMigrator::class));
         });
     }
 

@@ -8,11 +8,11 @@ class NormalizationRestController
 {
     private const NAMESPACE = 'persian-kit/v1';
 
-    private BatchMigrator $migrator;
+    private NormalizationJobManager $jobs;
 
-    public function __construct(BatchMigrator $migrator)
+    public function __construct(NormalizationJobManager $jobs)
     {
-        $this->migrator = $migrator;
+        $this->jobs = $jobs;
     }
 
     public function registerRoutes(): void
@@ -52,34 +52,22 @@ class NormalizationRestController
 
     public function status(): \WP_REST_Response
     {
-        $postTypes = get_post_types(['public' => true]);
-        $cursor    = $this->migrator->getCursor();
-
-        return new \WP_REST_Response([
-            'cursor'      => $cursor,
-            'is_resuming' => $cursor > 0,
-            'counts'      => $this->migrator->countAffected(array_values($postTypes)),
-        ]);
+        return new \WP_REST_Response(
+            $this->jobs->status(array_values(get_post_types(['public' => true])))
+        );
     }
 
     public function run(\WP_REST_Request $request): \WP_REST_Response
     {
-        $batchSize = $request->get_param('batch_size');
-        $postTypes = array_values(get_post_types(['public' => true]));
-
-        $result = $this->migrator->processBatch($postTypes, $batchSize);
-
-        return new \WP_REST_Response([
-            'processed' => $result->processed,
-            'modified'  => $result->modified,
-            'last_id'   => $result->lastId,
-            'has_more'  => $result->hasMore,
-        ]);
+        return new \WP_REST_Response($this->jobs->runBatch(
+            array_values(get_post_types(['public' => true])),
+            (int) $request->get_param('batch_size')
+        ));
     }
 
     public function restart(): \WP_REST_Response
     {
-        $this->migrator->clearCursor();
+        $this->jobs->restart();
 
         return new \WP_REST_Response(['success' => true]);
     }

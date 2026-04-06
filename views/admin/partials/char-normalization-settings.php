@@ -29,7 +29,7 @@ $tehMarbuta = !empty($moduleSettings['teh_marbuta']);
 
 <hr class="persian-kit-setting-separator">
 
-<div class="persian-kit-setting-row" x-data="persianKitNormalize()">
+<div class="persian-kit-setting-row" x-data="persianKitNormalize()" x-init="init()">
     <h4 class="persian-kit-setting-row__title"><?php esc_html_e('Batch Normalization', 'persian-kit'); ?></h4>
     <p class="description" style="margin-bottom: 1em;">
         <?php esc_html_e('Normalize Arabic characters in existing posts. New posts are normalized automatically on save.', 'persian-kit'); ?>
@@ -105,6 +105,7 @@ $tehMarbuta = !empty($moduleSettings['teh_marbuta']);
 <script>
 function persianKitNormalize() {
     return {
+        nextBatchTimer: null,
         running: false,
         done: false,
         counts: null,
@@ -127,40 +128,64 @@ function persianKitNormalize() {
             return response.json();
         },
 
-        async checkStatus() {
-            this.error = '';
+        applyStatus(data) {
+            const job = data.job || { status: 'idle' };
+
+            this.counts = data.counts ?? this.counts;
+            this.isResuming = !!data.is_resuming;
+            this.totalProcessed = job.processed || 0;
+            this.totalModified = job.modified || 0;
+
+            if (job.status === 'running') {
+                this.running = true;
+                this.done = false;
+                this.progressText = `Processed ${this.totalProcessed} posts (${this.totalModified} modified)...`;
+                return;
+            }
+
+            this.running = false;
+
+            if (job.status === 'completed') {
+                this.done = true;
+                this.doneText = `Done! ${this.totalProcessed} posts processed, ${this.totalModified} modified.`;
+                this.isResuming = false;
+                return;
+            }
+        },
+
+        async checkStatus(silent = false) {
+            if (!silent) {
+                this.error = '';
+            }
+
             try {
                 const data = await this.fetchApi('normalize/status');
-                this.counts = data.counts;
-                this.isResuming = data.is_resuming;
+                this.applyStatus(data);
             } catch (e) {
-                this.error = e.message;
+                if (!silent) {
+                    this.error = e.message;
+                }
             }
         },
 
         async runNormalization() {
-            this.running = true;
+            this.clearNextBatch();
             this.done = false;
             this.error = '';
-            this.totalProcessed = 0;
-            this.totalModified = 0;
+            this.running = true;
 
             try {
-                let hasMore = true;
-                while (hasMore) {
-                    const data = await this.fetchApi('normalize/run', 'POST');
-                    this.totalProcessed += data.processed;
-                    this.totalModified += data.modified;
-                    this.progressText = `Processed ${this.totalProcessed} posts (${this.totalModified} modified)...`;
-                    hasMore = data.has_more;
+                const data = await this.fetchApi('normalize/run', 'POST');
+                this.applyStatus(data);
+
+                if (data.has_more) {
+                    this.queueNextBatch();
+                    return;
                 }
 
-                this.done = true;
-                this.doneText = `Done! ${this.totalProcessed} posts processed, ${this.totalModified} modified.`;
-                this.isResuming = false;
+                this.running = false;
             } catch (e) {
                 this.error = e.message;
-            } finally {
                 this.running = false;
             }
         },
@@ -169,12 +194,46 @@ function persianKitNormalize() {
             this.error = '';
             try {
                 await this.fetchApi('normalize/restart', 'POST');
+                this.clearNextBatch();
+                this.running = false;
                 this.isResuming = false;
                 this.done = false;
                 this.counts = null;
+                this.totalProcessed = 0;
+                this.totalModified = 0;
+                this.progressText = '';
+                this.doneText = '';
             } catch (e) {
                 this.error = e.message;
             }
+        },
+
+        queueNextBatch() {
+            if (this.nextBatchTimer !== null) {
+                return;
+            }
+
+            this.nextBatchTimer = setTimeout(() => {
+                this.nextBatchTimer = null;
+                this.runNormalization();
+            }, 300);
+        },
+
+        clearNextBatch() {
+            if (this.nextBatchTimer === null) {
+                return;
+            }
+
+            clearTimeout(this.nextBatchTimer);
+            this.nextBatchTimer = null;
+        },
+
+        init() {
+            this.checkStatus(true).then(() => {
+                if (this.running) {
+                    this.queueNextBatch();
+                }
+            });
         },
     };
 }

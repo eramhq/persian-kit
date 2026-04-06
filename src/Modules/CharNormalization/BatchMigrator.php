@@ -38,6 +38,10 @@ class BatchMigrator
      */
     public function countAffected(array $postTypes): array
     {
+        if ($postTypes === []) {
+            return [];
+        }
+
         global $wpdb;
 
         $arabicPattern = '[\x{064A}\x{0643}\x{0660}-\x{0669}\x{0629}]';
@@ -67,6 +71,10 @@ class BatchMigrator
      */
     public function processBatch(array $postTypes, int $batchSize, bool $dryRun = false): BatchResult
     {
+        if ($postTypes === []) {
+            return new BatchResult(0, 0, $this->getCursor(), false);
+        }
+
         global $wpdb;
 
         $cursor = $this->getCursor();
