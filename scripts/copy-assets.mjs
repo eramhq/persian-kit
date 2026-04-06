@@ -30,6 +30,11 @@ const copies = [
         src: 'resources/js/text-editor-zwnj.js',
         dest: 'public/js/text-editor-zwnj.js',
     },
+    // Gutenberg ZWNJ handler
+    {
+        src: 'resources/js/gutenberg-zwnj.js',
+        dest: 'public/js/gutenberg-zwnj.js',
+    },
     // Jalali conversion library
     {
         src: 'resources/js/jalali.js',

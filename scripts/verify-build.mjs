@@ -11,6 +11,7 @@ const requiredOutputs = [
     'public/js/admin.min.js',
     'public/js/admin-date-override.js',
     'public/js/gutenberg-jalali-panel.js',
+    'public/js/gutenberg-zwnj.js',
     'public/js/jalali.js',
     'public/js/text-editor-zwnj.js',
     'public/js/tinymce-zwnj.js',

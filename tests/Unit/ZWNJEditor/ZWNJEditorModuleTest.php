@@ -88,6 +88,16 @@ class ZWNJEditorModuleTest extends TestCase
         $this->assertTrue(has_action('admin_enqueue_scripts'));
     }
 
+    public function test_boot_registers_block_editor_enqueue_action(): void
+    {
+        $module = $this->makeModule();
+        $container = Mockery::mock(ServiceContainer::class);
+
+        $module->boot($container);
+
+        $this->assertTrue(has_action('enqueue_block_editor_assets'));
+    }
+
     public function test_register_tinymce_plugin_adds_correct_url(): void
     {
         if (!defined('PERSIAN_KIT_URL')) {
@@ -123,6 +133,17 @@ class ZWNJEditorModuleTest extends TestCase
             define('PERSIAN_KIT_VERSION', '1.0.0');
         }
 
+        $screen = new class {
+            public string $base = 'post';
+
+            public function is_block_editor(): bool
+            {
+                return false;
+            }
+        };
+
+        Functions\expect('get_current_screen')->once()->andReturn($screen);
+
         Functions\expect('wp_enqueue_script')
             ->once()
             ->with(
@@ -141,6 +162,16 @@ class ZWNJEditorModuleTest extends TestCase
 
     public function test_enqueue_text_editor_script_on_post_new_page(): void
     {
+        $screen = new class {
+            public string $base = 'post';
+
+            public function is_block_editor(): bool
+            {
+                return false;
+            }
+        };
+
+        Functions\expect('get_current_screen')->once()->andReturn($screen);
         Functions\expect('wp_enqueue_script')->once();
 
         $module = $this->makeModule();
@@ -152,9 +183,78 @@ class ZWNJEditorModuleTest extends TestCase
     public function test_enqueue_text_editor_script_skips_non_post_pages(): void
     {
         Functions\expect('wp_enqueue_script')->never();
+        Functions\expect('get_current_screen')->never();
 
         $module = $this->makeModule();
         $module->enqueueTextEditorScript('toplevel_page_persian-kit');
+
+        $this->assertTrue(true);
+    }
+
+    public function test_enqueue_text_editor_script_skips_block_editor_post_screen(): void
+    {
+        $screen = new class {
+            public string $base = 'post';
+
+            public function is_block_editor(): bool
+            {
+                return true;
+            }
+        };
+
+        Functions\expect('get_current_screen')->once()->andReturn($screen);
+        Functions\expect('wp_enqueue_script')->never();
+
+        $module = $this->makeModule();
+        $module->enqueueTextEditorScript('post.php');
+
+        $this->assertTrue(true);
+    }
+
+    public function test_enqueue_block_editor_script_loads_on_block_editor_post_screen(): void
+    {
+        $screen = new class {
+            public string $base = 'post';
+
+            public function is_block_editor(): bool
+            {
+                return true;
+            }
+        };
+
+        Functions\expect('get_current_screen')->once()->andReturn($screen);
+        Functions\expect('wp_enqueue_script')
+            ->once()
+            ->with(
+                'persian-kit-gutenberg-zwnj',
+                PERSIAN_KIT_URL . 'public/js/gutenberg-zwnj.js',
+                [],
+                PERSIAN_KIT_VERSION,
+                true
+            );
+
+        $module = $this->makeModule();
+        $module->enqueueBlockEditorScript();
+
+        $this->assertTrue(true);
+    }
+
+    public function test_enqueue_block_editor_script_skips_non_post_block_editor_screens(): void
+    {
+        $screen = new class {
+            public string $base = 'widgets';
+
+            public function is_block_editor(): bool
+            {
+                return true;
+            }
+        };
+
+        Functions\expect('get_current_screen')->once()->andReturn($screen);
+        Functions\expect('wp_enqueue_script')->never();
+
+        $module = $this->makeModule();
+        $module->enqueueBlockEditorScript();
 
         $this->assertTrue(true);
     }
