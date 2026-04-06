@@ -16,7 +16,8 @@
         "veronalabs/wp-scoper": "^1.2.4",
         "phpunit/phpunit": "^10.0",
         "brain/monkey": "^2.6",
-        "mockery/mockery": "^1.6"
+        "mockery/mockery": "^1.6",
+        "yoast/phpunit-polyfills": "^2.0.5"
     },
     "autoload": {
         "psr-4": {
@@ -44,7 +45,9 @@
         }
     },
     "scripts": {
-        "test": "phpunit --testdox"
+        "test": "phpunit --testdox",
+        "test:integration:setup": "bash tests/bin/setup-integration-tests.sh",
+        "test:integration": "WP_TESTS_DIR=.wordpress-tests/wordpress-develop/tests/phpunit php .wordpress-tests/bin/phpunit-9.6.23.phar --testsuite integration --testdox"
     },
     "config": {
         "platform-check": false,

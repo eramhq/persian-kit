@@ -29,12 +29,15 @@ abstract class AbstractModule implements ModuleInterface
 
     public function isEnabled(): bool
     {
-        return (bool) $this->settings->module(static::key(), 'enabled', false);
+        return (bool) $this->setting('enabled', false);
     }
 
     protected function setting(string $key, mixed $default = null): mixed
     {
-        return $this->settings->module(static::key(), $key, $default);
+        $defaults = static::defaults();
+        $fallback = array_key_exists($key, $defaults) ? $defaults[$key] : $default;
+
+        return $this->settings->module(static::key(), $key, $fallback);
     }
 
     public function settingsView(): ?string

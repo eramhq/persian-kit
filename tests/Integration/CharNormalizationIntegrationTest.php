@@ -32,13 +32,12 @@ class CharNormalizationIntegrationTest extends WordPressIntegrationTestCase
             'post_type'    => 'post',
         ]);
 
-        $query = new \WP_Query([
-            's'              => 'كتاب ۱۲۳',
-            'post_type'      => 'post',
-            'posts_per_page' => 10,
-        ]);
+        $this->go_to('/?s=' . rawurlencode('كتاب ۱۲۳'));
 
-        $this->assertSame('کتاب 123', $query->get('s'));
-        $this->assertNotEmpty($query->posts);
+        global $wp_query;
+
+        $this->assertInstanceOf(\WP_Query::class, $wp_query);
+        $this->assertSame('کتاب 123', $wp_query->get('s'));
+        $this->assertNotEmpty($wp_query->posts);
     }
 }

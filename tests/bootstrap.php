@@ -14,6 +14,11 @@ if (!$wpTestsDir) {
 }
 
 if (file_exists($wpTestsDir . '/includes/functions.php')) {
+    $phpunitPolyfillsPath = dirname(__DIR__) . '/vendor/yoast/phpunit-polyfills';
+    if (file_exists($phpunitPolyfillsPath . '/phpunitpolyfills-autoload.php') && !defined('WP_TESTS_PHPUNIT_POLYFILLS_PATH')) {
+        define('WP_TESTS_PHPUNIT_POLYFILLS_PATH', $phpunitPolyfillsPath);
+    }
+
     require_once $wpTestsDir . '/includes/functions.php';
 
     tests_add_filter('muplugins_loaded', function () {
