@@ -9,6 +9,15 @@ defined('ABSPATH') || exit;
 class WooDateDisplayFilter
 {
     private static bool $inFilter = false;
+    /** @var string[] */
+    private array $templateContextMarkers = [
+        '/woocommerce/templates/order/tracking.php',
+        '/woocommerce/templates/myaccount/view-order.php',
+        '/woocommerce/templates/order/order-downloads.php',
+        '/woocommerce/templates/emails/email-downloads.php',
+        '/woocommerce/templates/emails/plain/email-downloads.php',
+        '/woocommerce/src/Blocks/BlockTypes/OrderConfirmation/Downloads.php',
+    ];
 
     public function register(): void
     {
@@ -47,6 +56,19 @@ class WooDateDisplayFilter
             if (($frame['function'] ?? null) === 'date_i18n') {
                 return true;
             }
+
+            continue;
+        }
+
+        foreach ($trace as $frame) {
+            $file = $frame['file'] ?? null;
+            if (!is_string($file)) {
+                continue;
+            }
+
+            if ($this->isTemplateContextFile($file)) {
+                return true;
+            }
         }
 
         return false;
@@ -57,7 +79,18 @@ class WooDateDisplayFilter
      */
     protected function debugTrace(): array
     {
-        return debug_backtrace(\DEBUG_BACKTRACE_IGNORE_ARGS, 8);
+        return debug_backtrace(\DEBUG_BACKTRACE_IGNORE_ARGS, 12);
+    }
+
+    private function isTemplateContextFile(string $file): bool
+    {
+        foreach ($this->templateContextMarkers as $marker) {
+            if (str_contains(str_replace('\\', '/', $file), $marker)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     private function shouldBypassDisplayConversion(string $format): bool

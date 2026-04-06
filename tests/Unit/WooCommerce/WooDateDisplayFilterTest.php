@@ -42,6 +42,14 @@ class WooDateDisplayFilterTest extends TestCase
             ['class' => 'WC_DateTime', 'function' => 'date_i18n'],
         ]));
 
+        $this->assertTrue($filter->isWooDateContext([
+            ['file' => '/var/www/html/wp-content/plugins/woocommerce/templates/order/tracking.php'],
+        ]));
+
+        $this->assertTrue($filter->isWooDateContext([
+            ['file' => '/var/www/html/wp-content/plugins/woocommerce/src/Blocks/BlockTypes/OrderConfirmation/Downloads.php'],
+        ]));
+
         $this->assertFalse($filter->isWooDateContext([
             ['class' => 'WP_Date_Query', 'function' => 'build_mysql_datetime'],
         ]));
@@ -61,6 +69,23 @@ class WooDateDisplayFilterTest extends TestCase
         $formatted = $filter->filterDateI18n('Mar 21, 2026', 'M j, Y', strtotime('2026-03-21 00:00:00'), false);
 
         $this->assertNotSame('Mar 21, 2026', $formatted);
+        $this->assertStringContainsString('1405', $formatted);
+    }
+
+    public function test_filter_date_i18n_converts_customer_template_dates(): void
+    {
+        $filter = new class extends WooDateDisplayFilter {
+            protected function debugTrace(): array
+            {
+                return [
+                    ['file' => '/var/www/html/wp-content/plugins/woocommerce/templates/emails/email-downloads.php'],
+                ];
+            }
+        };
+
+        $formatted = $filter->filterDateI18n('March 21, 2026', 'F j, Y', strtotime('2026-03-21 00:00:00'), false);
+
+        $this->assertNotSame('March 21, 2026', $formatted);
         $this->assertStringContainsString('1405', $formatted);
     }
 
