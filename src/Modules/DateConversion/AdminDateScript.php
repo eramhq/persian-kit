@@ -13,20 +13,20 @@ class AdminDateScript
     }
 
     /**
-     * Enqueue Jalali conversion + admin date override on all admin pages.
+     * Enqueue Jalali conversion + admin date override only where the classic UI needs it.
      *
-     * Quick Edit lives on edit.php, Classic Editor on post.php / post-new.php —
-     * we load on all admin pages to keep it simple and cover edge cases.
+     * Quick Edit lives on edit.php. Classic Editor lives on post.php / post-new.php,
+     * but block-editor screens get their own dedicated assets via enqueueGutenberg().
      */
-    public function enqueue(): void
+    public function enqueue(string $hookSuffix = ''): void
     {
-        wp_enqueue_script(
-            'persian-kit-jalali',
-            PERSIAN_KIT_URL . 'public/js/jalali.js',
-            [],
-            PERSIAN_KIT_VERSION,
-            true
-        );
+        if (!$this->shouldEnqueueClassicOverrides($hookSuffix)) {
+            return;
+        }
+
+        $this->registerSharedScripts();
+
+        wp_enqueue_script('persian-kit-jalali');
 
         wp_enqueue_script(
             'persian-kit-admin-date',
@@ -42,6 +42,10 @@ class AdminDateScript
      */
     public function enqueueGutenberg(): void
     {
+        $this->registerSharedScripts();
+
+        wp_enqueue_script('persian-kit-jalali');
+
         wp_enqueue_style(
             'persian-kit-gutenberg-jalali',
             PERSIAN_KIT_URL . 'public/css/gutenberg-jalali.css',
@@ -56,5 +60,42 @@ class AdminDateScript
             PERSIAN_KIT_VERSION,
             true
         );
+    }
+
+    private function registerSharedScripts(): void
+    {
+        wp_register_script(
+            'persian-kit-jalali',
+            PERSIAN_KIT_URL . 'public/js/jalali.js',
+            [],
+            PERSIAN_KIT_VERSION,
+            true
+        );
+    }
+
+    private function shouldEnqueueClassicOverrides(string $hookSuffix): bool
+    {
+        if ($hookSuffix === 'edit.php') {
+            return true;
+        }
+
+        if (!in_array($hookSuffix, ['post.php', 'post-new.php'], true)) {
+            return false;
+        }
+
+        if (!function_exists('get_current_screen')) {
+            return true;
+        }
+
+        $screen = get_current_screen();
+        if (!$screen) {
+            return true;
+        }
+
+        if (method_exists($screen, 'is_block_editor')) {
+            return !$screen->is_block_editor();
+        }
+
+        return true;
     }
 }
