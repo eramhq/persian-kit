@@ -121,6 +121,19 @@ class DateFiltersTest extends TestCase
         $this->assertSame('March 21, 2025', $result);
     }
 
+    public function test_filter_post_date_preserves_machine_format_output(): void
+    {
+        $filters = new DateFilters(false);
+
+        $post = new \stdClass();
+        $post->post_date_gmt = '2025-03-21 12:00:00';
+        $post->post_date = '2025-03-21 15:30:00';
+
+        $result = $filters->filterPostDate('2025-03-21T15:30:00+03:30', DATE_RFC3339, $post);
+
+        $this->assertSame('2025-03-21T15:30:00+03:30', $result);
+    }
+
     public function test_filter_wp_date_guards_against_recursion(): void
     {
         Functions\when('wp_timezone')->justReturn(new \DateTimeZone('Asia/Tehran'));
@@ -158,6 +171,19 @@ class DateFiltersTest extends TestCase
         $this->assertSame('1404/01/01', $result);
     }
 
+    public function test_filter_post_time_preserves_unix_timestamp_format(): void
+    {
+        $filters = new DateFilters(false);
+
+        $post = new \stdClass();
+        $post->post_date_gmt = '2025-03-21 12:00:00';
+        $post->post_date = '2025-03-21 15:30:00';
+
+        $result = $filters->filterPostTime('1742558400', 'U', $post);
+
+        $this->assertSame('1742558400', $result);
+    }
+
     public function test_filter_comment_date(): void
     {
         Functions\when('wp_timezone')->justReturn(new \DateTimeZone('Asia/Tehran'));
@@ -171,5 +197,19 @@ class DateFiltersTest extends TestCase
         $result = $filters->filterCommentDate('March 21, 2025', 'Y/m/d', $comment);
 
         $this->assertSame('1404/01/01', $result);
+    }
+
+    public function test_filter_get_post_time_preserves_machine_format_output(): void
+    {
+        Functions\when('get_post')->justReturn((object) [
+            'post_date_gmt' => '2025-03-21 12:00:00',
+            'post_date'     => '2025-03-21 15:30:00',
+        ]);
+
+        $filters = new DateFilters(false);
+
+        $result = $filters->filterGetPostTime('Fri, 21 Mar 2025 15:30:00 +0330', DATE_RFC2822, false);
+
+        $this->assertSame('Fri, 21 Mar 2025 15:30:00 +0330', $result);
     }
 }

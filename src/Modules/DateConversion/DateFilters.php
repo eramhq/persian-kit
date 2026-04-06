@@ -60,7 +60,7 @@ class DateFilters
 
     public function filterPostDate(string $date, string $format, ?object $post = null): string
     {
-        if (!$post) {
+        if (!$post || $this->shouldBypassDisplayConversion($format)) {
             return $date;
         }
 
@@ -72,7 +72,7 @@ class DateFilters
     public function filterTheDate(string $date, string $format, string $before, string $after): string
     {
         $post = get_post();
-        if (!$post) {
+        if (!$post || $this->shouldBypassDisplayConversion($format)) {
             return $date;
         }
 
@@ -83,7 +83,7 @@ class DateFilters
 
     public function filterPostTime(string $time, string $format, ?object $post = null): string
     {
-        if (!$post) {
+        if (!$post || $this->shouldBypassDisplayConversion($format)) {
             return $time;
         }
 
@@ -94,7 +94,7 @@ class DateFilters
 
     public function filterModifiedDate(string $date, string $format, ?object $post = null): string
     {
-        if (!$post) {
+        if (!$post || $this->shouldBypassDisplayConversion($format)) {
             return $date;
         }
 
@@ -105,7 +105,7 @@ class DateFilters
 
     public function filterModifiedTime(string $time, string $format, ?object $post = null): string
     {
-        if (!$post) {
+        if (!$post || $this->shouldBypassDisplayConversion($format)) {
             return $time;
         }
 
@@ -116,7 +116,7 @@ class DateFilters
 
     public function filterCommentDate(string $date, string $format, ?object $comment = null): string
     {
-        if (!$comment) {
+        if (!$comment || $this->shouldBypassDisplayConversion($format)) {
             return $date;
         }
 
@@ -127,7 +127,7 @@ class DateFilters
 
     public function filterCommentTime(string $time, string $format, bool $gmt, bool $translate, ?object $comment = null): string
     {
-        if (!$comment) {
+        if (!$comment || $this->shouldBypassDisplayConversion($format)) {
             return $time;
         }
 
@@ -140,7 +140,7 @@ class DateFilters
     public function filterGetPostTime(string $time, string $format, bool $gmt): string
     {
         $post = get_post();
-        if (!$post) {
+        if (!$post || $this->shouldBypassDisplayConversion($format)) {
             return $time;
         }
 
@@ -182,5 +182,33 @@ class DateFilters
             'parent' => 'top-secondary',
             'meta'   => ['class' => 'persian-kit-admin-date'],
         ]);
+    }
+
+    private function shouldBypassDisplayConversion(string $format): bool
+    {
+        static $machineFormats = null;
+
+        if ($machineFormats === null) {
+            $machineFormats = array_values(array_unique(array_filter([
+                'U',
+                'c',
+                'r',
+                \DATE_ATOM,
+                \DATE_COOKIE,
+                \DATE_ISO8601,
+                defined('DATE_ISO8601_EXPANDED') ? \DATE_ISO8601_EXPANDED : null,
+                \DATE_RFC822,
+                \DATE_RFC850,
+                \DATE_RFC1036,
+                \DATE_RFC1123,
+                'D, d M Y H:i:s \\G\\M\\T',
+                \DATE_RFC2822,
+                \DATE_RFC3339,
+                \DATE_RFC3339_EXTENDED,
+                \DATE_W3C,
+            ], static fn ($value) => is_string($value) && $value !== '')));
+        }
+
+        return in_array($format, $machineFormats, true);
     }
 }
