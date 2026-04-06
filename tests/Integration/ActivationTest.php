@@ -8,6 +8,7 @@ use PersianKit\Modules\CharNormalization\CharNormalizationModule;
 use PersianKit\Modules\DateConversion\DateConversionModule;
 use PersianKit\Modules\DigitConversion\DigitConversionModule;
 use PersianKit\Modules\Utilities\UtilitiesModule;
+use PersianKit\Modules\WooCommerce\WooCommerceModule;
 use PersianKit\Modules\ZWNJEditor\ZWNJEditorModule;
 use PersianKit\Tests\Integration\Support\WordPressIntegrationTestCase;
 
@@ -31,6 +32,7 @@ class ActivationTest extends WordPressIntegrationTestCase
         $this->assertSame(CharNormalizationModule::defaults(), $settings[CharNormalizationModule::key()]);
         $this->assertSame(AdminFontModule::defaults(), $settings[AdminFontModule::key()]);
         $this->assertSame(ZWNJEditorModule::defaults(), $settings[ZWNJEditorModule::key()]);
+        $this->assertSame(WooCommerceModule::defaults(), $settings[WooCommerceModule::key()]);
         $this->assertSame(UtilitiesModule::defaults(), $settings[UtilitiesModule::key()]);
     }
 }

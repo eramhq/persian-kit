@@ -6,6 +6,7 @@ use PersianKit\Core\SettingsManager;
 use PersianKit\Modules\AdminFont\AdminFontModule;
 use PersianKit\Modules\DateConversion\DateConversionModule;
 use PersianKit\Modules\DigitConversion\DigitConversionModule;
+use PersianKit\Modules\WooCommerce\WooCommerceModule;
 use PersianKit\Modules\ZWNJEditor\ZWNJEditorModule;
 use PersianKit\Modules\CharNormalization\CharNormalizationModule;
 use PersianKit\Modules\Utilities\UtilitiesModule;
@@ -21,6 +22,7 @@ class InstallManager
         CharNormalizationModule::class,
         AdminFontModule::class,
         ZWNJEditorModule::class,
+        WooCommerceModule::class,
         UtilitiesModule::class,
     ];
 

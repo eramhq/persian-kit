@@ -17,6 +17,7 @@ class CoreServiceProvider implements ServiceProvider
         \PersianKit\Modules\CharNormalization\CharNormalizationModule::class,
         \PersianKit\Modules\AdminFont\AdminFontModule::class,
         \PersianKit\Modules\ZWNJEditor\ZWNJEditorModule::class,
+        \PersianKit\Modules\WooCommerce\WooCommerceModule::class,
         \PersianKit\Modules\Utilities\UtilitiesModule::class,
     ];
 
