@@ -54,6 +54,7 @@ class DateFilters
     public function registerAdminFilters(): void
     {
         add_action('admin_bar_menu', [$this, 'addAdminBarClock'], 7);
+        add_action('wp_dashboard_setup', [$this, 'replaceDashboardActivityWidget'], 100);
     }
 
     // ── Tier 1 callbacks ──────────────────────────────────────────────
@@ -182,6 +183,52 @@ class DateFilters
             'parent' => 'top-secondary',
             'meta'   => ['class' => 'persian-kit-admin-date'],
         ]);
+    }
+
+    public function replaceDashboardActivityWidget(): void
+    {
+        if (!function_exists('wp_add_dashboard_widget') || !function_exists('wp_dashboard_site_activity')) {
+            return;
+        }
+
+        remove_meta_box('dashboard_activity', 'dashboard', 'normal');
+        wp_add_dashboard_widget(
+            'dashboard_activity',
+            __('Activity'),
+            [$this, 'renderDashboardActivityWidget'],
+            null,
+            null,
+            'normal',
+            'default'
+        );
+    }
+
+    public function renderDashboardActivityWidget(): void
+    {
+        add_filter('date_i18n', [$this, 'filterDashboardDateI18n'], 10, 4);
+
+        try {
+            wp_dashboard_site_activity();
+        } finally {
+            remove_filter('date_i18n', [$this, 'filterDashboardDateI18n'], 10);
+        }
+    }
+
+    public function filterDashboardDateI18n(string $date, string $format, int $timestamp, bool $gmt = false): string
+    {
+        if (self::$inFilter || $this->shouldBypassDisplayConversion($format)) {
+            return $date;
+        }
+
+        self::$inFilter = true;
+        try {
+            $timezone = $gmt ? new \DateTimeZone('UTC') : null;
+            $result = JalaliFormatter::format($format, $timestamp, $timezone);
+        } finally {
+            self::$inFilter = false;
+        }
+
+        return $result;
     }
 
     private function shouldBypassDisplayConversion(string $format): bool
