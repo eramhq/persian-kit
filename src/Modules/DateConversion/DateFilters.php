@@ -34,6 +34,8 @@ class DateFilters
         add_filter('get_comment_date', [$this, 'filterCommentDate'], 10, 3);
         add_filter('get_comment_time', [$this, 'filterCommentTime'], 10, 5);
         add_filter('get_post_time', [$this, 'filterGetPostTime'], 10, 3);
+        add_filter('render_block_core/post-date', [$this, 'filterPostDateBlock'], 10, 3);
+        add_filter('render_block_core/latest-comments', [$this, 'filterLatestCommentsBlock'], 10, 3);
     }
 
     /**
@@ -153,6 +155,42 @@ class DateFilters
         return JalaliFormatter::format($format, $source);
     }
 
+    public function filterPostDateBlock(string $blockContent, array $block, ?object $instance = null): string
+    {
+        if ($this->shouldSkipFrontendBlockConversion()) {
+            return $blockContent;
+        }
+
+        $attrs = is_array($block['attrs'] ?? null) ? $block['attrs'] : [];
+        $format = $attrs['format'] ?? $this->defaultDateFormat;
+
+        if ($format === 'human-diff' || $this->shouldBypassDisplayConversion($format)) {
+            return $blockContent;
+        }
+
+        return $this->replaceRenderedTimeText(
+            $blockContent,
+            function (string $datetime, string $innerHtml) use ($format): string {
+                $formattedDate = JalaliFormatter::format($format, $datetime);
+
+                return $this->replaceLinkedTimeText($innerHtml, $formattedDate);
+            },
+            true
+        );
+    }
+
+    public function filterLatestCommentsBlock(string $blockContent, array $block, ?object $instance = null): string
+    {
+        if ($this->shouldSkipFrontendBlockConversion() || $this->shouldBypassDisplayConversion($this->defaultDateFormat)) {
+            return $blockContent;
+        }
+
+        return $this->replaceRenderedTimeText(
+            $blockContent,
+            fn (string $datetime, string $innerHtml): string => JalaliFormatter::format($this->defaultDateFormat, $datetime)
+        );
+    }
+
     // ── Tier 2 callback ───────────────────────────────────────────────
 
     public function filterWpDate(string $date, string $format, int $timestamp, ?\DateTimeZone $timezone = null): string
@@ -257,5 +295,42 @@ class DateFilters
         }
 
         return in_array($format, $machineFormats, true);
+    }
+
+    private function shouldSkipFrontendBlockConversion(): bool
+    {
+        return function_exists('is_admin') && is_admin();
+    }
+
+    private function replaceRenderedTimeText(string $markup, callable $formatter, bool $firstOnly = false): string
+    {
+        // Keep the rewrite scoped to rendered TIME tags so visible date text changes
+        // without affecting machine-facing attributes like datetime.
+        $result = preg_replace_callback(
+            '/(?P<open><time\b[^>]*>)(?P<inner>.*?)(?P<close><\/time>)/is',
+            function (array $matches) use ($formatter): string {
+                if (!preg_match('/\bdatetime=(["\'])(?P<datetime>.*?)\1/i', $matches['open'], $datetimeMatches)) {
+                    return $matches[0];
+                }
+
+                $datetime = html_entity_decode($datetimeMatches['datetime'], ENT_QUOTES, 'UTF-8');
+                $replacement = $formatter($datetime, $matches['inner']);
+
+                return $matches['open'] . $replacement . $matches['close'];
+            },
+            $markup,
+            $firstOnly ? 1 : -1
+        );
+
+        return is_string($result) ? $result : $markup;
+    }
+
+    private function replaceLinkedTimeText(string $innerHtml, string $replacement): string
+    {
+        if (!preg_match('/^(?P<prefix>\s*)(?P<open><a\b[^>]*>)(?P<text>.*?)(?P<close><\/a>)(?P<suffix>\s*)$/is', $innerHtml, $matches)) {
+            return $replacement;
+        }
+
+        return $matches['prefix'] . $matches['open'] . $replacement . $matches['close'] . $matches['suffix'];
     }
 }

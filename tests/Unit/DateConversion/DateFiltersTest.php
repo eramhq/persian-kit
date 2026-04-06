@@ -45,6 +45,8 @@ class DateFiltersTest extends TestCase
             'get_comment_date',
             'get_comment_time',
             'get_post_time',
+            'render_block_core/post-date',
+            'render_block_core/latest-comments',
         ];
 
         foreach ($expectedHooks as $hook) {
@@ -197,6 +199,76 @@ class DateFiltersTest extends TestCase
         $result = $filters->filterCommentDate('March 21, 2025', 'Y/m/d', $comment);
 
         $this->assertSame('1404/01/01', $result);
+    }
+
+    public function test_filter_post_date_block_preserves_link_and_datetime_attribute(): void
+    {
+        Functions\when('wp_timezone')->justReturn(new \DateTimeZone('Asia/Tehran'));
+        Functions\when('apply_filters')->returnArg(2);
+
+        $filters = new DateFilters(false);
+
+        $block = [
+            'attrs' => [
+                'format' => 'Y/m/d',
+            ],
+        ];
+
+        $content = '<div class="wp-block-post-date"><time datetime="2025-03-21T15:30:00+03:30"><a href="/hello-world/">March 21, 2025</a></time></div>';
+
+        $result = $filters->filterPostDateBlock($content, $block);
+
+        $this->assertStringContainsString('datetime="2025-03-21T15:30:00+03:30"', $result);
+        $this->assertStringContainsString('<a href="/hello-world/">1404/01/01</a>', $result);
+    }
+
+    public function test_filter_post_date_block_returns_original_when_time_tag_missing(): void
+    {
+        $filters = new DateFilters(false);
+
+        $content = '<div class="wp-block-post-date">March 21, 2025</div>';
+
+        $result = $filters->filterPostDateBlock($content, ['attrs' => ['format' => 'Y/m/d']]);
+
+        $this->assertSame($content, $result);
+    }
+
+    public function test_filter_post_date_block_preserves_machine_format_output(): void
+    {
+        $filters = new DateFilters(false);
+
+        $content = '<div class="wp-block-post-date"><time datetime="2025-03-21T15:30:00+03:30"><a href="/hello-world/">2025-03-21T15:30:00+03:30</a></time></div>';
+
+        $result = $filters->filterPostDateBlock($content, ['attrs' => ['format' => DATE_RFC3339]]);
+
+        $this->assertSame($content, $result);
+    }
+
+    public function test_filter_latest_comments_block_returns_original_when_time_tag_missing(): void
+    {
+        $filters = new DateFilters(false);
+
+        $content = '<ol class="wp-block-latest-comments"><li>No date</li></ol>';
+
+        $result = $filters->filterLatestCommentsBlock($content, []);
+
+        $this->assertSame($content, $result);
+    }
+
+    public function test_filter_latest_comments_block_updates_visible_time_text(): void
+    {
+        Functions\when('wp_timezone')->justReturn(new \DateTimeZone('Asia/Tehran'));
+        Functions\when('apply_filters')->returnArg(2);
+
+        $filters = new DateFilters(false);
+
+        $content = '<ol class="wp-block-latest-comments"><li><time datetime="2025-03-21T15:30:00+03:30" class="wp-block-latest-comments__comment-date">March 21, 2025</time></li></ol>';
+
+        $result = $filters->filterLatestCommentsBlock($content, []);
+
+        $this->assertStringContainsString('datetime="2025-03-21T15:30:00+03:30"', $result);
+        $this->assertStringContainsString('1404', $result);
+        $this->assertStringNotContainsString('March 21, 2025', $result);
     }
 
     public function test_filter_get_post_time_preserves_machine_format_output(): void

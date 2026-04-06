@@ -101,4 +101,47 @@ class DateConversionIntegrationTest extends WordPressIntegrationTestCase
         $this->assertStringContainsString('1404', $output);
         $this->assertStringNotContainsString('2025', $output);
     }
+
+    public function test_post_date_block_renders_jalali_text_and_preserves_gregorian_datetime(): void
+    {
+        $content = '<div class="wp-block-post-date"><time datetime="2025-03-21T15:30:00+03:30"><a href="http://example.org/hello-world/">March 21, 2025</a></time></div>';
+        $block = [
+            'blockName' => 'core/post-date',
+            'attrs'     => [
+                'isLink' => true,
+                'format' => 'Y/m/d',
+            ],
+        ];
+
+        $output = apply_filters('render_block_core/post-date', $content, $block, null);
+
+        $this->assertStringContainsString('datetime="2025-03-21T15:30:00+03:30"', $output);
+        $this->assertStringContainsString('<a href="http://example.org/hello-world/">1404/01/01</a>', $output);
+    }
+
+    public function test_post_date_block_human_diff_output_is_unchanged(): void
+    {
+        $content = '<div class="wp-block-post-date"><time datetime="2025-03-21T15:30:00+03:30">2 days ago</time></div>';
+        $block = [
+            'blockName' => 'core/post-date',
+            'attrs'     => [
+                'format' => 'human-diff',
+            ],
+        ];
+
+        $output = apply_filters('render_block_core/post-date', $content, $block, null);
+
+        $this->assertSame($content, $output);
+    }
+
+    public function test_latest_comments_block_renders_jalali_text_and_preserves_gregorian_datetime(): void
+    {
+        $content = '<ol class="wp-block-latest-comments"><li class="wp-block-latest-comments__comment"><article><footer class="wp-block-latest-comments__comment-meta"><time datetime="2025-03-21T15:30:00+03:30" class="wp-block-latest-comments__comment-date">March 21, 2025</time></footer></article></li></ol>';
+
+        $output = apply_filters('render_block_core/latest-comments', $content, ['blockName' => 'core/latest-comments'], null);
+
+        $this->assertStringContainsString('datetime="2025-03-21T15:30:00+03:30"', $output);
+        $this->assertStringContainsString('1404', $output);
+        $this->assertStringNotContainsString('March 21, 2025', $output);
+    }
 }
