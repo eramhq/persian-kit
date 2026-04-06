@@ -12,6 +12,7 @@ class AdminPage
     public const MENU_SLUG = 'persian-kit';
 
     private SettingsManager $settings;
+    private ConflictDetector $conflicts;
 
     /** @var ModuleInterface[] */
     private array $modules;
@@ -20,10 +21,11 @@ class AdminPage
      * @param SettingsManager   $settings
      * @param ModuleInterface[] $modules
      */
-    public function __construct(SettingsManager $settings, array $modules)
+    public function __construct(SettingsManager $settings, array $modules, ConflictDetector $conflicts)
     {
         $this->settings = $settings;
         $this->modules = $modules;
+        $this->conflicts = $conflicts;
     }
 
     public function register(): void
@@ -51,21 +53,26 @@ class AdminPage
     public function render(): void
     {
         $moduleData = [];
+        $settingsByKey = [];
 
         foreach ($this->modules as $module) {
             $key = $module::key();
+            $moduleSettings = $this->settings->module($key);
+
             $moduleData[] = [
                 'key'         => $key,
                 'label'       => $module::label(),
                 'description' => $module::description(),
                 'instance'    => $module,
-                'settings'    => $this->settings->module($key),
+                'settings'    => $moduleSettings,
             ];
+            $settingsByKey[$key] = $moduleSettings;
         }
 
         View::load('admin/settings', [
-            'modules'  => $moduleData,
-            'settings' => $this->settings,
+            'modules'             => $moduleData,
+            'settings'            => $this->settings,
+            'compatibilityReports' => $this->conflicts->reports($settingsByKey),
         ]);
     }
 

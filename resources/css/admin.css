@@ -24,6 +24,126 @@
     color: #646970;
 }
 
+.persian-kit-compatibility {
+    margin: 0 0 1.5em;
+}
+
+.persian-kit-compatibility__intro {
+    margin: 0 0 1em;
+    color: #646970;
+}
+
+.persian-kit-compatibility__cards {
+    display: grid;
+    gap: 1em;
+}
+
+.persian-kit-compatibility__card {
+    background: var(--pk-color-bg);
+    border: 1px solid var(--pk-color-border);
+    border-radius: var(--pk-radius);
+    padding: 16px;
+}
+
+.persian-kit-compatibility__card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75em;
+    margin-bottom: 0.5em;
+}
+
+.persian-kit-compatibility__title {
+    margin: 0;
+    font-size: 15px;
+}
+
+.persian-kit-compatibility__type {
+    font-size: 12px;
+    color: #646970;
+}
+
+.persian-kit-compatibility__summary {
+    margin: 0 0 1em;
+}
+
+.persian-kit-compatibility__block + .persian-kit-compatibility__block {
+    margin-top: 1em;
+}
+
+.persian-kit-compatibility__handles,
+.persian-kit-compatibility__recommendations {
+    margin: 0.5em 0 0;
+}
+
+.persian-kit-compatibility__handles {
+    padding-inline-start: 1.25rem;
+}
+
+.persian-kit-compatibility__recommendations {
+    padding: 0;
+    list-style: none;
+    display: grid;
+    gap: 0.625em;
+}
+
+.persian-kit-compatibility__recommendation {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75em;
+}
+
+.persian-kit-compatibility__badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 7.25em;
+    padding: 0.25em 0.6em;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 600;
+    line-height: 1.4;
+}
+
+.persian-kit-compatibility__badge--turn_off {
+    background: #fcf0f1;
+    color: #b32d2e;
+}
+
+.persian-kit-compatibility__badge--keep_on {
+    background: #edfaef;
+    color: #0a7a20;
+}
+
+.persian-kit-compatibility__badge--leave_off {
+    background: #f0f6fc;
+    color: #0a4b78;
+}
+
+.persian-kit-compatibility__badge--no_change {
+    background: #f6f7f7;
+    color: #50575e;
+}
+
+.persian-kit-compatibility__recommendation-copy {
+    display: grid;
+    gap: 0.125em;
+}
+
+.persian-kit-compatibility__instruction {
+    font-weight: 500;
+}
+
+.persian-kit-compatibility__current,
+.persian-kit-compatibility__note {
+    color: #646970;
+    font-size: 12px;
+}
+
+.persian-kit-compatibility__note {
+    margin: 1em 0 0;
+}
+
 /* Module card */
 .persian-kit-module {
     background: var(--pk-color-bg);

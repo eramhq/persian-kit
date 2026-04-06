@@ -49,7 +49,8 @@ class CoreServiceProvider implements ServiceProvider
         $container->register(AdminPage::class, function (ServiceContainer $c) use ($modules) {
             return new AdminPage(
                 $c->get(SettingsManager::class),
-                $modules
+                $modules,
+                $c->get(ConflictDetector::class)
             );
         });
     }

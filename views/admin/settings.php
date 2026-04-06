@@ -2,8 +2,9 @@
 /**
  * Main settings page template.
  *
- * @var array                            $modules  Module data array.
- * @var \PersianKit\Core\SettingsManager $settings Settings manager instance.
+ * @var array                            $modules              Module data array.
+ * @var array                            $compatibilityReports Compatibility guidance cards.
+ * @var \PersianKit\Core\SettingsManager $settings             Settings manager instance.
  */
 
 defined('ABSPATH') || exit;
@@ -18,6 +19,14 @@ defined('ABSPATH') || exit;
         <div class="notice notice-success is-dismissible">
             <p><?php esc_html_e('Settings saved.', 'persian-kit'); ?></p>
         </div>
+    <?php endif; ?>
+
+    <?php if (!empty($compatibilityReports)) : ?>
+        <?php
+        \PersianKit\Components\View::load('admin/partials/compatibility-guidance', [
+            'compatibilityReports' => $compatibilityReports,
+        ]);
+        ?>
     <?php endif; ?>
 
     <form method="post" action="<?php echo esc_url(admin_url('admin-post.php')); ?>">
