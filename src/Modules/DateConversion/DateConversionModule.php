@@ -38,6 +38,10 @@ class DateConversionModule extends AbstractModule
         $container->register(RestApiExtension::class, function () {
             return new RestApiExtension();
         });
+
+        $container->register(AdminDateScript::class, function () {
+            return new AdminDateScript();
+        });
     }
 
     public function settingsView(): ?string
@@ -53,5 +57,6 @@ class DateConversionModule extends AbstractModule
         $filters->registerAdminFilters();
 
         $container->get(RestApiExtension::class)->register();
+        $container->get(AdminDateScript::class)->register();
     }
 }

@@ -30,6 +30,26 @@ const copies = [
         src: 'resources/js/text-editor-zwnj.js',
         dest: 'public/js/text-editor-zwnj.js',
     },
+    // Jalali conversion library
+    {
+        src: 'resources/js/jalali.js',
+        dest: 'public/js/jalali.js',
+    },
+    // Admin date override (Quick Edit + Classic Editor)
+    {
+        src: 'resources/js/admin-date-override.js',
+        dest: 'public/js/admin-date-override.js',
+    },
+    // Gutenberg Jalali date editor
+    {
+        src: 'resources/js/gutenberg-jalali-panel.js',
+        dest: 'public/js/gutenberg-jalali-panel.js',
+    },
+    // Gutenberg Jalali date editor styles
+    {
+        src: 'resources/css/gutenberg-jalali.css',
+        dest: 'public/css/gutenberg-jalali.css',
+    },
 ];
 
 for (const { src, dest } of copies) {

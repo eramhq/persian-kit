@@ -1,0 +1,94 @@
+/**
+ * Persian Kit — Gutenberg Jalali Date Editor styles
+ *
+ * Hides the native Gregorian DateTimePicker and styles the Jalali form
+ * that replaces it inside the schedule popover.
+ */
+
+/* Hide native DateTimePicker when Jalali form is active */
+.editor-post-schedule__dialog .components-datetime.pk-hidden {
+    display: none !important;
+}
+
+/* Jalali form container — matches Gutenberg component spacing */
+.pk-gutenberg-jalali-form {
+    padding: 16px;
+    direction: rtl;
+}
+
+/* Fieldset reset */
+.pk-jalali-fieldset {
+    border: none;
+    margin: 0 0 12px;
+    padding: 0;
+}
+
+.pk-jalali-fieldset:last-child {
+    margin-bottom: 0;
+}
+
+/* Legend — matches WP components uppercase label style */
+.pk-jalali-legend {
+    font-size: 11px;
+    font-weight: 500;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+    color: #1e1e1e;
+}
+
+/* Row of inputs */
+.pk-jalali-row {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+/* Shared input styling — matches WP components */
+.pk-jalali-input {
+    height: 32px;
+    padding: 4px 8px;
+    border: 1px solid #949494;
+    border-radius: 2px;
+    font-size: 13px;
+    text-align: center;
+    direction: ltr;
+    background: #fff;
+    color: #1e1e1e;
+    font-family: inherit;
+    -moz-appearance: textfield;
+}
+
+.pk-jalali-input::-webkit-inner-spin-button,
+.pk-jalali-input::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+.pk-jalali-input:focus {
+    border-color: var(--wp-components-color-accent, #3858e9);
+    box-shadow: 0 0 0 1px var(--wp-components-color-accent, #3858e9);
+    outline: none;
+}
+
+/* Specific widths */
+.pk-jalali-year {
+    width: 72px;
+}
+
+.pk-jalali-month {
+    flex: 1;
+    text-align: right;
+}
+
+.pk-jalali-day,
+.pk-jalali-hour,
+.pk-jalali-minute {
+    width: 56px;
+}
+
+/* Time separator */
+.pk-jalali-separator {
+    font-size: 16px;
+    font-weight: 600;
+    color: #757575;
+}
