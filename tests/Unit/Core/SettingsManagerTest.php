@@ -21,7 +21,7 @@ class SettingsManagerTest extends TestCase
         parent::tearDown();
     }
 
-    public function test_update_module_merges_existing_settings(): void
+    public function test_update_module_replaces_existing_settings(): void
     {
         $existing = [
             'date_conversion' => [
@@ -44,7 +44,6 @@ class SettingsManagerTest extends TestCase
             ->with('persian_kit_settings', [
                 'date_conversion' => [
                     'enabled'           => false,
-                    'global_conversion' => true,
                 ],
                 'admin_font' => [
                     'enabled' => true,
@@ -56,6 +55,6 @@ class SettingsManagerTest extends TestCase
         $manager->updateModule('date_conversion', ['enabled' => false]);
 
         $this->assertFalse($manager->module('date_conversion', 'enabled'));
-        $this->assertTrue($manager->module('date_conversion', 'global_conversion'));
+        $this->assertNull($manager->module('date_conversion', 'global_conversion'));
     }
 }

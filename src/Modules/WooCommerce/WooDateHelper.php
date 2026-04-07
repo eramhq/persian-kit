@@ -91,7 +91,7 @@ class WooDateHelper
         $day = (int) $matches['day'];
 
         if ($year >= 1700) {
-            return checkdate($month, $day, $year) ? $value : $value;
+            return $value;
         }
 
         if ($year < 1200 || $year > 1600) {

@@ -33,7 +33,8 @@
             return;
         }
 
-        var isShiftSpace = e.shiftKey && e.keyCode === 32 && !e.ctrlKey && !e.metaKey && !e.altKey;
+        var isShiftSpace = e.shiftKey && !e.ctrlKey && !e.metaKey && !e.altKey
+            && (e.key === ' ' || e.code === 'Space' || e.keyCode === 32);
 
         if (isShiftSpace) {
             e.preventDefault();

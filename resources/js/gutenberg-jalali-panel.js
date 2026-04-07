@@ -205,6 +205,7 @@
 
         if (isNaN(jy) || isNaN(jm) || isNaN(jd) || isNaN(hh) || isNaN(mn)) return;
 
+        jy = Math.max(1300, Math.min(1500, jy));
         jm = Math.max(1, Math.min(12, jm));
         var maxDay = jalaliMonthLength(jm, jy);
         jd = Math.max(1, Math.min(maxDay, jd));
