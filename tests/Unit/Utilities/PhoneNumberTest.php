@@ -43,10 +43,23 @@ class PhoneNumberTest extends TestCase
         $this->assertTrue($result->isValid());
     }
 
-    public function test_normalized_format_in_details(): void
+    public function test_normalized_formats_in_details(): void
     {
         $result = PhoneNumber::validate('+989121234567');
-        $this->assertSame('09121234567', $result->details()['normalized']);
+        $this->assertSame('09121234567', $result->details()['normalized_local']);
+        $this->assertSame('+989121234567', $result->details()['normalized_e164']);
+    }
+
+    public function test_valid_international_without_plus(): void
+    {
+        $result = PhoneNumber::validate('989121234567');
+        $this->assertTrue($result->isValid());
+        $this->assertSame('+989121234567', $result->details()['normalized_e164']);
+    }
+
+    public function test_normalize_returns_local_format(): void
+    {
+        $this->assertSame('09121234567', PhoneNumber::normalize('+989121234567'));
     }
 
     public function test_mci_operator(): void

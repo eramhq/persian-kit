@@ -192,7 +192,8 @@ Validation rules:
 
 Success details:
 
-- `normalized: string`
+- `normalized_local: string`
+- `normalized_e164: string`
 - `operator: ?string`
 - `type: 'mobile'`
 
@@ -200,7 +201,8 @@ Success details:
 $result = pk_validate_phone('+989121234567');
 
 if ($result->isValid()) {
-    $normalized = $result->details()['normalized']; // 09121234567
+    $normalizedLocal = $result->details()['normalized_local']; // 09121234567
+    $normalizedE164 = $result->details()['normalized_e164'];   // +989121234567
 }
 ```
 

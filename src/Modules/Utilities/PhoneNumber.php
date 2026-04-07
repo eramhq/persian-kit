@@ -86,13 +86,17 @@ class PhoneNumber
             return ValidationResult::failure('شماره موبایل باید ۱۱ رقم و با ۰۹ شروع شود');
         }
 
-        $prefix = substr($input, 1, 3);
+        $normalizedLocal = $input;
+        $normalizedE164 = '+98' . substr($normalizedLocal, 1);
+
+        $prefix = substr($normalizedLocal, 1, 3);
         $operator = self::OPERATORS[$prefix] ?? null;
 
         return ValidationResult::success([
-            'normalized' => $input,
-            'operator'   => $operator,
-            'type'       => 'mobile',
+            'normalized_local' => $normalizedLocal,
+            'normalized_e164'  => $normalizedE164,
+            'operator'         => $operator,
+            'type'             => 'mobile',
         ]);
     }
 
@@ -104,6 +108,6 @@ class PhoneNumber
             return null;
         }
 
-        return $result->details()['normalized'];
+        return $result->details()['normalized_local'];
     }
 }

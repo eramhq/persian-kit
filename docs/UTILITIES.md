@@ -29,7 +29,7 @@ if (!$result->isValid()) {
     );
 }
 
-$mobile = $result->details()['normalized'];
+$mobile = $result->details()['normalized_e164'];
 ```
 
 Use this pattern for:
@@ -92,7 +92,8 @@ Current validators:
 
 `pk_validate_phone`:
 
-- `normalized`
+- `normalized_local`
+- `normalized_e164`
 - `operator`
 - `type`
 
@@ -150,7 +151,7 @@ $result = pk_validate_phone($_POST['billing_mobile'] ?? '');
 if (!$result->isValid()) {
     wc_add_notice(implode(' ', $result->errors()), 'error');
 } else {
-    $_POST['billing_mobile'] = $result->details()['normalized'];
+    $_POST['billing_mobile'] = $result->details()['normalized_local'];
 }
 ```
 
