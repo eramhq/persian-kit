@@ -12,7 +12,7 @@ class CardNumber
      * Bank BIN (first 6 digits) to Persian bank name.
      * Source: persian-tools v5.0.0-beta.0 banksCode.skip.ts (49 entries)
      *
-     * @since 1.0.0
+     * @since 0.9.0
      */
     private const BANKS = [
         '636214' => 'بانک آینده',

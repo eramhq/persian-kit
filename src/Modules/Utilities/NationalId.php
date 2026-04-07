@@ -10,9 +10,9 @@ class NationalId
 {
     /**
      * City code mappings: 3-digit prefix => [city, province].
-     * Source: persian-tools v5.0.0-beta.0 place-by-ID data
+     * Source: persian-tools v5.0.0-beta.0 place-by-ID data + Gravity Forms national_id.js
      *
-     * @since 1.0.0
+     * @since 0.9.0
      */
     private const CITY_CODES = [
         '001' => ['city' => 'تهران مرکزی', 'province' => 'تهران'],

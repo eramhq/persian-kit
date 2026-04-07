@@ -5,7 +5,7 @@ defined('ABSPATH') || exit;
 $pluginDir = dirname(__DIR__);
 
 if (!defined('PERSIAN_KIT_VERSION')) {
-    define('PERSIAN_KIT_VERSION', '1.0.0');
+    define('PERSIAN_KIT_VERSION', '0.9.0');
 }
 
 if (!defined('PERSIAN_KIT_URL')) {

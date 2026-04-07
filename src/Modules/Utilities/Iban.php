@@ -12,7 +12,7 @@ class Iban
      * IBAN bank codes (3-digit, positions 4-6).
      * Source: persian-tools v5.0.0-beta.0 sheba/codes.skip.ts (37 entries + 2)
      *
-     * @since 1.0.0
+     * @since 0.9.0
      */
     private const BANKS = [
         '010' => 'بانک مرکزی جمهوری اسلامی ایران',

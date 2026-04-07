@@ -12,7 +12,7 @@ class PhoneNumber
      * Operator prefixes (3-digit after 09).
      * Source: persian-tools v5.0.0-beta.0
      *
-     * @since 1.0.0
+     * @since 0.9.0
      */
     private const OPERATORS = [
         // MCI (همراه اول)
