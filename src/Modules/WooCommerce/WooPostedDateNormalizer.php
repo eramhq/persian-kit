@@ -2,6 +2,8 @@
 
 namespace PersianKit\Modules\WooCommerce;
 
+use PersianKit\Modules\DigitConversion\DigitConverter;
+
 defined('ABSPATH') || exit;
 
 class WooPostedDateNormalizer
@@ -65,7 +67,7 @@ class WooPostedDateNormalizer
             return;
         }
 
-        $_POST[$key] = WooDateHelper::normalizeDigits($this->sanitizeScalar($_POST[$key]));
+        $_POST[$key] = DigitConverter::toEnglish($this->sanitizeScalar($_POST[$key]));
     }
 
     private function sanitizeScalar(mixed $value): string

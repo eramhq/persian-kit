@@ -3,6 +3,7 @@
 namespace PersianKit\Modules\WooCommerce;
 
 use PersianKit\Dependencies\Eram\Daynum\Instant;
+use PersianKit\Modules\DigitConversion\DigitConverter;
 
 defined('ABSPATH') || exit;
 
@@ -86,6 +87,7 @@ class WooOrderMonthFilter
     public function selectedJalaliMonth(): ?string
     {
         $raw = isset($_GET[self::QUERY_VAR]) ? sanitize_text_field(wp_unslash($_GET[self::QUERY_VAR])) : '';
+        $raw = DigitConverter::toEnglish($raw);
 
         if ($raw === '' || !preg_match('/^\d{6}$/', $raw)) {
             return null;
@@ -124,7 +126,7 @@ class WooOrderMonthFilter
         while ($cursor->greaterThanOrEqual($oldestMonth)) {
             $jalali = $cursor->jalali();
             $value = sprintf('%04d%02d', $jalali->year(), $jalali->month());
-            $label = WooDateHelper::toPersianDigits($jalali->withLocale('fa')->format('F Y'));
+            $label = DigitConverter::toPersian($jalali->withLocale('fa')->format('F Y'));
 
             $options[] = [
                 'value' => $value,

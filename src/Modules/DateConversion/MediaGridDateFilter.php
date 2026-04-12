@@ -2,6 +2,8 @@
 
 namespace PersianKit\Modules\DateConversion;
 
+use PersianKit\Modules\DigitConversion\DigitConverter;
+
 defined('ABSPATH') || exit;
 
 class MediaGridDateFilter
@@ -124,38 +126,12 @@ class MediaGridDateFilter
             $raw = sanitize_text_field(wp_unslash((string) $_REQUEST[PostTypeMonthFilter::QUERY_VAR]));
         }
 
-        $raw = $this->normalizeDigits($raw);
+        $raw = DigitConverter::toEnglish($raw);
 
         if ($raw === '' || !preg_match('/^\d{6}$/', $raw)) {
             return null;
         }
 
         return $raw;
-    }
-
-    private function normalizeDigits(string $value): string
-    {
-        return strtr($value, [
-            '۰' => '0',
-            '۱' => '1',
-            '۲' => '2',
-            '۳' => '3',
-            '۴' => '4',
-            '۵' => '5',
-            '۶' => '6',
-            '۷' => '7',
-            '۸' => '8',
-            '۹' => '9',
-            '٠' => '0',
-            '١' => '1',
-            '٢' => '2',
-            '٣' => '3',
-            '٤' => '4',
-            '٥' => '5',
-            '٦' => '6',
-            '٧' => '7',
-            '٨' => '8',
-            '٩' => '9',
-        ]);
     }
 }

@@ -57,6 +57,18 @@ class WooOrderMonthFilterTest extends TestCase
         $this->assertNull($filter->selectedGregorianRange());
     }
 
+    public function test_selected_gregorian_range_accepts_persian_digits(): void
+    {
+        $_GET['persian_kit_wc_month'] = '۱۴۰۵۰۱';
+
+        $filter = new WooOrderMonthFilter();
+
+        $this->assertSame([
+            'start' => '2026-03-21',
+            'end' => '2026-04-20',
+        ], $filter->selectedGregorianRange());
+    }
+
     public function test_month_options_are_built_from_daynum_backed_jalali_months(): void
     {
         $filter = $this->buildFilterWithDates('2026-03-21 10:00:00', '2026-04-12 10:00:00');

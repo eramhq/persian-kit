@@ -24,16 +24,6 @@ class WooDateHelperTest extends TestCase
         $this->assertNull(WooDateHelper::jalaliMonthToGregorianRange('14ab01'));
     }
 
-    public function test_to_persian_digits_converts_ascii_digits(): void
-    {
-        $this->assertSame('فروردین ۱۴۰۵', WooDateHelper::toPersianDigits('فروردین 1405'));
-    }
-
-    public function test_normalize_digits_converts_persian_and_arabic_digit_sets(): void
-    {
-        $this->assertSame('1405-01-02', WooDateHelper::normalizeDigits('۱۴۰۵-٠١-۰۲'));
-    }
-
     public function test_normalize_date_input_for_woo_save_converts_valid_jalali_date(): void
     {
         $this->assertSame('2026-03-21', WooDateHelper::normalizeDateInputForWooSave('1405-01-01'));
