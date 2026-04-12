@@ -56,4 +56,36 @@ class WooOrderMonthFilterTest extends TestCase
 
         $this->assertNull($filter->selectedGregorianRange());
     }
+
+    public function test_month_options_are_built_from_daynum_backed_jalali_months(): void
+    {
+        Functions\when('wc_get_orders')->justReturn([
+            new class {
+                public function get_date_created(): \DateTimeImmutable
+                {
+                    return new \DateTimeImmutable('2026-03-21 10:00:00', new \DateTimeZone('Asia/Tehran'));
+                }
+            },
+        ]);
+        Functions\when('wp_timezone')->justReturn(new \DateTimeZone('Asia/Tehran'));
+
+        $filter = new class extends WooOrderMonthFilter {
+            protected function currentDateTime(): \DateTimeInterface
+            {
+                return new \DateTimeImmutable('2026-04-12 10:00:00', new \DateTimeZone('Asia/Tehran'));
+            }
+
+            protected function canQueryOrders(): bool
+            {
+                return true;
+            }
+        };
+
+        $this->assertSame([
+            [
+                'value' => '140501',
+                'label' => 'فروردین ۱۴۰۵',
+            ],
+        ], $filter->monthOptions());
+    }
 }

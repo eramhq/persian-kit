@@ -2,7 +2,7 @@
 
 namespace PersianKit\Modules\WooCommerce;
 
-use PersianKit\Dependencies\Morilog\Jalali\Jalalian;
+use PersianKit\Dependencies\Eram\Daynum\Instant;
 
 defined('ABSPATH') || exit;
 
@@ -49,12 +49,12 @@ class WooDateHelper
             return null;
         }
 
-        $start = new Jalalian($year, $month, 1);
-        $end = new Jalalian($year, $month, $start->getMonthDays());
+        $start = Instant::fromJalali($year, $month, 1);
+        $end = $start->jalali()->endOfMonth();
 
         return [
-            'start' => $start->toCarbon()->format('Y-m-d'),
-            'end' => $end->toCarbon()->format('Y-m-d'),
+            'start' => $start->toDateTimeImmutable()->format('Y-m-d'),
+            'end' => $end->toDateTimeImmutable()->format('Y-m-d'),
         ];
     }
 
@@ -99,7 +99,7 @@ class WooDateHelper
         }
 
         try {
-            return (new Jalalian($year, $month, $day))->toCarbon()->format('Y-m-d');
+            return Instant::fromJalali($year, $month, $day)->toDateTimeImmutable()->format('Y-m-d');
         } catch (\Throwable $exception) {
             return $value;
         }

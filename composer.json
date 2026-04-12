@@ -10,7 +10,7 @@
     ],
     "require": {
         "php": ">=8.1",
-        "morilog/jalali": "^3.0"
+        "eram/daynum": "^1.0@beta"
     },
     "require-dev": {
         "veronalabs/wp-scoper": "^1.2.4",
@@ -33,7 +33,7 @@
         "wp-scoper": {
             "namespace_prefix": "PersianKit\\Dependencies",
             "packages": [
-                "morilog/jalali"
+                "eram/daynum"
             ],
             "target_directory": "packages",
             "delete_vendor_packages": false,

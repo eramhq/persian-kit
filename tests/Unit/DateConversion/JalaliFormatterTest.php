@@ -108,4 +108,47 @@ class JalaliFormatterTest extends TestCase
 
         $this->assertSame('15:30:45', $result);
     }
+
+    public function test_format_short_day_and_month_tokens_remain_compatible(): void
+    {
+        Functions\when('wp_timezone')->justReturn(new \DateTimeZone('Asia/Tehran'));
+        Functions\when('apply_filters')->returnArg(2);
+
+        $timestamp = gmmktime(12, 0, 45, 3, 21, 2025);
+        $result = JalaliFormatter::format('D j M Y', $timestamp);
+
+        $this->assertSame('ج 1 فرو 1404', $result);
+    }
+
+    public function test_format_meridiem_tokens_remain_compatible(): void
+    {
+        Functions\when('wp_timezone')->justReturn(new \DateTimeZone('Asia/Tehran'));
+        Functions\when('apply_filters')->returnArg(2);
+
+        $timestamp = gmmktime(12, 0, 45, 3, 21, 2025);
+        $result = JalaliFormatter::format('a A', $timestamp);
+
+        $this->assertSame('ب.ظ بعد از ظهر', $result);
+    }
+
+    public function test_format_composite_tokens_remain_compatible(): void
+    {
+        Functions\when('wp_timezone')->justReturn(new \DateTimeZone('Asia/Tehran'));
+        Functions\when('apply_filters')->returnArg(2);
+
+        $timestamp = gmmktime(12, 0, 45, 3, 21, 2025);
+
+        $this->assertSame('1404-01-01T15:30:45+03:30', JalaliFormatter::format('c', $timestamp));
+        $this->assertSame('ج, 01 فرو 1404 15:30:45 +03:30', JalaliFormatter::format('r', $timestamp));
+    }
+
+    public function test_format_legacy_day_and_week_tokens_remain_compatible(): void
+    {
+        Functions\when('wp_timezone')->justReturn(new \DateTimeZone('Asia/Tehran'));
+        Functions\when('apply_filters')->returnArg(2);
+
+        $timestamp = gmmktime(12, 0, 45, 3, 21, 2025);
+
+        $this->assertSame('7 6 1 1 1404', JalaliFormatter::format('N w z W o', $timestamp));
+    }
 }

@@ -2,7 +2,7 @@
 
 namespace PersianKit\Modules\WooCommerce;
 
-use PersianKit\Dependencies\Morilog\Jalali\Jalalian;
+use PersianKit\Dependencies\Eram\Daynum\Instant;
 
 defined('ABSPATH') || exit;
 
@@ -99,7 +99,7 @@ class WooOrderMonthFilter
      */
     public function monthOptions(): array
     {
-        if (!function_exists('wc_get_orders')) {
+        if (!$this->canQueryOrders()) {
             return [];
         }
 
@@ -115,25 +115,36 @@ class WooOrderMonthFilter
             return [];
         }
 
-        $oldestMonth = Jalalian::fromDateTime($oldestOrder->get_date_created())->getFirstDayOfMonth();
-        $currentMonth = Jalalian::fromDateTime(new \DateTime('now', wp_timezone()))->getFirstDayOfMonth();
+        $oldestMonth = Instant::fromDateTime($oldestOrder->get_date_created())->jalali()->startOfMonth();
+        $currentMonth = Instant::fromDateTime($this->currentDateTime())->jalali()->startOfMonth();
 
         $options = [];
         $cursor = $currentMonth;
 
-        while ($cursor->greaterThanOrEqualsTo($oldestMonth)) {
-            $value = sprintf('%04d%02d', $cursor->getYear(), $cursor->getMonth());
-            $label = WooDateHelper::toPersianDigits($cursor->format('F Y'));
+        while ($cursor->greaterThanOrEqual($oldestMonth)) {
+            $jalali = $cursor->jalali();
+            $value = sprintf('%04d%02d', $jalali->year(), $jalali->month());
+            $label = WooDateHelper::toPersianDigits($jalali->withLocale('fa')->format('F Y'));
 
             $options[] = [
                 'value' => $value,
                 'label' => $label,
             ];
 
-            $cursor = $cursor->subMonths(1)->getFirstDayOfMonth();
+            $cursor = $cursor->jalali()->subMonths(1)->jalali()->startOfMonth();
         }
 
         return $options;
+    }
+
+    protected function currentDateTime(): \DateTimeInterface
+    {
+        return new \DateTime('now', wp_timezone());
+    }
+
+    protected function canQueryOrders(): bool
+    {
+        return function_exists('wc_get_orders');
     }
 
     private function supportsOrderType(string $orderType): bool
