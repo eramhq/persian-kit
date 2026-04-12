@@ -39,6 +39,14 @@ class DateConversionModule extends AbstractModule
             return new PostTypeMonthFilter();
         });
 
+        $container->register(MediaAttachmentDateFormatter::class, function () {
+            return new MediaAttachmentDateFormatter();
+        });
+
+        $container->register(MediaGridDateFilter::class, function (ServiceContainer $container) {
+            return new MediaGridDateFilter($container->get(PostTypeMonthFilter::class));
+        });
+
         $container->register(RestApiExtension::class, function () {
             return new RestApiExtension();
         });
@@ -68,6 +76,8 @@ class DateConversionModule extends AbstractModule
         $filters->registerTier2();
         $filters->registerAdminFilters();
         $container->get(PostTypeMonthFilter::class)->register();
+        $container->get(MediaAttachmentDateFormatter::class)->register();
+        $container->get(MediaGridDateFilter::class)->register();
 
         $container->get(RestApiExtension::class)->register();
         $container->get(AdminDateScript::class)->register();

@@ -8,7 +8,9 @@ defined('ABSPATH') || exit;
 
 class PostTypeMonthFilter
 {
-    private const QUERY_VAR = 'persian_kit_jalali_month';
+    public const QUERY_VAR = 'persian_kit_jalali_month';
+    private const SCREEN_POSTS = 'edit.php';
+    private const SCREEN_MEDIA = 'upload.php';
 
     public function register(): void
     {
@@ -28,7 +30,7 @@ class PostTypeMonthFilter
 
     public function renderFilter(string $postType, string $which): void
     {
-        if ($which !== 'top' || !$this->supportsPostType($postType)) {
+        if (!$this->supportsNavLocation($postType, $which)) {
             return;
         }
 
@@ -127,6 +129,11 @@ class PostTypeMonthFilter
         return $this->jalaliMonthToGregorianRange($jalaliYearMonth);
     }
 
+    public function gregorianRangeForJalaliMonth(string $jalaliYearMonth): ?array
+    {
+        return $this->jalaliMonthToGregorianRange($jalaliYearMonth);
+    }
+
     public function selectedJalaliMonth(): ?string
     {
         $raw = isset($_GET[self::QUERY_VAR]) ? sanitize_text_field(wp_unslash($_GET[self::QUERY_VAR])) : '';
@@ -144,7 +151,7 @@ class PostTypeMonthFilter
         global $wpdb;
 
         $extraChecks = "AND post_status != 'auto-draft'";
-        $postStatus = isset($_GET['post_status']) ? sanitize_key(wp_unslash($_GET['post_status'])) : '';
+        $postStatus = $this->requestedStatus($postType);
 
         if ($postStatus !== 'trash') {
             $extraChecks .= " AND post_status != 'trash'";
@@ -168,7 +175,7 @@ class PostTypeMonthFilter
 
     protected function supportsPostType(string $postType): bool
     {
-        return $postType !== 'attachment' && post_type_exists($postType);
+        return post_type_exists($postType);
     }
 
     private function shouldFilterQuery(\WP_Query $query): bool
@@ -179,7 +186,7 @@ class PostTypeMonthFilter
 
         global $pagenow;
 
-        if ($pagenow !== 'edit.php') {
+        if (!in_array($pagenow, [self::SCREEN_POSTS, self::SCREEN_MEDIA], true)) {
             return false;
         }
 
@@ -190,6 +197,35 @@ class PostTypeMonthFilter
         }
 
         return $this->supportsPostType($postType);
+    }
+
+    private function supportsNavLocation(string $postType, string $which): bool
+    {
+        if (!$this->supportsPostType($postType)) {
+            return false;
+        }
+
+        if ($postType === 'attachment') {
+            return $which === 'bar';
+        }
+
+        return $which === 'top';
+    }
+
+    private function requestedStatus(string $postType): string
+    {
+        if ($postType === 'attachment') {
+            $attachmentFilter = isset($_GET['attachment-filter']) ? sanitize_key(wp_unslash($_GET['attachment-filter'])) : '';
+            $status = isset($_GET['status']) ? sanitize_key(wp_unslash($_GET['status'])) : '';
+
+            if ($attachmentFilter === 'trash' || $status === 'trash') {
+                return 'trash';
+            }
+
+            return '';
+        }
+
+        return isset($_GET['post_status']) ? sanitize_key(wp_unslash($_GET['post_status'])) : '';
     }
 
     private function filterLabelForPostType(string $postType): string
