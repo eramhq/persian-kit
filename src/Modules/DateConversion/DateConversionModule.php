@@ -35,6 +35,10 @@ class DateConversionModule extends AbstractModule
             return new DateFilters((bool) $this->setting('global_conversion', false));
         });
 
+        $container->register(PostTypeMonthFilter::class, function () {
+            return new PostTypeMonthFilter();
+        });
+
         $container->register(RestApiExtension::class, function () {
             return new RestApiExtension();
         });
@@ -63,6 +67,7 @@ class DateConversionModule extends AbstractModule
         $filters->registerTier1();
         $filters->registerTier2();
         $filters->registerAdminFilters();
+        $container->get(PostTypeMonthFilter::class)->register();
 
         $container->get(RestApiExtension::class)->register();
         $container->get(AdminDateScript::class)->register();
