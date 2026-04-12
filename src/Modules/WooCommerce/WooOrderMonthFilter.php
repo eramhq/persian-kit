@@ -115,8 +115,8 @@ class WooOrderMonthFilter
             return [];
         }
 
-        $oldestMonth = Instant::fromDateTime($oldestOrder->get_date_created())->jalali()->startOfMonth();
-        $currentMonth = Instant::fromDateTime($this->currentDateTime())->jalali()->startOfMonth();
+        $oldestMonth = Instant::fromDateTime($oldestOrder->get_date_created())->jalali()->startOfMonth()->withTime(0, 0, 0);
+        $currentMonth = Instant::fromDateTime($this->currentDateTime())->jalali()->startOfMonth()->withTime(0, 0, 0);
 
         $options = [];
         $cursor = $currentMonth;
