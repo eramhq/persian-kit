@@ -59,27 +59,7 @@ class WooOrderMonthFilterTest extends TestCase
 
     public function test_month_options_are_built_from_daynum_backed_jalali_months(): void
     {
-        Functions\when('wc_get_orders')->justReturn([
-            new class {
-                public function get_date_created(): \DateTimeImmutable
-                {
-                    return new \DateTimeImmutable('2026-03-21 10:00:00', new \DateTimeZone('Asia/Tehran'));
-                }
-            },
-        ]);
-        Functions\when('wp_timezone')->justReturn(new \DateTimeZone('Asia/Tehran'));
-
-        $filter = new class extends WooOrderMonthFilter {
-            protected function currentDateTime(): \DateTimeInterface
-            {
-                return new \DateTimeImmutable('2026-04-12 10:00:00', new \DateTimeZone('Asia/Tehran'));
-            }
-
-            protected function canQueryOrders(): bool
-            {
-                return true;
-            }
-        };
+        $filter = $this->buildFilterWithDates('2026-03-21 10:00:00', '2026-04-12 10:00:00');
 
         $this->assertSame([
             [
@@ -91,27 +71,7 @@ class WooOrderMonthFilterTest extends TestCase
 
     public function test_month_options_include_oldest_month_when_current_time_is_earlier_in_same_month(): void
     {
-        Functions\when('wc_get_orders')->justReturn([
-            new class {
-                public function get_date_created(): \DateTimeImmutable
-                {
-                    return new \DateTimeImmutable('2026-03-25 18:30:00', new \DateTimeZone('Asia/Tehran'));
-                }
-            },
-        ]);
-        Functions\when('wp_timezone')->justReturn(new \DateTimeZone('Asia/Tehran'));
-
-        $filter = new class extends WooOrderMonthFilter {
-            protected function currentDateTime(): \DateTimeInterface
-            {
-                return new \DateTimeImmutable('2026-04-12 08:00:00', new \DateTimeZone('Asia/Tehran'));
-            }
-
-            protected function canQueryOrders(): bool
-            {
-                return true;
-            }
-        };
+        $filter = $this->buildFilterWithDates('2026-03-25 18:30:00', '2026-04-12 08:00:00');
 
         $this->assertSame([
             [
@@ -119,5 +79,36 @@ class WooOrderMonthFilterTest extends TestCase
                 'label' => 'فروردین ۱۴۰۵',
             ],
         ], $filter->monthOptions());
+    }
+
+    private function buildFilterWithDates(string $orderDate, string $currentDate): WooOrderMonthFilter
+    {
+        $tz = new \DateTimeZone('Asia/Tehran');
+
+        Functions\when('wc_get_orders')->justReturn([
+            new class($orderDate, $tz) {
+                public function __construct(private string $date, private \DateTimeZone $tz) {}
+
+                public function get_date_created(): \DateTimeImmutable
+                {
+                    return new \DateTimeImmutable($this->date, $this->tz);
+                }
+            },
+        ]);
+        Functions\when('wp_timezone')->justReturn($tz);
+
+        return new class($currentDate, $tz) extends WooOrderMonthFilter {
+            public function __construct(private string $date, private \DateTimeZone $tz) {}
+
+            protected function currentDateTime(): \DateTimeInterface
+            {
+                return new \DateTimeImmutable($this->date, $this->tz);
+            }
+
+            protected function canQueryOrders(): bool
+            {
+                return true;
+            }
+        };
     }
 }
