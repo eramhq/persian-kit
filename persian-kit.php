@@ -10,6 +10,8 @@
  * Domain Path: /languages
  * Requires at least: 6.2
  * Requires PHP: 8.1
+ * WC requires at least: 8.0
+ * WC tested up to: 10.6.2
  * License: GPL v2 or later
  * License URI: https://www.gnu.org/licenses/gpl-2.0.html
  * Plugin Prefix: PERSIAN_KIT

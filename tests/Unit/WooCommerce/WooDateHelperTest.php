@@ -30,10 +30,17 @@ class WooDateHelperTest extends TestCase
         $this->assertSame('2026-03-21', WooDateHelper::normalizeDateInputForWooSave('۱۴۰۵-۰۱-۰۱'));
     }
 
+    public function test_normalize_date_input_for_woo_save_trims_and_keeps_empty_inputs_empty(): void
+    {
+        $this->assertSame('2026-03-21', WooDateHelper::normalizeDateInputForWooSave(' ۱۴۰۵-۰۱-۰۱ '));
+        $this->assertSame('', WooDateHelper::normalizeDateInputForWooSave('   '));
+    }
+
     public function test_normalize_date_input_for_woo_save_leaves_gregorian_and_unknown_values_untouched(): void
     {
         $this->assertSame('2026-03-21', WooDateHelper::normalizeDateInputForWooSave('2026-03-21'));
         $this->assertSame('foo', WooDateHelper::normalizeDateInputForWooSave('foo'));
         $this->assertSame('1405-13-01', WooDateHelper::normalizeDateInputForWooSave('1405-13-01'));
+        $this->assertSame('1405-13-01', WooDateHelper::normalizeDateInputForWooSave('۱۴۰۵-۱۳-۰۱'));
     }
 }

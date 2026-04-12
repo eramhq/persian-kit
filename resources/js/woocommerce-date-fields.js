@@ -8,14 +8,30 @@
     var g2j = Jalali.gregorianToJalali;
     var j2g = Jalali.jalaliToGregorian;
     var pad = Jalali.pad;
+    var proxyCounter = 0;
+    var ignoredProxyClasses = {
+        'date-picker': true,
+        'date-picker-field': true,
+        'hasDatepicker': true,
+        'sale_price_dates_from': true,
+        'sale_price_dates_to': true,
+        'pk-woo-gregorian-source': true
+    };
 
-    var selectors = [
+    var dateSelectors = [
         '#_sale_price_dates_from',
         '#_sale_price_dates_to',
         '#expiry_date',
         'input[name="order_date"]',
         'input[name^="variable_sale_price_dates_from["]',
-        'input[name^="variable_sale_price_dates_to["]'
+        'input[name^="variable_sale_price_dates_to["]',
+        'input[name^="access_expires["]'
+    ].join(', ');
+
+    var timeSelectors = [
+        'input[name="order_date_hour"]',
+        'input[name="order_date_minute"]',
+        'input[name="order_date_second"]'
     ].join(', ');
 
     function toAsciiDigits(value) {
@@ -78,85 +94,222 @@
         return parts.day <= Jalali.jalaliMonthLength(parts.month, parts.year);
     }
 
-    function destroyGregorianPicker($input) {
-        if (typeof $input.datepicker !== 'function') {
-            return;
-        }
-
-        if (!$input.hasClass('hasDatepicker')) {
-            return;
-        }
-
-        try {
-            $input.datepicker('destroy');
-        } catch (error) {
-            return;
-        }
-
-        $input.removeClass('hasDatepicker');
+    function isGregorianDate(parts) {
+        return !!parts && parts.year >= 1700 && isValidGregorian(parts);
     }
 
-    function convertInputToJalali(input) {
-        var $input = $(input);
-        var parts = parseDate($input.val());
+    function isJalaliDate(parts) {
+        return !!parts && parts.year >= 1200 && parts.year <= 1600 && isValidJalali(parts);
+    }
 
-        if (!parts || parts.year < 1700 || !isValidGregorian(parts)) {
-            destroyGregorianPicker($input);
-            return;
+    function buildProxyClasses($source) {
+        var classNames = $.trim($source.attr('class') || '').split(/\s+/);
+        var proxyClasses = [];
+
+        $.each(classNames, function (_, className) {
+            if (className && !ignoredProxyClasses[className]) {
+                proxyClasses.push(className);
+            }
+        });
+
+        proxyClasses.push('pk-woo-jalali-date-field');
+
+        return $.trim(proxyClasses.join(' '));
+    }
+
+    function proxyValueFromSource(sourceValue) {
+        var trimmed = $.trim(sourceValue);
+        var parts;
+        var jalali;
+
+        if (trimmed === '') {
+            return '';
         }
 
-        var jalali = g2j(parts.year, parts.month, parts.day);
-        $input.val(formatDate({
+        parts = parseDate(trimmed);
+        if (!isGregorianDate(parts)) {
+            return trimmed;
+        }
+
+        jalali = g2j(parts.year, parts.month, parts.day);
+
+        return formatDate({
             year: jalali[0],
             month: jalali[1],
             day: jalali[2]
-        }));
-        $input.attr('data-pk-woo-calendar', 'jalali');
-
-        destroyGregorianPicker($input);
-    }
-
-    function convertInputToGregorian(input) {
-        var $input = $(input);
-        var parts = parseDate($input.val());
-
-        if (!parts || parts.year < 1200 || parts.year > 1600 || !isValidJalali(parts)) {
-            return;
-        }
-
-        var gregorian = j2g(parts.year, parts.month, parts.day);
-        $input.val(formatDate({
-            year: gregorian[0],
-            month: gregorian[1],
-            day: gregorian[2]
-        }));
-    }
-
-    function convertVisibleWooDates(context) {
-        $(selectors, context || document).each(function () {
-            convertInputToJalali(this);
         });
     }
 
-    function convertWooDatesForSave(context) {
-        $(selectors, context || document).each(function () {
-            convertInputToGregorian(this);
+    function syncSourceFromProxy($source, $proxy, commitInvalidRaw) {
+        var rawValue = $.trim($proxy.val());
+        var normalized = toAsciiDigits(rawValue);
+        var parts;
+        var gregorian;
+
+        if (normalized === '') {
+            $source.val('');
+            return;
+        }
+
+        parts = parseDate(normalized);
+
+        if (isGregorianDate(parts)) {
+            $source.val(formatDate(parts));
+            return;
+        }
+
+        if (isJalaliDate(parts)) {
+            gregorian = j2g(parts.year, parts.month, parts.day);
+            $source.val(formatDate({
+                year: gregorian[0],
+                month: gregorian[1],
+                day: gregorian[2]
+            }));
+            return;
+        }
+
+        if (commitInvalidRaw) {
+            $source.val(normalized);
+        }
+    }
+
+    function normalizeTimeField($input) {
+        var normalized = toAsciiDigits($.trim($input.val()));
+
+        if ($input.val() !== normalized) {
+            $input.val(normalized);
+        }
+    }
+
+    function getProxyForSource($source) {
+        var proxyId = $source.attr('data-pk-woo-proxy-id');
+
+        return proxyId ? $('#' + proxyId) : $();
+    }
+
+    function bindProxyField($source, $proxy) {
+        $proxy.on('input change', function () {
+            syncSourceFromProxy($source, $proxy, false);
+        });
+
+        $source.on('change.pkWooDateProxy', function () {
+            $proxy.val(proxyValueFromSource($source.val()));
+        });
+    }
+
+    function enhanceDateField(source) {
+        var $source = $(source);
+        var proxyId;
+        var $proxy;
+
+        if ($source.attr('data-pk-woo-proxy-bound') === '1') {
+            return;
+        }
+
+        proxyId = $source.attr('id') ? $source.attr('id') + '-pk-jalali' : 'pk-woo-date-' + (++proxyCounter);
+        $proxy = $('<input />', {
+            type: 'text',
+            id: proxyId,
+            'class': buildProxyClasses($source),
+            dir: 'ltr',
+            autocomplete: 'off',
+            inputmode: 'numeric'
+        });
+
+        $.each(['maxlength', 'placeholder', 'pattern', 'size'], function (_, attribute) {
+            var value = $source.attr(attribute);
+
+            if (typeof value === 'string' && value !== '') {
+                $proxy.attr(attribute, value);
+            }
+        });
+
+        $.each(['aria-label', 'aria-describedby'], function (_, attribute) {
+            var value = $source.attr(attribute);
+
+            if (typeof value === 'string' && value !== '') {
+                $proxy.attr(attribute, value);
+            }
+        });
+
+        if ($source.is('[readonly]')) {
+            $proxy.prop('readonly', true);
+        }
+
+        if ($source.is(':disabled')) {
+            $proxy.prop('disabled', true);
+        }
+
+        $proxy.val(proxyValueFromSource($source.val()));
+
+        $source
+            .attr('data-pk-woo-proxy-bound', '1')
+            .attr('data-pk-woo-proxy-id', proxyId)
+            .attr('tabindex', '-1')
+            .attr('aria-hidden', 'true')
+            .addClass('pk-woo-gregorian-source')
+            .hide()
+            .after($proxy);
+
+        bindProxyField($source, $proxy);
+    }
+
+    function enhanceDateFields(context) {
+        $(dateSelectors, context || document).each(function () {
+            enhanceDateField(this);
+        });
+    }
+
+    function enhanceTimeFields(context) {
+        $(timeSelectors, context || document).each(function () {
+            var $input = $(this);
+
+            normalizeTimeField($input);
+
+            if ($input.attr('data-pk-woo-time-bound') === '1') {
+                return;
+            }
+
+            $input.attr('data-pk-woo-time-bound', '1').on('input change blur', function () {
+                normalizeTimeField($input);
+            });
+        });
+    }
+
+    function commitDateFields(context) {
+        enhanceDateFields(context);
+        enhanceTimeFields(context);
+
+        $(dateSelectors, context || document).each(function () {
+            var $source = $(this);
+            var $proxy = getProxyForSource($source);
+
+            if ($proxy.length) {
+                syncSourceFromProxy($source, $proxy, true);
+            }
         });
     }
 
     $(function () {
-        convertVisibleWooDates(document);
+        enhanceDateFields(document);
+        enhanceTimeFields(document);
+
+        $(document.body).on('wc-init-datepickers', function () {
+            enhanceDateFields(document);
+            enhanceTimeFields(document);
+        });
 
         $(document).on('submit', 'form#post, form[name="post"]', function () {
-            convertWooDatesForSave(this);
+            commitDateFields(this);
         });
 
         $('#woocommerce-product-data')
             .on('woocommerce_variations_loaded woocommerce_variations_added', function () {
-                convertVisibleWooDates(this);
+                enhanceDateFields(this);
+                enhanceTimeFields(this);
             })
             .on('woocommerce_variations_save_variations_button woocommerce_variations_save_variations_on_submit', function () {
-                convertWooDatesForSave(this);
+                commitDateFields(this);
             });
     });
 })(window.jQuery, window.PersianKitJalali);

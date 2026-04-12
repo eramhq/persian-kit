@@ -28,6 +28,7 @@ class WooPostedDateNormalizerTest extends TestCase
             $_POST['order_date_hour'],
             $_POST['order_date_minute'],
             $_POST['order_date_second'],
+            $_POST['access_expires'],
             $_POST['variable_sale_price_dates_from'],
             $_POST['variable_sale_price_dates_to']
         );
@@ -45,6 +46,7 @@ class WooPostedDateNormalizerTest extends TestCase
         $this->assertTrue(has_action('woocommerce_process_shop_coupon_meta'));
         $this->assertTrue(has_action('woocommerce_process_shop_order_meta'));
         $this->assertTrue(has_action('wp_ajax_woocommerce_save_variations'));
+        $this->assertTrue(has_filter('woocommerce_date_input_html_pattern'));
     }
 
     public function test_normalize_product_dates_converts_jalali_inputs(): void
@@ -92,5 +94,30 @@ class WooPostedDateNormalizerTest extends TestCase
         $this->assertSame('2026-05-22', $_POST['variable_sale_price_dates_from'][0]);
         $this->assertSame('', $_POST['variable_sale_price_dates_from'][1]);
         $this->assertSame('2026-06-21', $_POST['variable_sale_price_dates_to'][0]);
+    }
+
+    public function test_normalize_order_download_expiry_dates_converts_each_row(): void
+    {
+        $_POST['access_expires'] = [
+            0 => '۱۴۰۵-۰۴-۱۰',
+            1 => '',
+            2 => '2026-07-10',
+        ];
+
+        (new WooPostedDateNormalizer())->normalizeOrderDates();
+
+        $this->assertSame('2026-07-01', $_POST['access_expires'][0]);
+        $this->assertSame('', $_POST['access_expires'][1]);
+        $this->assertSame('2026-07-10', $_POST['access_expires'][2]);
+    }
+
+    public function test_filter_date_input_html_pattern_accepts_ascii_and_localized_digits(): void
+    {
+        $pattern = (new WooPostedDateNormalizer())->filterDateInputHtmlPattern('[0-9]{4}-(0[1-9]|1[012])-(0[1-9]|1[0-9]|2[0-9]|3[01])');
+
+        $this->assertSame(1, preg_match('/^' . $pattern . '$/u', '2026-03-21'));
+        $this->assertSame(1, preg_match('/^' . $pattern . '$/u', '۱۴۰۵-۰۱-۰۱'));
+        $this->assertSame(1, preg_match('/^' . $pattern . '$/u', '١٤٠٥-٠١-٠١'));
+        $this->assertSame(0, preg_match('/^' . $pattern . '$/u', '1405-13-01'));
     }
 }
