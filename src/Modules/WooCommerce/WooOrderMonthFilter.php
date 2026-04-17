@@ -3,7 +3,7 @@
 namespace PersianKit\Modules\WooCommerce;
 
 use PersianKit\Dependencies\Eram\Daynum\Instant;
-use PersianKit\Modules\DigitConversion\DigitConverter;
+use PersianKit\Dependencies\Eram\Abzar\Digits\DigitConverter;
 
 defined('ABSPATH') || exit;
 

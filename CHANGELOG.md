@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.0.0-beta.1] - 2026-04-17
+
+- Replaced the plugin's internal Persian utility classes with the `eram/abzar` library.
+- Added `pk_*` helpers for the new features: `pk_currency_format`, `pk_currency_convert`, `pk_words_to_number`, `pk_validate_postal_code`, `pk_validate_plate_number`, `pk_validate_bill_id`, `pk_half_space_fix`, `pk_keyboard_fix`, `pk_persian_sort`.
+- Pre-release — unannounced API; expect churn until 1.0.0.
+
 ## [0.9.0] - 2026-04-07
 
 Initial pre-1.0 public baseline.

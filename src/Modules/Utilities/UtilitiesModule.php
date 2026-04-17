@@ -2,6 +2,7 @@
 
 namespace PersianKit\Modules\Utilities;
 
+use PersianKit\Dependencies\Eram\Abzar\Text\Slug;
 use PersianKit\Abstracts\AbstractModule;
 use PersianKit\Container\ServiceContainer;
 
@@ -37,7 +38,9 @@ class UtilitiesModule extends AbstractModule
     {
         if (apply_filters('persian_kit_utilities', true, 'sanitize_title')) {
             remove_filter('sanitize_title', 'sanitize_title_with_dashes', 10);
-            add_filter('sanitize_title', [Slug::class, 'sanitizeTitleFilter'], 10, 3);
+            add_filter('sanitize_title', static function ($title, $raw_title, $context) {
+                return Slug::generate((string) $title);
+            }, 10, 3);
         }
     }
 }

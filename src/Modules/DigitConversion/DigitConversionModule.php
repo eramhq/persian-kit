@@ -2,6 +2,7 @@
 
 namespace PersianKit\Modules\DigitConversion;
 
+use PersianKit\Dependencies\Eram\Abzar\Digits\DigitConverter;
 use PersianKit\Abstracts\AbstractModule;
 use PersianKit\Container\ServiceContainer;
 

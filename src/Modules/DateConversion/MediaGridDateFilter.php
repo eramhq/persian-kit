@@ -2,7 +2,7 @@
 
 namespace PersianKit\Modules\DateConversion;
 
-use PersianKit\Modules\DigitConversion\DigitConverter;
+use PersianKit\Dependencies\Eram\Abzar\Digits\DigitConverter;
 
 defined('ABSPATH') || exit;
 

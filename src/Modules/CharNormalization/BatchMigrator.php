@@ -2,6 +2,8 @@
 
 namespace PersianKit\Modules\CharNormalization;
 
+use PersianKit\Dependencies\Eram\Abzar\Text\CharNormalizer;
+
 defined('ABSPATH') || exit;
 
 class BatchMigrator

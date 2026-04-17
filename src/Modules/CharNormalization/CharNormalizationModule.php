@@ -2,6 +2,7 @@
 
 namespace PersianKit\Modules\CharNormalization;
 
+use PersianKit\Dependencies\Eram\Abzar\Text\CharNormalizer;
 use PersianKit\Abstracts\AbstractModule;
 use PersianKit\Container\ServiceContainer;
 
@@ -37,7 +38,9 @@ class CharNormalizationModule extends AbstractModule
     public function register(ServiceContainer $container): void
     {
         $container->register(CharNormalizer::class, function () {
-            return new CharNormalizer((bool) $this->setting('teh_marbuta', false));
+            return new CharNormalizer(
+                tehMarbuta: (bool) $this->setting('teh_marbuta', false),
+            );
         });
 
         $container->register(BatchMigrator::class, function (ServiceContainer $c) {

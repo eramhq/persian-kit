@@ -4,8 +4,68 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "6742863dfd60d82ed3d2df2f8b02af76",
+    "content-hash": "618a11a77c3a2531a7931a1ec7a52fb8",
     "packages": [
+        {
+            "name": "eram/abzar",
+            "version": "0.5.0-beta",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/eramhq/abzar-php.git",
+                "reference": "b2a4a5e3e32241ad3fbf8fc4c394d3831b7d63b6"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/eramhq/abzar-php/zipball/b2a4a5e3e32241ad3fbf8fc4c394d3831b7d63b6",
+                "reference": "b2a4a5e3e32241ad3fbf8fc4c394d3831b7d63b6",
+                "shasum": ""
+            },
+            "require": {
+                "ext-mbstring": "*",
+                "php": ">=8.1"
+            },
+            "require-dev": {
+                "friendsofphp/php-cs-fixer": "^3.64",
+                "infection/infection": "^0.29",
+                "phpbench/phpbench": "^1.3",
+                "phpstan/phpstan": "^2.1",
+                "phpunit/phpunit": "^10.5"
+            },
+            "suggest": {
+                "eramhq/daynum": "Jalali / Shamsi calendar utilities (date parsing, month names, conversions) — companion to abzar.",
+                "ext-intl": "Required for PersianCollator and CharNormalizer::normalizeToNfc (Unicode NFC normalization); everything else is pure PHP."
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Eram\\Abzar\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "Zero-runtime-dependency Persian (Farsi) utility toolkit for PHP 8.1+: validators (national ID, IBAN, bank card, phone), formatters (number-to-words, time-ago, ordinals), text utilities (slug, script detection, char normalization), and digit conversion.",
+            "homepage": "https://github.com/eramhq/abzar-php",
+            "keywords": [
+                "IBAN",
+                "digit-conversion",
+                "farsi",
+                "iran",
+                "national-id",
+                "number-to-words",
+                "persian",
+                "phone",
+                "slug",
+                "utilities",
+                "validation"
+            ],
+            "support": {
+                "issues": "https://github.com/eramhq/abzar-php/issues",
+                "source": "https://github.com/eramhq/abzar-php"
+            },
+            "time": "2026-04-17T05:24:48+00:00"
+        },
         {
             "name": "eram/daynum",
             "version": "v1.0.0-beta.1",
@@ -2973,6 +3033,7 @@
     "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": {
+        "eram/abzar": 10,
         "eram/daynum": 10
     },
     "prefer-stable": false,

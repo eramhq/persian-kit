@@ -6,9 +6,9 @@ use PHPUnit\Framework\TestCase;
 use Brain\Monkey;
 use Brain\Monkey\Functions;
 use Mockery;
+use PersianKit\Dependencies\Eram\Abzar\Text\CharNormalizer;
 use PersianKit\Modules\CharNormalization\BatchMigrator;
 use PersianKit\Modules\CharNormalization\BatchResult;
-use PersianKit\Modules\CharNormalization\CharNormalizer;
 
 class BatchMigratorTest extends TestCase
 {
