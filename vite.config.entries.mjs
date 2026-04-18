@@ -10,11 +10,11 @@ export default defineConfig({
             entry: resolve(__dirname, `resources/entries/${entry}-entry.js`),
             formats: ['iife'],
             name: `persianKit_${entry}`,
-            fileName: () => `${entry}.min.js`,
+            fileName: () => `${entry}.js`,
         },
         outDir: resolve(__dirname, 'public/js'),
         emptyOutDir: false,
-        minify: 'esbuild',
+        minify: false,
         sourcemap: false,
     },
 });

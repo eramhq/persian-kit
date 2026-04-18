@@ -100,7 +100,7 @@ class AssetManagerTest extends TestCase
             ->once()
             ->with(
                 'persian-kit-admin',
-                PERSIAN_KIT_URL . 'public/js/admin.min.js',
+                PERSIAN_KIT_URL . 'public/js/admin.js',
                 [],
                 PERSIAN_KIT_VERSION,
                 true

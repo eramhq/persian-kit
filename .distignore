@@ -1,5 +1,6 @@
 # Version control
 .git
+.github
 .gitignore
 .gitkeep
 
@@ -9,6 +10,17 @@
 # Hidden config files
 .editorconfig
 .phpunit.result.cache
+
+# OS metadata
+.DS_Store
+
+# AI tooling
+.cursor
+.claude
+.aider*
+CLAUDE.md
+GEMINI.md
+.codex
 
 # Dev config
 phpunit.xml.dist

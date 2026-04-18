@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file.
 
+## [X.Y.Z] - Unreleased
+
+- Prepared the plugin for WordPress.org submission: added `readme.txt`, `uninstall.php`, and `Tested up to:` plugin header.
+- Bumped `Requires at least:` to WordPress 6.5 to match `wp_enqueue_script_module()` usage.
+- Declared WooCommerce HPOS compatibility via `before_woocommerce_init`.
+- Removed `load_plugin_textdomain()` call; translations are auto-loaded by WordPress core for hosted plugins.
+- Replaced the inline `<style>` in the WooCommerce orders Jalali month filter with a conditionally enqueued stylesheet.
+- Renamed the admin bundle from `admin.min.js` to `admin.js` and disabled minification so the source-equivalent ships in the dist.
+- Removed the non-standard `Plugin Prefix:` header.
+- Tightened `.distignore` against AI-tooling directories and OS metadata files.
+
 ## [1.0.0-beta.1] - 2026-04-17
 
 - Replaced the plugin's internal Persian utility classes with the `eram/abzar` library.

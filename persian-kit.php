@@ -8,13 +8,13 @@
  * Author URI: https://flavor.dev
  * Text Domain: persian-kit
  * Domain Path: /languages
- * Requires at least: 6.2
+ * Requires at least: 6.5
+ * Tested up to: 6.7
  * Requires PHP: 8.1
  * WC requires at least: 8.0
  * WC tested up to: 10.6.2
  * License: GPL v2 or later
  * License URI: https://www.gnu.org/licenses/gpl-2.0.html
- * Plugin Prefix: PERSIAN_KIT
  */
 
 defined('ABSPATH') || exit;
@@ -48,6 +48,16 @@ require_once __DIR__ . '/src/constants.php';
 |--------------------------------------------------------------------------
 */
 require_once __DIR__ . '/src/functions.php';
+
+add_action('before_woocommerce_init', function () {
+    if (class_exists(\Automattic\WooCommerce\Utilities\FeaturesUtil::class)) {
+        \Automattic\WooCommerce\Utilities\FeaturesUtil::declare_compatibility(
+            'custom_order_tables',
+            PERSIAN_KIT_MAIN_FILE,
+            true
+        );
+    }
+});
 
 /*
 |--------------------------------------------------------------------------

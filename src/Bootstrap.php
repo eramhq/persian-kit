@@ -32,8 +32,6 @@ class Bootstrap
 
     public static function setup(): void
     {
-        add_action('init', [__CLASS__, 'loadTextdomain']);
-
         self::initializeServices();
 
         do_action('persian_kit_loaded');
@@ -47,15 +45,6 @@ class Bootstrap
     public static function get(string $id): mixed
     {
         return self::container()->get($id);
-    }
-
-    public static function loadTextdomain(): void
-    {
-        load_plugin_textdomain(
-            'persian-kit',
-            false,
-            dirname(plugin_basename(PERSIAN_KIT_MAIN_FILE)) . '/languages'
-        );
     }
 
     public static function activate(bool $networkWide): void

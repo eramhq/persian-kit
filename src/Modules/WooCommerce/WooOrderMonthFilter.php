@@ -10,6 +10,8 @@ defined('ABSPATH') || exit;
 class WooOrderMonthFilter
 {
     private const QUERY_VAR = 'persian_kit_wc_month';
+    private const SCREEN_LEGACY = 'edit-shop_order';
+    private const SCREEN_HPOS = 'woocommerce_page_wc-orders';
 
     public function register(): void
     {
@@ -17,6 +19,27 @@ class WooOrderMonthFilter
         add_filter('woocommerce_order_query_args', [$this, 'filterOrderQueryArgs'], 20);
         add_action('restrict_manage_posts', [$this, 'renderLegacyFilter'], 20, 2);
         add_action('pre_get_posts', [$this, 'filterLegacyOrderQuery'], 20);
+        add_action('admin_enqueue_scripts', [$this, 'enqueueAssets']);
+    }
+
+    public function enqueueAssets(): void
+    {
+        $screen = get_current_screen();
+        if ($screen === null || !$this->isOrdersScreen($screen)) {
+            return;
+        }
+
+        wp_enqueue_style(
+            'persian-kit-woo-order-filter',
+            PERSIAN_KIT_URL . 'public/css/woo-order-filter.css',
+            [],
+            PERSIAN_KIT_VERSION
+        );
+    }
+
+    private function isOrdersScreen(\WP_Screen $screen): bool
+    {
+        return $screen->id === self::SCREEN_LEGACY || $screen->id === self::SCREEN_HPOS;
     }
 
     public function renderHposFilter(string $orderType, string $which): void
@@ -180,6 +203,5 @@ class WooOrderMonthFilter
         }
 
         echo '</select>';
-        echo '<style>#filter-by-date{display:none;}</style>';
     }
 }

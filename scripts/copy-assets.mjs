@@ -60,6 +60,11 @@ const copies = [
         src: 'resources/css/gutenberg-jalali.css',
         dest: 'public/css/gutenberg-jalali.css',
     },
+    // WooCommerce orders Jalali month filter styles
+    {
+        src: 'resources/css/woo-order-filter.css',
+        dest: 'public/css/woo-order-filter.css',
+    },
 ];
 
 for (const { src, dest } of copies) {

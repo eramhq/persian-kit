@@ -8,7 +8,7 @@ class AssetManager
 {
     private const SETTINGS_ASSETS = [
         'public/css/admin.css',
-        'public/js/admin.min.js',
+        'public/js/admin.js',
     ];
 
     private bool $missingAssetsNoticeRegistered = false;
@@ -61,7 +61,7 @@ class AssetManager
 
         wp_enqueue_script(
             'persian-kit-admin',
-            PERSIAN_KIT_URL . 'public/js/admin.min.js',
+            PERSIAN_KIT_URL . 'public/js/admin.js',
             [],
             PERSIAN_KIT_VERSION,
             true
