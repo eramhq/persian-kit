@@ -14,7 +14,7 @@
         "eram/abzar": "^0.5@beta"
     },
     "require-dev": {
-        "veronalabs/wp-scoper": "^1.2.4",
+        "veronalabs/wp-scoper": "^1.2.6",
         "phpunit/phpunit": "^10.0",
         "brain/monkey": "^2.6",
         "mockery/mockery": "^1.6",
@@ -50,15 +50,8 @@
         "test": "phpunit --testdox",
         "test:integration:setup": "bash tests/bin/setup-integration-tests.sh",
         "test:integration": "WP_TESTS_DIR=.wordpress-tests/wordpress-develop/tests/phpunit php .wordpress-tests/bin/phpunit-9.6.23.phar --testsuite integration --testdox",
-        "patch-wp-scoper": "bash scripts/patch-wp-scoper.sh",
-        "post-install-cmd": [
-            "@patch-wp-scoper",
-            "@composer wp-scope"
-        ],
-        "post-update-cmd": [
-            "@patch-wp-scoper",
-            "@composer wp-scope"
-        ]
+        "post-install-cmd": "@composer wp-scope",
+        "post-update-cmd": "@composer wp-scope"
     },
     "config": {
         "platform-check": false,

@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "618a11a77c3a2531a7931a1ec7a52fb8",
+    "content-hash": "3980e9be29bd4ca4f36c656c754bac4a",
     "packages": [
         {
             "name": "eram/abzar",
@@ -2353,7 +2353,7 @@
         },
         {
             "name": "symfony/polyfill-ctype",
-            "version": "v1.34.0",
+            "version": "v1.36.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/polyfill-ctype.git",
@@ -2412,7 +2412,7 @@
                 "portable"
             ],
             "support": {
-                "source": "https://github.com/symfony/polyfill-ctype/tree/v1.34.0"
+                "source": "https://github.com/symfony/polyfill-ctype/tree/v1.36.0"
             },
             "funding": [
                 {
@@ -2436,7 +2436,7 @@
         },
         {
             "name": "symfony/polyfill-intl-grapheme",
-            "version": "v1.34.0",
+            "version": "v1.36.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/polyfill-intl-grapheme.git",
@@ -2494,7 +2494,7 @@
                 "shim"
             ],
             "support": {
-                "source": "https://github.com/symfony/polyfill-intl-grapheme/tree/v1.34.0"
+                "source": "https://github.com/symfony/polyfill-intl-grapheme/tree/v1.36.0"
             },
             "funding": [
                 {
@@ -2518,7 +2518,7 @@
         },
         {
             "name": "symfony/polyfill-intl-normalizer",
-            "version": "v1.34.0",
+            "version": "v1.36.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/polyfill-intl-normalizer.git",
@@ -2579,7 +2579,7 @@
                 "shim"
             ],
             "support": {
-                "source": "https://github.com/symfony/polyfill-intl-normalizer/tree/v1.34.0"
+                "source": "https://github.com/symfony/polyfill-intl-normalizer/tree/v1.36.0"
             },
             "funding": [
                 {
@@ -2603,7 +2603,7 @@
         },
         {
             "name": "symfony/polyfill-mbstring",
-            "version": "v1.34.0",
+            "version": "v1.36.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/polyfill-mbstring.git",
@@ -2664,7 +2664,7 @@
                 "shim"
             ],
             "support": {
-                "source": "https://github.com/symfony/polyfill-mbstring/tree/v1.34.0"
+                "source": "https://github.com/symfony/polyfill-mbstring/tree/v1.36.0"
             },
             "funding": [
                 {
@@ -2914,16 +2914,16 @@
         },
         {
             "name": "veronalabs/wp-scoper",
-            "version": "1.2.5",
+            "version": "1.2.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/veronalabs/wp-scoper.git",
-                "reference": "544cb8630c087eb5f89f51671296a171d2204d7e"
+                "reference": "214fee917ac4bbcf54237e4021fe9fa86670027a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/veronalabs/wp-scoper/zipball/544cb8630c087eb5f89f51671296a171d2204d7e",
-                "reference": "544cb8630c087eb5f89f51671296a171d2204d7e",
+                "url": "https://api.github.com/repos/veronalabs/wp-scoper/zipball/214fee917ac4bbcf54237e4021fe9fa86670027a",
+                "reference": "214fee917ac4bbcf54237e4021fe9fa86670027a",
                 "shasum": ""
             },
             "require": {
@@ -2962,9 +2962,9 @@
             "description": "A Composer plugin that prefixes namespaces in WordPress plugin dependencies to prevent conflicts",
             "support": {
                 "issues": "https://github.com/veronalabs/wp-scoper/issues",
-                "source": "https://github.com/veronalabs/wp-scoper/tree/v1.2.5"
+                "source": "https://github.com/veronalabs/wp-scoper/tree/v1.2.6"
             },
-            "time": "2026-04-07T06:56:55+00:00"
+            "time": "2026-04-18T05:19:28+00:00"
         },
         {
             "name": "yoast/phpunit-polyfills",
