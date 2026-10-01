@@ -85,13 +85,18 @@ class DateConversionModule extends AbstractModule
         $filters = $container->get(DateFilters::class);
         $filters->registerTier1();
         $filters->registerTier2();
+        // The admin bar clock also shows on the front end.
         $filters->registerAdminFilters();
-        $container->get(PostTypeMonthFilter::class)->register();
-        $container->get(MediaAttachmentDateFormatter::class)->register();
-        $container->get(MediaGridDateFilter::class)->register();
         $container->get(DateArchiveFilter::class)->register();
-
         $container->get(RestApiExtension::class)->register();
-        $container->get(AdminDateScript::class)->register();
+
+        // Admin screens, admin-ajax (the media grid) and admin-post only.
+        // is_admin() is false for REST, cron and WP-CLI.
+        if (is_admin()) {
+            $container->get(PostTypeMonthFilter::class)->register();
+            $container->get(MediaAttachmentDateFormatter::class)->register();
+            $container->get(MediaGridDateFilter::class)->register();
+            $container->get(AdminDateScript::class)->register();
+        }
     }
 }

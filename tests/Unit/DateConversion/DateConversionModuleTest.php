@@ -2,17 +2,88 @@
 
 namespace PersianKit\Tests\Unit\DateConversion;
 
+use Brain\Monkey;
+use Brain\Monkey\Functions;
 use Mockery;
+use PersianKit\Container\ServiceContainer;
 use PersianKit\Core\SettingsManager;
+use PersianKit\Modules\DateConversion\AdminDateScript;
+use PersianKit\Modules\DateConversion\DateArchiveFilter;
 use PersianKit\Modules\DateConversion\DateConversionModule;
+use PersianKit\Modules\DateConversion\DateFilters;
+use PersianKit\Modules\DateConversion\MediaAttachmentDateFormatter;
+use PersianKit\Modules\DateConversion\MediaGridDateFilter;
+use PersianKit\Modules\DateConversion\PostTypeMonthFilter;
+use PersianKit\Modules\DateConversion\RestApiExtension;
 use PHPUnit\Framework\TestCase;
 
 class DateConversionModuleTest extends TestCase
 {
+    private const ADMIN_SERVICES = [
+        PostTypeMonthFilter::class,
+        MediaAttachmentDateFormatter::class,
+        MediaGridDateFilter::class,
+        AdminDateScript::class,
+    ];
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+        Monkey\setUp();
+    }
+
     protected function tearDown(): void
     {
-        Mockery::close();
+        Monkey\tearDown();
         parent::tearDown();
+    }
+
+    public function test_boot_outside_admin_skips_admin_services(): void
+    {
+        Functions\when('is_admin')->justReturn(false);
+
+        $this->assertSame(
+            [DateFilters::class, DateArchiveFilter::class, RestApiExtension::class],
+            $this->bootAndListFetched()
+        );
+    }
+
+    public function test_boot_in_admin_registers_admin_services(): void
+    {
+        Functions\when('is_admin')->justReturn(true);
+
+        $this->assertSame(
+            array_merge([DateFilters::class, DateArchiveFilter::class, RestApiExtension::class], self::ADMIN_SERVICES),
+            $this->bootAndListFetched()
+        );
+    }
+
+    /**
+     * @return list<string> Service ids fetched from the container, in order.
+     */
+    private function bootAndListFetched(): array
+    {
+        $fetched = [];
+        $container = Mockery::mock(ServiceContainer::class);
+        $container->shouldReceive('get')->andReturnUsing(function (string $id) use (&$fetched) {
+            $fetched[] = $id;
+
+            if ($id === DateFilters::class) {
+                $filters = Mockery::mock(DateFilters::class);
+                $filters->shouldReceive('registerTier1', 'registerTier2', 'registerAdminFilters')->once();
+
+                return $filters;
+            }
+
+            $service = Mockery::mock($id);
+            $service->shouldReceive('register')->once();
+
+            return $service;
+        });
+
+        $this->makeModule()->boot($container);
+
+        return $fetched;
     }
 
     private function makeModule(): DateConversionModule

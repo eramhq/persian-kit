@@ -12,6 +12,10 @@ All notable changes to this project will be documented in this file.
 - Dates are read and written as the editor's site-local text, and "Now" is the site's time. Before, both went through the browser's timezone, so an editor in another timezone got a wrong "Now".
 - The date script loads on the post editor only, not the site or widget editors.
 
+### Robustness
+
+- Services that only work in the admin (the settings page and its assets, the posts, media and WooCommerce order month filters, the media date formatter, the admin date pickers and the WooCommerce date fields) are no longer created on front-end, REST, cron or WP-CLI requests. They still load for admin-ajax and admin-post.
+
 ## [1.0.0-beta.3] - Unreleased
 
 First WordPress.org release. Includes everything listed under 1.0.0-beta.2, plus the fixes from the pre-release review below.

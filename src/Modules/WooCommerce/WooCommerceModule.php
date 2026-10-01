@@ -54,10 +54,15 @@ class WooCommerceModule extends AbstractModule
             return;
         }
 
-        $container->get(WooOrderMonthFilter::class)->register();
-        $container->get(WooAdminDateFields::class)->register();
-        $container->get(WooPostedDateNormalizer::class)->register();
         $container->get(WooDateDisplayFilter::class)->register();
+
+        // Order screens, product and coupon edit screens, and the variations
+        // save through admin-ajax.
+        if (is_admin()) {
+            $container->get(WooOrderMonthFilter::class)->register();
+            $container->get(WooAdminDateFields::class)->register();
+            $container->get(WooPostedDateNormalizer::class)->register();
+        }
     }
 
     private function supportsWooCommerce(): bool

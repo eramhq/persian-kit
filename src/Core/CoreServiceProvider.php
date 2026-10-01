@@ -62,11 +62,12 @@ class CoreServiceProvider implements ServiceProvider
         // Conflict detection
         $container->get(ConflictDetector::class)->registerNotice();
 
-        // Asset manager (enqueues admin scripts on plugin pages)
-        $container->get(AssetManager::class);
-
-        // Admin page
-        $container->get(AdminPage::class)->register();
+        // The settings page, its assets and admin-post handlers. is_admin()
+        // is true for admin-post.php and false for REST, cron and WP-CLI.
+        if (is_admin()) {
+            $container->get(AssetManager::class);
+            $container->get(AdminPage::class)->register();
+        }
 
         // Boot each enabled feature module
         $modules = $container->get('modules')->all;
