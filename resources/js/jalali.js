@@ -165,11 +165,129 @@
         return n < 10 ? '0' + n : '' + n;
     }
 
+    /**
+     * Number of days in a Gregorian month.
+     *
+     * @param {number} gm Gregorian month (1-12)
+     * @param {number} gy Gregorian year
+     * @returns {number}
+     */
+    function gregorianMonthLength(gm, gy) {
+        if (gm === 2) {
+            return ((gy % 4 === 0 && gy % 100 !== 0) || gy % 400 === 0) ? 29 : 28;
+        }
+        return [4, 6, 9, 11].indexOf(gm) === -1 ? 31 : 30;
+    }
+
+    /**
+     * Read the block editor's date string (YYYY-MM-DDTHH:MM[:SS], site-local).
+     *
+     * Never goes through Date, which would apply the browser's timezone.
+     * Anything after the seconds (fraction, offset) is ignored.
+     *
+     * @param {string} str
+     * @returns {{gy: number, gm: number, gd: number, hh: number, mn: number, ss: number}|null}
+     */
+    function parseEditorDate(str) {
+        var m = /^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2})(?::(\d{2}))?/.exec(typeof str === 'string' ? str : '');
+        if (!m) return null;
+
+        var parts = {
+            gy: +m[1],
+            gm: +m[2],
+            gd: +m[3],
+            hh: +m[4],
+            mn: +m[5],
+            ss: m[6] ? +m[6] : 0
+        };
+
+        if (parts.gm < 1 || parts.gm > 12 || parts.gd < 1 || parts.gd > gregorianMonthLength(parts.gm, parts.gy) ||
+            parts.hh > 23 || parts.mn > 59 || parts.ss > 59) {
+            return null;
+        }
+
+        return parts;
+    }
+
+    /**
+     * Jalali date and time of an editor date string.
+     *
+     * @param {string} str
+     * @returns {{jy: number, jm: number, jd: number, hh: number, mn: number}|null}
+     */
+    function toJalaliParts(str) {
+        var g = parseEditorDate(str);
+        if (!g) return null;
+
+        var j = gregorianToJalali(g.gy, g.gm, g.gd);
+        return { jy: j[0], jm: j[1], jd: j[2], hh: g.hh, mn: g.mn };
+    }
+
+    function clamp(n, min, max) {
+        return Math.max(min, Math.min(max, n));
+    }
+
+    /**
+     * Bring Jalali parts into range: year 1300-1500, a day that exists in the
+     * month (30 Esfand only in leap years), hour 0-23 and minute 0-59.
+     *
+     * @param {{jy: number, jm: number, jd: number, hh: number, mn: number}} parts
+     * @returns {{jy: number, jm: number, jd: number, hh: number, mn: number}|null} null if a part is not a number
+     */
+    function clampJalaliParts(parts) {
+        var keys = ['jy', 'jm', 'jd', 'hh', 'mn'];
+        var n = {};
+        for (var i = 0; i < keys.length; i++) {
+            n[keys[i]] = Math.trunc(Number(parts[keys[i]]));
+            if (!isFinite(n[keys[i]])) return null;
+        }
+
+        var jy = clamp(n.jy, 1300, 1500);
+        var jm = clamp(n.jm, 1, 12);
+
+        return {
+            jy: jy,
+            jm: jm,
+            jd: clamp(n.jd, 1, jalaliMonthLength(jm, jy)),
+            hh: clamp(n.hh, 0, 23),
+            mn: clamp(n.mn, 0, 59)
+        };
+    }
+
+    /**
+     * Editor date string (YYYY-MM-DDTHH:MM:00, site-local) for Jalali parts.
+     *
+     * @param {{jy: number, jm: number, jd: number, hh: number, mn: number}} parts
+     * @returns {string|null}
+     */
+    function fromJalaliParts(parts) {
+        var p = clampJalaliParts(parts);
+        if (!p) return null;
+
+        var g = jalaliToGregorian(p.jy, p.jm, p.jd);
+        return g[0] + '-' + pad(g[1]) + '-' + pad(g[2]) + 'T' + pad(p.hh) + ':' + pad(p.mn) + ':00';
+    }
+
+    /**
+     * Label such as "15 دی 1405 10:30".
+     *
+     * @param {{jy: number, jm: number, jd: number, hh: number, mn: number}} parts
+     * @returns {string}
+     */
+    function formatJalaliLabel(parts) {
+        return parts.jd + ' ' + JALALI_MONTHS[parts.jm] + ' ' + parts.jy + ' ' + pad(parts.hh) + ':' + pad(parts.mn);
+    }
+
     var api = {
         gregorianToJalali: gregorianToJalali,
         jalaliToGregorian: jalaliToGregorian,
         isJalaliLeapYear: isJalaliLeapYear,
         jalaliMonthLength: jalaliMonthLength,
+        parseEditorDate: parseEditorDate,
+        toJalaliParts: toJalaliParts,
+        clampJalaliParts: clampJalaliParts,
+        fromJalaliParts: fromJalaliParts,
+        formatJalaliLabel: formatJalaliLabel,
         JALALI_MONTHS: JALALI_MONTHS,
         JALALI_WEEKDAYS: JALALI_WEEKDAYS,
         pad: pad

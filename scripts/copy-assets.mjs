@@ -52,8 +52,8 @@ const copies = [
     },
     // Gutenberg Jalali date editor
     {
-        src: 'resources/js/gutenberg-jalali-panel.js',
-        dest: 'public/js/gutenberg-jalali-panel.js',
+        src: 'resources/js/gutenberg-jalali-date.js',
+        dest: 'public/js/gutenberg-jalali-date.js',
     },
     // WooCommerce admin Jalali date fields
     {

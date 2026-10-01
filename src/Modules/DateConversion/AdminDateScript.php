@@ -38,10 +38,17 @@ class AdminDateScript
     }
 
     /**
-     * Enqueue Gutenberg Jalali date editor on block editor pages.
+     * Enqueue the Gutenberg Jalali date editor on the block editor post screen.
+     *
+     * The site and widget editors also fire enqueue_block_editor_assets, but
+     * have no publish date.
      */
     public function enqueueGutenberg(): void
     {
+        if (!$this->isBlockEditorPostScreen()) {
+            return;
+        }
+
         JalaliScript::register();
 
         wp_enqueue_script('persian-kit-jalali');
@@ -55,8 +62,18 @@ class AdminDateScript
 
         wp_enqueue_script(
             'persian-kit-gutenberg-jalali',
-            PERSIAN_KIT_URL . 'public/js/gutenberg-jalali-panel.js',
-            ['wp-data', 'wp-components', 'wp-i18n', 'persian-kit-jalali'],
+            PERSIAN_KIT_URL . 'public/js/gutenberg-jalali-date.js',
+            [
+                'wp-plugins',
+                'wp-element',
+                'wp-components',
+                'wp-data',
+                'wp-date',
+                'wp-i18n',
+                'wp-editor',
+                'wp-edit-post',
+                JalaliScript::HANDLE,
+            ],
             PERSIAN_KIT_VERSION,
             true
         );
@@ -82,5 +99,19 @@ class AdminDateScript
         }
 
         return !$screen->is_block_editor();
+    }
+
+    private function isBlockEditorPostScreen(): bool
+    {
+        if (!function_exists('get_current_screen')) {
+            return false;
+        }
+
+        $screen = get_current_screen();
+        if (!$screen) {
+            return false;
+        }
+
+        return $screen->base === 'post' && $screen->is_block_editor();
     }
 }

@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file.
 
+## [Unreleased]
+
+### Block editor dates
+
+- The block editor's Jalali date is a "Publish" row of its own in the post sidebar, built on the editor's plugin API (`PluginPostStatusInfo`) instead of rewriting core's date picker in the page. Core's Gregorian row is hidden with one CSS rule; if WordPress renames it, both rows show and both work.
+- The row's label updates as you type. Before, it showed the previous date while the date popover was open.
+- The pre-publish and post-publish panels show the Jalali date.
+- Dates are read and written as the editor's site-local text, and "Now" is the site's time. Before, both went through the browser's timezone, so an editor in another timezone got a wrong "Now".
+- The date script loads on the post editor only, not the site or widget editors.
+
 ## [1.0.0-beta.3] - Unreleased
 
 First WordPress.org release. Includes everything listed under 1.0.0-beta.2, plus the fixes from the pre-release review below.

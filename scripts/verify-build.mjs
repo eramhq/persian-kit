@@ -11,7 +11,7 @@ const requiredOutputs = [
     'public/css/woo-order-filter.css',
     'public/js/admin.js',
     'public/js/admin-date-override.js',
-    'public/js/gutenberg-jalali-panel.js',
+    'public/js/gutenberg-jalali-date.js',
     'public/js/gutenberg-zwnj.js',
     'public/js/jalali.js',
     'public/js/media-grid-date-filter.js',

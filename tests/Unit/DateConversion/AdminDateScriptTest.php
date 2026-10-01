@@ -5,6 +5,7 @@ namespace PersianKit\Tests\Unit\DateConversion;
 use Brain\Monkey;
 use Brain\Monkey\Functions;
 use PersianKit\Modules\DateConversion\AdminDateScript;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
 class AdminDateScriptTest extends TestCase
@@ -111,6 +112,8 @@ class AdminDateScriptTest extends TestCase
 
     public function test_enqueue_gutenberg_loads_shared_and_editor_assets(): void
     {
+        Functions\expect('get_current_screen')->once()->andReturn($this->screen('post', true));
+
         $registerCalls = [];
         $enqueueScriptCalls = [];
         $enqueueStyleCalls = [];
@@ -140,8 +143,18 @@ class AdminDateScriptTest extends TestCase
             ['persian-kit-jalali'],
             [
                 'persian-kit-gutenberg-jalali',
-                PERSIAN_KIT_URL . 'public/js/gutenberg-jalali-panel.js',
-                ['wp-data', 'wp-components', 'wp-i18n', 'persian-kit-jalali'],
+                PERSIAN_KIT_URL . 'public/js/gutenberg-jalali-date.js',
+                [
+                    'wp-plugins',
+                    'wp-element',
+                    'wp-components',
+                    'wp-data',
+                    'wp-date',
+                    'wp-i18n',
+                    'wp-editor',
+                    'wp-edit-post',
+                    'persian-kit-jalali',
+                ],
                 PERSIAN_KIT_VERSION,
                 true,
             ],
@@ -153,5 +166,43 @@ class AdminDateScriptTest extends TestCase
             ['wp-components'],
             PERSIAN_KIT_VERSION,
         ]], $enqueueStyleCalls);
+    }
+
+    /**
+     * @return array<string, array{0: string}>
+     */
+    public static function nonPostEditorScreens(): array
+    {
+        return [
+            'site editor'   => ['site-editor'],
+            'widget editor' => ['widgets'],
+        ];
+    }
+
+    #[DataProvider('nonPostEditorScreens')]
+    public function test_enqueue_gutenberg_skips_other_block_editors(string $base): void
+    {
+        Functions\expect('get_current_screen')->once()->andReturn($this->screen($base, true));
+        Functions\expect('wp_register_script')->never();
+        Functions\expect('wp_enqueue_script')->never();
+        Functions\expect('wp_enqueue_style')->never();
+
+        (new AdminDateScript())->enqueueGutenberg();
+
+        $this->assertTrue(true);
+    }
+
+    private function screen(string $base, bool $isBlockEditor): object
+    {
+        return new class ($base, $isBlockEditor) {
+            public function __construct(public string $base, private bool $blockEditor)
+            {
+            }
+
+            public function is_block_editor(): bool
+            {
+                return $this->blockEditor;
+            }
+        };
     }
 }

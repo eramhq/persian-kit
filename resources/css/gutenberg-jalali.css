@@ -1,94 +1,117 @@
 /**
  * Persian Kit — Gutenberg Jalali Date Editor styles
  *
- * Hides the native Gregorian DateTimePicker and styles the Jalali form
- * that replaces it inside the schedule popover.
+ * Lays out the Jalali "Publish" row and date form (gutenberg-jalali-date.js),
+ * and hides core's Gregorian "Publish" row. If WordPress renames that row's
+ * classes, both rows show and both still work.
  */
 
-/* Hide native DateTimePicker when Jalali form is active */
-.editor-post-schedule__dialog .components-datetime.pk-hidden {
-    display: none !important;
+/* Core's Gregorian "Publish" row; the Jalali row replaces it. */
+.editor-post-panel__row:has(.editor-post-schedule__panel-dropdown) {
+    display: none;
 }
 
-/* Jalali form container — matches Gutenberg component spacing */
-.pk-gutenberg-jalali-form {
+/* Sidebar row — matches core's label/control rows */
+.components-panel__row.persian-kit-jalali-date {
+    align-items: flex-start;
+    gap: 8px;
+    min-height: 32px;
+    margin-top: 0;
+}
+
+.persian-kit-jalali-date__label {
+    display: flex;
+    flex-shrink: 0;
+    align-items: center;
+    width: 38%;
+    min-height: 32px;
+    hyphens: auto;
+    word-break: break-word;
+}
+
+.persian-kit-jalali-date__dropdown {
+    flex-grow: 1;
+}
+
+.persian-kit-jalali-date__toggle.components-button {
+    max-width: 100%;
+    height: auto;
+    min-height: 32px;
+    text-align: start;
+    white-space: normal;
+}
+
+/* Date form */
+.persian-kit-jalali-date__dialog .components-popover__content {
+    min-width: 280px;
+}
+
+.persian-kit-jalali-date__form {
     padding: 16px;
-    direction: rtl;
 }
 
-/* Fieldset reset */
-.pk-jalali-fieldset {
-    border: none;
-    margin: 0 0 12px;
+.persian-kit-jalali-date__fieldset {
+    border: 0;
+    margin: 0 0 16px;
     padding: 0;
+    min-width: 0;
 }
 
-.pk-jalali-fieldset:last-child {
-    margin-bottom: 0;
-}
-
-/* Legend — matches WP components uppercase label style */
-.pk-jalali-legend {
+.persian-kit-jalali-date__legend {
+    margin-bottom: 8px;
+    padding: 0;
     font-size: 11px;
     font-weight: 500;
+    line-height: 1.4;
     text-transform: uppercase;
-    margin-bottom: 8px;
-    color: #1e1e1e;
 }
 
-/* Row of inputs */
-.pk-jalali-row {
+.persian-kit-jalali-date__row {
     display: flex;
     gap: 8px;
-    align-items: center;
+    align-items: flex-end;
 }
 
-/* Shared input styling — matches WP components */
-.pk-jalali-input {
-    height: 32px;
-    padding: 4px 8px;
-    border: 1px solid #949494;
-    border-radius: 2px;
-    font-size: 13px;
-    text-align: center;
+/* Hour before minute, read left to right like a clock */
+.persian-kit-jalali-date__time {
     direction: ltr;
-    background: #fff;
-    color: #1e1e1e;
-    font-family: inherit;
+}
+
+.persian-kit-jalali-date__field {
+    flex: 0 0 64px;
+    min-width: 0;
+}
+
+.persian-kit-jalali-date__year {
+    flex-basis: 76px;
+}
+
+.persian-kit-jalali-date__month {
+    flex: 1 1 auto;
+}
+
+.persian-kit-jalali-date__field input[type="number"] {
+    direction: ltr;
+    text-align: center;
     -moz-appearance: textfield;
 }
 
-.pk-jalali-input::-webkit-inner-spin-button,
-.pk-jalali-input::-webkit-outer-spin-button {
+.persian-kit-jalali-date__field input[type="number"]::-webkit-inner-spin-button,
+.persian-kit-jalali-date__field input[type="number"]::-webkit-outer-spin-button {
     -webkit-appearance: none;
     margin: 0;
 }
 
-.pk-jalali-input:focus {
-    border-color: var(--wp-components-color-accent, #3858e9);
-    box-shadow: 0 0 0 1px var(--wp-components-color-accent, #3858e9);
-    outline: none;
+/* Pre- and post-publish panels */
+.persian-kit-jalali-date__value {
+    margin-inline-start: 4px;
+    font-weight: 400;
 }
 
-/* Specific widths */
-.pk-jalali-year {
-    width: 72px;
+.persian-kit-jalali-date__panel .persian-kit-jalali-date__form {
+    padding: 0;
 }
 
-.pk-jalali-month {
-    flex: 1;
-    text-align: right;
-}
-
-.pk-jalali-day,
-.pk-jalali-hour,
-.pk-jalali-minute {
-    width: 56px;
-}
-
-/* Time separator */
-.pk-jalali-separator {
-    font-size: 16px;
-    font-weight: 600;
-    color: #757575;
+.persian-kit-jalali-date__summary {
+    margin: 0;
 }
