@@ -22,6 +22,12 @@ class ActivationTest extends WordPressIntegrationTestCase
         delete_option('persian_kit_settings');
         delete_option('persian_kit_db_version');
         delete_option('persian_kit_show_welcome');
+
+        // InstallManager runs on plugins_loaded, before SettingsRegistrar
+        // registers the setting on init, so its writes and the settings older
+        // versions stored are not sanitized. WordPress restores hooks after
+        // each test.
+        remove_all_filters('sanitize_option_persian_kit_settings');
     }
 
     public function test_activate_sets_module_defaults(): void

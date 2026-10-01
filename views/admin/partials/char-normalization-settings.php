@@ -29,9 +29,10 @@ $selectedPostTypes = array_values(array_diff(array_keys($postTypeLabels), ['atta
 
 <div class="persian-kit-setting-row">
     <label>
+        <input type="hidden" name="persian_kit_settings[char_normalization][normalize_on_save]" value="0">
         <input
             type="checkbox"
-            name="modules[char_normalization][normalize_on_save]"
+            name="persian_kit_settings[char_normalization][normalize_on_save]"
             value="1"
             <?php checked($normalizeOnSave); ?>
         >
@@ -44,9 +45,10 @@ $selectedPostTypes = array_values(array_diff(array_keys($postTypeLabels), ['atta
 
 <div class="persian-kit-setting-row">
     <label>
+        <input type="hidden" name="persian_kit_settings[char_normalization][teh_marbuta]" value="0">
         <input
             type="checkbox"
-            name="modules[char_normalization][teh_marbuta]"
+            name="persian_kit_settings[char_normalization][teh_marbuta]"
             value="1"
             <?php checked($tehMarbuta); ?>
         >

@@ -32,9 +32,10 @@ $options = [
     <?php foreach ($options as $optionKey => $option) : ?>
         <p>
             <label>
+                <input type="hidden" name="persian_kit_settings[digit_conversion][<?php echo esc_attr($optionKey); ?>]" value="0">
                 <input
                     type="checkbox"
-                    name="modules[digit_conversion][<?php echo esc_attr($optionKey); ?>]"
+                    name="persian_kit_settings[digit_conversion][<?php echo esc_attr($optionKey); ?>]"
                     value="1"
                     <?php checked(!empty($moduleSettings[$optionKey])); ?>
                 >

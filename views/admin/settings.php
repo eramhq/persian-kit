@@ -23,11 +23,10 @@ $showWelcome = !empty($args['showWelcome']);
         <?php esc_html_e('Turn each module on or off, then save. Changes take effect on your site right away.', 'persian-kit'); ?>
     </p>
 
-    <?php if (isset($_GET['updated'])) : // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Display-only flag set by our own redirect. ?>
-        <div class="notice notice-success is-dismissible">
-            <p><?php esc_html_e('Settings saved.', 'persian-kit'); ?></p>
-        </div>
-    <?php endif; ?>
+    <?php
+    // "Settings saved." from options.php; WordPress shows it by itself only under the Settings menu.
+    settings_errors();
+    ?>
 
     <?php if ($showWelcome) : ?>
         <?php
@@ -46,9 +45,8 @@ $showWelcome = !empty($args['showWelcome']);
         ?>
     <?php endif; ?>
 
-    <form method="post" action="<?php echo esc_url(admin_url('admin-post.php')); ?>">
-        <input type="hidden" name="action" value="persian_kit_save">
-        <?php wp_nonce_field('persian_kit_settings'); ?>
+    <form method="post" action="<?php echo esc_url(admin_url('options.php')); ?>">
+        <?php settings_fields(\PersianKit\Core\SettingsRegistrar::GROUP); ?>
 
         <div class="persian-kit-modules">
             <?php foreach ($modules as $moduleData) : ?>

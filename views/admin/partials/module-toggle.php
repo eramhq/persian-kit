@@ -39,9 +39,11 @@ $descId       = 'persian-kit-module-' . $moduleKey . '-description';
         </div>
 
         <label class="persian-kit-module__toggle">
+            <?php // Sent when the toggle is off; the checkbox overrides it when on. ?>
+            <input type="hidden" name="persian_kit_settings[<?php echo esc_attr($moduleKey); ?>][enabled]" value="0">
             <input
                 type="checkbox"
-                name="modules[<?php echo esc_attr($moduleKey); ?>][enabled]"
+                name="persian_kit_settings[<?php echo esc_attr($moduleKey); ?>][enabled]"
                 value="1"
                 aria-labelledby="<?php echo esc_attr($nameId); ?>"
                 <?php if ($moduleDescription !== '') : ?>

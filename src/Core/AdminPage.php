@@ -32,7 +32,6 @@ class AdminPage
     public function register(): void
     {
         add_action('admin_menu', [$this, 'addMenu']);
-        add_action('admin_post_persian_kit_save', [$this, 'handleSave']);
         add_action('admin_post_persian_kit_dismiss_welcome', [$this, 'handleDismissWelcome']);
         add_filter('plugin_action_links_' . plugin_basename(PERSIAN_KIT_MAIN_FILE), [$this, 'addSettingsLink']);
     }
@@ -100,44 +99,6 @@ class AdminPage
                 'persian_kit_dismiss_welcome'
             ),
         ]);
-    }
-
-    public function handleSave(): void
-    {
-        if (!current_user_can('manage_options')) {
-            wp_die(esc_html__('You do not have permission to access this page.', 'persian-kit'));
-        }
-
-        check_admin_referer('persian_kit_settings');
-
-        // Each module's sanitizeSettings() sanitizes its own values below.
-        // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
-        $modules = isset($_POST['modules']) ? wp_unslash($_POST['modules']) : [];
-
-        if (!is_array($modules)) {
-            $modules = [];
-        }
-
-        $sanitized = [];
-
-        foreach ($this->modules as $module) {
-            $key = $module::key();
-            $values = $modules[$key] ?? [];
-
-            if (!is_array($values)) {
-                $values = [];
-            }
-
-            // Toggle: if checkbox not present, module is disabled
-            $values['enabled'] = isset($values['enabled']);
-
-            $sanitized[$key] = $module->sanitizeSettings($values);
-        }
-
-        $this->settings->updateModules($sanitized);
-
-        wp_safe_redirect(add_query_arg('updated', '1', $this->pageUrl()));
-        exit;
     }
 
     public function handleDismissWelcome(): void

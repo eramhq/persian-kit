@@ -463,4 +463,6 @@ Settings are stored in the `persian_kit_settings` option, per module under these
 | `woocommerce` | `enabled` (on) |
 | `utilities` | `enabled` (on), `persian_slugs` (on) |
 
+The option is registered with the Settings API (group `persian_kit`), so every write is sanitized, whether it comes from the settings screen or from `update_option()`. Each module's values are merged over what is stored and sanitized by the module; a module left out keeps its stored values, and keys that are not module keys are dropped. Booleans are stored as `true`/`false`.
+
 `persian_kit_db_version` records the settings schema version. Sites upgraded from a version before 2 keep their earlier behaviour: digit conversion stays as it was (with the new `dates`, `numbers` and `prices` options off) and `normalize_on_save` is on.

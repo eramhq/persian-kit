@@ -16,9 +16,10 @@ $persianSlugs = !empty($moduleSettings['persian_slugs']);
 ?>
 <div class="persian-kit-setting-row">
     <label>
+        <input type="hidden" name="persian_kit_settings[utilities][persian_slugs]" value="0">
         <input
             type="checkbox"
-            name="modules[utilities][persian_slugs]"
+            name="persian_kit_settings[utilities][persian_slugs]"
             value="1"
             <?php checked($persianSlugs); ?>
         >

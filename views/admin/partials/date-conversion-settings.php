@@ -16,9 +16,10 @@ $globalConversion = !empty($moduleSettings['global_conversion']);
 ?>
 <div class="persian-kit-setting-row">
     <label>
+        <input type="hidden" name="persian_kit_settings[date_conversion][global_conversion]" value="0">
         <input
             type="checkbox"
-            name="modules[date_conversion][global_conversion]"
+            name="persian_kit_settings[date_conversion][global_conversion]"
             value="1"
             <?php checked($globalConversion); ?>
         >

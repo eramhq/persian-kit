@@ -52,10 +52,15 @@ abstract class AbstractModule implements ModuleInterface
     public function sanitizeSettings(array $values): array
     {
         $defaults = static::defaults();
+        $sanitized = array_replace($defaults, array_intersect_key($values, $defaults));
 
-        return array_replace(
-            $defaults,
-            array_intersect_key($values, $defaults)
-        );
+        // Form checkboxes post '0' and '1'; store real booleans.
+        foreach ($defaults as $key => $default) {
+            if (is_bool($default)) {
+                $sanitized[$key] = (bool) $sanitized[$key];
+            }
+        }
+
+        return $sanitized;
     }
 }

@@ -45,6 +45,10 @@ class CoreServiceProvider implements ServiceProvider
 
         $modules = $this->modules;
 
+        $container->register(SettingsRegistrar::class, function () use ($modules) {
+            return new SettingsRegistrar($modules);
+        });
+
         $container->register(AdminPage::class, function (ServiceContainer $c) use ($modules) {
             return new AdminPage(
                 $c->get(SettingsManager::class),
@@ -58,6 +62,9 @@ class CoreServiceProvider implements ServiceProvider
     {
         // Conflict detection
         $container->get(ConflictDetector::class)->registerNotice();
+
+        // Sanitizes every write to the settings option, from any context.
+        $container->get(SettingsRegistrar::class)->register();
 
         // The settings page, its assets and admin-post handlers. is_admin()
         // is true for admin-post.php and false for REST, cron and WP-CLI.

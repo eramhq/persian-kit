@@ -15,6 +15,7 @@ All notable changes to this project will be documented in this file.
 ### Robustness
 
 - Services that only work in the admin (the settings page and its assets, the posts, media and WooCommerce order month filters, the media date formatter, the admin date pickers and the WooCommerce date fields) are no longer created on front-end, REST, cron or WP-CLI requests. They still load for admin-ajax and admin-post.
+- The settings screen saves through the WordPress Settings API (`options.php`) instead of a custom `admin-post.php` handler, and the `persian_kit_settings` option is sanitized on every write, from any code: module values are merged over the stored ones and sanitized by their module, a module left out keeps its values, and unknown keys are dropped. Options of the WooCommerce Support and ZWNJ modules are stored as booleans instead of `'1'`/`'0'`. The form's fields are named `persian_kit_settings[module][key]` (were `modules[module][key]`), and the `admin_post_persian_kit_save` action is gone.
 - Developers: `ServiceContainer::get()` throws `PersianKit\Container\ServiceNotFoundException` for an id that was never registered, instead of returning `null`. The list of modules lives in one place, `PersianKit\Core\ModuleRegistry::MODULES`, and the `'modules'` container entry is gone.
 
 ## [1.0.0-beta.3] - Unreleased
