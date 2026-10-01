@@ -141,7 +141,7 @@ msgid ""
 "Jalali dates in post permalinks, as WP Jalali does: turn on \"Use Jalali "
 "dates in post permalinks\" under Date Conversion."
 msgstr ""
-"Persian Kit هم برگه‌های بایگانی شمسی مثل /1405/07/ را نشان می‌دهد و مثل WP "
+"Persian Kit هم برگه‌های بایگانی شمسی مثل ⁦/1405/07/⁩ را نشان می‌دهد و مثل WP "
 "Jalali می‌تواند تاریخ شمسی را در پیوند یکتای نوشته‌ها بگذارد: در بخش «تاریخ "
 "شمسی»، «تاریخ شمسی در پیوند یکتای نوشته‌ها» را روشن کنید."
 
@@ -553,7 +553,7 @@ msgid ""
 "and link to Jalali archive pages such as /1405/07/."
 msgstr ""
 "ابزارک‌ها و بلوک‌های «بایگانی» و «تقویم» ماه‌ها و روزهای شمسی را نشان می‌دهند و "
-"به برگه‌های بایگانی شمسی، مثل /1405/07/، پیوند می‌دهند."
+"به برگه‌های بایگانی شمسی، مثل ⁦/1405/07/⁩، پیوند می‌دهند."
 
 #: views/admin/partials/date-conversion-settings.php:63
 msgid "Use Jalali dates in post permalinks"
@@ -565,8 +565,8 @@ msgid ""
 "post/ instead of /2026/10/01/my-post/. Old links redirect to the new ones. "
 "If Persian Kit is deactivated, the Jalali links stop working."
 msgstr ""
-"برای ساختارهای پیوند یکتا که تاریخ دارند، مثل «روز و نام»: /1405/07/09/my-"
-"post/ به جای /2026/10/01/my-post/. پیوندهای قبلی به پیوندهای تازه هدایت "
+"برای ساختارهای پیوند یکتا که تاریخ دارند، مثل «روز و نام»: ⁦/1405/07/09/my-"
+"post/⁩ به جای ⁦/2026/10/01/my-post/⁩. پیوندهای قبلی به پیوندهای تازه هدایت "
 "می‌شوند. اگر Persian Kit غیرفعال شود، پیوندهای شمسی دیگر کار نمی‌کنند."
 
 #: views/admin/partials/digit-conversion-settings.php:17
