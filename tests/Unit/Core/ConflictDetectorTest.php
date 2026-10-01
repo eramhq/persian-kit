@@ -126,7 +126,7 @@ class ConflictDetectorTest extends TestCase
     public function test_render_notice_outputs_short_guidance_on_supported_screen(): void
     {
         Functions\when('current_user_can')->alias(static fn (string $capability): bool => $capability === 'activate_plugins');
-        Functions\when('get_current_screen')->justReturn((object) ['id' => 'plugins']);
+        Functions\when('get_current_screen')->justReturn($this->screen('plugins'));
         Functions\when('is_plugin_active')->alias(static fn (string $slug): bool => $slug === 'wp-parsidate/wp-parsidate.php');
         Functions\when('is_multisite')->justReturn(false);
 
@@ -145,7 +145,7 @@ class ConflictDetectorTest extends TestCase
     public function test_render_notice_skips_unrelated_screen(): void
     {
         Functions\when('current_user_can')->justReturn(true);
-        Functions\when('get_current_screen')->justReturn((object) ['id' => 'dashboard']);
+        Functions\when('get_current_screen')->justReturn($this->screen('dashboard'));
         Functions\when('is_plugin_active')->alias(static fn (string $slug): bool => $slug === 'wp-parsidate/wp-parsidate.php');
         Functions\when('is_multisite')->justReturn(false);
 
@@ -156,5 +156,13 @@ class ConflictDetectorTest extends TestCase
         $output = ob_get_clean();
 
         $this->assertSame('', $output);
+    }
+
+    private function screen(string $id): \WP_Screen
+    {
+        $screen = new \WP_Screen();
+        $screen->id = $id;
+
+        return $screen;
     }
 }

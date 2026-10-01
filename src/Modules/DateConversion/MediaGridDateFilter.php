@@ -110,12 +110,18 @@ class MediaGridDateFilter
         return $pagenow === self::SCREEN_MEDIA;
     }
 
+    /**
+     * Reads the month from the media library's query-attachments request, a
+     * read-only query that core serves without a nonce.
+     *
+     * phpcs:disable WordPress.Security.NonceVerification.Recommended
+     */
     private function requestedJalaliMonth(): ?string
     {
         $raw = '';
 
         if (isset($_REQUEST['query']) && is_array($_REQUEST['query'])) {
-            $requestQuery = wp_unslash($_REQUEST['query']);
+            $requestQuery = wp_unslash($_REQUEST['query']); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- The one value used is sanitized below.
 
             if (isset($requestQuery[PostTypeMonthFilter::QUERY_VAR]) && (is_string($requestQuery[PostTypeMonthFilter::QUERY_VAR]) || is_numeric($requestQuery[PostTypeMonthFilter::QUERY_VAR]))) {
                 $raw = sanitize_text_field((string) $requestQuery[PostTypeMonthFilter::QUERY_VAR]);
@@ -125,6 +131,8 @@ class MediaGridDateFilter
         if ($raw === '' && isset($_REQUEST[PostTypeMonthFilter::QUERY_VAR]) && (is_string($_REQUEST[PostTypeMonthFilter::QUERY_VAR]) || is_numeric($_REQUEST[PostTypeMonthFilter::QUERY_VAR]))) {
             $raw = sanitize_text_field(wp_unslash((string) $_REQUEST[PostTypeMonthFilter::QUERY_VAR]));
         }
+
+        // phpcs:enable WordPress.Security.NonceVerification.Recommended
 
         $raw = DigitConverter::toEnglish($raw);
 

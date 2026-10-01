@@ -1,0 +1,17 @@
+includes:
+    - vendor/szepeviktor/phpstan-wordpress/extension.neon
+
+parameters:
+    level: 6
+    phpVersion: 80100
+    paths:
+        - src
+        - persian-kit.php
+        - uninstall.php
+    scanDirectories:
+        - packages
+    scanFiles:
+        - vendor/php-stubs/woocommerce-stubs/woocommerce-stubs.php
+        - tests/stubs/wp-cli.php
+    bootstrapFiles:
+        - tests/phpstan-bootstrap.php

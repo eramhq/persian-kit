@@ -89,6 +89,9 @@ class WooOrderMonthFilter
         return $args;
     }
 
+    /**
+     * @return array{start: string, end: string}|null
+     */
     public function selectedGregorianRange(): ?array
     {
         $jalaliYearMonth = $this->selectedJalaliMonth();
@@ -101,7 +104,7 @@ class WooOrderMonthFilter
 
     public function selectedJalaliMonth(): ?string
     {
-        $raw = isset($_GET[self::QUERY_VAR]) ? sanitize_text_field(wp_unslash($_GET[self::QUERY_VAR])) : '';
+        $raw = isset($_GET[self::QUERY_VAR]) ? sanitize_text_field(wp_unslash($_GET[self::QUERY_VAR])) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only list filter value; nothing is saved.
         $raw = DigitConverter::toEnglish($raw);
 
         if ($raw === '' || !preg_match('/^\d{6}$/', $raw)) {
@@ -127,8 +130,10 @@ class WooOrderMonthFilter
             'return' => 'ids',
         ]);
 
-        $oldestId = is_array($orderIds) ? reset($orderIds) : false;
-        $oldestOrder = $oldestId ? $this->loadOrder((int) $oldestId) : null;
+        // 'return' => 'ids' yields IDs, though the stubs type the result as orders.
+        $first = is_array($orderIds) ? reset($orderIds) : false;
+        $oldestId = $first instanceof \WC_Abstract_Order ? $first->get_id() : (int) $first;
+        $oldestOrder = $oldestId > 0 ? $this->loadOrder($oldestId) : null;
         if (!$oldestOrder || !method_exists($oldestOrder, 'get_date_created') || !$oldestOrder->get_date_created()) {
             return [];
         }

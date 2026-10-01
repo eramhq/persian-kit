@@ -16,7 +16,7 @@ class NormalizationJobManager
     }
 
     /**
-     * @param array<string> $postTypes
+     * @param array<mixed> $postTypes
      * @return array<string, mixed>
      */
     public function runBatch(array $postTypes, int $batchSize): array
@@ -71,6 +71,7 @@ class NormalizationJobManager
     }
 
     /**
+     * @param array<mixed> $postTypes
      * @return array<string, mixed>
      */
     public function status(array $postTypes): array
@@ -130,7 +131,9 @@ class NormalizationJobManager
     }
 
     /**
-     * @param array<string> $postTypes
+     * Post types arrive from REST and WP-CLI input, so non-strings are dropped.
+     *
+     * @param array<mixed> $postTypes
      * @return array<string>
      */
     private function normalizePostTypes(array $postTypes): array

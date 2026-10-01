@@ -61,6 +61,13 @@ All notable changes to this project will be documented in this file.
 - All user-facing strings are translatable, including the JavaScript ones (`wp_set_script_translations()`), the compatibility guidance cards and the ZWNJ editor button tooltip. Placeholders have translators comments, and the POT now includes JavaScript strings.
 - Removed dead code: `ViteHelper`, `BatchMigrator::isComplete()`, `ConflictDetector::detect()`, the container's unused alias/`__get`/`reset`, and the empty deactivation hook. `ModuleInterface` now declares `isEnabled()` and `settingsView()`.
 
+### Development
+
+- GitHub Actions CI on PHP 8.1 and 8.4: unit tests, integration tests against WordPress 7.1, PHPStan level 6 (with `szepeviktor/phpstan-wordpress`), PHPCS with the WordPress security and i18n sniffs, `npm run dist` and Plugin Check on the built plugin.
+- Added `composer phpstan` and `composer phpcs`. The code now passes both, fixing the array types, redundant checks and SQL `IN (...)` placeholders they reported.
+- PHPUnit configuration migrated to the 10.5 schema; integration tests use `phpunit-integration.xml.dist` for WordPress's PHPUnit 9.6 runner.
+- Dev dependencies: wp-scoper 1.4.2, PHPUnit 10.5.65, Mockery 1.6.15, Alpine.js 3.17, Vazirmatn 5.3, Vite 6.4.3.
+
 ## [1.0.0-beta.1] - 2026-04-17
 
 - Replaced the plugin's internal Persian utility classes with the `eram/abzar` library.

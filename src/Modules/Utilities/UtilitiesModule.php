@@ -24,6 +24,9 @@ class UtilitiesModule extends AbstractModule
         return __('Persian slug, validation, and formatting tools', 'persian-kit');
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     public static function defaults(): array
     {
         return ['enabled' => true];

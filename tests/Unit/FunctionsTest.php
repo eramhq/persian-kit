@@ -139,6 +139,7 @@ class FunctionsTest extends TestCase
 
     public function test_currency_rejects_unknown_unit(): void
     {
+        \Brain\Monkey\Functions\when('esc_html')->returnArg();
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage('Unknown currency unit "dollar"');
 

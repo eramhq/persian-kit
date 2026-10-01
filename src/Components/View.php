@@ -6,6 +6,10 @@ defined('ABSPATH') || exit;
 
 class View
 {
+    /**
+     * @param string|array<int, string> $view
+     * @param array<string, mixed>      $args
+     */
     public static function load(string|array $view, array $args = [], bool $return = false): ?string
     {
         $views = is_array($view) ? $view : [$view];
@@ -22,7 +26,8 @@ class View
             }
 
             if (!empty($args)) {
-                extract($args, EXTR_SKIP);
+                // Templates read their documented variables by name.
+                extract($args, EXTR_SKIP); // phpcs:ignore WordPress.PHP.DontExtract.extract_extract
             }
 
             include $__path;

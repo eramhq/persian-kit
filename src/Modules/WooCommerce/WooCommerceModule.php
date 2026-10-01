@@ -24,6 +24,9 @@ class WooCommerceModule extends AbstractModule
         return __('Adds Jalali date tools for WooCommerce screens and customer-facing dates when WooCommerce is active', 'persian-kit');
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     public static function defaults(): array
     {
         return ['enabled' => true];

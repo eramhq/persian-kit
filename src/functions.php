@@ -189,7 +189,7 @@ function pk_currency_unit(string $unit): Unit
         'toman' => Unit::TOMAN,
         'rial'  => Unit::RIAL,
         default => throw new \InvalidArgumentException(
-            sprintf('Unknown currency unit "%s". Use "toman" or "rial".', $unit)
+            sprintf('Unknown currency unit "%s". Use "toman" or "rial".', esc_html($unit))
         ),
     };
 }

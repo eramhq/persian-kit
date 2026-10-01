@@ -26,6 +26,9 @@ class CharNormalizationModule extends AbstractModule
         return __('Normalizes Arabic characters (Yeh, Kaf) to Persian', 'persian-kit');
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     public static function defaults(): array
     {
         return ['enabled' => true, 'teh_marbuta' => false];
@@ -57,6 +60,10 @@ class CharNormalizationModule extends AbstractModule
         });
     }
 
+    /**
+     * @param array<string, mixed> $values
+     * @return array<string, mixed>
+     */
     public function sanitizeSettings(array $values): array
     {
         return [
@@ -123,6 +130,10 @@ class CharNormalizationModule extends AbstractModule
         });
     }
 
+    /**
+     * @param array<string, mixed> $data
+     * @param array<string, mixed> $postarr
+     */
     private function shouldNormalize(array $data, array $postarr): bool
     {
         $postType = $data['post_type'] ?? $postarr['post_type'] ?? '';

@@ -77,6 +77,10 @@ class ConflictDetector
         ];
     }
 
+    /**
+     * @param array<string, array<string, mixed>> $currentSettings Settings by module key.
+     * @return list<array<string, mixed>>
+     */
     public function reports(array $currentSettings = []): array
     {
         $reports = [];
@@ -140,6 +144,9 @@ class ConflictDetector
         <?php
     }
 
+    /**
+     * @return array<string, array<string, mixed>>
+     */
     private function policies(): array
     {
         $policies = $this->defaultPolicies();
@@ -166,6 +173,10 @@ class ConflictDetector
         return $normalizedPolicies;
     }
 
+    /**
+     * @param array<string, mixed> $policy
+     * @return array<string, mixed>
+     */
     private function normalizePolicy(array $policy): array
     {
         $name = is_string($policy['name'] ?? null) && $policy['name'] !== ''
@@ -207,6 +218,10 @@ class ConflictDetector
         ];
     }
 
+    /**
+     * @param array<string, mixed> $recommendation
+     * @return array<string, mixed>|null
+     */
     private function normalizeRecommendation(array $recommendation): ?array
     {
         $key = is_string($recommendation['key'] ?? null) ? trim($recommendation['key']) : '';
@@ -228,6 +243,11 @@ class ConflictDetector
         ];
     }
 
+    /**
+     * @param array<string, mixed>                $policy
+     * @param array<string, array<string, mixed>> $currentSettings
+     * @return array<string, mixed>
+     */
     private function buildReport(string $slug, array $policy, array $currentSettings): array
     {
         $recommendations = [];
@@ -282,6 +302,9 @@ class ConflictDetector
         };
     }
 
+    /**
+     * @param array<string, array<string, mixed>> $currentSettings
+     */
     private function currentSettingValue(string $key, array $currentSettings): bool
     {
         $segments = explode('.', $key);
@@ -305,7 +328,7 @@ class ConflictDetector
         }
 
         $screen = get_current_screen();
-        $screenId = is_object($screen) && isset($screen->id) && is_string($screen->id) ? $screen->id : '';
+        $screenId = $screen instanceof \WP_Screen ? $screen->id : '';
 
         return in_array($screenId, [
             'plugins',

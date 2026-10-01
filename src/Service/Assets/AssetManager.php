@@ -76,6 +76,9 @@ class AssetManager
         wp_set_script_translations('persian-kit-admin', 'persian-kit');
     }
 
+    /**
+     * @return array<string, string>
+     */
     private function getLocalizedData(): array
     {
         return [

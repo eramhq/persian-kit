@@ -8,8 +8,12 @@ class SettingsManager
 {
     private const OPTION_KEY = 'persian_kit_settings';
 
+    /** @var array<string, array<string, mixed>>|null */
     private ?array $cache = null;
 
+    /**
+     * @return array<string, array<string, mixed>>
+     */
     public function all(): array
     {
         return $this->load();
@@ -27,6 +31,9 @@ class SettingsManager
         return $moduleSettings[$key] ?? $default;
     }
 
+    /**
+     * @param array<string, mixed> $values
+     */
     public function updateModule(string $moduleKey, array $values): void
     {
         $settings = $this->load();
@@ -34,6 +41,9 @@ class SettingsManager
         $this->save($settings);
     }
 
+    /**
+     * @param array<string, mixed> $defaults
+     */
     public function setDefaults(string $moduleKey, array $defaults): void
     {
         $settings = $this->load();
@@ -46,6 +56,9 @@ class SettingsManager
         $this->save($settings);
     }
 
+    /**
+     * @return array<string, array<string, mixed>>
+     */
     private function load(): array
     {
         if ($this->cache !== null) {
@@ -61,6 +74,9 @@ class SettingsManager
         return $this->cache;
     }
 
+    /**
+     * @param array<string, array<string, mixed>> $settings
+     */
     private function save(array $settings): void
     {
         update_option(self::OPTION_KEY, $settings, true);

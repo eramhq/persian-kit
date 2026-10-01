@@ -45,6 +45,10 @@ abstract class AbstractModule implements ModuleInterface
         return null;
     }
 
+    /**
+     * @param array<string, mixed> $values
+     * @return array<string, mixed>
+     */
     public function sanitizeSettings(array $values): array
     {
         $defaults = static::defaults();

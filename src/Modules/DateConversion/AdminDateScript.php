@@ -92,10 +92,6 @@ class AdminDateScript
             return true;
         }
 
-        if (method_exists($screen, 'is_block_editor')) {
-            return !$screen->is_block_editor();
-        }
-
-        return true;
+        return !$screen->is_block_editor();
     }
 }

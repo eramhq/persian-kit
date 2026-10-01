@@ -121,6 +121,9 @@ class PostTypeMonthFilter
         return array_values($options);
     }
 
+    /**
+     * @return array{start: string, end: string}|null
+     */
     public function selectedGregorianRange(): ?array
     {
         $jalaliYearMonth = $this->selectedJalaliMonth();
@@ -131,6 +134,9 @@ class PostTypeMonthFilter
         return WooDateHelper::jalaliMonthToGregorianRange($jalaliYearMonth);
     }
 
+    /**
+     * @return array{start: string, end: string}|null
+     */
     public function gregorianRangeForJalaliMonth(string $jalaliYearMonth): ?array
     {
         return WooDateHelper::jalaliMonthToGregorianRange($jalaliYearMonth);
@@ -138,7 +144,7 @@ class PostTypeMonthFilter
 
     public function selectedJalaliMonth(): ?string
     {
-        $raw = isset($_GET[self::QUERY_VAR]) ? sanitize_text_field(wp_unslash($_GET[self::QUERY_VAR])) : '';
+        $raw = isset($_GET[self::QUERY_VAR]) ? sanitize_text_field(wp_unslash($_GET[self::QUERY_VAR])) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only list filter value; nothing is saved.
         $raw = DigitConverter::toEnglish($raw);
 
         if ($raw === '' || !preg_match('/^\d{6}$/', $raw)) {
@@ -148,6 +154,9 @@ class PostTypeMonthFilter
         return $raw;
     }
 
+    /**
+     * @return list<string> Distinct Y-m-d days, newest first.
+     */
     protected function queryDistinctPostDays(string $postType): array
     {
         global $wpdb;
@@ -165,24 +174,23 @@ class PostTypeMonthFilter
             return $cached;
         }
 
-        $extraChecks = "AND post_status != 'auto-draft'";
-
-        if ($postStatus !== 'trash') {
-            $extraChecks .= " AND post_status != 'trash'";
-        } else {
-            $extraChecks = $wpdb->prepare(' AND post_status = %s', $postStatus);
-        }
-
-        $results = $wpdb->get_col(
-            $wpdb->prepare(
+        $results = $postStatus === 'trash'
+            ? $wpdb->get_col($wpdb->prepare(
                 "SELECT DISTINCT DATE(post_date) AS post_day
-                FROM $wpdb->posts
+                FROM {$wpdb->posts}
                 WHERE post_type = %s
-                $extraChecks
+                  AND post_status = 'trash'
                 ORDER BY post_date DESC",
                 $postType
-            )
-        );
+            ))
+            : $wpdb->get_col($wpdb->prepare(
+                "SELECT DISTINCT DATE(post_date) AS post_day
+                FROM {$wpdb->posts}
+                WHERE post_type = %s
+                  AND post_status NOT IN ('auto-draft', 'trash')
+                ORDER BY post_date DESC",
+                $postType
+            ));
 
         $days = array_values(array_filter(array_map('strval', (array) $results)));
         wp_cache_set($cacheKey, $days, 'persian_kit');
@@ -232,8 +240,10 @@ class PostTypeMonthFilter
     private function requestedStatus(string $postType): string
     {
         if ($postType === 'attachment') {
+            // phpcs:disable WordPress.Security.NonceVerification.Recommended -- Read-only list screen state.
             $attachmentFilter = isset($_GET['attachment-filter']) ? sanitize_key(wp_unslash($_GET['attachment-filter'])) : '';
             $status = isset($_GET['status']) ? sanitize_key(wp_unslash($_GET['status'])) : '';
+            // phpcs:enable
 
             if ($attachmentFilter === 'trash' || $status === 'trash') {
                 return 'trash';
@@ -242,7 +252,7 @@ class PostTypeMonthFilter
             return '';
         }
 
-        return isset($_GET['post_status']) ? sanitize_key(wp_unslash($_GET['post_status'])) : '';
+        return isset($_GET['post_status']) ? sanitize_key(wp_unslash($_GET['post_status'])) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only list screen state.
     }
 
     private function filterLabelForPostType(string $postType): string

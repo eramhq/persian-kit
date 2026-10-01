@@ -38,11 +38,17 @@ class RestApiExtension
         }
     }
 
+    /**
+     * @param array<string, mixed> $post Prepared REST response data.
+     */
     public function getDateJalali(array $post): ?string
     {
         return $this->formatIsoJalali($post['date_gmt'] ?? null, $post['date'] ?? null);
     }
 
+    /**
+     * @param array<string, mixed> $post Prepared REST response data.
+     */
     public function getModifiedDateJalali(array $post): ?string
     {
         return $this->formatIsoJalali($post['modified_gmt'] ?? null, $post['modified'] ?? null);

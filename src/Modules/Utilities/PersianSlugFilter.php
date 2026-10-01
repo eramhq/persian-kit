@@ -126,13 +126,10 @@ class PersianSlugFilter
             return null;
         }
 
-        $namePlaceholders = implode(',', array_fill(0, count($candidates), '%s'));
-        $typePlaceholders = implode(',', array_fill(0, count($postTypes), '%s'));
-
         $row = $wpdb->get_row($wpdb->prepare(
             "SELECT ID, post_name, post_type FROM {$wpdb->posts}
-             WHERE post_name IN ({$namePlaceholders})
-               AND post_type IN ({$typePlaceholders})
+             WHERE post_name IN (" . implode(',', array_fill(0, count($candidates), '%s')) . ")
+               AND post_type IN (" . implode(',', array_fill(0, count($postTypes), '%s')) . ")
                AND post_status = 'publish'
              ORDER BY ID ASC
              LIMIT 1",

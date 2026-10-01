@@ -13,6 +13,7 @@ class MediaAttachmentDateFormatter
 
     /**
      * @param array<string, mixed> $response
+     * @return array<string, mixed>
      */
     public function filterAttachmentData(array $response, object $attachment, mixed $meta = null): array
     {

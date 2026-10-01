@@ -18,6 +18,7 @@ defined('ABSPATH') || exit;
  * WooCommerce unslashes them again when it reads them.
  *
  * phpcs:disable WordPress.Security.NonceVerification.Missing
+ * phpcs:disable WordPress.Security.ValidatedSanitizedInput -- sanitizeScalar() unslashes and sanitizes every value read.
  */
 class WooPostedDateNormalizer
 {

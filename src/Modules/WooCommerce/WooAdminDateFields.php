@@ -88,7 +88,7 @@ class WooAdminDateFields
             return false;
         }
 
-        $action = isset($_GET['action']) ? sanitize_key(wp_unslash($_GET['action'])) : '';
+        $action = isset($_GET['action']) ? sanitize_key(wp_unslash($_GET['action'])) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Only decides which script to load.
 
         return in_array($action, ['edit', 'new'], true);
     }

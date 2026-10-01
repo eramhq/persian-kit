@@ -82,7 +82,7 @@ class DateFilters
             return $date;
         }
 
-        $formatted = JalaliFormatter::fromLocalMysql($format ?: $this->defaultDateFormat, $post->post_date ?? null);
+        $formatted = JalaliFormatter::fromLocalMysql($format ?: $this->defaultDateFormat, $post->post_date);
 
         return $formatted === null ? $date : $before . $formatted . $after;
     }
@@ -166,6 +166,9 @@ class DateFilters
         return JalaliFormatter::formatDateTime($format, $dateTime);
     }
 
+    /**
+     * @param array<string, mixed> $block
+     */
     public function filterPostDateBlock(string $blockContent, array $block, ?object $instance = null): string
     {
         if ($this->shouldSkipFrontendBlockConversion()) {
@@ -190,6 +193,9 @@ class DateFilters
         );
     }
 
+    /**
+     * @param array<string, mixed> $block
+     */
     public function filterLatestCommentsBlock(string $blockContent, array $block, ?object $instance = null): string
     {
         if ($this->shouldSkipFrontendBlockConversion() || DateDisplayGuard::shouldBypass($this->defaultDateFormat)) {

@@ -47,8 +47,8 @@ class NormalizeCommand
      *     wp persian-kit normalize --post-type=post,page,product --batch-size=50
      *     wp persian-kit normalize --restart
      *
-     * @param array $args       Positional arguments.
-     * @param array $assocArgs  Associative arguments.
+     * @param array<int, string>    $args      Positional arguments.
+     * @param array<string, mixed> $assocArgs Associative arguments.
      */
     public function __invoke(array $args, array $assocArgs): void
     {
@@ -70,6 +70,9 @@ class NormalizeCommand
         $this->run($postTypes, $batchSize);
     }
 
+    /**
+     * @param array<int, string> $postTypes
+     */
     private function dryRun(array $postTypes): void
     {
         \WP_CLI::log('Counting posts with Arabic characters...');
@@ -89,6 +92,8 @@ class NormalizeCommand
     /**
      * Runs the batches through the job manager, so the settings screen shows
      * the same progress and can resume a run the CLI left unfinished.
+     *
+     * @param array<int, string> $postTypes
      */
     private function run(array $postTypes, int $batchSize): void
     {

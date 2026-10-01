@@ -24,6 +24,11 @@ GEMINI.md
 
 # Dev config
 phpunit.xml.dist
+phpunit-integration.xml.dist
+phpstan.neon.dist
+phpstan-baseline.neon
+phpcs.xml.dist
+.phpunit.cache/
 
 # Source assets (built output is in public/)
 resources/

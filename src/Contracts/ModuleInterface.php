@@ -14,6 +14,9 @@ interface ModuleInterface
 
     public static function description(): string;
 
+    /**
+     * @return array<string, mixed>
+     */
     public static function defaults(): array;
 
     public function isEnabled(): bool;
@@ -23,6 +26,10 @@ interface ModuleInterface
      */
     public function settingsView(): ?string;
 
+    /**
+     * @param array<string, mixed> $values
+     * @return array<string, mixed>
+     */
     public function sanitizeSettings(array $values): array;
 
     public function register(ServiceContainer $container): void;

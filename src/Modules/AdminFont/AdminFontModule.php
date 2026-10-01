@@ -24,6 +24,9 @@ class AdminFontModule extends AbstractModule
         return __('Applies Vazirmatn Persian font to WP admin', 'persian-kit');
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     public static function defaults(): array
     {
         return ['enabled' => true, 'font' => 'vazirmatn'];
@@ -43,6 +46,10 @@ class AdminFontModule extends AbstractModule
         return 'admin/partials/admin-font-settings';
     }
 
+    /**
+     * @param array<string, mixed> $values
+     * @return array<string, mixed>
+     */
     public function sanitizeSettings(array $values): array
     {
         $font = is_string($values['font'] ?? null) ? strtolower(trim($values['font'])) : '';

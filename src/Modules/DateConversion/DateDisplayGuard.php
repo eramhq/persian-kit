@@ -40,7 +40,7 @@ final class DateDisplayGuard
             \DATE_RFC3339,
             \DATE_RFC3339_EXTENDED,
             \DATE_W3C,
-        ], static fn ($value) => is_string($value) && $value !== '')));
+        ], static fn (?string $value): bool => $value !== null)));
 
         return in_array($format, self::$machineFormats, true);
     }

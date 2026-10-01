@@ -48,11 +48,10 @@ class BatchMigrator
         global $wpdb;
 
         $arabicPattern = '[\x{064A}\x{0643}\x{0660}-\x{0669}\x{0629}]';
-        $placeholders = implode(',', array_fill(0, count($postTypes), '%s'));
 
         $rows = $wpdb->get_results($wpdb->prepare(
             "SELECT post_type, COUNT(*) AS cnt FROM {$wpdb->posts}
-             WHERE post_type IN ({$placeholders})
+             WHERE post_type IN (" . implode(',', array_fill(0, count($postTypes), '%s')) . ")
                AND post_status != 'auto-draft'
                AND (post_title REGEXP %s OR post_content REGEXP %s OR post_excerpt REGEXP %s)
              GROUP BY post_type",
@@ -81,20 +80,17 @@ class BatchMigrator
         global $wpdb;
 
         $cursor = $this->getCursor();
-        $placeholders = implode(',', array_fill(0, count($postTypes), '%s'));
 
-        $query = $wpdb->prepare(
+        $posts = $wpdb->get_results($wpdb->prepare(
             "SELECT ID, post_title, post_content, post_excerpt
              FROM {$wpdb->posts}
              WHERE ID > %d
-               AND post_type IN ({$placeholders})
+               AND post_type IN (" . implode(',', array_fill(0, count($postTypes), '%s')) . ")
                AND post_status != 'auto-draft'
              ORDER BY ID ASC
              LIMIT %d",
             array_merge([$cursor], $postTypes, [$batchSize])
-        );
-
-        $posts = $wpdb->get_results($query);
+        ));
 
         if (empty($posts)) {
             return new BatchResult(0, 0, $cursor, false);

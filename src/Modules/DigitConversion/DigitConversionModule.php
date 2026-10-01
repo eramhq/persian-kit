@@ -26,6 +26,9 @@ class DigitConversionModule extends AbstractModule
         return __('Converts English/Arabic digits to Persian in content', 'persian-kit');
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     public static function defaults(): array
     {
         return ['enabled' => true];

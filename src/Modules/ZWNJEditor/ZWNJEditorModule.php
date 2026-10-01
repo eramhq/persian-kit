@@ -24,6 +24,9 @@ class ZWNJEditorModule extends AbstractModule
         return __('Adds a half-space keyboard shortcut to the Classic Editor and Block Editor', 'persian-kit');
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     public static function defaults(): array
     {
         return ['enabled' => true];
@@ -123,14 +126,6 @@ class ZWNJEditorModule extends AbstractModule
             return false;
         }
 
-        if (property_exists($screen, 'base') && $screen->base !== 'post') {
-            return false;
-        }
-
-        if (!method_exists($screen, 'is_block_editor')) {
-            return false;
-        }
-
-        return $screen->is_block_editor();
+        return $screen->base === 'post' && $screen->is_block_editor();
     }
 }

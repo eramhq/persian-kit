@@ -24,6 +24,9 @@ class DateConversionModule extends AbstractModule
         return __('Converts Gregorian dates to Jalali (Shamsi)', 'persian-kit');
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     public static function defaults(): array
     {
         return ['enabled' => true, 'global_conversion' => false];
@@ -61,6 +64,10 @@ class DateConversionModule extends AbstractModule
         return 'admin/partials/date-conversion-settings';
     }
 
+    /**
+     * @param array<string, mixed> $values
+     * @return array<string, mixed>
+     */
     public function sanitizeSettings(array $values): array
     {
         return [
