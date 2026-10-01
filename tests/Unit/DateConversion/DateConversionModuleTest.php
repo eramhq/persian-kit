@@ -11,6 +11,7 @@ use PersianKit\Modules\DateConversion\AdminDateScript;
 use PersianKit\Modules\DateConversion\DateArchiveFilter;
 use PersianKit\Modules\DateConversion\DateConversionModule;
 use PersianKit\Modules\DateConversion\DateFilters;
+use PersianKit\Modules\DateConversion\JalaliDateArchive;
 use PersianKit\Modules\DateConversion\MediaAttachmentDateFormatter;
 use PersianKit\Modules\DateConversion\MediaGridDateFilter;
 use PersianKit\Modules\DateConversion\PostTypeMonthFilter;
@@ -43,7 +44,7 @@ class DateConversionModuleTest extends TestCase
         Functions\when('is_admin')->justReturn(false);
 
         $this->assertSame(
-            [DateFilters::class, DateArchiveFilter::class, RestApiExtension::class],
+            [DateFilters::class, DateArchiveFilter::class, JalaliDateArchive::class, RestApiExtension::class],
             $this->bootAndListFetched()
         );
     }
@@ -53,7 +54,7 @@ class DateConversionModuleTest extends TestCase
         Functions\when('is_admin')->justReturn(true);
 
         $this->assertSame(
-            array_merge([DateFilters::class, DateArchiveFilter::class, RestApiExtension::class], self::ADMIN_SERVICES),
+            array_merge([DateFilters::class, DateArchiveFilter::class, JalaliDateArchive::class, RestApiExtension::class], self::ADMIN_SERVICES),
             $this->bootAndListFetched()
         );
     }

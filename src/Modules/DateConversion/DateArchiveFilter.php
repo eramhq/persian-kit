@@ -3,21 +3,21 @@
 namespace PersianKit\Modules\DateConversion;
 
 use PersianKit\Dependencies\Eram\Abzar\Digits\DigitConverter;
-use PersianKit\Dependencies\Eram\Daynum\CivilDateTime;
 
 defined('ABSPATH') || exit;
 
 /**
- * Date archives stay Gregorian (/2025/03/), so their titles name the Jalali
- * period the Gregorian one covers ("اسفند 1403 – فروردین 1404") instead of the
- * first post's Jalali month. Date links built from Jalali parts, such as
- * get_month_link(get_the_time('Y'), get_the_time('m')), are mapped back to
- * Gregorian so they do not 404.
+ * Titles for date archives. A Jalali archive (/1405/07/, see
+ * JalaliDateArchive) is named for its period ("مهر 1405"). A Gregorian one
+ * (/2025/03/) names the Jalali period it covers ("اسفند 1403 – فروردین 1404")
+ * instead of the first post's Jalali month.
+ *
+ * Date links built from Jalali parts, such as
+ * get_month_link(get_the_time('Y'), get_the_time('m')), already lead to the
+ * Jalali archive; parts written with Persian digits are made ASCII.
  */
 class DateArchiveFilter
 {
-    private const JALALI_YEAR_LIMIT = 1700;
-
     public function register(): void
     {
         add_filter('get_the_archive_title', [$this, 'filterArchiveTitle'], 10, 3);
@@ -59,21 +59,21 @@ class DateArchiveFilter
 
     public function filterYearLink(string $link, mixed $year): string
     {
-        $parts = $this->gregorianParts($year, null, null);
+        $parts = $this->asciiParts($year, null, null);
 
         return $parts === null ? $link : get_year_link($parts[0]);
     }
 
     public function filterMonthLink(string $link, mixed $year, mixed $month): string
     {
-        $parts = $this->gregorianParts($year, $month, null);
+        $parts = $this->asciiParts($year, $month, null);
 
         return $parts === null ? $link : get_month_link($parts[0], $parts[1]);
     }
 
     public function filterDayLink(string $link, mixed $year, mixed $month, mixed $day): string
     {
-        $parts = $this->gregorianParts($year, $month, $day);
+        $parts = $this->asciiParts($year, $month, $day);
 
         return $parts === null ? $link : get_day_link($parts[0], $parts[1], $parts[2]);
     }
@@ -85,6 +85,11 @@ class DateArchiveFilter
     {
         if (is_admin() || !is_date() || is_feed()) {
             return null;
+        }
+
+        $jalali = JalaliDateArchive::current();
+        if ($jalali !== null) {
+            return $this->jalaliArchiveLabel($jalali['year'], $jalali['month'], $jalali['day']);
         }
 
         [$year, $month, $day] = $this->queriedDate();
@@ -116,6 +121,26 @@ class DateArchiveFilter
         }
 
         return null;
+    }
+
+    private function jalaliArchiveLabel(int $year, ?int $month, ?int $day): ?string
+    {
+        if (is_day() && $month !== null && $day !== null) {
+            $date = JalaliPeriod::toDateTime($year, $month, $day);
+
+            return $date === null ? null : JalaliFormatter::formatDateTime(get_option('date_format'), $date);
+        }
+
+        $date = JalaliPeriod::toDateTime($year, $month ?? 1, 1);
+        if ($date === null) {
+            return null;
+        }
+
+        if (is_month() && $month !== null) {
+            return JalaliFormatter::formatDateTime('F Y', $date);
+        }
+
+        return is_year() ? JalaliFormatter::formatDateTime('Y', $date) : null;
     }
 
     private function monthRangeLabel(\DateTimeImmutable $start, \DateTimeImmutable $end): string
@@ -174,20 +199,19 @@ class DateArchiveFilter
     }
 
     /**
-     * Gregorian [year, month, day] for link parts that are Jalali or written
-     * with Persian digits, or null when the parts are already plain Gregorian.
+     * ASCII [year, month, day] for link parts written with Persian or Arabic
+     * digits, or null when they are already ASCII or not numbers.
      *
      * @return array{int, int, int}|null
      */
-    private function gregorianParts(mixed $year, mixed $month, mixed $day): ?array
+    private function asciiParts(mixed $year, mixed $month, mixed $day): ?array
     {
-        $rawParts = [$year, $month, $day];
         $parts = [];
         $hadNonAsciiDigits = false;
 
-        foreach ($rawParts as $index => $raw) {
+        foreach ([$year, $month, $day] as $raw) {
             if ($raw === null) {
-                $parts[$index] = null;
+                $parts[] = 0;
                 continue;
             }
 
@@ -202,69 +226,9 @@ class DateArchiveFilter
             }
 
             $hadNonAsciiDigits = $hadNonAsciiDigits || $english !== $raw;
-            $parts[$index] = (int) $english;
+            $parts[] = (int) $english;
         }
 
-        [$jy, $jm, $jd] = $parts;
-
-        if ($jy === null || $jy === 0) {
-            return null;
-        }
-
-        if ($jy >= self::JALALI_YEAR_LIMIT) {
-            return $hadNonAsciiDigits ? [$jy, (int) $jm, (int) $jd] : null;
-        }
-
-        $gregorian = $this->gregorianForJalali($jy, $jm, $jd);
-        if ($gregorian === null) {
-            return null;
-        }
-
-        return [
-            (int) $gregorian->format('Y'),
-            $jm === null ? 0 : (int) $gregorian->format('n'),
-            $jd === null ? 0 : (int) $gregorian->format('j'),
-        ];
-    }
-
-    /**
-     * A Jalali year or month covers parts of two Gregorian ones. When the link
-     * is for the current post's own year or month, that post's Gregorian date
-     * picks the side; otherwise the first day of the Jalali period does.
-     */
-    private function gregorianForJalali(int $jy, ?int $jm, ?int $jd): ?\DateTimeImmutable
-    {
-        $postDate = $this->currentPostDate();
-        if ($postDate !== null) {
-            $jalali = CivilDateTime::fromDateTime($postDate)->jalali();
-
-            if ($jalali->year() === $jy
-                && ($jm === null || $jalali->month() === $jm)
-                && ($jd === null || $jalali->day() === $jd)
-            ) {
-                return $postDate;
-            }
-        }
-
-        $month = $jm ?? 1;
-        $day = $jd ?? 1;
-
-        if (!CivilDateTime::isValidJalali($jy, $month, $day)) {
-            return null;
-        }
-
-        return CivilDateTime::fromJalali($jy, $month, $day)->toDateTimeImmutable();
-    }
-
-    private function currentPostDate(): ?\DateTimeImmutable
-    {
-        $post = get_post();
-        if (!$post) {
-            return null;
-        }
-
-        $dateTime = get_post_datetime($post);
-
-        return $dateTime instanceof \DateTimeImmutable ? $dateTime : null;
+        return $hadNonAsciiDigits ? [$parts[0], $parts[1], $parts[2]] : null;
     }
 }

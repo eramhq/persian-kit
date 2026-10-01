@@ -12,6 +12,11 @@ All notable changes to this project will be documented in this file.
 - Dates are read and written as the editor's site-local text, and "Now" is the site's time. Before, both went through the browser's timezone, so an editor in another timezone got a wrong "Now".
 - The date script loads on the post editor only, not the site or widget editors.
 
+### Jalali archives
+
+- Jalali date archive pages: `/1405/07/` lists exactly the posts of Mehr 1405, `/1405/` those of the Jalali year and `/1405/07/09/` those of one day (`?m=140507` with plain permalinks). A year below 1700 is read as Jalali; Gregorian archive URLs work as before. The title of a Jalali archive names its period ("مهر 1405"). 31 Shahrivar and the other days past the 30th of a Gregorian month no longer 404 or redirect.
+- Changed: date links built from Jalali parts, such as `get_month_link(get_the_time('Y'), get_the_time('m'))` in a theme, now lead to the Jalali archive (`/1403/12/`) instead of redirecting to a Gregorian month (`/2025/03/`).
+
 ### Robustness
 
 - Services that only work in the admin (the settings page and its assets, the posts, media and WooCommerce order month filters, the media date formatter, the admin date pickers and the WooCommerce date fields) are no longer created on front-end, REST, cron or WP-CLI requests. They still load for admin-ajax and admin-post.

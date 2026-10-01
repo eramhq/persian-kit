@@ -54,6 +54,10 @@ class DateConversionModule extends AbstractModule
             return new DateArchiveFilter();
         });
 
+        $container->register(JalaliDateArchive::class, function () {
+            return new JalaliDateArchive();
+        });
+
         $container->register(RestApiExtension::class, function () {
             return new RestApiExtension();
         });
@@ -88,6 +92,7 @@ class DateConversionModule extends AbstractModule
         // The admin bar clock also shows on the front end.
         $filters->registerAdminFilters();
         $container->get(DateArchiveFilter::class)->register();
+        $container->get(JalaliDateArchive::class)->register();
         $container->get(RestApiExtension::class)->register();
 
         // Admin screens, admin-ajax (the media grid) and admin-post only.
