@@ -2,7 +2,44 @@
 
 All notable changes to this project will be documented in this file.
 
-## [1.0.0-beta.2] - Unreleased
+## [1.0.0-beta.3] - Unreleased
+
+First WordPress.org release. Includes everything listed under 1.0.0-beta.2, plus the fixes from the pre-release review below.
+
+### What users need
+
+- Persian admin interface: a Persian (fa_IR) translation ships in `languages/`, including the settings screen's JavaScript strings. It is loaded only while no WordPress.org language pack is installed for the locale, so translate.wordpress.org takes over once a pack exists. `npm run build:i18n` compiles the `.po` file.
+- Safer first run. New installs start with digit conversion and fixing letters on save off; dates, search, the editor half-space, the admin font (Persian admins only), WooCommerce dates and Persian slugs are on. The settings screen shows a welcome notice that explains each module until it is dismissed. Existing sites keep their settings: the upgrade to settings version 2 writes their old behaviour out explicitly.
+- Digit conversion has options for Jalali dates (through `persian_kit_date_display`), counts (`number_format_i18n`) and WooCommerce prices (`formatted_woocommerce_price`). Text in `<kbd>` and `<samp>` keeps its digits, like code.
+- Search matches both spellings: a `posts_search` filter matches each term as typed, with Persian ی/ک and with Arabic ي/ك, so posts saved before normalization are found. Search terms are no longer rewritten, and their digits are no longer turned into Latin digits (that broke matching on `utf8mb4_general_ci` databases). Fixing letters on save is now a separate option, "Fix letters when posts are saved", and the `persian_kit_char_normalization` context for search is `posts_search` instead of `pre_get_posts`.
+- A Settings link on the Plugins screen and a translation icon for the menu.
+- Plain-language module descriptions. "Global date conversion (wp_date hook)" is now "Convert all dates (advanced)", with its side effects listed. The Utilities description says the switch controls slugs only; the helper functions always load.
+- Developers: `persian_kit_loaded` and the `function_exists()` guard are documented. The duplicate `persian_kit_known_conflicts` filter is removed; use `persian_kit_conflict_policies`.
+
+### Correctness fixes
+
+- Date pickers (classic editor, Quick Edit, block editor, WooCommerce) used a different leap-year rule from the date converter, and allowed 30 Esfand in every year. 30 Esfand 1404, which does not exist, was saved as 1 Farvardin 1405. Leap years now come from the converter itself, and a JavaScript test (`npm run test:js`) runs in CI.
+- The settings screen showed a module or option added in an update as off while it was running, and saving the screen then turned it off. Stored settings are now always read on top of each module's defaults. Settings are saved in one write instead of one per module.
+- Settings have a schema version (`persian_kit_db_version`) and an upgrade routine on `plugins_loaded`. Network activation creates the default settings on every site, and on sites created later (`wp_initialize_site`).
+- The compatibility card never appeared for Persian WooCommerce: its main file is `persian-woocommerce/woocommerce-persian.php`. The Persian WooCommerce and WP-Parsidate cards now recommend turning off the WooCommerce Support module.
+- Date archives: `/2025/03/` was titled with the first post's Jalali month, although a Gregorian month spans two. The archive title and `<title>` now name the whole period (`اسفند 1403 – فروردین 1404`; a year archive shows `1403 – 1404`). Date links built from the Jalali parts of a post date (`get_month_link(get_the_time('Y'), get_the_time('m'))`) are mapped back to the Gregorian archive instead of a 404.
+- Modules now boot on `after_setup_theme` (priority 20) instead of `plugins_loaded`, so filters such as `persian_kit_digit_conversion` added in a theme's `functions.php` take effect. `persian_kit_loaded` still fires on `plugins_loaded`, before the modules boot.
+- Batch normalization:
+  - The settings panel asks for confirmation, with a backup reminder, before it changes posts.
+  - "Count posts to fix" does a dry run and shows, per post type (by its label), the posts the saved settings would change.
+  - A post type picker chooses what to fix. A resumed job keeps the post types it started with.
+  - The fix is disabled while the settings form has unsaved changes.
+  - The count leaves Teh Marbuta (ة) out unless that option is on.
+  - Opening the settings page no longer scans every post.
+  - The Run button no longer stays hidden after a completed job.
+  - `wp persian-kit normalize --dry-run` uses the same exact count.
+- The module toggles have accessible names and descriptions, and the batch status is announced to screen readers (`aria-live`).
+- The REST `date_jalali` and `date_modified_jalali` schema no longer call the value ISO format; it is a Jalali date laid out like ISO 8601.
+- The docs now describe the `wp_mail` exclusion accurately: only text filtered while `wp_mail` runs is skipped.
+
+## [1.0.0-beta.2] - Not released separately
+
+These changes ship in 1.0.0-beta.3.
 
 - Prepared the plugin for WordPress.org submission: added `readme.txt`, `uninstall.php`, and `Tested up to:` plugin header.
 - Bumped `Requires at least:` to WordPress 6.5 (for `wp_is_serving_rest_request()`).
@@ -42,37 +79,6 @@ All notable changes to this project will be documented in this file.
 - `the_date()` prints the date once per day again.
 - The REST `date_jalali` field uses the local date for drafts, and media library dates use the site timezone.
 - An out-of-range Jalali month in the WooCommerce order filter is ignored instead of causing a fatal error.
-
-### What users need, from the pre-release review
-
-- Persian admin interface: a Persian (fa_IR) translation ships in `languages/`, including the settings screen's JavaScript strings. It is loaded only while no WordPress.org language pack is installed for the locale, so translate.wordpress.org takes over once a pack exists. `npm run build:i18n` compiles the `.po` file. The wording still needs a native speaker's review.
-- Safer first run. New installs start with digit conversion and fixing letters on save off; dates, search, the editor half-space, the admin font (Persian admins only), WooCommerce dates and Persian slugs are on. The settings screen shows a welcome notice that explains each module until it is dismissed. Existing sites keep their settings: the upgrade to settings version 2 writes their old behaviour out explicitly.
-- Digit conversion has options for Jalali dates (through `persian_kit_date_display`), counts (`number_format_i18n`) and WooCommerce prices (`formatted_woocommerce_price`). Text in `<kbd>` and `<samp>` keeps its digits, like code.
-- Search matches both spellings: a `posts_search` filter matches each term as typed, with Persian ی/ک and with Arabic ي/ك, so posts saved before normalization are found. Search terms are no longer rewritten, and their digits are no longer turned into Latin digits (that broke matching on `utf8mb4_general_ci` databases). Fixing letters on save is now a separate option, "Fix letters when posts are saved", and the `persian_kit_char_normalization` context for search is `posts_search` instead of `pre_get_posts`.
-- A Settings link on the Plugins screen and a translation icon for the menu.
-- Plain-language module descriptions. "Global date conversion (wp_date hook)" is now "Convert all dates (advanced)", with its side effects listed. The Utilities description says the switch controls slugs only; the helper functions always load.
-- Developers: `persian_kit_loaded` and the `function_exists()` guard are documented. The duplicate `persian_kit_known_conflicts` filter is removed; use `persian_kit_conflict_policies`.
-
-### Correctness fixes from the pre-release review
-
-- Date pickers (classic editor, Quick Edit, block editor, WooCommerce) used a different leap-year rule from the date converter, and allowed 30 Esfand in every year. 30 Esfand 1404, which does not exist, was saved as 1 Farvardin 1405. Leap years now come from the converter itself, and a JavaScript test (`npm run test:js`) runs in CI.
-- The settings screen showed a module or option added in an update as off while it was running, and saving the screen then turned it off. Stored settings are now always read on top of each module's defaults. Settings are saved in one write instead of one per module.
-- Settings have a schema version (`persian_kit_db_version`) and an upgrade routine on `plugins_loaded`. Network activation creates the default settings on every site, and on sites created later (`wp_initialize_site`).
-- The compatibility card never appeared for Persian WooCommerce: its main file is `persian-woocommerce/woocommerce-persian.php`. The Persian WooCommerce and WP-Parsidate cards now recommend turning off the WooCommerce Support module.
-- Date archives: `/2025/03/` was titled with the first post's Jalali month, although a Gregorian month spans two. The archive title and `<title>` now name the whole period (`اسفند 1403 – فروردین 1404`; a year archive shows `1403 – 1404`). Date links built from the Jalali parts of a post date (`get_month_link(get_the_time('Y'), get_the_time('m'))`) are mapped back to the Gregorian archive instead of a 404.
-- Modules now boot on `after_setup_theme` (priority 20) instead of `plugins_loaded`, so filters such as `persian_kit_digit_conversion` added in a theme's `functions.php` take effect. `persian_kit_loaded` still fires on `plugins_loaded`, before the modules boot.
-- Batch normalization:
-  - The settings panel asks for confirmation, with a backup reminder, before it changes posts.
-  - "Count posts to fix" does a dry run and shows, per post type (by its label), the posts the saved settings would change.
-  - A post type picker chooses what to fix. A resumed job keeps the post types it started with.
-  - The fix is disabled while the settings form has unsaved changes.
-  - The count leaves Teh Marbuta (ة) out unless that option is on.
-  - Opening the settings page no longer scans every post.
-  - The Run button no longer stays hidden after a completed job.
-  - `wp persian-kit normalize --dry-run` uses the same exact count.
-- The module toggles have accessible names and descriptions, and the batch status is announced to screen readers (`aria-live`).
-- The REST `date_jalali` and `date_modified_jalali` schema no longer call the value ISO format; it is a Jalali date laid out like ISO 8601.
-- The docs now describe the `wp_mail` exclusion accurately: only text filtered while `wp_mail` runs is skipped.
 
 ### Scope, robustness and performance
 

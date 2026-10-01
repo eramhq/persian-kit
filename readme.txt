@@ -4,7 +4,7 @@ Tags: persian, farsi, jalali, woocommerce, rtl
 Requires at least: 6.5
 Tested up to: 7.1
 Requires PHP: 8.1
-Stable tag: 1.0.0-beta.2
+Stable tag: 1.0.0-beta.3
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -86,8 +86,19 @@ No. WooCommerce features only activate when WooCommerce is installed and active.
 
 == Changelog ==
 
-= 1.0.0-beta.2 =
+= 1.0.0-beta.3 =
 * First WordPress.org release.
+* Persian (fa_IR) admin interface, used until a WordPress.org language pack is available.
+* New installs start with Persian digits and fixing letters on save off, and show a short welcome that explains each module. Existing sites keep their settings.
+* Search finds words typed with either Arabic (ي ك) or Persian (ی ک) letters, without changing content.
+* Persian digits can also apply to Jalali dates, counts and WooCommerce prices, each with its own option.
+* Fixing existing posts asks for confirmation, can count first without changing anything, and lets you choose post types.
+* Fixed: date pickers allowed 30 Esfand in non-leap years (30 Esfand 1404 was saved as 1 Farvardin 1405).
+* Fixed: options added in an update showed as off on the settings screen while running, and saving turned them off.
+* Fixed: date archive titles named only one Jalali month, and date links built from Jalali dates led to "not found" pages.
+* Fixed: the compatibility guidance never appeared next to Persian WooCommerce.
+* Fixed: filters added in a theme's functions.php had no effect.
+* Network activation sets up every site, including sites added later.
 * Switched core utilities to the `eram/abzar` (0.8) and `eram/daynum` (1.0.0-beta.3) libraries.
 * PHP helper functions for developers, all named `persian_kit_*`, including `persian_kit_currency_format`, `persian_kit_currency_convert`, `persian_kit_words_to_number`, `persian_kit_validate_postal_code`, `persian_kit_validate_plate_number`, `persian_kit_validate_bill_id`, `persian_kit_half_space_fix`, `persian_kit_keyboard_fix`, `persian_kit_persian_sort`.
 * Persian slugs turn a half-space (ZWNJ) into `-`. Slugs saved by earlier versions keep working, and posts created before activation load again.
@@ -106,5 +117,5 @@ No. WooCommerce features only activate when WooCommerce is installed and active.
 
 == Upgrade Notice ==
 
-= 1.0.0-beta.2 =
-Beta release. Fixes Jalali dates in feeds and timezone offsets. New Persian slugs use "-" instead of a half-space; existing URLs keep working.
+= 1.0.0-beta.3 =
+Beta release. Persian admin interface, search that finds both spellings of ی and ک, and safer defaults for new installs; existing sites keep their settings. Fixes Jalali leap years in date pickers, date archive titles, and Jalali dates in feeds.

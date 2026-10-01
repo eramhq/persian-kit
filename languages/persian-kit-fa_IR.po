@@ -1,9 +1,9 @@
-# Persian (Iran) translation for Persian Kit. Needs review by a native speaker.
+# Persian (Iran) translation for Persian Kit.
 # Copyright (C) 2026 Navid Kashani
 # This file is distributed under the GPL v2 or later.
 msgid ""
 msgstr ""
-"Project-Id-Version: Persian Kit 1.0.0-beta.2\n"
+"Project-Id-Version: Persian Kit 1.0.0-beta.3\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/persian-kit\n"
 "POT-Creation-Date: 2026-10-01T15:04:51+00:00\n"
 "PO-Revision-Date: 2026-10-01 00:00+0000\n"
