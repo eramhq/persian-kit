@@ -46,7 +46,8 @@ class SearchFilter
             return $search;
         }
 
-        $exclusionPrefix = apply_filters('wp_query_search_exclusion_prefix', '-');
+        // Same core filter WP_Query::parse_search() applies.
+        $exclusionPrefix = apply_filters('wp_query_search_exclusion_prefix', '-'); // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- Core's own hook.
         $parsedTerms = [];
         $hasVariants = false;
 
@@ -55,14 +56,14 @@ class SearchFilter
                 return $search;
             }
 
-            $exclude = $exclusionPrefix && str_starts_with($term, $exclusionPrefix);
-            if ($exclude) {
+            $negated = $exclusionPrefix && str_starts_with($term, $exclusionPrefix);
+            if ($negated) {
                 $term = substr($term, strlen($exclusionPrefix));
             }
 
             $variants = $this->variants($term);
             $hasVariants = $hasVariants || count($variants) > 1;
-            $parsedTerms[] = ['exclude' => $exclude, 'variants' => $variants];
+            $parsedTerms[] = ['negated' => $negated, 'variants' => $variants];
         }
 
         if (!$hasVariants) {
@@ -86,7 +87,7 @@ class SearchFilter
     }
 
     /**
-     * @param list<array{exclude: bool, variants: list<string>}> $parsedTerms
+     * @param list<array{negated: bool, variants: list<string>}> $parsedTerms
      */
     private function buildSearch(\WP_Query $query, array $parsedTerms): string
     {
@@ -97,8 +98,8 @@ class SearchFilter
         $clauses = [];
 
         foreach ($parsedTerms as $parsedTerm) {
-            $likeOp = $parsedTerm['exclude'] ? 'NOT LIKE' : 'LIKE';
-            $andOr = $parsedTerm['exclude'] ? ' AND ' : ' OR ';
+            $likeOp = $parsedTerm['negated'] ? 'NOT LIKE' : 'LIKE';
+            $andOr = $parsedTerm['negated'] ? ' AND ' : ' OR ';
             $parts = [];
 
             foreach ($columns as $column) {
@@ -135,7 +136,7 @@ class SearchFilter
         }
 
         // Same core filter WP_Query::parse_search() applies.
-        $columns = (array) apply_filters('post_search_columns', (array) $columns, (string) $query->get('s'), $query);
+        $columns = (array) apply_filters('post_search_columns', (array) $columns, (string) $query->get('s'), $query); // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- Core's own hook.
         $columns = array_values(array_intersect($columns, self::DEFAULT_COLUMNS));
 
         return $columns === [] ? self::DEFAULT_COLUMNS : $columns;
