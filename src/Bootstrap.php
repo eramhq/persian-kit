@@ -4,6 +4,7 @@ namespace PersianKit;
 
 use PersianKit\Container\ServiceContainer;
 use PersianKit\Core\CoreServiceProvider;
+use PersianKit\Modules\CharNormalization\CLI\NormalizeCommand;
 use PersianKit\Service\I18n\BundledTranslations;
 use PersianKit\Service\Installation\InstallManager;
 
@@ -33,6 +34,20 @@ class Bootstrap
         BundledTranslations::register();
 
         add_action('plugins_loaded', [__CLASS__, 'setup'], 10);
+
+        if (defined('WP_CLI') && WP_CLI) {
+            add_action('cli_init', [__CLASS__, 'registerCliCommands']);
+        }
+    }
+
+    /**
+     * Available whether or not the Character Normalization module is on.
+     * The class name (not an instance) keeps WP-CLI's docblock synopsis, and
+     * WP-CLI only constructs the command when it runs.
+     */
+    public static function registerCliCommands(): void
+    {
+        \WP_CLI::add_command('persian-kit normalize', NormalizeCommand::class);
     }
 
     /**

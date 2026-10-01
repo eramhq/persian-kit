@@ -2,6 +2,7 @@
 
 namespace PersianKit\Modules\CharNormalization\CLI;
 
+use PersianKit\Bootstrap;
 use PersianKit\Modules\CharNormalization\NormalizationJobManager;
 
 defined('ABSPATH') || exit;
@@ -10,9 +11,13 @@ class NormalizeCommand
 {
     private NormalizationJobManager $jobs;
 
-    public function __construct(NormalizationJobManager $jobs)
+    /**
+     * WP-CLI constructs the command with no arguments when it runs, after
+     * the plugin's services are registered.
+     */
+    public function __construct(?NormalizationJobManager $jobs = null)
     {
-        $this->jobs = $jobs;
+        $this->jobs = $jobs ?? Bootstrap::get(NormalizationJobManager::class);
     }
 
     /**

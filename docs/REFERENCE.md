@@ -439,7 +439,7 @@ Filters the built-in compatibility guidance for other Persian plugins.
 
 ## WP-CLI
 
-Character normalization has a CLI command:
+Character normalization has a CLI command. It is available even when the Character Normalization module is off, and uses that module's saved settings:
 
 ```bash
 wp persian-kit normalize [--dry-run] [--post-type=post,page] [--batch-size=100] [--restart]

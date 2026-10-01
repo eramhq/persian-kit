@@ -111,12 +111,6 @@ class CharNormalizationModule extends AbstractModule
             $container->get(SearchFilter::class)->register();
         }
 
-        if (defined('WP_CLI') && WP_CLI) {
-            \WP_CLI::add_command('persian-kit normalize', new CLI\NormalizeCommand(
-                $container->get(NormalizationJobManager::class)
-            ));
-        }
-
         add_action('rest_api_init', function () use ($container) {
             $container->get(NormalizationRestController::class)->registerRoutes();
         });

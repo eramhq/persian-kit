@@ -5,6 +5,8 @@ namespace PersianKit\Tests\Unit\CharNormalization\CLI;
 use Brain\Monkey;
 use Brain\Monkey\Functions;
 use Mockery;
+use PersianKit\Bootstrap;
+use PersianKit\Container\ServiceContainer;
 use PersianKit\Modules\CharNormalization\CLI\NormalizeCommand;
 use PersianKit\Modules\CharNormalization\NormalizationJobManager;
 use PHPUnit\Framework\TestCase;
@@ -45,6 +47,28 @@ class NormalizeCommandTest extends TestCase
     {
         Monkey\tearDown();
         parent::tearDown();
+    }
+
+    public function test_is_registered_by_class_name(): void
+    {
+        \WP_CLI::$commands = [];
+
+        Bootstrap::registerCliCommands();
+
+        $this->assertSame([['persian-kit normalize', NormalizeCommand::class]], \WP_CLI::$commands);
+    }
+
+    public function test_without_arguments_takes_the_job_manager_from_the_container(): void
+    {
+        $jobs = Mockery::mock(NormalizationJobManager::class);
+        $jobs->shouldReceive('status')->once()->andReturn(['cursor' => 0, 'is_resuming' => false, 'job' => []]);
+        $jobs->shouldReceive('runBatch')->once()->andReturn(['has_more' => false, 'job' => ['processed' => 0, 'modified' => 0]]);
+        ServiceContainer::getInstance()->singleton(NormalizationJobManager::class, $jobs);
+
+        // As WP-CLI does when the command runs.
+        (new NormalizeCommand())([], []);
+
+        $this->assertContains(['success', 'Done! 0 posts processed, 0 modified.'], \WP_CLI::$messages);
     }
 
     public function test_run_goes_through_the_job_manager(): void

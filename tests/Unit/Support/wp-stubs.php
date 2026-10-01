@@ -86,8 +86,15 @@ if (!class_exists('WP_CLI')) {
             self::$messages[] = ['success', $message];
         }
 
-        public static function add_command(string $name, $callable): void
+        /** @var list<array{0: string, 1: mixed}> */
+        public static array $commands = [];
+
+        /** @param callable|object|string $callable */
+        public static function add_command(string $name, $callable, array $args = []): bool
         {
+            self::$commands[] = [$name, $callable];
+
+            return true;
         }
     }
 }
