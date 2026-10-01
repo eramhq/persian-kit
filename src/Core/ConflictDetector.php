@@ -61,7 +61,7 @@ class ConflictDetector
                     ['key' => 'zwnj_editor', 'label' => __('ZWNJ Editor Support', 'persian-kit'), 'action' => 'keep_on'],
                     ['key' => 'utilities', 'label' => __('Utilities', 'persian-kit'), 'action' => 'keep_on'],
                 ],
-                'note' => __('WP Jalali also changes archive and permalink behavior. Persian Kit does not replace that yet.', 'persian-kit'),
+                'note' => __('WP Jalali can also put Jalali dates in post permalinks. Persian Kit serves Jalali archive pages such as /1405/07/, but post permalinks keep their Gregorian dates.', 'persian-kit'),
             ],
             'persian-woocommerce/woocommerce-persian.php' => [
                 'name'    => 'Persian WooCommerce',

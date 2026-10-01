@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-10-01T17:53:23+00:00\n"
+"POT-Creation-Date: 2026-10-01T18:04:16+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: persian-kit\n"
@@ -140,7 +140,7 @@ msgid "Jalali archive and permalink behavior"
 msgstr ""
 
 #: src/Core/ConflictDetector.php:64
-msgid "WP Jalali also changes archive and permalink behavior. Persian Kit does not replace that yet."
+msgid "WP Jalali can also put Jalali dates in post permalinks. Persian Kit serves Jalali archive pages such as /1405/07/, but post permalinks keep their Gregorian dates."
 msgstr ""
 
 #: src/Core/ConflictDetector.php:69

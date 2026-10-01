@@ -17,6 +17,7 @@ Persian Kit is a modular WordPress plugin for Persian-language sites. It focuses
 = Features =
 
 * Jalali date conversion at the display layer
+* Jalali archive pages (/1405/07/ lists the posts of Mehr 1405), and a Jalali archive list and calendar in the Archives and Calendar widgets and blocks
 * REST API Jalali companion fields
 * Persian digits in content, dates, counts and WooCommerce prices (off until you turn it on)
 * Search that finds words typed with either Arabic (ي ك) or Persian (ی ک) letters
@@ -76,9 +77,11 @@ With the Utilities module's "Persian slugs" option on (the default), new posts a
 
 With Date Conversion on, the dashboard's Activity widget, post lists and the admin bar show Jalali dates. The Activity widget is WordPress's own widget re-rendered with Jalali dates. The admin font applies only when the admin language is Persian or right-to-left.
 
-= Why do date archive titles show two months? =
+= How do date archives work? =
 
-Date archives such as `/2025/03/` are Gregorian months, and every Gregorian month spans two Jalali months, so the title names both (for example "اسفند 1403 – فروردین 1404").
+With Date Conversion on, a date archive whose year is below 1700 is Jalali: `/1405/07/` lists the posts of Mehr 1405, `/1405/` those of the Jalali year and `/1405/07/09/` those of one day, and the title reads "مهر 1405". The Archives and Calendar widgets and blocks list Jalali months and days and link to these pages; turn that off with the "Show the archive list and calendar in Jalali" option.
+
+Gregorian archives such as `/2025/03/` keep working. Every Gregorian month spans two Jalali months, so their title names both (for example "اسفند 1403 – فروردین 1404").
 
 = Do I need WooCommerce? =
 
