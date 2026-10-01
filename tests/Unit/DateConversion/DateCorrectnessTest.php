@@ -228,6 +228,8 @@ class DateCorrectnessTest extends TestCase
 
     public function test_rest_draft_without_gmt_date_uses_local_date(): void
     {
+        // No stored post: the response fields are read.
+        Functions\when('get_post')->justReturn(null);
         $rest = new RestApiExtension();
 
         $this->assertSame('1403-12-30T23:00:00', $rest->getDateJalali(['date_gmt' => null, 'date' => '2025-03-20T23:00:00']));

@@ -57,6 +57,7 @@ class RestApiExtensionTest extends TestCase
     {
         Functions\when('wp_timezone')->justReturn(new \DateTimeZone('Asia/Tehran'));
         Functions\when('apply_filters')->returnArg(2);
+        Functions\when('get_post')->justReturn(null);
 
         $ext = new RestApiExtension();
 
@@ -77,6 +78,7 @@ class RestApiExtensionTest extends TestCase
     {
         Functions\when('wp_timezone')->justReturn(new \DateTimeZone('Asia/Tehran'));
         Functions\when('apply_filters')->returnArg(2);
+        Functions\when('get_post')->justReturn(null);
 
         $ext = new RestApiExtension();
 

@@ -43,6 +43,11 @@ class RestApiExtension
      */
     public function getDateJalali(array $post): ?string
     {
+        $stored = $this->storedPost($post);
+        if ($stored !== null) {
+            return $this->formatJalali($stored->post_date_gmt, $stored->post_date);
+        }
+
         return $this->formatJalali($post['date_gmt'] ?? null, $post['date'] ?? null);
     }
 
@@ -51,7 +56,27 @@ class RestApiExtension
      */
     public function getModifiedDateJalali(array $post): ?string
     {
+        $stored = $this->storedPost($post);
+        if ($stored !== null) {
+            return $this->formatJalali($stored->post_modified_gmt, $stored->post_modified);
+        }
+
         return $this->formatJalali($post['modified_gmt'] ?? null, $post['modified'] ?? null);
+    }
+
+    /**
+     * The post being prepared. Its dates are read from the post because a
+     * request with _fields, such as ?_fields=date_jalali, leaves date,
+     * modified and even id out of the data passed here. Core's posts
+     * controller sets the global post before preparing each item.
+     *
+     * @param array<string, mixed> $post
+     */
+    private function storedPost(array $post): ?\WP_Post
+    {
+        $stored = get_post(isset($post['id']) ? (int) $post['id'] : null);
+
+        return $stored instanceof \WP_Post ? $stored : null;
     }
 
     /**
