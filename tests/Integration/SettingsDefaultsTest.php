@@ -4,14 +4,8 @@ namespace PersianKit\Tests\Integration;
 
 use PersianKit\Core\AdminPage;
 use PersianKit\Core\ConflictDetector;
+use PersianKit\Core\ModuleRegistry;
 use PersianKit\Core\SettingsManager;
-use PersianKit\Modules\AdminFont\AdminFontModule;
-use PersianKit\Modules\CharNormalization\CharNormalizationModule;
-use PersianKit\Modules\DateConversion\DateConversionModule;
-use PersianKit\Modules\DigitConversion\DigitConversionModule;
-use PersianKit\Modules\Utilities\UtilitiesModule;
-use PersianKit\Modules\WooCommerce\WooCommerceModule;
-use PersianKit\Modules\ZWNJEditor\ZWNJEditorModule;
 use PersianKit\Service\I18n\BundledTranslations;
 use PersianKit\Tests\Integration\Support\WordPressIntegrationTestCase;
 
@@ -155,14 +149,6 @@ class SettingsDefaultsTest extends WordPressIntegrationTestCase
      */
     private function moduleClasses(): array
     {
-        return [
-            DigitConversionModule::class,
-            DateConversionModule::class,
-            CharNormalizationModule::class,
-            AdminFontModule::class,
-            ZWNJEditorModule::class,
-            WooCommerceModule::class,
-            UtilitiesModule::class,
-        ];
+        return ModuleRegistry::MODULES;
     }
 }

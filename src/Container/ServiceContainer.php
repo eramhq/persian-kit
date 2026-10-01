@@ -39,6 +39,9 @@ class ServiceContainer
         return $this;
     }
 
+    /**
+     * @throws ServiceNotFoundException When nothing is registered as $id.
+     */
     public function get(string $id): mixed
     {
         if (isset($this->instances[$id])) {
@@ -50,7 +53,8 @@ class ServiceContainer
             return $this->instances[$id];
         }
 
-        return null;
+        // phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped -- A developer error naming a service id, not output.
+        throw ServiceNotFoundException::forId($id);
     }
 
     public function has(string $id): bool

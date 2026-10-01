@@ -4,22 +4,20 @@ namespace PersianKit\Core;
 
 use PersianKit\Container\ServiceContainer;
 use PersianKit\Container\ServiceProvider;
+use PersianKit\Contracts\ModuleInterface;
 use PersianKit\Service\Assets\AssetManager;
 
 defined('ABSPATH') || exit;
 
 class CoreServiceProvider implements ServiceProvider
 {
-    /** @var array<class-string<\PersianKit\Contracts\ModuleInterface>> */
-    private array $featureModules = [
-        \PersianKit\Modules\DigitConversion\DigitConversionModule::class,
-        \PersianKit\Modules\DateConversion\DateConversionModule::class,
-        \PersianKit\Modules\CharNormalization\CharNormalizationModule::class,
-        \PersianKit\Modules\AdminFont\AdminFontModule::class,
-        \PersianKit\Modules\ZWNJEditor\ZWNJEditorModule::class,
-        \PersianKit\Modules\WooCommerce\WooCommerceModule::class,
-        \PersianKit\Modules\Utilities\UtilitiesModule::class,
-    ];
+    /**
+     * Module instances, created in register() and booted in boot(). Bootstrap
+     * boots the same provider instance it registered.
+     *
+     * @var list<ModuleInterface>
+     */
+    private array $modules = [];
 
     public function register(ServiceContainer $container): void
     {
@@ -36,17 +34,16 @@ class CoreServiceProvider implements ServiceProvider
         });
 
         // Instantiate and register each feature module
-        $modules = [];
         $settings = $container->get(SettingsManager::class);
 
-        foreach ($this->featureModules as $moduleClass) {
+        foreach (ModuleRegistry::MODULES as $moduleClass) {
             $settings->registerDefaults($moduleClass::key(), $moduleClass::defaults());
             $module = new $moduleClass($settings);
             $module->register($container);
-            $modules[] = $module;
+            $this->modules[] = $module;
         }
 
-        $container->singleton('modules', (object) ['all' => $modules]);
+        $modules = $this->modules;
 
         $container->register(AdminPage::class, function (ServiceContainer $c) use ($modules) {
             return new AdminPage(
@@ -70,8 +67,7 @@ class CoreServiceProvider implements ServiceProvider
         }
 
         // Boot each enabled feature module
-        $modules = $container->get('modules')->all;
-        foreach ($modules as $module) {
+        foreach ($this->modules as $module) {
             if ($module->isEnabled()) {
                 $module->boot($container);
             }

@@ -30,7 +30,7 @@ class CoreServiceProviderTest extends TestCase
     {
         Functions\when('is_admin')->justReturn(false);
 
-        $this->assertSame([ConflictDetector::class, 'modules'], $this->bootAndListFetched());
+        $this->assertSame([ConflictDetector::class], $this->bootAndListFetched());
     }
 
     public function test_boot_in_admin_loads_settings_page_and_assets(): void
@@ -38,7 +38,7 @@ class CoreServiceProviderTest extends TestCase
         Functions\when('is_admin')->justReturn(true);
 
         $this->assertSame(
-            [ConflictDetector::class, AssetManager::class, AdminPage::class, 'modules'],
+            [ConflictDetector::class, AssetManager::class, AdminPage::class],
             $this->bootAndListFetched()
         );
     }
@@ -57,7 +57,6 @@ class CoreServiceProviderTest extends TestCase
                 ConflictDetector::class => Mockery::mock(ConflictDetector::class)->shouldReceive('registerNotice')->once()->getMock(),
                 AdminPage::class        => Mockery::mock(AdminPage::class)->shouldReceive('register')->once()->getMock(),
                 AssetManager::class     => Mockery::mock(AssetManager::class),
-                'modules'               => (object) ['all' => []],
             };
         });
 

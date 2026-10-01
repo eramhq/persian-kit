@@ -2,14 +2,10 @@
 
 namespace PersianKit\Service\Installation;
 
+use PersianKit\Core\ModuleRegistry;
 use PersianKit\Core\SettingsManager;
-use PersianKit\Modules\AdminFont\AdminFontModule;
-use PersianKit\Modules\DateConversion\DateConversionModule;
 use PersianKit\Modules\DigitConversion\DigitConversionModule;
-use PersianKit\Modules\WooCommerce\WooCommerceModule;
-use PersianKit\Modules\ZWNJEditor\ZWNJEditorModule;
 use PersianKit\Modules\CharNormalization\CharNormalizationModule;
-use PersianKit\Modules\Utilities\UtilitiesModule;
 
 defined('ABSPATH') || exit;
 
@@ -24,17 +20,6 @@ class InstallManager
      * Bump when stored settings need a migration, and add the step to migrate().
      */
     public const DB_VERSION = 2;
-
-    /** @var array<class-string<\PersianKit\Contracts\ModuleInterface>> */
-    private static array $modules = [
-        DigitConversionModule::class,
-        DateConversionModule::class,
-        CharNormalizationModule::class,
-        AdminFontModule::class,
-        ZWNJEditorModule::class,
-        WooCommerceModule::class,
-        UtilitiesModule::class,
-    ];
 
     public static function activate(bool $networkWide): void
     {
@@ -92,7 +77,7 @@ class InstallManager
 
         if (!is_array($stored) || $stored === []) {
             $defaults = [];
-            foreach (self::$modules as $moduleClass) {
+            foreach (ModuleRegistry::MODULES as $moduleClass) {
                 $defaults[$moduleClass::key()] = $moduleClass::defaults();
             }
             $settings->updateModules($defaults);

@@ -15,6 +15,7 @@ All notable changes to this project will be documented in this file.
 ### Robustness
 
 - Services that only work in the admin (the settings page and its assets, the posts, media and WooCommerce order month filters, the media date formatter, the admin date pickers and the WooCommerce date fields) are no longer created on front-end, REST, cron or WP-CLI requests. They still load for admin-ajax and admin-post.
+- Developers: `ServiceContainer::get()` throws `PersianKit\Container\ServiceNotFoundException` for an id that was never registered, instead of returning `null`. The list of modules lives in one place, `PersianKit\Core\ModuleRegistry::MODULES`, and the `'modules'` container entry is gone.
 
 ## [1.0.0-beta.3] - Unreleased
 
