@@ -34,7 +34,10 @@ class BatchMigrator
     }
 
     /**
-     * Count posts containing Arabic characters, grouped by post type.
+     * Count posts containing a character the current settings would change,
+     * grouped by post type. An upper bound: characters inside tags or code
+     * blocks are counted but left alone. processBatch() in dry-run mode gives
+     * the exact number.
      *
      * @param array<string> $postTypes
      * @return array<string, int>
@@ -47,7 +50,7 @@ class BatchMigrator
 
         global $wpdb;
 
-        $arabicPattern = '[\x{064A}\x{0643}\x{0660}-\x{0669}\x{0629}]';
+        $arabicPattern = $this->affectedCharacterPattern();
 
         // No WordPress API counts posts by a content REGEXP; the count is shown once per status check.
         // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
@@ -69,24 +72,25 @@ class BatchMigrator
     }
 
     /**
-     * Process one batch of posts starting from the cursor position.
+     * Process one batch of posts after $cursor (the saved cursor by default).
+     * A dry run changes nothing and leaves the saved cursor alone.
      *
      * @param array<string> $postTypes
      */
-    public function processBatch(array $postTypes, int $batchSize, bool $dryRun = false): BatchResult
+    public function processBatch(array $postTypes, int $batchSize, bool $dryRun = false, ?int $cursor = null): BatchResult
     {
+        $cursor ??= $this->getCursor();
+
         if ($postTypes === []) {
-            return new BatchResult(0, 0, $this->getCursor(), false);
+            return new BatchResult(0, 0, $cursor, false);
         }
 
         global $wpdb;
 
-        $cursor = $this->getCursor();
-
         // Batch scan by ID cursor; each batch is read once, so caching would only waste memory.
         // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
         $posts = $wpdb->get_results($wpdb->prepare(
-            "SELECT ID, post_title, post_content, post_excerpt
+            "SELECT ID, post_type, post_title, post_content, post_excerpt
              FROM {$wpdb->posts}
              WHERE ID > %d
                AND post_type IN (" . implode(',', array_fill(0, count($postTypes), '%s')) . ")
@@ -101,6 +105,7 @@ class BatchMigrator
         }
 
         $modified = 0;
+        $modifiedByType = [];
         $lastId = $cursor;
 
         foreach ($posts as $post) {
@@ -140,6 +145,8 @@ class BatchMigrator
 
             if ($changed) {
                 $modified++;
+                $type = (string) ($post->post_type ?? '');
+                $modifiedByType[$type] = ($modifiedByType[$type] ?? 0) + 1;
             }
         }
 
@@ -149,6 +156,21 @@ class BatchMigrator
             $this->setCursor($lastId);
         }
 
-        return new BatchResult(count($posts), $modified, $lastId, $hasMore);
+        return new BatchResult(count($posts), $modified, $lastId, $hasMore, $modifiedByType);
+    }
+
+    /**
+     * MySQL REGEXP character class of the characters the normalizer changes:
+     * Arabic Yeh and Kaf, Arabic-Indic digits, and Teh Marbuta when enabled.
+     */
+    private function affectedCharacterPattern(): string
+    {
+        $pattern = '[\x{064A}\x{0643}\x{0660}-\x{0669}';
+
+        if ($this->normalizer->normalize("\u{0629}") !== "\u{0629}") {
+            $pattern .= '\x{0629}';
+        }
+
+        return $pattern . ']';
     }
 }

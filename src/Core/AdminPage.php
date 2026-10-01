@@ -91,6 +91,8 @@ class AdminPage
             $modules = [];
         }
 
+        $sanitized = [];
+
         foreach ($this->modules as $module) {
             $key = $module::key();
             $values = $modules[$key] ?? [];
@@ -102,8 +104,10 @@ class AdminPage
             // Toggle: if checkbox not present, module is disabled
             $values['enabled'] = isset($values['enabled']);
 
-            $this->settings->updateModule($key, $module->sanitizeSettings($values));
+            $sanitized[$key] = $module->sanitizeSettings($values);
         }
+
+        $this->settings->updateModules($sanitized);
 
         wp_safe_redirect(
             add_query_arg(

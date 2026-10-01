@@ -125,16 +125,19 @@
     }
 
     /**
-     * Check if a Jalali year is a leap year (33-year cycle).
+     * Check if a Jalali year is a leap year.
+     *
+     * Derived from the converters so the pickers and the conversion always
+     * agree: 30 Esfand exists only when it round-trips to itself.
      *
      * @param {number} jy Jalali year
      * @returns {boolean}
      */
     function isJalaliLeapYear(jy) {
-        var breaks = [1, 5, 9, 13, 17, 22, 26, 30];
-        var mod = ((jy - 474) % 2820 + 2820) % 2820 + 474;
-        var remainder = (mod + 38) * 682 % 2816;
-        return remainder < 682;
+        var g = jalaliToGregorian(jy, 12, 30);
+        var back = gregorianToJalali(g[0], g[1], g[2]);
+
+        return back[0] === jy && back[1] === 12 && back[2] === 30;
     }
 
     /**

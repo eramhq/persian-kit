@@ -301,3 +301,21 @@
 .persian-kit-footer {
     margin-top: 1em;
 }
+
+/* Batch post type picker */
+.persian-kit-post-types {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25em 1.25em;
+    margin: 0 0 1em;
+}
+
+.persian-kit-post-types legend {
+    font-weight: 600;
+    margin-bottom: 0.25em;
+}
+
+/* Batch confirmation */
+.persian-kit-module__settings .persian-kit-batch-confirm {
+    margin: 0 0 1em;
+}

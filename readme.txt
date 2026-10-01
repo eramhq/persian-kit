@@ -52,7 +52,7 @@ Full source, build instructions, and issue tracker:
 
 = Does Persian Kit support multisite? =
 
-Persian Kit is configured per site. Network activation works at the plugin level, but default settings are created only on the site where the plugin is activated; configure each site from its own Persian Kit screen. Uninstalling the plugin removes its options from every site in the network.
+Persian Kit is configured per site. Network activation creates the default settings on every site, and on sites added later; configure each site from its own Persian Kit screen. Uninstalling the plugin removes its options from every site in the network.
 
 = Is Persian Kit compatible with WooCommerce HPOS (custom order tables)? =
 
@@ -86,7 +86,7 @@ No. WooCommerce features only activate when WooCommerce is installed and active.
 * Fixed: post and comment times were off by the site's timezone offset, so late-evening comments showed the next day.
 * Fixed: drafts showed year −1, and the dashboard Activity widget and WooCommerce dates added the timezone offset twice.
 * Fixed: `the_date()` printed the date for every post instead of once per day.
-* Digit conversion no longer runs in the admin, REST API, feeds or outgoing email.
+* Digit conversion no longer runs in the admin, REST API, feeds, or on text filtered while `wp_mail` runs. Email content rendered before `wp_mail()` is called is still converted.
 * WooCommerce: one Jalali month filter per orders screen (HPOS and legacy); declared HPOS compatibility.
 * The admin font loads only for Persian or right-to-left admin languages.
 * Batch normalization no longer resumes by itself when the settings page opens; WP-CLI and the settings page share progress.

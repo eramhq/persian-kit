@@ -391,7 +391,7 @@ add_filter('persian_kit_digit_conversion', function (bool $enabled, string $hook
 }, 10, 2);
 ```
 
-Digit conversion never runs on admin screens, in REST responses, in feeds, or while a `wp_mail` filter is running.
+Digit conversion never runs on admin screens, in REST responses or in feeds. The email exclusion is narrow: it skips only text filtered while a `wp_mail` filter is running. Content rendered before `wp_mail()` is called, such as an email template that calls `the_title` or `the_content`, is still converted.
 
 ### `persian_kit_char_normalization`
 
@@ -433,6 +433,7 @@ Character normalization has a CLI command:
 wp persian-kit normalize [--dry-run] [--post-type=post,page] [--batch-size=100] [--restart]
 ```
 
+- `--dry-run` counts the posts the current settings would change, by post type, without saving anything.
 - `--batch-size` is clamped to 1–500.
 - Progress is stored in the same job as the settings screen's batch tool, so either one can resume a run the other left unfinished.
 

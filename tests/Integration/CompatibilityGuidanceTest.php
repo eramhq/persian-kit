@@ -53,7 +53,7 @@ class CompatibilityGuidanceTest extends WordPressIntegrationTestCase
 
     public function test_settings_page_renders_supplementary_guidance_for_persian_woocommerce(): void
     {
-        update_option('active_plugins', ['persian-woocommerce/persian-woocommerce.php']);
+        update_option('active_plugins', ['persian-woocommerce/woocommerce-persian.php']);
 
         set_current_screen('toplevel_page_persian-kit');
 
@@ -66,6 +66,7 @@ class CompatibilityGuidanceTest extends WordPressIntegrationTestCase
         $this->assertStringContainsString('Leave Global Date Conversion off in Persian Kit.', $output);
         $this->assertStringContainsString('No change needed for Digit Conversion.', $output);
         $this->assertStringContainsString('Let Persian WooCommerce handle Woo-specific dates.', $output);
+        $this->assertStringContainsString('Turn off WooCommerce Support in Persian Kit.', $output);
     }
 
     private function adminPage(): AdminPage

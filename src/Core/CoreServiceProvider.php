@@ -40,6 +40,7 @@ class CoreServiceProvider implements ServiceProvider
         $settings = $container->get(SettingsManager::class);
 
         foreach ($this->featureModules as $moduleClass) {
+            $settings->registerDefaults($moduleClass::key(), $moduleClass::defaults());
             $module = new $moduleClass($settings);
             $module->register($container);
             $modules[] = $module;

@@ -45,12 +45,14 @@ class ConflictDetectorTest extends TestCase
         $this->assertContains('Jalali dates', $reports[0]['handles']);
         $this->assertSame('Turn off', $reports[0]['recommendations'][0]['action_label']);
         $this->assertSame('Currently on', $reports[0]['recommendations'][0]['current_label']);
-        $this->assertSame('Keep on', $reports[0]['recommendations'][4]['action_label']);
+        $this->assertSame('Turn off', $reports[0]['recommendations'][4]['action_label']);
+        $this->assertSame('woocommerce', $reports[0]['recommendations'][4]['key']);
+        $this->assertSame('Keep on', $reports[0]['recommendations'][5]['action_label']);
     }
 
     public function test_reports_include_nested_setting_guidance_for_persian_woocommerce(): void
     {
-        Functions\when('is_plugin_active')->alias(static fn (string $slug): bool => $slug === 'persian-woocommerce/persian-woocommerce.php');
+        Functions\when('is_plugin_active')->alias(static fn (string $slug): bool => $slug === 'persian-woocommerce/woocommerce-persian.php');
         Functions\when('is_multisite')->justReturn(false);
 
         $detector = new ConflictDetector();
@@ -66,6 +68,12 @@ class ConflictDetectorTest extends TestCase
         $this->assertSame('Keep on', $reports[0]['recommendations'][0]['action_label']);
         $this->assertSame('Leave off', $reports[0]['recommendations'][1]['action_label']);
         $this->assertSame('Currently off', $reports[0]['recommendations'][1]['current_label']);
+
+        $woocommerce = array_values(array_filter(
+            $reports[0]['recommendations'],
+            static fn (array $recommendation): bool => $recommendation['key'] === 'woocommerce'
+        ));
+        $this->assertSame('turn_off', $woocommerce[0]['action']);
     }
 
     public function test_reports_include_network_active_plugins_on_multisite(): void

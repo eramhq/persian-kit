@@ -22,15 +22,17 @@ $moduleSettings = $args['moduleSettings'] ?? [];
 
 $isEnabled    = !empty($moduleSettings['enabled']);
 $settingsView = $module->settingsView();
+$nameId       = 'persian-kit-module-' . $moduleKey . '-name';
+$descId       = 'persian-kit-module-' . $moduleKey . '-description';
 ?>
 <div class="persian-kit-module" x-data="{ enabled: <?php echo $isEnabled ? 'true' : 'false'; ?> }">
     <div class="persian-kit-module__header">
         <div class="persian-kit-module__info">
-            <span class="persian-kit-module__name">
+            <span class="persian-kit-module__name" id="<?php echo esc_attr($nameId); ?>">
                 <?php echo esc_html($moduleLabel); ?>
             </span>
             <?php if ($moduleDescription !== '') : ?>
-                <span class="persian-kit-module__description">
+                <span class="persian-kit-module__description" id="<?php echo esc_attr($descId); ?>">
                     <?php echo esc_html($moduleDescription); ?>
                 </span>
             <?php endif; ?>
@@ -41,6 +43,10 @@ $settingsView = $module->settingsView();
                 type="checkbox"
                 name="modules[<?php echo esc_attr($moduleKey); ?>][enabled]"
                 value="1"
+                aria-labelledby="<?php echo esc_attr($nameId); ?>"
+                <?php if ($moduleDescription !== '') : ?>
+                    aria-describedby="<?php echo esc_attr($descId); ?>"
+                <?php endif; ?>
                 x-model="enabled"
                 <?php checked($isEnabled); ?>
             >

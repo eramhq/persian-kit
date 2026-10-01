@@ -30,12 +30,14 @@ class ConflictDetector
                     __('Digit conversion in content', 'persian-kit'),
                     __('Arabic-to-Persian text normalization', 'persian-kit'),
                     __('Admin and editor font styling', 'persian-kit'),
+                    __('WooCommerce Jalali dates', 'persian-kit'),
                 ],
                 'recommendations' => [
                     ['key' => 'date_conversion', 'label' => __('Date Conversion', 'persian-kit'), 'action' => 'turn_off'],
                     ['key' => 'digit_conversion', 'label' => __('Digit Conversion', 'persian-kit'), 'action' => 'turn_off'],
                     ['key' => 'char_normalization', 'label' => __('Character Normalization', 'persian-kit'), 'action' => 'turn_off'],
                     ['key' => 'admin_font', 'label' => __('Admin Font', 'persian-kit'), 'action' => 'turn_off'],
+                    ['key' => 'woocommerce', 'label' => __('WooCommerce Support', 'persian-kit'), 'action' => 'turn_off'],
                     ['key' => 'zwnj_editor', 'label' => __('ZWNJ Editor Support', 'persian-kit'), 'action' => 'keep_on'],
                     ['key' => 'utilities', 'label' => __('Utilities', 'persian-kit'), 'action' => 'keep_on'],
                 ],
@@ -61,7 +63,7 @@ class ConflictDetector
                 ],
                 'note' => __('WP Jalali also changes archive and permalink behavior. Persian Kit does not replace that yet.', 'persian-kit'),
             ],
-            'persian-woocommerce/persian-woocommerce.php' => [
+            'persian-woocommerce/woocommerce-persian.php' => [
                 'name'    => 'Persian WooCommerce',
                 'type'    => 'supplementary',
                 'summary' => __('Persian WooCommerce is already handling WooCommerce-specific Persian date features.', 'persian-kit'),
@@ -77,6 +79,7 @@ class ConflictDetector
                     ['key' => 'char_normalization', 'label' => __('Character Normalization', 'persian-kit'), 'action' => 'no_change'],
                     ['key' => 'admin_font', 'label' => __('Admin Font', 'persian-kit'), 'action' => 'no_change'],
                     ['key' => 'zwnj_editor', 'label' => __('ZWNJ Editor Support', 'persian-kit'), 'action' => 'no_change'],
+                    ['key' => 'woocommerce', 'label' => __('WooCommerce Support', 'persian-kit'), 'action' => 'turn_off'],
                     ['key' => 'utilities', 'label' => __('Utilities', 'persian-kit'), 'action' => 'keep_on'],
                 ],
                 'note' => __('Let Persian WooCommerce handle Woo-specific dates. Persian Kit can still handle normal WordPress dates.', 'persian-kit'),

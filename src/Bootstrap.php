@@ -17,6 +17,9 @@ class Bootstrap
         CoreServiceProvider::class,
     ];
 
+    /** @var list<\PersianKit\Container\ServiceProvider> */
+    private static array $bootQueue = [];
+
     public static function init(): void
     {
         if (self::$initialized) {
@@ -30,11 +33,31 @@ class Bootstrap
         add_action('plugins_loaded', [__CLASS__, 'setup'], 10);
     }
 
+    /**
+     * Services are registered on plugins_loaded and booted on after_setup_theme,
+     * so filters a theme adds in functions.php are in place before any module
+     * reads them.
+     */
     public static function setup(): void
     {
-        self::initializeServices();
+        InstallManager::maybeUpgrade();
+
+        self::registerServices();
 
         do_action('persian_kit_loaded');
+
+        add_action('after_setup_theme', [__CLASS__, 'boot'], 20);
+    }
+
+    public static function boot(): void
+    {
+        $container = self::container();
+
+        foreach (self::$bootQueue as $provider) {
+            $provider->boot($container);
+        }
+
+        self::$bootQueue = [];
     }
 
     public static function container(): ServiceContainer
@@ -55,21 +78,17 @@ class Bootstrap
     private static function registerLifecycleHooks(): void
     {
         register_activation_hook(PERSIAN_KIT_MAIN_FILE, [__CLASS__, 'activate']);
+        add_action('wp_initialize_site', [InstallManager::class, 'initializeSite'], 20);
     }
 
-    private static function initializeServices(): void
+    private static function registerServices(): void
     {
         $container = self::container();
 
-        $providers = [];
         foreach (self::$providers as $providerClass) {
             $provider = new $providerClass();
             $provider->register($container);
-            $providers[] = $provider;
-        }
-
-        foreach ($providers as $provider) {
-            $provider->boot($container);
+            self::$bootQueue[] = $provider;
         }
     }
 }

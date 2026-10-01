@@ -87,6 +87,19 @@ jobs:
       - name: Integration tests
         run: composer test:integration
 
+  js:
+    name: JavaScript tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 22
+
+      - name: Unit tests
+        run: npm run test:js
+
   build:
     name: Build and Plugin Check
     runs-on: ubuntu-latest

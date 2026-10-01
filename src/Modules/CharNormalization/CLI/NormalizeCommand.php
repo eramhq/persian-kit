@@ -2,19 +2,16 @@
 
 namespace PersianKit\Modules\CharNormalization\CLI;
 
-use PersianKit\Modules\CharNormalization\BatchMigrator;
 use PersianKit\Modules\CharNormalization\NormalizationJobManager;
 
 defined('ABSPATH') || exit;
 
 class NormalizeCommand
 {
-    private BatchMigrator $migrator;
     private NormalizationJobManager $jobs;
 
-    public function __construct(BatchMigrator $migrator, NormalizationJobManager $jobs)
+    public function __construct(NormalizationJobManager $jobs)
     {
-        $this->migrator = $migrator;
         $this->jobs = $jobs;
     }
 
@@ -24,7 +21,7 @@ class NormalizeCommand
      * ## OPTIONS
      *
      * [--dry-run]
-     * : Count affected posts without modifying.
+     * : Count the posts the current settings would change, without saving.
      *
      * [--post-type=<types>]
      * : Comma-separated post types.
@@ -63,7 +60,7 @@ class NormalizeCommand
         }
 
         if ($dryRun) {
-            $this->dryRun($postTypes);
+            $this->dryRun($postTypes, $batchSize);
             return;
         }
 
@@ -71,14 +68,26 @@ class NormalizeCommand
     }
 
     /**
+     * Counts the posts the current settings would change, without saving.
+     *
      * @param array<int, string> $postTypes
      */
-    private function dryRun(array $postTypes): void
+    private function dryRun(array $postTypes, int $batchSize): void
     {
-        \WP_CLI::log('Counting posts with Arabic characters...');
+        \WP_CLI::log('Counting posts the current settings would change...');
 
-        $counts = $this->migrator->countAffected($postTypes);
-        $total  = array_sum($counts);
+        $counts = [];
+        $cursor = 0;
+
+        do {
+            $data = $this->jobs->preview($postTypes, $cursor, $batchSize);
+            foreach ($data['counts'] as $type => $count) {
+                $counts[$type] = ($counts[$type] ?? 0) + $count;
+            }
+            $cursor = (int) $data['last_id'];
+        } while ($data['has_more']);
+
+        $total = array_sum($counts);
 
         $tableData = [];
         foreach ($counts as $type => $count) {

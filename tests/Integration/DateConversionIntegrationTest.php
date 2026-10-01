@@ -93,7 +93,7 @@ class DateConversionIntegrationTest extends WordPressIntegrationTestCase
 
         $title = get_the_archive_title();
 
-        $this->assertStringContainsString('1404', $title);
+        $this->assertStringContainsString('اسفند 1403 – فروردین 1404', $title);
         $this->assertStringNotContainsString('2025', $title);
     }
 

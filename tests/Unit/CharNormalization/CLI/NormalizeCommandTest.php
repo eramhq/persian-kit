@@ -5,7 +5,6 @@ namespace PersianKit\Tests\Unit\CharNormalization\CLI;
 use Brain\Monkey;
 use Brain\Monkey\Functions;
 use Mockery;
-use PersianKit\Modules\CharNormalization\BatchMigrator;
 use PersianKit\Modules\CharNormalization\CLI\NormalizeCommand;
 use PersianKit\Modules\CharNormalization\NormalizationJobManager;
 use PHPUnit\Framework\TestCase;
@@ -94,17 +93,30 @@ class NormalizeCommandTest extends TestCase
     {
         $jobs = Mockery::mock(NormalizationJobManager::class);
         $jobs->shouldReceive('restart')->once();
-        $migrator = Mockery::mock(BatchMigrator::class);
-        $migrator->shouldReceive('countAffected')->once()->andReturn(['post' => 2]);
+        $jobs->shouldReceive('preview')->once()->andReturn(['counts' => ['post' => 2], 'processed' => 5, 'last_id' => 9, 'has_more' => false]);
         Functions\when('WP_CLI\Utils\format_items')->justReturn(null);
 
-        (new NormalizeCommand($migrator, $jobs))([], ['restart' => true, 'dry-run' => true, 'post-type' => 'post']);
+        $this->command($jobs)([], ['restart' => true, 'dry-run' => true, 'post-type' => 'post']);
 
         $this->assertContains(['log', 'Total: 2 posts need normalization.'], \WP_CLI::$messages);
     }
 
+    public function test_dry_run_adds_up_preview_batches_from_the_returned_cursor(): void
+    {
+        $jobs = Mockery::mock(NormalizationJobManager::class);
+        $jobs->shouldReceive('preview')->once()->with(['post', 'page'], 0, 100)
+            ->andReturn(['counts' => ['post' => 2, 'page' => 0], 'processed' => 100, 'last_id' => 120, 'has_more' => true]);
+        $jobs->shouldReceive('preview')->once()->with(['post', 'page'], 120, 100)
+            ->andReturn(['counts' => ['post' => 1, 'page' => 3], 'processed' => 40, 'last_id' => 200, 'has_more' => false]);
+        Functions\when('WP_CLI\Utils\format_items')->justReturn(null);
+
+        $this->command($jobs)([], ['dry-run' => true]);
+
+        $this->assertContains(['log', 'Total: 6 posts need normalization.'], \WP_CLI::$messages);
+    }
+
     private function command(NormalizationJobManager $jobs): NormalizeCommand
     {
-        return new NormalizeCommand(Mockery::mock(BatchMigrator::class), $jobs);
+        return new NormalizeCommand($jobs);
     }
 }

@@ -1,38 +1,96 @@
 /**
  * Alpine component for the batch normalization panel on the settings page.
  * Batches run only while this page drives them; a reload pauses the job.
+ *
+ * @param {{labels?: Object<string, string>, selected?: string[]}} config
+ *   Public post type labels by slug, and the slugs checked by default.
  */
-export default function normalizeJob() {
-    const { __, sprintf } = window.wp.i18n;
+export default function normalizeJob(config = {}) {
+    const { __, _n, sprintf } = window.wp.i18n;
 
     return {
+        labels: config.labels || {},
+        postTypes: config.selected || [],
         nextBatchTimer: null,
         running: false,
+        previewing: false,
         paused: false,
         done: false,
+        confirming: false,
+        backupConfirmed: false,
+        settingsDirty: false,
         counts: null,
         isResuming: false,
         progressText: '',
+        previewText: '',
         doneText: '',
         error: '',
         totalProcessed: 0,
         totalModified: 0,
 
+        get busy() {
+            return this.running || this.previewing;
+        },
+
+        get countRows() {
+            return Object.entries(this.counts || {}).map(([type, count]) => ({
+                type,
+                label: this.labels[type] || type,
+                count,
+            }));
+        },
+
         init() {
+            // The fix runs with the saved settings, so edits elsewhere in the
+            // form must be saved first. The panel's own inputs are not settings.
+            const form = this.$el.closest('form');
+            if (form) {
+                const markDirty = (event) => {
+                    if (!this.$el.contains(event.target)) {
+                        this.settingsDirty = true;
+                        this.confirming = false;
+                    }
+                };
+                form.addEventListener('change', markDirty);
+                form.addEventListener('input', markDirty);
+            }
+
             this.checkStatus(true);
         },
 
-        async fetchApi(endpoint, method = 'GET') {
+        async fetchApi(endpoint, method = 'GET', params = {}) {
             const settings = window.persianKitSettings;
-            const response = await fetch(settings.restUrl + endpoint, {
+            let url = settings.restUrl + endpoint;
+            const options = {
                 method,
                 headers: {
                     'X-WP-Nonce': settings.nonce,
-                    'Content-Type': 'application/json',
                 },
-            });
+            };
+
+            if (method === 'GET') {
+                const query = new URLSearchParams();
+                for (const [key, value] of Object.entries(params)) {
+                    if (Array.isArray(value)) {
+                        value.forEach((item) => query.append(`${key}[]`, item));
+                    } else {
+                        query.append(key, value);
+                    }
+                }
+                const queryString = query.toString();
+                if (queryString !== '') {
+                    // Plain permalinks put the route in ?rest_route=.
+                    url += (url.includes('?') ? '&' : '?') + queryString;
+                }
+            } else {
+                options.headers['Content-Type'] = 'application/json';
+                options.body = JSON.stringify(params);
+            }
+
+            const response = await fetch(url, options);
             if (!response.ok) {
-                throw new Error(response.statusText);
+                const body = await response.json().catch(() => null);
+                throw new Error((body && body.message) || response.statusText);
             }
             return response.json();
         },
@@ -40,7 +98,6 @@ export default function normalizeJob() {
         applyStatus(data) {
             const job = data.job || { status: 'idle' };
 
-            this.counts = data.counts ?? this.counts;
             this.isResuming = !!data.is_resuming;
             this.totalProcessed = job.processed || 0;
             this.totalModified = job.modified || 0;
@@ -49,6 +106,10 @@ export default function normalizeJob() {
             this.paused = job.status === 'running';
 
             if (this.paused) {
+                // A resumed job keeps the post types it started with.
+                if (Array.isArray(job.post_types) && job.post_types.length > 0) {
+                    this.postTypes = job.post_types;
+                }
                 this.done = false;
                 this.progressText = sprintf(
                     /* translators: 1: number of posts processed, 2: number of posts changed. */
@@ -85,6 +146,75 @@ export default function normalizeJob() {
             }
         },
 
+        /**
+         * Dry run over every selected post: counts the posts the saved
+         * settings would change, without changing anything.
+         */
+        async preview() {
+            this.error = '';
+            this.previewText = '';
+            this.counts = null;
+            this.previewing = true;
+
+            const counts = Object.fromEntries(this.postTypes.map((type) => [type, 0]));
+            let cursor = 0;
+            let checked = 0;
+            let hasMore = true;
+
+            try {
+                while (hasMore) {
+                    this.progressText = sprintf(
+                        /* translators: %d: number of posts checked so far. */
+                        __('Checked %d posts…', 'persian-kit'),
+                        checked
+                    );
+
+                    const data = await this.fetchApi('normalize/preview', 'GET', {
+                        post_types: this.postTypes,
+                        cursor,
+                    });
+
+                    for (const [type, count] of Object.entries(data.counts || {})) {
+                        counts[type] = (counts[type] || 0) + count;
+                    }
+                    checked += data.processed || 0;
+                    cursor = data.last_id || cursor;
+                    hasMore = !!data.has_more;
+                }
+
+                const total = Object.values(counts).reduce((sum, count) => sum + count, 0);
+                this.counts = counts;
+                this.previewText = total === 0
+                    ? __('No posts need fixing.', 'persian-kit')
+                    : sprintf(
+                        /* translators: 1: number of posts that would change, 2: number of posts checked. */
+                        _n(
+                            '%1$d post of %2$d checked would change.',
+                            '%1$d posts of %2$d checked would change.',
+                            total,
+                            'persian-kit'
+                        ),
+                        total,
+                        checked
+                    );
+            } catch (e) {
+                this.error = e.message;
+            } finally {
+                this.previewing = false;
+            }
+        },
+
+        confirmRun() {
+            this.confirming = false;
+            this.backupConfirmed = false;
+            this.runNormalization();
+        },
+
+        cancelConfirm() {
+            this.confirming = false;
+            this.backupConfirmed = false;
+        },
+
         async runNormalization() {
             this.clearNextBatch();
             this.done = false;
@@ -92,7 +222,9 @@ export default function normalizeJob() {
             this.running = true;
 
             try {
-                const data = await this.fetchApi('normalize/run', 'POST');
+                const data = await this.fetchApi('normalize/run', 'POST', {
+                    post_types: this.postTypes,
+                });
                 this.applyStatus(data);
 
                 if (data.has_more) {
@@ -120,6 +252,7 @@ export default function normalizeJob() {
                 this.totalProcessed = 0;
                 this.totalModified = 0;
                 this.progressText = '';
+                this.previewText = '';
                 this.doneText = '';
             } catch (e) {
                 this.error = e.message;

@@ -20,7 +20,7 @@ class RestApiExtension
                 'get_callback' => [$this, 'getDateJalali'],
                 'schema'       => [
                     'type'        => ['string', 'null'],
-                    'description' => 'Jalali (Shamsi) date in ISO format.',
+                    'description' => 'Publish date as Jalali (Shamsi) YYYY-MM-DDTHH:MM:SS in the site timezone. Laid out like ISO 8601 but not ISO 8601: the year, month and day are Jalali.',
                     'context'     => ['view', 'embed'],
                     'readonly'    => true,
                 ],
@@ -30,7 +30,7 @@ class RestApiExtension
                 'get_callback' => [$this, 'getModifiedDateJalali'],
                 'schema'       => [
                     'type'        => ['string', 'null'],
-                    'description' => 'Jalali (Shamsi) modified date in ISO format.',
+                    'description' => 'Last-modified date as Jalali (Shamsi) YYYY-MM-DDTHH:MM:SS in the site timezone. Laid out like ISO 8601 but not ISO 8601: the year, month and day are Jalali.',
                     'context'     => ['view', 'embed'],
                     'readonly'    => true,
                 ],
@@ -43,7 +43,7 @@ class RestApiExtension
      */
     public function getDateJalali(array $post): ?string
     {
-        return $this->formatIsoJalali($post['date_gmt'] ?? null, $post['date'] ?? null);
+        return $this->formatJalali($post['date_gmt'] ?? null, $post['date'] ?? null);
     }
 
     /**
@@ -51,13 +51,13 @@ class RestApiExtension
      */
     public function getModifiedDateJalali(array $post): ?string
     {
-        return $this->formatIsoJalali($post['modified_gmt'] ?? null, $post['modified'] ?? null);
+        return $this->formatJalali($post['modified_gmt'] ?? null, $post['modified'] ?? null);
     }
 
     /**
      * Drafts have no GMT date (null), so the local date is the fallback.
      */
-    private function formatIsoJalali(?string $gmt, ?string $local): ?string
+    private function formatJalali(?string $gmt, ?string $local): ?string
     {
         return JalaliFormatter::fromGmtMysql('Y-m-d\\TH:i:s', $gmt)
             ?? JalaliFormatter::fromLocalMysql('Y-m-d\\TH:i:s', $local);

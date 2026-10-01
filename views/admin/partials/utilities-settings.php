@@ -12,7 +12,7 @@ defined('ABSPATH') || exit;
 
 $moduleSettings = $args['moduleSettings'] ?? [];
 
-$persianSlugs = !array_key_exists('persian_slugs', $moduleSettings) || !empty($moduleSettings['persian_slugs']);
+$persianSlugs = !empty($moduleSettings['persian_slugs']);
 ?>
 <div class="persian-kit-setting-row">
     <label>

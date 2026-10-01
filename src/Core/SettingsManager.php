@@ -6,23 +6,44 @@ defined('ABSPATH') || exit;
 
 class SettingsManager
 {
-    private const OPTION_KEY = 'persian_kit_settings';
+    public const OPTION_KEY = 'persian_kit_settings';
 
     /** @var array<string, array<string, mixed>>|null */
     private ?array $cache = null;
 
+    /** @var array<string, array<string, mixed>> */
+    private array $defaults = [];
+
     /**
+     * Stored values are read on top of these, so a module or key added in an
+     * update reports (and runs with) its default until the user saves.
+     *
+     * @param array<string, mixed> $defaults
+     */
+    public function registerDefaults(string $moduleKey, array $defaults): void
+    {
+        $this->defaults[$moduleKey] = $defaults;
+    }
+
+    /**
+     * Every module's settings, merged with its registered defaults.
+     *
      * @return array<string, array<string, mixed>>
      */
     public function all(): array
     {
-        return $this->load();
+        $settings = [];
+
+        foreach (array_keys($this->defaults + $this->load()) as $moduleKey) {
+            $settings[$moduleKey] = $this->module($moduleKey);
+        }
+
+        return $settings;
     }
 
     public function module(string $moduleKey, ?string $key = null, mixed $default = null): mixed
     {
-        $settings = $this->load();
-        $moduleSettings = $settings[$moduleKey] ?? [];
+        $moduleSettings = array_replace($this->defaults[$moduleKey] ?? [], $this->load()[$moduleKey] ?? []);
 
         if ($key === null) {
             return $moduleSettings;
@@ -36,8 +57,22 @@ class SettingsManager
      */
     public function updateModule(string $moduleKey, array $values): void
     {
+        $this->updateModules([$moduleKey => $values]);
+    }
+
+    /**
+     * Replace several modules' settings in one write.
+     *
+     * @param array<string, array<string, mixed>> $valuesByModule
+     */
+    public function updateModules(array $valuesByModule): void
+    {
         $settings = $this->load();
-        $settings[$moduleKey] = $values;
+
+        foreach ($valuesByModule as $moduleKey => $values) {
+            $settings[$moduleKey] = $values;
+        }
+
         $this->save($settings);
     }
 
@@ -65,11 +100,9 @@ class SettingsManager
             return $this->cache;
         }
 
-        $this->cache = get_option(self::OPTION_KEY, []);
+        $stored = get_option(self::OPTION_KEY, []);
 
-        if (!is_array($this->cache)) {
-            $this->cache = [];
-        }
+        $this->cache = is_array($stored) ? array_filter($stored, 'is_array') : [];
 
         return $this->cache;
     }

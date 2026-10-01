@@ -29,6 +29,11 @@ class NormalizationJobManager
         $wasRunning = ($state['status'] ?? '') === 'running';
         $isResuming = $cursor > 0 || $wasRunning;
 
+        // The cursor belongs to the post types the job started with.
+        if ($wasRunning && is_array($state['post_types'] ?? null) && $state['post_types'] !== []) {
+            $postTypes = $this->normalizePostTypes($state['post_types']);
+        }
+
         if (($state['status'] ?? '') !== 'running') {
             $state = [
                 'status'      => 'running',
@@ -71,15 +76,38 @@ class NormalizationJobManager
     }
 
     /**
+     * One dry-run batch after $cursor: how many posts in it the current
+     * settings would change, by post type. Stateless, so it never touches a
+     * running job; the caller passes back last_id until has_more is false.
+     *
+     * @param array<mixed> $postTypes
+     * @return array<string, mixed>
+     */
+    public function preview(array $postTypes, int $cursor, int $batchSize): array
+    {
+        $postTypes = $this->normalizePostTypes($postTypes);
+        $result = $this->migrator->processBatch($postTypes, $this->normalizeBatchSize($batchSize), true, max(0, $cursor));
+
+        return [
+            'counts'    => array_replace(array_fill_keys($postTypes, 0), $result->modifiedByType),
+            'processed' => $result->processed,
+            'last_id'   => $result->lastId,
+            'has_more'  => $result->hasMore,
+        ];
+    }
+
+    /**
+     * The saved job, without counting posts: counting scans every post, so it
+     * runs only when a job starts or the user asks for a preview.
+     *
      * @param array<mixed> $postTypes
      * @return array<string, mixed>
      */
     public function status(array $postTypes): array
     {
-        $postTypes = $this->normalizePostTypes($postTypes);
         $state = $this->getState();
 
-        $counts = $state['counts'] ?? $this->migrator->countAffected($postTypes);
+        $counts = $state['counts'] ?? [];
         $cursor = $this->migrator->getCursor();
         $job = $state;
 

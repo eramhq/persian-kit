@@ -127,4 +127,53 @@ class NormalizationJobManagerTest extends TestCase
         $this->assertFalse($result['has_more']);
         $this->assertTrue($result['is_resuming']);
     }
+
+    public function test_preview_is_a_dry_run_from_the_given_cursor(): void
+    {
+        $migrator = Mockery::mock(BatchMigrator::class);
+        $migrator->shouldReceive('processBatch')
+            ->once()
+            ->with(['post', 'page'], 200, true, 15)
+            ->andReturn(new BatchResult(200, 3, 215, true, ['post' => 3]));
+
+        $result = (new NormalizationJobManager($migrator))->preview(['post', 'page'], 15, 200);
+
+        $this->assertSame(['post' => 3, 'page' => 0], $result['counts']);
+        $this->assertSame(215, $result['last_id']);
+        $this->assertTrue($result['has_more']);
+        $this->assertSame([], $this->options);
+    }
+
+    public function test_resumed_job_keeps_its_own_post_types(): void
+    {
+        $this->options[NormalizationJobManager::STATE_OPTION] = [
+            'status'     => 'running',
+            'post_types' => ['page'],
+            'processed'  => 10,
+            'modified'   => 2,
+        ];
+
+        $migrator = Mockery::mock(BatchMigrator::class);
+        $migrator->shouldReceive('getCursor')->andReturn(10);
+        $migrator->shouldReceive('processBatch')
+            ->once()
+            ->with(['page'], 50)
+            ->andReturn(new BatchResult(5, 0, 15, true));
+
+        $result = (new NormalizationJobManager($migrator))->runBatch(['post'], 50);
+
+        $this->assertSame(['page'], $result['job']['post_types']);
+    }
+
+    public function test_status_does_not_count_posts(): void
+    {
+        $migrator = Mockery::mock(BatchMigrator::class);
+        $migrator->shouldReceive('getCursor')->andReturn(0);
+        $migrator->shouldReceive('countAffected')->never();
+
+        $status = (new NormalizationJobManager($migrator))->status(['post']);
+
+        $this->assertSame('idle', $status['job']['status']);
+        $this->assertSame([], $status['counts']);
+    }
 }

@@ -211,4 +211,52 @@ class BatchMigratorTest extends TestCase
 
         unset($GLOBALS['wpdb']);
     }
+
+    public function test_dry_run_from_an_explicit_cursor_counts_changes_by_post_type(): void
+    {
+        Functions\expect('get_option')->never();
+        Functions\expect('update_option')->never();
+
+        $wpdb = Mockery::mock('wpdb');
+        $wpdb->posts = 'wp_posts';
+        $wpdb->shouldReceive('prepare')
+            ->once()
+            ->with(Mockery::type('string'), [40, 'post', 'page', 2])
+            ->andReturn('SELECT ...');
+        $wpdb->shouldReceive('get_results')->once()->andReturn([
+            (object) ['ID' => 41, 'post_type' => 'page', 'post_title' => 'كتاب', 'post_content' => '', 'post_excerpt' => ''],
+            (object) ['ID' => 42, 'post_type' => 'post', 'post_title' => 'کتاب', 'post_content' => '', 'post_excerpt' => ''],
+        ]);
+        $GLOBALS['wpdb'] = $wpdb;
+
+        $result = $this->makeMigrator()->processBatch(['post', 'page'], 2, true, 40);
+
+        $this->assertSame(['page' => 1], $result->modifiedByType);
+        $this->assertSame(42, $result->lastId);
+        $this->assertTrue($result->hasMore);
+
+        unset($GLOBALS['wpdb']);
+    }
+
+    public function test_count_affected_leaves_teh_marbuta_out_unless_enabled(): void
+    {
+        $patterns = [];
+        $wpdb = Mockery::mock('wpdb');
+        $wpdb->posts = 'wp_posts';
+        $wpdb->shouldReceive('prepare')->twice()->andReturnUsing(function (string $query, array $args) use (&$patterns) {
+            $patterns[] = $args[1];
+
+            return 'SELECT ...';
+        });
+        $wpdb->shouldReceive('get_results')->twice()->andReturn([]);
+        $GLOBALS['wpdb'] = $wpdb;
+
+        (new BatchMigrator(new CharNormalizer()))->countAffected(['post']);
+        (new BatchMigrator(new CharNormalizer(tehMarbuta: true)))->countAffected(['post']);
+
+        $this->assertStringNotContainsString('0629', $patterns[0]);
+        $this->assertStringContainsString('0629', $patterns[1]);
+
+        unset($GLOBALS['wpdb']);
+    }
 }

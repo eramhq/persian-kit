@@ -57,4 +57,51 @@ class SettingsManagerTest extends TestCase
         $this->assertFalse($manager->module('date_conversion', 'enabled'));
         $this->assertNull($manager->module('date_conversion', 'global_conversion'));
     }
+
+    public function test_module_merges_registered_defaults_under_stored_values(): void
+    {
+        Functions\when('get_option')->justReturn([
+            'utilities' => ['enabled' => false],
+        ]);
+
+        $manager = new SettingsManager();
+        $manager->registerDefaults('utilities', ['enabled' => true, 'persian_slugs' => true]);
+        $manager->registerDefaults('woocommerce', ['enabled' => true]);
+
+        $this->assertSame(['enabled' => false, 'persian_slugs' => true], $manager->module('utilities'));
+        $this->assertTrue($manager->module('utilities', 'persian_slugs'));
+        $this->assertSame([
+            'utilities'   => ['enabled' => false, 'persian_slugs' => true],
+            'woocommerce' => ['enabled' => true],
+        ], $manager->all());
+    }
+
+    public function test_corrupt_module_entries_are_ignored(): void
+    {
+        Functions\when('get_option')->justReturn(['utilities' => 'yes']);
+
+        $manager = new SettingsManager();
+        $manager->registerDefaults('utilities', ['enabled' => true]);
+
+        $this->assertSame(['enabled' => true], $manager->module('utilities'));
+    }
+
+    public function test_update_modules_writes_once(): void
+    {
+        Functions\when('get_option')->justReturn([]);
+        Functions\expect('update_option')
+            ->once()
+            ->with('persian_kit_settings', [
+                'utilities'   => ['enabled' => true],
+                'woocommerce' => ['enabled' => false],
+            ], true);
+
+        $manager = new SettingsManager();
+        $manager->updateModules([
+            'utilities'   => ['enabled' => true],
+            'woocommerce' => ['enabled' => false],
+        ]);
+
+        $this->assertSame(['enabled' => false], $manager->module('woocommerce'));
+    }
 }
