@@ -5,6 +5,7 @@ namespace PersianKit\Tests\Unit\Core;
 use Brain\Monkey;
 use Brain\Monkey\Functions;
 use PersianKit\Core\ConflictDetector;
+use PersianKit\Core\SettingsManager;
 use PHPUnit\Framework\TestCase;
 
 class ConflictDetectorTest extends TestCase
@@ -164,5 +165,52 @@ class ConflictDetectorTest extends TestCase
         $screen->id = $id;
 
         return $screen;
+    }
+
+    public function test_notice_disappears_once_overlapping_modules_are_off(): void
+    {
+        Functions\when('current_user_can')->justReturn(true);
+        Functions\when('get_current_screen')->justReturn($this->screen('plugins'));
+        Functions\when('is_plugin_active')->alias(static fn (string $slug): bool => $slug === 'wp-parsidate/wp-parsidate.php');
+        Functions\when('is_multisite')->justReturn(false);
+
+        $off = ['enabled' => false];
+        $settings = \Mockery::mock(SettingsManager::class);
+        $settings->shouldReceive('all')->andReturn([
+            'date_conversion' => $off, 'digit_conversion' => $off, 'char_normalization' => $off,
+            'admin_font' => $off, 'zwnj_editor' => ['enabled' => true], 'utilities' => ['enabled' => true],
+        ]);
+
+        ob_start();
+        (new ConflictDetector($settings))->renderNotice();
+        $this->assertSame('', ob_get_clean());
+    }
+
+    public function test_notice_stays_while_an_overlapping_module_is_on(): void
+    {
+        Functions\when('current_user_can')->justReturn(true);
+        Functions\when('get_current_screen')->justReturn($this->screen('plugins'));
+        Functions\when('is_plugin_active')->alias(static fn (string $slug): bool => $slug === 'wp-parsidate/wp-parsidate.php');
+        Functions\when('is_multisite')->justReturn(false);
+
+        $settings = \Mockery::mock(SettingsManager::class);
+        $settings->shouldReceive('all')->andReturn([
+            'date_conversion' => ['enabled' => true], 'digit_conversion' => ['enabled' => false],
+        ]);
+
+        ob_start();
+        (new ConflictDetector($settings))->renderNotice();
+        $this->assertStringContainsString('WP-Parsidate', (string) ob_get_clean());
+    }
+
+    public function test_report_reads_module_enabled_flag(): void
+    {
+        Functions\when('is_plugin_active')->alias(static fn (string $slug): bool => $slug === 'wp-parsidate/wp-parsidate.php');
+        Functions\when('is_multisite')->justReturn(false);
+
+        $reports = (new ConflictDetector())->reports(['date_conversion' => ['enabled' => false, 'global_conversion' => false]]);
+        $dates = array_values(array_filter($reports[0]['recommendations'], static fn ($r) => $r['key'] === 'date_conversion'))[0];
+
+        $this->assertFalse($dates['current_value']);
     }
 }

@@ -76,7 +76,7 @@ class AdminFontModule extends AbstractModule
 
         wp_add_inline_style(
             'persian-kit-admin-font',
-            ":root { --pk-admin-font: 'Vazirmatn'; }"
+            ":root { --persian-kit-admin-font: 'Vazirmatn'; }"
         );
     }
 

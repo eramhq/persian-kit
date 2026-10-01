@@ -125,7 +125,7 @@ class AdminFontModuleTest extends TestCase
         $module = $this->makeModule();
         $module->enqueueFont();
 
-        $this->assertStringContainsString('--pk-admin-font', $capturedCss);
+        $this->assertStringContainsString('--persian-kit-admin-font', $capturedCss);
         $this->assertStringContainsString('Vazirmatn', $capturedCss);
     }
 

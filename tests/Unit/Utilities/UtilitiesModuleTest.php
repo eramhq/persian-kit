@@ -30,16 +30,16 @@ class UtilitiesModuleTest extends TestCase
         parent::tearDown();
     }
 
-    public function test_boot_replaces_core_slug_filter(): void
+    public function test_boot_adds_slug_filter_after_core(): void
     {
-        Functions\expect('remove_filter')->once()->with('sanitize_title', 'sanitize_title_with_dashes', 10);
+        Functions\expect('remove_filter')->never();
 
         $container = ServiceContainer::getInstance();
-        $module = new UtilitiesModule(Mockery::mock(SettingsManager::class));
+        $module = new UtilitiesModule($this->settings(['enabled' => true]));
         $module->register($container);
         $module->boot($container);
 
-        $this->assertNotFalse(has_filter('sanitize_title', [$container->get(PersianSlugFilter::class), 'sanitizeTitle']));
+        $this->assertSame(11, has_filter('sanitize_title', [$container->get(PersianSlugFilter::class), 'sanitizeTitle']));
         $this->assertNotFalse(has_filter('pre_handle_404'));
         $this->assertNotFalse(has_action('template_redirect'));
     }
@@ -47,14 +47,24 @@ class UtilitiesModuleTest extends TestCase
     public function test_boot_respects_utilities_filter(): void
     {
         Filters\expectApplied('persian_kit_utilities')->once()->with(true, 'sanitize_title')->andReturn(false);
-        Functions\expect('remove_filter')->never();
 
         $container = ServiceContainer::getInstance();
-        $module = new UtilitiesModule(Mockery::mock(SettingsManager::class));
+        $module = new UtilitiesModule($this->settings(['enabled' => true]));
         $module->register($container);
         $module->boot($container);
 
-        $this->assertTrue(true);
+        $this->assertFalse(has_filter('pre_handle_404'));
+    }
+
+    public function test_persian_slugs_setting_turns_the_filter_off(): void
+    {
+        $container = ServiceContainer::getInstance();
+        $module = new UtilitiesModule($this->settings(['enabled' => true, 'persian_slugs' => false]));
+        $module->register($container);
+        $module->boot($container);
+
+        $this->assertFalse(has_filter('sanitize_title'));
+        $this->assertSame(['enabled' => true, 'persian_slugs' => false], $module->sanitizeSettings(['enabled' => '1']));
     }
 
     public function test_persian_title_is_slugged_in_save_context(): void
@@ -70,7 +80,7 @@ class UtilitiesModuleTest extends TestCase
     {
         $filter = new PersianSlugFilter();
 
-        $this->assertSame('می-خواهم', $filter->sanitizeTitle('می' . self::ZWNJ . 'خواهم', '', 'save'));
+        $this->assertSame('می-خواهم', $filter->sanitizeTitle('core-encoded', 'می' . self::ZWNJ . 'خواهم', 'save'));
     }
 
     public function test_query_context_keeps_zwnj_so_legacy_slugs_resolve(): void
@@ -85,29 +95,26 @@ class UtilitiesModuleTest extends TestCase
     {
         $filter = new PersianSlugFilter();
 
-        $this->assertSame('می-خواهم', $filter->sanitizeTitle('می-خواهم', '', 'query'));
+        $this->assertSame('می-خواهم', $filter->sanitizeTitle('core-encoded', 'می-خواهم', 'query'));
     }
 
     public function test_percent_encoded_persian_is_decoded_before_slugging(): void
     {
         $filter = new PersianSlugFilter();
 
-        $this->assertSame('سلام', $filter->sanitizeTitle(rawurlencode('سلام'), '', 'query'));
+        $this->assertSame('سلام', $filter->sanitizeTitle('core-encoded', rawurlencode('سلام'), 'query'));
     }
 
     /**
      * @dataProvider coreTitles
      */
-    public function test_non_persian_titles_are_left_to_core(string $title, string $context): void
+    public function test_non_persian_titles_keep_cores_result(string $title, string $context): void
     {
-        Functions\expect('sanitize_title_with_dashes')
-            ->once()
-            ->with($title, $title, $context)
-            ->andReturn('core-result');
+        Functions\expect('sanitize_title_with_dashes')->never();
 
         $filter = new PersianSlugFilter();
 
-        $this->assertSame('core-result', $filter->sanitizeTitle($title, $title, $context));
+        $this->assertSame('core-result', $filter->sanitizeTitle('core-result', $title, $context));
     }
 
     public static function coreTitles(): array
@@ -201,6 +208,16 @@ class UtilitiesModuleTest extends TestCase
     private function coreForm(string $slug): string
     {
         return strtolower(rawurlencode($slug));
+    }
+
+    private function settings(array $values): SettingsManager
+    {
+        $settings = Mockery::mock(SettingsManager::class);
+        $settings->shouldReceive('module')->andReturnUsing(
+            static fn (string $module, ?string $key = null, mixed $default = null) => $key === null ? $values : ($values[$key] ?? $default)
+        );
+
+        return $settings;
     }
 
     private function mockPostLookup(array $expectedNames, ?object $row): void

@@ -10,6 +10,11 @@ const copies = [
         src: `node_modules/@fontsource-variable/vazirmatn/files/vazirmatn-${subset}-wght-normal.woff2`,
         dest: `public/fonts/vazirmatn/vazirmatn-${subset}-wght-normal.woff2`,
     })),
+    // Vazirmatn licence (SIL OFL 1.1 must travel with the font files)
+    {
+        src: 'node_modules/@fontsource-variable/vazirmatn/LICENSE',
+        dest: 'public/fonts/vazirmatn/OFL.txt',
+    },
     // Admin CSS (settings page styles)
     {
         src: 'resources/css/admin.css',

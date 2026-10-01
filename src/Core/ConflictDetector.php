@@ -6,6 +6,13 @@ defined('ABSPATH') || exit;
 
 class ConflictDetector
 {
+    private ?SettingsManager $settings;
+
+    public function __construct(?SettingsManager $settings = null)
+    {
+        $this->settings = $settings;
+    }
+
     /**
      * Built at runtime so the guidance text can be translated.
      *
@@ -115,7 +122,13 @@ class ConflictDetector
             return;
         }
 
-        $reports = $this->reports();
+        // Once the overlapping modules are switched off, the notice goes away.
+        $reports = $this->settings === null
+            ? $this->reports()
+            : array_values(array_filter(
+                $this->reports($this->settings->all()),
+                static fn (array $report): bool => self::hasPendingRecommendation($report)
+            ));
 
         if ($reports === []) {
             return;
@@ -278,6 +291,22 @@ class ConflictDetector
         ];
     }
 
+    /**
+     * True while a module the report says to turn (or leave) off is still on.
+     *
+     * @param array<string, mixed> $report
+     */
+    private static function hasPendingRecommendation(array $report): bool
+    {
+        foreach ($report['recommendations'] as $recommendation) {
+            if (in_array($recommendation['action'], ['turn_off', 'leave_off'], true) && $recommendation['current_value']) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     private function actionLabel(string $action): string
     {
         return match ($action) {
@@ -316,6 +345,11 @@ class ConflictDetector
             }
 
             $value = $value[$segment];
+        }
+
+        // A bare module key ("date_conversion") means the module's enabled flag.
+        if (is_array($value)) {
+            return !empty($value['enabled']);
         }
 
         return (bool) $value;

@@ -8,7 +8,7 @@
  *   A. Label Override — replaces the sidebar date button text with Jalali
  *   B. Popover Interceptor — hides native DateTimePicker, injects Jalali form
  *
- * Depends on: wp-data, wp-components, PersianKitJalali
+ * Depends on: wp-data, wp-components, wp-i18n, PersianKitJalali
  */
 (function (wp, Jalali) {
     'use strict';
@@ -22,6 +22,9 @@
     var MONTHS = Jalali.JALALI_MONTHS;
     var pad = Jalali.pad;
     var jalaliMonthLength = Jalali.jalaliMonthLength;
+
+    // Core's own strings, so the labels match the editor's language.
+    var __ = (wp.i18n && wp.i18n.__) || function (text) { return text; };
 
     var isDispatching = false;
     var isInjecting = false;
@@ -89,7 +92,7 @@
             var info = getStoreDate();
             var expected;
             if (info.isFloating || !info.date) {
-                expected = 'هم‌اکنون';
+                expected = __('Immediately');
             } else {
                 var d = new Date(info.date);
                 if (isNaN(d.getTime())) return;
@@ -112,7 +115,7 @@
 
         var dateLegend = document.createElement('legend');
         dateLegend.className = 'pk-jalali-legend';
-        dateLegend.textContent = 'تاریخ';
+        dateLegend.textContent = __('Date');
 
         var dateFieldset = document.createElement('fieldset');
         dateFieldset.className = 'pk-jalali-fieldset';
@@ -155,7 +158,7 @@
 
         var timeLegend = document.createElement('legend');
         timeLegend.className = 'pk-jalali-legend';
-        timeLegend.textContent = 'ساعت';
+        timeLegend.textContent = __('Time');
 
         var timeFieldset = document.createElement('fieldset');
         timeFieldset.className = 'pk-jalali-fieldset';

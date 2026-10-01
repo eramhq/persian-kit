@@ -46,7 +46,7 @@ class PostTypeMonthFilter
 
         echo '<label for="persian-kit-filter-by-jalali-date" class="screen-reader-text">' . esc_html($label) . '</label>';
         echo '<select name="' . esc_attr(self::QUERY_VAR) . '" id="persian-kit-filter-by-jalali-date">';
-        echo '<option value="0">' . esc_html__('All dates') . '</option>'; // phpcs:ignore WordPress.WP.I18n.MissingArgDomain -- Same label as core's drop-down this replaces.
+        echo '<option value="0">' . esc_html__('All dates', 'persian-kit') . '</option>';
 
         foreach ($options as $option) {
             printf(
@@ -262,6 +262,6 @@ class PostTypeMonthFilter
     {
         $object = get_post_type_object($postType);
 
-        return $object->labels->filter_by_date ?? __('Filter by date'); // phpcs:ignore WordPress.WP.I18n.MissingArgDomain -- Core's label.
+        return $object->labels->filter_by_date ?? __('Filter by date', 'persian-kit');
     }
 }

@@ -24,6 +24,7 @@ class DateFiltersTest extends TestCase
             };
         });
         Functions\when('is_admin')->justReturn(false);
+        Functions\when('esc_html')->alias(static fn (string $text): string => htmlspecialchars($text, ENT_QUOTES, 'UTF-8'));
     }
 
     protected function tearDown(): void
@@ -284,5 +285,18 @@ class DateFiltersTest extends TestCase
         $result = $filters->filterGetPostTime('Fri, 21 Mar 2025 15:30:00 +0330', DATE_RFC2822, false);
 
         $this->assertSame('Fri, 21 Mar 2025 15:30:00 +0330', $result);
+    }
+
+    public function test_post_date_block_escapes_formatted_text(): void
+    {
+        Functions\when('wp_timezone')->justReturn(new \DateTimeZone('Asia/Tehran'));
+
+        $filters = new DateFilters(false);
+        $html = '<div class="wp-block-post-date"><time datetime="2025-03-21T15:30:00+03:30">March 21, 2025</time></div>';
+
+        $result = $filters->filterPostDateBlock($html, ['attrs' => ['format' => 'Y \\<\\b\\> &']]);
+
+        $this->assertStringContainsString('1404 &lt;b&gt; &amp;', $result);
+        $this->assertStringNotContainsString('<b>', $result);
     }
 }

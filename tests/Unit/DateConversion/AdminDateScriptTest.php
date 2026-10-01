@@ -13,6 +13,10 @@ class AdminDateScriptTest extends TestCase
     {
         parent::setUp();
         Monkey\setUp();
+        Functions\when('wp_script_is')->justReturn(false);
+        Functions\when('wp_add_inline_script')->justReturn(true);
+        Functions\when('wp_json_encode')->alias('json_encode');
+        Functions\when('__')->returnArg();
 
         if (!defined('PERSIAN_KIT_URL')) {
             define('PERSIAN_KIT_URL', 'https://example.com/wp-content/plugins/persian-kit/');
@@ -137,7 +141,7 @@ class AdminDateScriptTest extends TestCase
             [
                 'persian-kit-gutenberg-jalali',
                 PERSIAN_KIT_URL . 'public/js/gutenberg-jalali-panel.js',
-                ['wp-data', 'wp-components', 'persian-kit-jalali'],
+                ['wp-data', 'wp-components', 'wp-i18n', 'persian-kit-jalali'],
                 PERSIAN_KIT_VERSION,
                 true,
             ],

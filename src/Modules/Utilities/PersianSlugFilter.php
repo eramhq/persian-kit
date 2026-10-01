@@ -7,13 +7,14 @@ use PersianKit\Dependencies\Eram\Abzar\Text\Slug;
 defined('ABSPATH') || exit;
 
 /**
- * Persian-aware replacement for core's sanitize_title_with_dashes().
+ * Persian slugs, applied after core's sanitize_title_with_dashes().
  *
- * Titles without Arabic-script characters go straight to core, so Latin slugs,
- * Woo attribute taxonomies (pa_color) and percent-encoded input keep their
- * core behaviour. Persian titles are slugged by abzar, which turns ZWNJ into
- * "-". Lookups ('query' context) keep ZWNJ so slugs saved before that change
- * still resolve.
+ * Core's filter stays in place. For titles without Arabic-script characters
+ * its result is returned unchanged, so Latin slugs, Woo attribute taxonomies
+ * (pa_color) and percent-encoded input behave exactly as in core. Persian
+ * titles are slugged from the raw title by abzar, which turns ZWNJ into "-".
+ * Lookups ('query' context) keep ZWNJ so slugs saved before that change still
+ * resolve.
  */
 class PersianSlugFilter
 {
@@ -23,8 +24,7 @@ class PersianSlugFilter
 
     public function register(): void
     {
-        remove_filter('sanitize_title', 'sanitize_title_with_dashes', 10);
-        add_filter('sanitize_title', [$this, 'sanitizeTitle'], 10, 3);
+        add_filter('sanitize_title', [$this, 'sanitizeTitle'], 11, 3);
         add_filter('pre_handle_404', [$this, 'resolveLegacySlug'], 10, 2);
         // Before core's redirect_canonical() so an exact slug match wins over its 404 guess.
         add_action('template_redirect', [$this, 'redirectLegacySlug'], 9);
@@ -37,11 +37,10 @@ class PersianSlugFilter
      */
     public function sanitizeTitle($title, $rawTitle = '', $context = 'display'): string
     {
-        $title = (string) $title;
-        $decoded = rawurldecode($title);
+        $decoded = rawurldecode((string) $rawTitle);
 
         if (!self::hasArabicScript($decoded)) {
-            return sanitize_title_with_dashes($title, (string) $rawTitle, (string) $context);
+            return (string) $title;
         }
 
         if ($context === 'query') {

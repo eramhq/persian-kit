@@ -23,6 +23,12 @@
     var monthLength = Jalali.jalaliMonthLength;
     var pad = Jalali.pad;
 
+    // Translated labels from PHP (window.persianKitDateLabels); Persian fallback.
+    function label(key, fallback) {
+        var labels = window.persianKitDateLabels || {};
+        return $('<div>').text(labels[key] || fallback).html();
+    }
+
     // ── Helpers ──────────────────────────────────────────────────────
 
     /**
@@ -50,20 +56,26 @@
      * @param {string} idPrefix  Prefix for element IDs (e.g. "pk" or "pk_qe")
      */
     function buildJalaliUI(jy, jm, jd, hh, mn, idPrefix) {
+        // Every value goes into HTML attributes, so reduce them to plain numbers first.
+        jy = parseInt(jy, 10) || 0;
+        jd = parseInt(jd, 10) || 1;
+        hh = pad(parseInt(hh, 10) || 0);
+        mn = pad(parseInt(mn, 10) || 0);
+
         return '<div class="pk-jalali-date timestamp-wrap" dir="rtl">' +
-            '<label><span class="screen-reader-text">ماه</span>' +
+            '<label><span class="screen-reader-text">' + label('month', 'ماه') + '</span>' +
             buildMonthSelect(jm, idPrefix) +
             '</label>' +
-            '<label><span class="screen-reader-text">روز</span>' +
+            '<label><span class="screen-reader-text">' + label('day', 'روز') + '</span>' +
             '<input type="text" id="' + idPrefix + '_jjj" name="' + idPrefix + '_jjj" value="' + pad(jd) + '" size="2" maxlength="2" autocomplete="off" class="pk-jalali-input" />' +
             '</label>, ' +
-            '<label><span class="screen-reader-text">سال</span>' +
+            '<label><span class="screen-reader-text">' + label('year', 'سال') + '</span>' +
             '<input type="text" id="' + idPrefix + '_jaa" name="' + idPrefix + '_jaa" value="' + jy + '" size="4" maxlength="4" autocomplete="off" class="pk-jalali-input" />' +
             '</label> @ ' +
-            '<label><span class="screen-reader-text">ساعت</span>' +
+            '<label><span class="screen-reader-text">' + label('hour', 'ساعت') + '</span>' +
             '<input type="text" id="' + idPrefix + '_jhh" name="' + idPrefix + '_jhh" value="' + hh + '" size="2" maxlength="2" autocomplete="off" class="pk-jalali-input" />' +
             '</label> : ' +
-            '<label><span class="screen-reader-text">دقیقه</span>' +
+            '<label><span class="screen-reader-text">' + label('minute', 'دقیقه') + '</span>' +
             '<input type="text" id="' + idPrefix + '_jmn" name="' + idPrefix + '_jmn" value="' + mn + '" size="2" maxlength="2" autocomplete="off" class="pk-jalali-input" />' +
             '</label>' +
             '</div>';

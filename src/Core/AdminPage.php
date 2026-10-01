@@ -71,7 +71,6 @@ class AdminPage
 
         View::load('admin/settings', [
             'modules'             => $moduleData,
-            'settings'            => $this->settings,
             'compatibilityReports' => $this->conflicts->reports($settingsByKey),
         ]);
     }

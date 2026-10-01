@@ -4,13 +4,15 @@
  *
  * @var array                            $modules              Module data array.
  * @var array                            $compatibilityReports Compatibility guidance cards.
- * @var \PersianKit\Core\SettingsManager $settings             Settings manager instance.
  */
 
 defined('ABSPATH') || exit;
 
 // Variables here are local to View::load(), not globals.
 // phpcs:disable WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound
+
+$modules = $args['modules'] ?? [];
+$compatibilityReports = $args['compatibilityReports'] ?? [];
 ?>
 <div class="wrap persian-kit-wrap">
     <h1><?php esc_html_e('Persian Kit', 'persian-kit'); ?></h1>

@@ -27,8 +27,8 @@ class CoreServiceProvider implements ServiceProvider
             return new SettingsManager();
         });
 
-        $container->register(ConflictDetector::class, function () {
-            return new ConflictDetector();
+        $container->register(ConflictDetector::class, function (ServiceContainer $c) {
+            return new ConflictDetector($c->get(SettingsManager::class));
         });
 
         $container->register(AssetManager::class, function () {

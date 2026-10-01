@@ -237,7 +237,7 @@ class DateCorrectnessTest extends TestCase
 
     public function test_media_date_is_read_in_site_timezone(): void
     {
-        Functions\when('__')->returnArg();
+        Functions\when('get_option')->justReturn('F j, Y');
 
         $response = (new MediaAttachmentDateFormatter())->filterAttachmentData(
             ['dateFormatted' => 'March 20, 2025'],

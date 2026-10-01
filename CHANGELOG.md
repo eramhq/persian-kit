@@ -13,6 +13,10 @@ All notable changes to this project will be documented in this file.
 - Removed the non-standard `Plugin Prefix:` header.
 - Tightened `.distignore` against AI-tooling directories and OS metadata files.
 
+### Breaking: helper functions renamed
+
+- Every `pk_*` helper is now `persian_kit_*` (`pk_date()` → `persian_kit_date()`), matching the plugin's prefix as WordPress.org requires. The old names are removed.
+
 ### Library upgrade: eram/abzar 0.8, eram/daynum 1.0.0-beta.3
 
 - Upgraded `eram/abzar` from 0.5 to `^0.8@beta` and `eram/daynum` to 1.0.0-beta.3.
@@ -20,13 +24,13 @@ All notable changes to this project will be documented in this file.
 - Persian slug handling now applies only to titles that contain Persian/Arabic letters. Other titles go through WordPress core again, which fixes WooCommerce attribute taxonomies (`pa_color` was turned into `pa-color`), percent-encoded slugs and accented Latin letters (`Café` → `cafe`).
 - Posts created before the plugin was activated (stored with WordPress's percent-encoded slugs) load again. A request whose slug only differs in ZWNJ vs `-` is redirected (301) to the post.
 - Digit conversion and character normalization leave content unchanged instead of failing when PCRE cannot process very large or malformed HTML. The batch normalizer skips such posts and continues.
-- `pk_ordinal_short()` takes `bool $persianDigits = true` as its second argument. The old `'persian'` / `'english'` strings still work.
-- Behaviour changes in the `pk_*` helpers that come from abzar:
-  - `pk_keyboard_fix()` maps upper-case Latin letters through the Persian Shift layer (`H` → `آ`) instead of lower-casing them.
+- `persian_kit_ordinal_short()` takes `bool $persianDigits = true` as its second argument. The old `'persian'` / `'english'` strings still work.
+- Behaviour changes in the `persian_kit_*` helpers that come from abzar:
+  - `persian_kit_keyboard_fix()` maps upper-case Latin letters through the Persian Shift layer (`H` → `آ`) instead of lower-casing them.
   - Validators report a warning for unknown national-ID city codes, IBAN bank codes and phone area codes; `isValid()` stays `true`. Use `isStrictlyValid()` to reject them.
   - Licence-plate province and plate-type data were corrected.
-  - `pk_ordinal_word(30)` returns `سی‌ام` (was `سی اُم`).
-  - `pk_words_to_number()` returns `null` for text that is not a number (`دو سه`) and for values past `PHP_INT_MAX`.
+  - `persian_kit_ordinal_word(30)` returns `سی‌ام` (was `سی اُم`).
+  - `persian_kit_words_to_number()` returns `null` for text that is not a number (`دو سه`) and for values past `PHP_INT_MAX`.
 
 ### Date correctness
 
@@ -60,6 +64,15 @@ All notable changes to this project will be documented in this file.
 - The batch normalization panel's script moved from an inline `<script>` into the admin bundle; settings are passed with `wp_add_inline_script()`.
 - All user-facing strings are translatable, including the JavaScript ones (`wp_set_script_translations()`), the compatibility guidance cards and the ZWNJ editor button tooltip. Placeholders have translators comments, and the POT now includes JavaScript strings.
 - Plugin Check reports no errors. The bundled libraries are marked as third-party code at build time; the plugin's direct database queries and template variables carry the reason they are needed.
+- Review fixes before WordPress.org submission:
+  - The bundled libraries' licence files now ship with them: `packages/eram/*/LICENSE`, the Vazirmatn `OFL.txt`, and Alpine.js's MIT notice in `admin.js`.
+  - The Persian slug filter runs after WordPress's own (priority 11) instead of replacing it, and has its own "Persian slugs" option in the Utilities module.
+  - The compatibility notice disappears once the overlapping modules are turned off. The guidance cards now report a disabled module as off (before, any module showed "Currently on").
+  - Strings borrowed from WordPress core use the plugin's text domain; the media library date uses the site's date format.
+  - Classic-editor date labels are translatable; the block editor uses WordPress's own "Date", "Time" and "Immediately" strings.
+  - Block date output is escaped, and the classic-editor date fields build their HTML from numbers only.
+  - Templates read their values from `$args` instead of `extract()`, and view names are validated.
+  - Alpine.js is no longer exposed as `window.Alpine`, and the admin font CSS variable is `--persian-kit-admin-font`.
 - Removed dead code: `ViteHelper`, `BatchMigrator::isComplete()`, `ConflictDetector::detect()`, the container's unused alias/`__get`/`reset`, and the empty deactivation hook. `ModuleInterface` now declares `isEnabled()` and `settingsView()`.
 
 ### Development

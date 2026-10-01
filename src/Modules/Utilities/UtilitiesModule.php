@@ -29,7 +29,7 @@ class UtilitiesModule extends AbstractModule
      */
     public static function defaults(): array
     {
-        return ['enabled' => true];
+        return ['enabled' => true, 'persian_slugs' => true];
     }
 
     public function register(ServiceContainer $container): void
@@ -39,9 +39,26 @@ class UtilitiesModule extends AbstractModule
         });
     }
 
+    public function settingsView(): ?string
+    {
+        return 'admin/partials/utilities-settings';
+    }
+
+    /**
+     * @param array<string, mixed> $values
+     * @return array<string, mixed>
+     */
+    public function sanitizeSettings(array $values): array
+    {
+        return [
+            'enabled'       => !empty($values['enabled']),
+            'persian_slugs' => !empty($values['persian_slugs']),
+        ];
+    }
+
     public function boot(ServiceContainer $container): void
     {
-        if (apply_filters('persian_kit_utilities', true, 'sanitize_title')) {
+        if ($this->setting('persian_slugs', true) && apply_filters('persian_kit_utilities', true, 'sanitize_title')) {
             $container->get(PersianSlugFilter::class)->register();
         }
     }

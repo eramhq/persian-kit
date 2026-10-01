@@ -185,7 +185,7 @@ class DateFilters
         return $this->replaceRenderedTimeText(
             $blockContent,
             function (string $datetime, string $innerHtml) use ($format): string {
-                $formattedDate = JalaliFormatter::format($format, $datetime);
+                $formattedDate = esc_html(JalaliFormatter::format($format, $datetime));
 
                 return $this->replaceLinkedTimeText($innerHtml, $formattedDate);
             },
@@ -204,7 +204,7 @@ class DateFilters
 
         return $this->replaceRenderedTimeText(
             $blockContent,
-            fn (string $datetime, string $innerHtml): string => JalaliFormatter::format($this->defaultDateFormat, $datetime)
+            fn (string $datetime, string $innerHtml): string => esc_html(JalaliFormatter::format($this->defaultDateFormat, $datetime))
         );
     }
 
@@ -249,7 +249,7 @@ class DateFilters
         remove_meta_box('dashboard_activity', 'dashboard', 'normal');
         wp_add_dashboard_widget(
             'dashboard_activity',
-            __('Activity'), // phpcs:ignore WordPress.WP.I18n.MissingArgDomain -- Replaces core's widget; keeps its translated title.
+            __('Activity', 'persian-kit'),
             [$this, 'renderDashboardActivityWidget'],
             null,
             null,

@@ -16,6 +16,7 @@ class MediaAttachmentDateFormatterTest extends TestCase
 
         Functions\when('__')->alias(fn (string $text, ?string $domain = null): string => $text);
         Functions\when('wp_timezone')->justReturn(new \DateTimeZone('Asia/Tehran'));
+        Functions\when('get_option')->justReturn('F j, Y');
         Functions\when('apply_filters')->returnArg(2);
     }
 

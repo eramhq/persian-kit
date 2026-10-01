@@ -21,9 +21,7 @@ class MediaAttachmentDateFormatter
             return $response;
         }
 
-        // Same format string core uses for dateFormatted, so it keeps core's translation.
-        // phpcs:ignore WordPress.WP.I18n.MissingArgDomain
-        $response['dateFormatted'] = JalaliFormatter::fromLocalMysql(__('F j, Y'), $attachment->post_date)
+        $response['dateFormatted'] = JalaliFormatter::fromLocalMysql((string) get_option('date_format'), $attachment->post_date)
             ?? $response['dateFormatted'];
 
         return $response;

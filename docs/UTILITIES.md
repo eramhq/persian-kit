@@ -21,7 +21,7 @@ These helpers are most useful when your own code handles user input outside the 
 ### Validate and return field-level errors
 
 ```php
-$result = pk_validate_phone($_POST['mobile'] ?? '');
+$result = persian_kit_validate_phone($_POST['mobile'] ?? '');
 
 if (!$result->isValid()) {
     return new WP_Error(
@@ -44,8 +44,8 @@ Use this pattern for:
 ### Normalize before lookup or persistence
 
 ```php
-$normalizedName = pk_normalize_persian($rawName);
-$normalizedSlug = pk_slug($postTitle);
+$normalizedName = persian_kit_normalize_persian($rawName);
+$normalizedSlug = persian_kit_slug($postTitle);
 ```
 
 This is useful when:
@@ -59,7 +59,7 @@ This is useful when:
 Prefer:
 
 ```php
-$result = pk_validate_card_number($input);
+$result = persian_kit_validate_card_number($input);
 
 if ($result->isValid()) {
     $bank = $result->detail()?->bank; // null when the BIN isn't listed
@@ -76,14 +76,14 @@ All validators return abzar's `ValidationResult` instead of throwing for invalid
 
 Current validators:
 
-- `pk_validate_national_id`
-- `pk_validate_legal_id`
-- `pk_validate_phone`
-- `pk_validate_card_number`
-- `pk_validate_iban`
-- `pk_validate_postal_code`
-- `pk_validate_plate_number`
-- `pk_validate_bill_id`
+- `persian_kit_validate_national_id`
+- `persian_kit_validate_legal_id`
+- `persian_kit_validate_phone`
+- `persian_kit_validate_card_number`
+- `persian_kit_validate_iban`
+- `persian_kit_validate_postal_code`
+- `persian_kit_validate_plate_number`
+- `persian_kit_validate_bill_id`
 
 #### Details
 
@@ -91,14 +91,14 @@ Current validators:
 
 | Helper | Detail properties |
 | --- | --- |
-| `pk_validate_national_id` | `value`, `cityCode`, `city`, `province` |
-| `pk_validate_legal_id` | `value` |
-| `pk_validate_phone` | `type`, `normalizedLocal`, `normalizedE164`, `operator`, `areaCode`, `city`, `province` |
-| `pk_validate_card_number` | `value`, `bin`, `bank` |
-| `pk_validate_iban` | `value`, `bankCode`, `bank` |
-| `pk_validate_postal_code` | `postalCode`, `zoneCode` |
-| `pk_validate_plate_number` | `twoDigit`, `letter`, `threeDigit`, `cityCode`, `type`, `province`, `provinces` |
-| `pk_validate_bill_id` | `billId`, `paymentId`, `type` |
+| `persian_kit_validate_national_id` | `value`, `cityCode`, `city`, `province` |
+| `persian_kit_validate_legal_id` | `value` |
+| `persian_kit_validate_phone` | `type`, `normalizedLocal`, `normalizedE164`, `operator`, `areaCode`, `city`, `province` |
+| `persian_kit_validate_card_number` | `value`, `bin`, `bank` |
+| `persian_kit_validate_iban` | `value`, `bankCode`, `bank` |
+| `persian_kit_validate_postal_code` | `postalCode`, `zoneCode` |
+| `persian_kit_validate_plate_number` | `twoDigit`, `letter`, `threeDigit`, `cityCode`, `type`, `province`, `provinces` |
+| `persian_kit_validate_bill_id` | `billId`, `paymentId`, `type` |
 
 #### Warnings
 
@@ -108,27 +108,27 @@ Well-formed, checksum-valid input is valid even when a lookup fails: an unlisted
 
 These helpers are stricter and throw abzar's `FormatException` when the input is malformed:
 
-- `pk_number_format`
-- `pk_number_to_words`
-- `pk_time_ago`
-- `pk_ordinal_word`
-- `pk_ordinal_short`
+- `persian_kit_number_format`
+- `persian_kit_number_to_words`
+- `persian_kit_time_ago`
+- `persian_kit_ordinal_word`
+- `persian_kit_ordinal_short`
 
 `FormatException` extends `\RuntimeException`. Wrap these helpers when the input is user-controlled:
 
 ```php
 try {
-    $formatted = pk_number_format($userValue, '٬');
+    $formatted = persian_kit_number_format($userValue, '٬');
 } catch (\RuntimeException $e) {
     $formatted = null;
 }
 ```
 
-`pk_words_to_number` doesn't throw; it returns `null` for text that isn't a number. The currency helpers throw `InvalidArgumentException` for a unit other than `toman` or `rial`.
+`persian_kit_words_to_number` doesn't throw; it returns `null` for text that isn't a number. The currency helpers throw `InvalidArgumentException` for a unit other than `toman` or `rial`.
 
 ### Text helpers
 
-`pk_normalize_persian` and `pk_slug` are safe building blocks for text pipelines.
+`persian_kit_normalize_persian` and `persian_kit_slug` are safe building blocks for text pipelines.
 
 Typical flow:
 
@@ -142,7 +142,7 @@ Typical flow:
 ### Accept Persian digits in a custom checkout field
 
 ```php
-$result = pk_validate_phone($_POST['billing_mobile'] ?? '');
+$result = persian_kit_validate_phone($_POST['billing_mobile'] ?? '');
 
 if (!$result->isValid()) {
     wc_add_notice(implode(' ', $result->errors()), 'error');
@@ -154,8 +154,8 @@ if (!$result->isValid()) {
 ### Build searchable normalized meta
 
 ```php
-$searchable = pk_normalize_persian($rawText);
-$searchable = pk_to_english_digits($searchable);
+$searchable = persian_kit_normalize_persian($rawText);
+$searchable = persian_kit_to_english_digits($searchable);
 
 update_post_meta($postId, '_searchable_value', $searchable);
 ```
@@ -163,19 +163,19 @@ update_post_meta($postId, '_searchable_value', $searchable);
 ### Generate a Persian-preserving slug outside the post editor
 
 ```php
-$slug = pk_slug($label); // a ZWNJ becomes "-"
+$slug = persian_kit_slug($label); // a ZWNJ becomes "-"
 ```
 
 ### Show a price in toman
 
 ```php
-echo esc_html(pk_currency_format($priceInToman)); // ۱،۵۰۰،۰۰۰ تومان
+echo esc_html(persian_kit_currency_format($priceInToman)); // ۱،۵۰۰،۰۰۰ تومان
 ```
 
 ### Sort terms by their Persian names
 
 ```php
-$sorted = pk_persian_sort($terms, static fn (WP_Term $term): string => $term->name);
+$sorted = persian_kit_persian_sort($terms, static fn (WP_Term $term): string => $term->name);
 ```
 
 This needs the `intl` extension for correct Persian order; without it the sort falls back to byte order.
@@ -183,7 +183,7 @@ This needs the `intl` extension for correct Persian order; without it the sort f
 ### Render a relative timestamp in Persian
 
 ```php
-echo esc_html(pk_time_ago(get_post_timestamp($post)));
+echo esc_html(persian_kit_time_ago(get_post_timestamp($post)));
 ```
 
 ## Design Constraints To Keep In Mind
@@ -192,20 +192,20 @@ echo esc_html(pk_time_ago(get_post_timestamp($post)));
 
 Error and warning messages are Persian strings. For machine-readable results use `errorCodes()` and `warningCodes()`, which return abzar `ErrorCode` enum cases.
 
-### `pk_normalize_persian` is intentionally narrower than full content normalization
+### `persian_kit_normalize_persian` is intentionally narrower than full content normalization
 
 It normalizes text input, not rich HTML documents. For content-wide HTML-aware normalization, use the plugin's module behavior instead of the helper.
 
-### `pk_is_arabic` is not a general Unicode Arabic detector
+### `persian_kit_is_arabic` is not a general Unicode Arabic detector
 
 It is designed to distinguish Arabic-exclusive character usage from Persian usage. Use it as a heuristic aligned with Persian Kit's rules, not as a universal language detector.
 
 ### Date helpers and digit helpers are separate on purpose
 
-`pk_date()` returns date text, but not necessarily Persian digits. Compose helpers when you need both:
+`persian_kit_date()` returns date text, but not necessarily Persian digits. Compose helpers when you need both:
 
 ```php
-echo pk_to_persian_digits(pk_date('Y/m/d'));
+echo persian_kit_to_persian_digits(persian_kit_date('Y/m/d'));
 ```
 
 ## Suggested Conventions for Integrators

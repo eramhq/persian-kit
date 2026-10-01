@@ -1,8 +1,9 @@
 <?php
 
 /**
- * Marks the scoped copies of eram/abzar and eram/daynum in packages/ as
- * third-party code for PHPCS and Plugin Check.
+ * Finishes the scoped copies of eram/abzar and eram/daynum in packages/:
+ * copies each library's LICENSE next to it (MIT requires the notice to travel
+ * with the code) and marks the files as third-party code for PHPCS and Plugin Check.
  *
  * Both are plain PHP libraries that also run outside WordPress, so their
  * exception messages can't use WordPress escaping. Persian Kit never prints
@@ -15,6 +16,14 @@ $marker = '// phpcs:ignoreFile -- Bundled third-party library (MIT), checked ups
 if (!is_dir($root)) {
     fwrite(STDERR, "packages/eram not found; run composer install first.\n");
     exit(1);
+}
+
+foreach (['abzar', 'daynum'] as $package) {
+    $license = dirname(__DIR__) . "/vendor/eram/{$package}/LICENSE";
+    if (!is_file($license) || !is_dir("{$root}/{$package}") || !copy($license, "{$root}/{$package}/LICENSE")) {
+        fwrite(STDERR, "Could not copy the LICENSE for eram/{$package}.\n");
+        exit(1);
+    }
 }
 
 $marked = 0;

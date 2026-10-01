@@ -14,6 +14,12 @@ defined('ABSPATH') || exit;
 // Variables here are local to View::load(), not globals.
 // phpcs:disable WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound
 
+$moduleKey = $args['moduleKey'];
+$moduleLabel = $args['moduleLabel'];
+$moduleDescription = $args['moduleDescription'];
+$module = $args['module'];
+$moduleSettings = $args['moduleSettings'] ?? [];
+
 $isEnabled    = !empty($moduleSettings['enabled']);
 $settingsView = $module->settingsView();
 ?>

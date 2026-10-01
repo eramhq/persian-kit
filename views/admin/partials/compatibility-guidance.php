@@ -9,6 +9,8 @@ defined('ABSPATH') || exit;
 
 // Variables here are local to View::load(), not globals.
 // phpcs:disable WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound
+
+$compatibilityReports = $args['compatibilityReports'] ?? [];
 ?>
 <section id="persian-kit-compatibility" class="persian-kit-compatibility">
     <h2><?php esc_html_e('Compatibility', 'persian-kit'); ?></h2>

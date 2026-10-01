@@ -24,7 +24,7 @@ class AdminDateScript
             return;
         }
 
-        $this->registerSharedScripts();
+        JalaliScript::register();
 
         wp_enqueue_script('persian-kit-jalali');
 
@@ -42,7 +42,7 @@ class AdminDateScript
      */
     public function enqueueGutenberg(): void
     {
-        $this->registerSharedScripts();
+        JalaliScript::register();
 
         wp_enqueue_script('persian-kit-jalali');
 
@@ -56,18 +56,7 @@ class AdminDateScript
         wp_enqueue_script(
             'persian-kit-gutenberg-jalali',
             PERSIAN_KIT_URL . 'public/js/gutenberg-jalali-panel.js',
-            ['wp-data', 'wp-components', 'persian-kit-jalali'],
-            PERSIAN_KIT_VERSION,
-            true
-        );
-    }
-
-    private function registerSharedScripts(): void
-    {
-        wp_register_script(
-            'persian-kit-jalali',
-            PERSIAN_KIT_URL . 'public/js/jalali.js',
-            [],
+            ['wp-data', 'wp-components', 'wp-i18n', 'persian-kit-jalali'],
             PERSIAN_KIT_VERSION,
             true
         );

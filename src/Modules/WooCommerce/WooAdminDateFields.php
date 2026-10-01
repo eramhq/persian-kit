@@ -2,6 +2,8 @@
 
 namespace PersianKit\Modules\WooCommerce;
 
+use PersianKit\Modules\DateConversion\JalaliScript;
+
 defined('ABSPATH') || exit;
 
 class WooAdminDateFields
@@ -17,7 +19,7 @@ class WooAdminDateFields
             return;
         }
 
-        $this->registerSharedScripts();
+        JalaliScript::register();
 
         wp_enqueue_script('persian-kit-jalali');
 
@@ -25,17 +27,6 @@ class WooAdminDateFields
             'persian-kit-woocommerce-date-fields',
             PERSIAN_KIT_URL . 'public/js/woocommerce-date-fields.js',
             ['jquery', 'persian-kit-jalali'],
-            PERSIAN_KIT_VERSION,
-            true
-        );
-    }
-
-    private function registerSharedScripts(): void
-    {
-        wp_register_script(
-            'persian-kit-jalali',
-            PERSIAN_KIT_URL . 'public/js/jalali.js',
-            [],
             PERSIAN_KIT_VERSION,
             true
         );

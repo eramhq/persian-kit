@@ -22,7 +22,7 @@ Persian Kit is a modular WordPress plugin for Persian-language sites. It focuses
 * Arabic-to-Persian character normalization (live and batch)
 * Vazirmatn-powered admin font support
 * ZWNJ editor shortcuts for Classic Editor and Gutenberg
-* Persian slug generation
+* Persian slugs that keep Persian letters readable (can be turned off)
 * PHP validation and formatting helpers for common Iranian data
 * WooCommerce Jalali date support for supported screens (HPOS-compatible)
 
@@ -32,10 +32,10 @@ Persian Kit ships and credits the following third-party components:
 
 * [eram/abzar](https://github.com/eramhq/abzar-php) — MIT-licensed PHP utilities for Persian text and digit handling.
 * [eram/daynum](https://github.com/eramhq/daynum) — MIT-licensed PHP Jalali date library.
-* [Alpine.js](https://alpinejs.dev) — MIT-licensed JavaScript framework, bundled into the admin script.
+* [Alpine.js](https://alpinejs.dev) — MIT-licensed JavaScript framework, bundled into the admin script together with its MIT-licensed dependencies `@vue/reactivity` and `@vue/shared`.
 * [Vazirmatn](https://github.com/rastikerdar/vazirmatn) — Persian font by Saber Rastikerdar, licensed under the SIL Open Font License 1.1.
 
-All bundled components are GPL-compatible.
+All bundled components are GPL-compatible. Their license texts ship with the plugin: `packages/eram/*/LICENSE`, `public/fonts/vazirmatn/OFL.txt` and the header of `public/js/admin.js`.
 
 = Source code =
 
@@ -62,6 +62,14 @@ Yes. Persian Kit declares HPOS compatibility and the Jalali order date filter wo
 
 Translations are loaded automatically by WordPress from the WordPress.org translation system. You do not need to manually load a language pack.
 
+= How does Persian Kit change slugs? =
+
+With the Utilities module's "Persian slugs" option on (the default), new posts and terms with Persian titles get slugs that keep the Persian letters, with a half-space turned into "-". Titles without Persian letters are slugged by WordPress as usual. Existing slugs are never rewritten, and older URLs keep working. Turn the option off to use WordPress's percent-encoded slugs instead.
+
+= What does Persian Kit change in the admin? =
+
+With Date Conversion on, the dashboard's Activity widget, post lists and the admin bar show Jalali dates. The Activity widget is WordPress's own widget re-rendered with Jalali dates. The admin font applies only when the admin language is Persian or right-to-left.
+
 = Do I need WooCommerce? =
 
 No. WooCommerce features only activate when WooCommerce is installed and active.
@@ -71,7 +79,7 @@ No. WooCommerce features only activate when WooCommerce is installed and active.
 = 1.0.0-beta.2 =
 * First WordPress.org release.
 * Switched core utilities to the `eram/abzar` (0.8) and `eram/daynum` (1.0.0-beta.3) libraries.
-* Added `pk_*` helpers: `pk_currency_format`, `pk_currency_convert`, `pk_words_to_number`, `pk_validate_postal_code`, `pk_validate_plate_number`, `pk_validate_bill_id`, `pk_half_space_fix`, `pk_keyboard_fix`, `pk_persian_sort`.
+* PHP helper functions for developers, all named `persian_kit_*`, including `persian_kit_currency_format`, `persian_kit_currency_convert`, `persian_kit_words_to_number`, `persian_kit_validate_postal_code`, `persian_kit_validate_plate_number`, `persian_kit_validate_bill_id`, `persian_kit_half_space_fix`, `persian_kit_keyboard_fix`, `persian_kit_persian_sort`.
 * Persian slugs turn a half-space (ZWNJ) into `-`. Slugs saved by earlier versions keep working, and posts created before activation load again.
 * Latin slugs and WooCommerce attribute names (`pa_color`) are left to WordPress, which fixes attributes being renamed to `pa-color`.
 * Fixed: feeds (RSS, Atom) showed Jalali dates.

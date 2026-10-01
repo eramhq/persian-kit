@@ -56,11 +56,11 @@
         "test:integration": "WP_TESTS_DIR=.wordpress-tests/wordpress-develop/tests/phpunit php .wordpress-tests/bin/phpunit-9.6.23.phar -c phpunit-integration.xml.dist --testsuite integration --testdox",
         "post-install-cmd": [
             "@composer wp-scope",
-            "@php scripts/mark-bundled-libraries.php"
+            "@php scripts/prepare-bundled-libraries.php"
         ],
         "post-update-cmd": [
             "@composer wp-scope",
-            "@php scripts/mark-bundled-libraries.php"
+            "@php scripts/prepare-bundled-libraries.php"
         ],
         "phpstan": "phpstan analyse --memory-limit=2G",
         "phpcs": "phpcs"
