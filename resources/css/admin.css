@@ -319,3 +319,22 @@
 .persian-kit-module__settings .persian-kit-batch-confirm {
     margin: 0 0 1em;
 }
+
+/* Welcome notice */
+.persian-kit-welcome h2 {
+    margin: 0.75em 0 0.25em;
+}
+
+.persian-kit-welcome__modules {
+    list-style: disc;
+    padding-inline-start: 1.5em;
+}
+
+.persian-kit-welcome__state {
+    color: #646970;
+}
+
+.persian-kit-warning-list {
+    list-style: disc;
+    padding-inline-start: 1.5em;
+}

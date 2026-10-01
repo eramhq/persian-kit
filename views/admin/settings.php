@@ -4,6 +4,8 @@
  *
  * @var array                            $modules              Module data array.
  * @var array                            $compatibilityReports Compatibility guidance cards.
+ * @var bool                             $showWelcome          Whether to show the first-run notice.
+ * @var string                           $dismissWelcomeUrl    URL that hides the first-run notice.
  */
 
 defined('ABSPATH') || exit;
@@ -13,17 +15,27 @@ defined('ABSPATH') || exit;
 
 $modules = $args['modules'] ?? [];
 $compatibilityReports = $args['compatibilityReports'] ?? [];
+$showWelcome = !empty($args['showWelcome']);
 ?>
 <div class="wrap persian-kit-wrap">
     <h1><?php esc_html_e('Persian Kit', 'persian-kit'); ?></h1>
     <p class="persian-kit-page-description">
-        <?php esc_html_e('Enable or disable modules and configure their settings.', 'persian-kit'); ?>
+        <?php esc_html_e('Turn each module on or off, then save. Changes take effect on your site right away.', 'persian-kit'); ?>
     </p>
 
     <?php if (isset($_GET['updated'])) : // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Display-only flag set by our own redirect. ?>
         <div class="notice notice-success is-dismissible">
             <p><?php esc_html_e('Settings saved.', 'persian-kit'); ?></p>
         </div>
+    <?php endif; ?>
+
+    <?php if ($showWelcome) : ?>
+        <?php
+        \PersianKit\Components\View::load('admin/partials/welcome', [
+            'modules'           => $modules,
+            'dismissWelcomeUrl' => $args['dismissWelcomeUrl'] ?? '',
+        ]);
+        ?>
     <?php endif; ?>
 
     <?php if (!empty($compatibilityReports)) : ?>

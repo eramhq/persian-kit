@@ -51,6 +51,7 @@ class AssetManagerTest extends TestCase
         Functions\when('esc_html__')->alias(static fn (string $text) => $text);
         Functions\when('esc_html')->alias(static fn (string $text) => $text);
         Functions\when('current_user_can')->justReturn(true);
+        Functions\when('determine_locale')->justReturn('en_US');
     }
 
     protected function tearDown(): void
@@ -115,6 +116,21 @@ class AssetManagerTest extends TestCase
             ->with('persian-kit-admin', 'persian-kit');
 
         $manager->enqueueAdmin('toplevel_page_persian-kit');
+        $this->addToAssertionCount(1);
+    }
+
+    public function test_persian_admin_uses_the_bundled_script_translations(): void
+    {
+        Functions\when('determine_locale')->justReturn('fa_IR');
+        Functions\when('wp_enqueue_style')->justReturn(null);
+        Functions\when('wp_enqueue_script')->justReturn(null);
+        Functions\when('wp_add_inline_script')->justReturn(true);
+
+        Functions\expect('wp_set_script_translations')
+            ->once()
+            ->with('persian-kit-admin', 'persian-kit', PERSIAN_KIT_DIR . 'languages');
+
+        (new TestableAssetManager(true))->enqueueAdmin('toplevel_page_persian-kit');
         $this->addToAssertionCount(1);
     }
 }

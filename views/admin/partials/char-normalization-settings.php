@@ -12,6 +12,7 @@ defined('ABSPATH') || exit;
 
 $moduleSettings = $args['moduleSettings'] ?? [];
 
+$normalizeOnSave = !empty($moduleSettings['normalize_on_save']);
 $tehMarbuta = !empty($moduleSettings['teh_marbuta']);
 
 $postTypeLabels = [];
@@ -22,6 +23,25 @@ foreach (get_post_types(['public' => true], 'objects') as $postType => $postType
 // Media titles and captions are rarely typed in Persian by hand; opt in.
 $selectedPostTypes = array_values(array_diff(array_keys($postTypeLabels), ['attachment']));
 ?>
+<p class="description">
+    <?php esc_html_e('Search always matches both spellings while this module is on. It does not change any content.', 'persian-kit'); ?>
+</p>
+
+<div class="persian-kit-setting-row">
+    <label>
+        <input
+            type="checkbox"
+            name="modules[char_normalization][normalize_on_save]"
+            value="1"
+            <?php checked($normalizeOnSave); ?>
+        >
+        <?php esc_html_e('Fix letters when posts are saved', 'persian-kit'); ?>
+    </label>
+    <p class="description">
+        <?php esc_html_e('Replaces Arabic ي and ك with Persian ی and ک, and Arabic-Indic digits with Persian digits, in the title, excerpt and content of public posts each time they are saved. Code blocks and HTML tags are left alone.', 'persian-kit'); ?>
+    </p>
+</div>
+
 <div class="persian-kit-setting-row">
     <label>
         <input
@@ -30,7 +50,7 @@ $selectedPostTypes = array_values(array_diff(array_keys($postTypeLabels), ['atta
             value="1"
             <?php checked($tehMarbuta); ?>
         >
-        <?php esc_html_e('Convert Arabic Teh Marbuta (ة) to Persian Heh (ه)', 'persian-kit'); ?>
+        <?php esc_html_e('When fixing letters, also replace Arabic Teh Marbuta (ة) with Persian Heh (ه)', 'persian-kit'); ?>
     </label>
     <p class="description persian-kit-warning">
         <?php esc_html_e(

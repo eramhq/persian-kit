@@ -1,0 +1,656 @@
+# Persian (Iran) translation for Persian Kit. Needs review by a native speaker.
+# Copyright (C) 2026 Navid Kashani
+# This file is distributed under the GPL v2 or later.
+msgid ""
+msgstr ""
+"Project-Id-Version: Persian Kit 1.0.0-beta.2\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/persian-kit\n"
+"POT-Creation-Date: 2026-10-01T15:04:51+00:00\n"
+"PO-Revision-Date: 2026-10-01 00:00+0000\n"
+"Last-Translator: Persian Kit contributors\n"
+"Language-Team: Persian (Iran)\n"
+"Language: fa_IR\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: WP-CLI 2.12.0\n"
+"X-Domain: persian-kit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. Plugin Name of the plugin
+#: persian-kit.php src/Core/AdminPage.php:62 src/Core/AdminPage.php:63
+#: src/Core/ConflictDetector.php:144 src/Service/Assets/AssetManager.php:45
+#: views/admin/settings.php:21
+msgid "Persian Kit"
+msgstr "Persian Kit"
+
+#. Plugin URI of the plugin
+#: persian-kit.php
+msgid "https://github.com/eramhq/persian-kit"
+msgstr ""
+
+#. Description of the plugin
+#: persian-kit.php
+msgid "A modular Persian (Farsi) language toolkit for WordPress."
+msgstr ""
+"ابزارهای زبان فارسی برای وردپرس، که هر کدام را جداگانه می‌توانید روشن یا "
+"خاموش کنید."
+
+#. Author of the plugin
+#: persian-kit.php
+msgid "Navid Kashani"
+msgstr ""
+
+#. Author URI of the plugin
+#: persian-kit.php
+msgid "https://flavor.dev"
+msgstr ""
+
+#: src/Core/AdminPage.php:54
+msgid "Settings"
+msgstr "تنظیمات"
+
+#: src/Core/AdminPage.php:108 src/Core/AdminPage.php:146
+msgid "You do not have permission to access this page."
+msgstr "شما اجازهٔ دسترسی به این صفحه را ندارید."
+
+#: src/Core/ConflictDetector.php:27
+msgid "WP-Parsidate is already handling some Persian date and text features."
+msgstr ""
+"افزونهٔ WP-Parsidate بخشی از کارهای مربوط به تاریخ و متن فارسی را از قبل "
+"انجام می‌دهد."
+
+#: src/Core/ConflictDetector.php:29 src/Core/ConflictDetector.php:50
+msgid "Jalali dates"
+msgstr "تاریخ شمسی"
+
+#: src/Core/ConflictDetector.php:30 src/Core/ConflictDetector.php:51
+msgid "Digit conversion in content"
+msgstr "تبدیل اعداد در محتوا"
+
+#: src/Core/ConflictDetector.php:31 src/Core/ConflictDetector.php:52
+msgid "Arabic-to-Persian text normalization"
+msgstr "یکسان‌سازی حروف عربی به فارسی"
+
+#: src/Core/ConflictDetector.php:32
+msgid "Admin and editor font styling"
+msgstr "فونت پیشخوان و ویرایشگر"
+
+#: src/Core/ConflictDetector.php:33
+msgid "WooCommerce Jalali dates"
+msgstr "تاریخ شمسی در ووکامرس"
+
+#: src/Core/ConflictDetector.php:36 src/Core/ConflictDetector.php:57
+#: src/Core/ConflictDetector.php:76
+#: src/Modules/DateConversion/DateConversionModule.php:19
+msgid "Date Conversion"
+msgstr "تاریخ شمسی"
+
+#: src/Core/ConflictDetector.php:37 src/Core/ConflictDetector.php:58
+#: src/Core/ConflictDetector.php:78
+#: src/Modules/DigitConversion/DigitConversionModule.php:21
+msgid "Digit Conversion"
+msgstr "اعداد فارسی"
+
+#: src/Core/ConflictDetector.php:38 src/Core/ConflictDetector.php:59
+#: src/Core/ConflictDetector.php:79
+#: src/Modules/CharNormalization/CharNormalizationModule.php:21
+msgid "Character Normalization"
+msgstr "یکسان‌سازی ی و ک"
+
+#: src/Core/ConflictDetector.php:39 src/Core/ConflictDetector.php:60
+#: src/Core/ConflictDetector.php:80
+#: src/Modules/AdminFont/AdminFontModule.php:19
+msgid "Admin Font"
+msgstr "فونت پیشخوان"
+
+#: src/Core/ConflictDetector.php:40 src/Core/ConflictDetector.php:82
+#: src/Modules/WooCommerce/WooCommerceModule.php:19
+msgid "WooCommerce Support"
+msgstr "پشتیبانی از ووکامرس"
+
+#: src/Core/ConflictDetector.php:41 src/Core/ConflictDetector.php:61
+#: src/Core/ConflictDetector.php:81
+#: src/Modules/ZWNJEditor/ZWNJEditorModule.php:19
+msgid "ZWNJ Editor Support"
+msgstr "نیم‌فاصله در ویرایشگر"
+
+#: src/Core/ConflictDetector.php:42 src/Core/ConflictDetector.php:62
+#: src/Core/ConflictDetector.php:83
+#: src/Modules/Utilities/UtilitiesModule.php:19
+msgid "Utilities"
+msgstr "ابزارها"
+
+#: src/Core/ConflictDetector.php:48
+msgid "WP Jalali is already handling some Persian date and text features."
+msgstr ""
+"افزونهٔ WP Jalali بخشی از کارهای مربوط به تاریخ و متن فارسی را از قبل انجام "
+"می‌دهد."
+
+#: src/Core/ConflictDetector.php:53
+msgid "Some admin and editor styling"
+msgstr "بخشی از ظاهر پیشخوان و ویرایشگر"
+
+#: src/Core/ConflictDetector.php:54
+msgid "Jalali archive and permalink behavior"
+msgstr "بایگانی‌ها و پیوندهای یکتای شمسی"
+
+#: src/Core/ConflictDetector.php:64
+msgid ""
+"WP Jalali also changes archive and permalink behavior. Persian Kit does not "
+"replace that yet."
+msgstr ""
+"WP Jalali رفتار بایگانی‌ها و پیوندهای یکتا را هم تغییر می‌دهد. Persian Kit "
+"هنوز جایگزینی برای این بخش ندارد."
+
+#: src/Core/ConflictDetector.php:69
+msgid ""
+"Persian WooCommerce is already handling WooCommerce-specific Persian date "
+"features."
+msgstr ""
+"افزونهٔ ووکامرس فارسی تاریخ‌های شمسی مخصوص ووکامرس را از قبل مدیریت می‌کند."
+
+#: src/Core/ConflictDetector.php:71
+msgid "WooCommerce Jalali date inputs"
+msgstr "فیلدهای تاریخ شمسی در ووکامرس"
+
+#: src/Core/ConflictDetector.php:72
+msgid "Order, product, and coupon date editing"
+msgstr "ویرایش تاریخ سفارش، محصول و کد تخفیف"
+
+#: src/Core/ConflictDetector.php:73
+msgid "Some WooCommerce date display and email formatting"
+msgstr "بخشی از نمایش تاریخ‌ها و ایمیل‌های ووکامرس"
+
+#: src/Core/ConflictDetector.php:77
+#: views/admin/partials/date-conversion-settings.php:25
+msgid "Convert all dates (advanced)"
+msgstr "تبدیل همهٔ تاریخ‌ها (پیشرفته)"
+
+#: src/Core/ConflictDetector.php:85
+msgid ""
+"Let Persian WooCommerce handle Woo-specific dates. Persian Kit can still "
+"handle normal WordPress dates."
+msgstr ""
+"تاریخ‌های مخصوص ووکامرس را به ووکامرس فارسی بسپارید. Persian Kit همچنان "
+"می‌تواند تاریخ‌های معمول وردپرس را شمسی کند."
+
+#: src/Core/ConflictDetector.php:145
+#: views/admin/partials/compatibility-guidance.php:18
+msgid ""
+"Another Persian plugin is already handling some of the same features. To "
+"avoid mixed results, use only one plugin for each feature area."
+msgstr ""
+"افزونهٔ فارسی دیگری هم بخشی از همین کارها را انجام می‌دهد. برای اینکه نتیجه‌ها "
+"با هم قاطی نشوند، هر کار را فقط به یک افزونه بسپارید."
+
+#: src/Core/ConflictDetector.php:154
+msgid "Review recommended settings"
+msgstr "دیدن تنظیمات پیشنهادی"
+
+#: src/Core/ConflictDetector.php:199
+msgid "Unknown plugin"
+msgstr "افزونهٔ ناشناخته"
+
+#. translators: %s: name of another plugin.
+#: src/Core/ConflictDetector.php:229
+#, php-format
+msgid "%s is already handling some of the same features."
+msgstr "%s بخشی از همین کارها را از قبل انجام می‌دهد."
+
+#: src/Core/ConflictDetector.php:280
+msgid "Currently on"
+msgstr "الان روشن است"
+
+#: src/Core/ConflictDetector.php:281
+msgid "Currently off"
+msgstr "الان خاموش است"
+
+#: src/Core/ConflictDetector.php:315
+msgid "Turn off"
+msgstr "خاموش کنید"
+
+#: src/Core/ConflictDetector.php:316
+msgid "Keep on"
+msgstr "روشن بماند"
+
+#: src/Core/ConflictDetector.php:317
+msgid "Leave off"
+msgstr "خاموش بماند"
+
+#: src/Core/ConflictDetector.php:318
+msgid "No change needed"
+msgstr "تغییری لازم نیست"
+
+#. translators: %s: Persian Kit module name.
+#: src/Core/ConflictDetector.php:326
+#, php-format
+msgid "Turn off %s in Persian Kit."
+msgstr "«%s» را در Persian Kit خاموش کنید."
+
+#. translators: %s: Persian Kit module name.
+#: src/Core/ConflictDetector.php:328
+#, php-format
+msgid "Keep %s enabled in Persian Kit."
+msgstr "«%s» را در Persian Kit روشن نگه دارید."
+
+#. translators: %s: Persian Kit module name.
+#: src/Core/ConflictDetector.php:330
+#, php-format
+msgid "Leave %s off in Persian Kit."
+msgstr "«%s» را در Persian Kit خاموش نگه دارید."
+
+#. translators: %s: Persian Kit module name.
+#: src/Core/ConflictDetector.php:332
+#, php-format
+msgid "No change needed for %s."
+msgstr "برای «%s» تغییری لازم نیست."
+
+#: src/Modules/AdminFont/AdminFontModule.php:24
+msgid ""
+"Uses the Vazirmatn font in the admin when your admin language is Persian or "
+"right-to-left. Your site's theme is not affected."
+msgstr ""
+"وقتی زبان پیشخوان فارسی یا راست‌به‌چپ است، پیشخوان با فونت وزیرمتن نمایش داده "
+"می‌شود. روی قالب سایت اثری ندارد."
+
+#: src/Modules/CharNormalization/CharNormalizationModule.php:26
+msgid ""
+"Search finds words typed with either Arabic (ي ك) or Persian (ی ک) letters. "
+"Can also fix the letters when posts are saved."
+msgstr ""
+"جست‌وجوی سایت کلمه‌ها را پیدا می‌کند، چه با ي و ك عربی نوشته شده باشند چه با ی "
+"و ک فارسی. می‌تواند هنگام ذخیرهٔ نوشته‌ها حروف را هم اصلاح کند."
+
+#: src/Modules/CharNormalization/NormalizationRestController.php:125
+msgid "Choose at least one public post type."
+msgstr "دست‌کم یک نوع نوشتهٔ عمومی را انتخاب کنید."
+
+#. translators: 1: start of a date range, 2: end of a date range.
+#: src/Modules/DateConversion/DateArchiveFilter.php:138
+#, php-format
+msgctxt "date range"
+msgid "%1$s – %2$s"
+msgstr "%1$s – %2$s"
+
+#: src/Modules/DateConversion/DateConversionModule.php:24
+msgid ""
+"Shows post, comment and admin dates as Jalali (Shamsi). Stored dates are not "
+"changed, and feeds and structured data keep Gregorian dates."
+msgstr ""
+"تاریخ نوشته‌ها، دیدگاه‌ها و پیشخوان را شمسی نشان می‌دهد. تاریخ‌های ذخیره‌شده "
+"تغییر نمی‌کنند و خوراک‌ها و داده‌های ساختاریافته میلادی می‌مانند."
+
+#: src/Modules/DateConversion/DateFilters.php:252
+msgid "Activity"
+msgstr "فعالیت"
+
+#: src/Modules/DateConversion/JalaliScript.php:32
+msgid "Year"
+msgstr "سال"
+
+#: src/Modules/DateConversion/JalaliScript.php:33
+msgid "Month"
+msgstr "ماه"
+
+#: src/Modules/DateConversion/JalaliScript.php:34
+msgid "Day"
+msgstr "روز"
+
+#: src/Modules/DateConversion/JalaliScript.php:35
+msgid "Hour"
+msgstr "ساعت"
+
+#: src/Modules/DateConversion/JalaliScript.php:36
+msgid "Minute"
+msgstr "دقیقه"
+
+#: src/Modules/DateConversion/PostTypeMonthFilter.php:49
+msgid "All dates"
+msgstr "همهٔ تاریخ‌ها"
+
+#: src/Modules/DateConversion/PostTypeMonthFilter.php:265
+msgid "Filter by date"
+msgstr "فیلتر بر اساس تاریخ"
+
+#: src/Modules/DigitConversion/DigitConversionModule.php:26
+msgid ""
+"Shows Persian digits (۱۲۳) instead of English ones (123) in post titles, "
+"content, excerpts, comments, widgets and tags on your site. Admin screens, "
+"feeds and the REST API keep English digits."
+msgstr ""
+"در عنوان، محتوا، خلاصه، دیدگاه‌ها، ابزارک‌ها و برچسب‌های سایت، اعداد را به‌جای "
+"انگلیسی (123) فارسی (۱۲۳) نشان می‌دهد. پیشخوان، خوراک‌ها و REST API اعداد "
+"انگلیسی را نگه می‌دارند."
+
+#: src/Modules/Utilities/UtilitiesModule.php:24
+msgid ""
+"Controls Persian slugs only. The persian_kit_* helper functions for "
+"developers are always available, even when this is off."
+msgstr ""
+"فقط نامک‌های فارسی را کنترل می‌کند. توابع persian_kit_* برای توسعه‌دهندگان "
+"همیشه در دسترس‌اند، حتی وقتی این بخش خاموش است."
+
+#: src/Modules/WooCommerce/WooCommerceModule.php:24
+msgid ""
+"Jalali date fields and month filters on WooCommerce order, product and "
+"coupon screens, and Jalali dates on order pages and emails customers see. "
+"Does nothing unless WooCommerce is active."
+msgstr ""
+"فیلدهای تاریخ شمسی و فیلتر ماه در صفحه‌های سفارش، محصول و کد تخفیف ووکامرس، و "
+"تاریخ شمسی در صفحه‌ها و ایمیل‌های سفارش که مشتری می‌بیند. بدون ووکامرس کاری "
+"انجام نمی‌دهد."
+
+#: src/Modules/WooCommerce/WooOrderMonthFilter.php:199
+msgid "All Jalali dates"
+msgstr "همهٔ تاریخ‌های شمسی"
+
+#: src/Modules/ZWNJEditor/ZWNJEditorModule.php:24
+msgid ""
+"Type a half-space (ZWNJ) with Shift+Space in the Classic and Block editors. "
+"The Classic Editor also gets a toolbar button."
+msgstr ""
+"در ویرایشگر کلاسیک و ویرایشگر بلوک با Shift+Space نیم‌فاصله تایپ کنید. "
+"ویرایشگر کلاسیک یک دکمه در نوار ابزار هم دارد."
+
+#: src/Modules/ZWNJEditor/ZWNJEditorModule.php:88
+msgid "Insert Zero-Width Non-Joiner (Shift+Space)"
+msgstr "درج نیم‌فاصله (Shift+Space)"
+
+#: src/Service/Assets/AssetManager.php:46
+msgid ""
+"The generated admin assets are missing. Build the plugin before packaging or "
+"using it from source."
+msgstr ""
+"فایل‌های ساخته‌شدهٔ پیشخوان پیدا نشدند. پیش از بسته‌بندی یا استفاده از کد منبع، "
+"افزونه را بسازید (build)."
+
+#: views/admin/partials/admin-font-settings.php:23
+msgid "Admin font"
+msgstr "فونت پیشخوان"
+
+#: views/admin/partials/char-normalization-settings.php:27
+msgid ""
+"Search always matches both spellings while this module is on. It does not "
+"change any content."
+msgstr ""
+"تا وقتی این بخش روشن است، جست‌وجو هر دو املا را پیدا می‌کند. این کار هیچ "
+"محتوایی را تغییر نمی‌دهد."
+
+#: views/admin/partials/char-normalization-settings.php:38
+msgid "Fix letters when posts are saved"
+msgstr "اصلاح حروف هنگام ذخیرهٔ نوشته‌ها"
+
+#: views/admin/partials/char-normalization-settings.php:41
+msgid ""
+"Replaces Arabic ي and ك with Persian ی and ک, and Arabic-Indic digits with "
+"Persian digits, in the title, excerpt and content of public posts each time "
+"they are saved. Code blocks and HTML tags are left alone."
+msgstr ""
+"هر بار که نوشته‌ای عمومی ذخیره می‌شود، در عنوان، خلاصه و محتوای آن ي و ك عربی "
+"را با ی و ک فارسی، و اعداد عربی را با اعداد فارسی جایگزین می‌کند. بلوک‌های کد "
+"و برچسب‌های HTML دست نمی‌خورند."
+
+#: views/admin/partials/char-normalization-settings.php:53
+msgid ""
+"When fixing letters, also replace Arabic Teh Marbuta (ة) with Persian Heh (ه)"
+msgstr "هنگام اصلاح حروف، ة عربی را هم با ه فارسی جایگزین کن"
+
+#: views/admin/partials/char-normalization-settings.php:56
+msgid ""
+"Warning: This may corrupt Arabic or Quranic text. Only enable if your "
+"content is exclusively Persian."
+msgstr ""
+"هشدار: این کار ممکن است متن عربی یا آیه‌های قرآن را خراب کند. فقط وقتی روشنش "
+"کنید که همهٔ محتوای سایت فارسی است."
+
+#: views/admin/partials/char-normalization-settings.php:69
+msgid "Fix existing posts"
+msgstr "اصلاح نوشته‌های موجود"
+
+#: views/admin/partials/char-normalization-settings.php:71
+msgid ""
+"Rewrites posts that are already saved, using the saved settings above. Count "
+"first to see how many posts would change."
+msgstr ""
+"نوشته‌هایی را که قبلاً ذخیره شده‌اند با تنظیمات ذخیره‌شدهٔ بالا بازنویسی می‌کند. "
+"اول بشمارید تا ببینید چند نوشته تغییر می‌کند."
+
+#: views/admin/partials/char-normalization-settings.php:75
+msgid "Post types"
+msgstr "نوع‌های نوشته"
+
+#: views/admin/partials/char-normalization-settings.php:91
+msgid "Count posts to fix"
+msgstr "شمردن نوشته‌هایی که باید اصلاح شوند"
+
+#: views/admin/partials/char-normalization-settings.php:100
+msgid "Resume fixing posts…"
+msgstr "ادامهٔ اصلاح نوشته‌ها…"
+
+#: views/admin/partials/char-normalization-settings.php:101
+msgid "Fix posts…"
+msgstr "اصلاح نوشته‌ها…"
+
+#: views/admin/partials/char-normalization-settings.php:110
+msgid "Start Over"
+msgstr "شروع دوباره"
+
+#: views/admin/partials/char-normalization-settings.php:115
+msgid ""
+"You have unsaved changes. Save your settings before fixing posts, because "
+"the fix uses the saved settings."
+msgstr ""
+"تغییرهای ذخیره‌نشده دارید. پیش از اصلاح نوشته‌ها تنظیمات را ذخیره کنید، چون "
+"اصلاح با تنظیمات ذخیره‌شده انجام می‌شود."
+
+#: views/admin/partials/char-normalization-settings.php:121
+msgid "This changes your saved posts and cannot be undone."
+msgstr "این کار نوشته‌های ذخیره‌شدهٔ شما را تغییر می‌دهد و برگشت‌پذیر نیست."
+
+#: views/admin/partials/char-normalization-settings.php:122
+msgid ""
+"Posts are updated directly in the database, without revisions. Back up your "
+"database before you continue."
+msgstr ""
+"نوشته‌ها مستقیم در پایگاه داده به‌روز می‌شوند و رونوشتی از نسخهٔ قبلی ساخته "
+"نمی‌شود. پیش از ادامه از پایگاه داده پشتیبان بگیرید."
+
+#: views/admin/partials/char-normalization-settings.php:127
+msgid "I have a recent backup of my database"
+msgstr "از پایگاه داده‌ام پشتیبان تازه دارم"
+
+#: views/admin/partials/char-normalization-settings.php:132
+msgid "Fix posts now"
+msgstr "همین حالا اصلاح کن"
+
+#: views/admin/partials/char-normalization-settings.php:135
+msgid "Cancel"
+msgstr "انصراف"
+
+#: views/admin/partials/char-normalization-settings.php:143
+msgid "Posts that would change, by post type"
+msgstr "نوشته‌هایی که تغییر می‌کنند، به تفکیک نوع نوشته"
+
+#: views/admin/partials/char-normalization-settings.php:146
+msgid "Post type"
+msgstr "نوع نوشته"
+
+#: views/admin/partials/char-normalization-settings.php:147
+msgid "Posts to fix"
+msgstr "نوشته‌های نیازمند اصلاح"
+
+#: views/admin/partials/compatibility-guidance.php:16
+msgid "Compatibility"
+msgstr "سازگاری"
+
+#: views/admin/partials/compatibility-guidance.php:29
+msgid "Supplementary"
+msgstr "مکمل"
+
+#: views/admin/partials/compatibility-guidance.php:30
+msgid "Overlap"
+msgstr "هم‌پوشانی"
+
+#: views/admin/partials/compatibility-guidance.php:39
+msgid "This plugin is handling:"
+msgstr "این افزونه این کارها را انجام می‌دهد:"
+
+#: views/admin/partials/compatibility-guidance.php:50
+msgid "Recommended Persian Kit settings"
+msgstr "تنظیمات پیشنهادی Persian Kit"
+
+#: views/admin/partials/date-conversion-settings.php:28
+msgid ""
+"By default only post, comment and admin dates are converted. Turn this on "
+"only if your theme or a plugin still shows Gregorian dates, because it "
+"converts every date WordPress formats with wp_date(). Known side effects:"
+msgstr ""
+"به‌طور پیش‌فرض فقط تاریخ نوشته‌ها، دیدگاه‌ها و پیشخوان تبدیل می‌شود. این گزینه را "
+"فقط وقتی روشن کنید که قالب یا افزونه‌ای هنوز تاریخ میلادی نشان می‌دهد، چون هر "
+"تاریخی را که وردپرس با wp_date() می‌سازد تبدیل می‌کند. اثرهای جانبی شناخته‌شده:"
+
+#: views/admin/partials/date-conversion-settings.php:31
+msgid ""
+"Search engines may read Jalali dates in structured data (JSON-LD) from SEO "
+"plugins."
+msgstr ""
+"موتورهای جست‌وجو ممکن است در داده‌های ساختاریافتهٔ (JSON-LD) افزونه‌های سئو "
+"تاریخ شمسی ببینند."
+
+#: views/admin/partials/date-conversion-settings.php:32
+msgid ""
+"Plugins that read back a date they formatted, such as event, booking or form "
+"plugins, can save or compare the wrong date."
+msgstr ""
+"افزونه‌هایی که تاریخی را که خودشان ساخته‌اند دوباره می‌خوانند، مثل افزونه‌های "
+"رویداد، رزرو یا فرم، ممکن است تاریخ اشتباه ذخیره یا مقایسه کنند."
+
+#: views/admin/partials/date-conversion-settings.php:33
+msgid "Dates in exports and in emails sent by other plugins become Jalali."
+msgstr ""
+"تاریخ‌ها در خروجی‌ها و در ایمیل‌هایی که افزونه‌های دیگر می‌فرستند شمسی می‌شوند."
+
+#: views/admin/partials/digit-conversion-settings.php:17
+msgid "Dates"
+msgstr "تاریخ‌ها"
+
+#: views/admin/partials/digit-conversion-settings.php:18
+msgid "Jalali dates on your site, such as ۱۴ فروردین ۱۴۰۴."
+msgstr "تاریخ‌های شمسی سایت، مثل ۱۴ فروردین ۱۴۰۴."
+
+#: views/admin/partials/digit-conversion-settings.php:21
+msgid "Counts"
+msgstr "شمارش‌ها"
+
+#: views/admin/partials/digit-conversion-settings.php:22
+msgid "Numbers WordPress formats for display, such as comment and post counts."
+msgstr ""
+"عددهایی که وردپرس برای نمایش قالب‌بندی می‌کند، مثل تعداد دیدگاه‌ها و نوشته‌ها."
+
+#: views/admin/partials/digit-conversion-settings.php:25
+msgid "WooCommerce prices"
+msgstr "قیمت‌های ووکامرس"
+
+#: views/admin/partials/digit-conversion-settings.php:26
+msgid ""
+"Product, cart and order prices. Prices drawn by the block cart and checkout "
+"keep English digits."
+msgstr ""
+"قیمت محصول، سبد خرید و سفارش. قیمت‌هایی که سبد خرید و پرداختِ بلوکی نشان "
+"می‌دهند اعداد انگلیسی می‌مانند."
+
+#: views/admin/partials/digit-conversion-settings.php:31
+msgid "Also use Persian digits in"
+msgstr "اعداد فارسی در این موارد هم استفاده شود"
+
+#: views/admin/partials/digit-conversion-settings.php:47
+msgid "Text inside code, <kbd> and <samp> elements keeps its digits."
+msgstr "اعداد داخل کد و عنصرهای <kbd> و <samp> تغییر نمی‌کنند."
+
+#: views/admin/partials/utilities-settings.php:25
+msgid "Persian slugs"
+msgstr "نامک فارسی"
+
+#: views/admin/partials/utilities-settings.php:28
+msgid ""
+"Keeps Persian letters in post and term slugs instead of percent-encoding "
+"them, and turns a half-space into \"-\". Other slugs are left to WordPress. "
+"Existing slugs are not changed."
+msgstr ""
+"حروف فارسی را در نامک نوشته‌ها و برچسب‌ها نگه می‌دارد، به‌جای اینکه به کدهای "
+"درصددار تبدیلشان کند، و نیم‌فاصله را به «-» تبدیل می‌کند. نامک‌های دیگر به "
+"وردپرس سپرده می‌شوند. نامک‌های موجود تغییر نمی‌کنند."
+
+#: views/admin/partials/welcome.php:18
+msgid "Welcome to Persian Kit"
+msgstr "به Persian Kit خوش آمدید"
+
+#: views/admin/partials/welcome.php:20
+msgid ""
+"Each module below can be switched on or off on its own. Here is what each "
+"one does on your site right now."
+msgstr ""
+"هر بخش زیر را جداگانه می‌توانید روشن یا خاموش کنید. این فهرست نشان می‌دهد هر "
+"بخش الان روی سایت شما چه می‌کند."
+
+#: views/admin/partials/welcome.php:27
+msgid "on"
+msgstr "روشن"
+
+#: views/admin/partials/welcome.php:27
+msgid "off"
+msgstr "خاموش"
+
+#: views/admin/partials/welcome.php:34
+msgid ""
+"Your saved posts are not changed. Digit conversion and fixing letters on "
+"save start off; turn them on below if you want them."
+msgstr ""
+"نوشته‌های ذخیره‌شدهٔ شما تغییر نمی‌کنند. اعداد فارسی و اصلاح حروف هنگام ذخیره در "
+"ابتدا خاموش‌اند؛ اگر لازمشان دارید، از پایین روشنشان کنید."
+
+#: views/admin/partials/welcome.php:38
+msgid "Got it, hide this"
+msgstr "متوجه شدم، پنهانش کن"
+
+#: views/admin/settings.php:23
+msgid ""
+"Turn each module on or off, then save. Changes take effect on your site "
+"right away."
+msgstr ""
+"هر بخش را روشن یا خاموش کنید و ذخیره کنید. تغییرها بلافاصله روی سایت اعمال "
+"می‌شوند."
+
+#: views/admin/settings.php:28
+msgid "Settings saved."
+msgstr "تنظیمات ذخیره شد."
+
+#: views/admin/settings.php:68
+msgid "Save Settings"
+msgstr "ذخیرهٔ تنظیمات"
+
+#. translators: 1: number of posts processed, 2: number of posts changed.
+#: public/js/admin.js:4329
+msgid "Processed %1$d posts (%2$d modified)…"
+msgstr "%1$d نوشته بررسی شد (%2$d مورد تغییر کرد)…"
+
+#. translators: 1: number of posts processed, 2: number of posts changed.
+#: public/js/admin.js:4339
+msgid "Done! %1$d posts processed, %2$d modified."
+msgstr "تمام شد! %1$d نوشته بررسی شد و %2$d مورد تغییر کرد."
+
+#. translators: %d: number of posts checked so far.
+#: public/js/admin.js:4375
+msgid "Checked %d posts…"
+msgstr "%d نوشته بررسی شد…"
+
+#: public/js/admin.js:4391
+msgid "No posts need fixing."
+msgstr "هیچ نوشته‌ای نیاز به اصلاح ندارد."
+
+#. translators: 1: number of posts that would change, 2: number of posts checked.
+#: public/js/admin.js:4393
+msgid "%1$d post of %2$d checked would change."
+msgid_plural "%1$d posts of %2$d checked would change."
+msgstr[0] "%1$d نوشته از %2$d نوشتهٔ بررسی‌شده تغییر می‌کند."

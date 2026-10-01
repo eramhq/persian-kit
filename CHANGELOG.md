@@ -7,7 +7,7 @@ All notable changes to this project will be documented in this file.
 - Prepared the plugin for WordPress.org submission: added `readme.txt`, `uninstall.php`, and `Tested up to:` plugin header.
 - Bumped `Requires at least:` to WordPress 6.5 (for `wp_is_serving_rest_request()`).
 - Declared WooCommerce HPOS compatibility via `before_woocommerce_init`.
-- Removed `load_plugin_textdomain()` call; translations are auto-loaded by WordPress core for hosted plugins.
+- Removed `load_plugin_textdomain()` call; translations are auto-loaded by WordPress core for hosted plugins. (The bundled Persian translation added later loads only when no language pack is installed.)
 - Replaced the inline `<style>` in the WooCommerce orders Jalali month filter with a conditionally enqueued stylesheet.
 - Renamed the admin bundle from `admin.min.js` to `admin.js` and disabled minification so the source-equivalent ships in the dist.
 - Removed the non-standard `Plugin Prefix:` header.
@@ -42,6 +42,16 @@ All notable changes to this project will be documented in this file.
 - `the_date()` prints the date once per day again.
 - The REST `date_jalali` field uses the local date for drafts, and media library dates use the site timezone.
 - An out-of-range Jalali month in the WooCommerce order filter is ignored instead of causing a fatal error.
+
+### What users need, from the pre-release review
+
+- Persian admin interface: a Persian (fa_IR) translation ships in `languages/`, including the settings screen's JavaScript strings. It is loaded only while no WordPress.org language pack is installed for the locale, so translate.wordpress.org takes over once a pack exists. `npm run build:i18n` compiles the `.po` file. The wording still needs a native speaker's review.
+- Safer first run. New installs start with digit conversion and fixing letters on save off; dates, search, the editor half-space, the admin font (Persian admins only), WooCommerce dates and Persian slugs are on. The settings screen shows a welcome notice that explains each module until it is dismissed. Existing sites keep their settings: the upgrade to settings version 2 writes their old behaviour out explicitly.
+- Digit conversion has options for Jalali dates (through `persian_kit_date_display`), counts (`number_format_i18n`) and WooCommerce prices (`formatted_woocommerce_price`). Text in `<kbd>` and `<samp>` keeps its digits, like code.
+- Search matches both spellings: a `posts_search` filter matches each term as typed, with Persian ی/ک and with Arabic ي/ك, so posts saved before normalization are found. Search terms are no longer rewritten, and their digits are no longer turned into Latin digits (that broke matching on `utf8mb4_general_ci` databases). Fixing letters on save is now a separate option, "Fix letters when posts are saved", and the `persian_kit_char_normalization` context for search is `posts_search` instead of `pre_get_posts`.
+- A Settings link on the Plugins screen and a translation icon for the menu.
+- Plain-language module descriptions. "Global date conversion (wp_date hook)" is now "Convert all dates (advanced)", with its side effects listed. The Utilities description says the switch controls slugs only; the helper functions always load.
+- Developers: `persian_kit_loaded` and the `function_exists()` guard are documented. The duplicate `persian_kit_known_conflicts` filter is removed; use `persian_kit_conflict_policies`.
 
 ### Correctness fixes from the pre-release review
 

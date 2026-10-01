@@ -23,7 +23,7 @@ class CharNormalizationModule extends AbstractModule
 
     public static function description(): string
     {
-        return __('Normalizes Arabic characters (Yeh, Kaf) to Persian', 'persian-kit');
+        return __('Search finds words typed with either Arabic (ي ك) or Persian (ی ک) letters. Can also fix the letters when posts are saved.', 'persian-kit');
     }
 
     /**
@@ -31,7 +31,7 @@ class CharNormalizationModule extends AbstractModule
      */
     public static function defaults(): array
     {
-        return ['enabled' => true, 'teh_marbuta' => false];
+        return ['enabled' => true, 'normalize_on_save' => false, 'teh_marbuta' => false];
     }
 
     public function settingsView(): ?string
@@ -55,6 +55,10 @@ class CharNormalizationModule extends AbstractModule
             return new NormalizationRestController($c->get(NormalizationJobManager::class));
         });
 
+        $container->register(SearchFilter::class, function (ServiceContainer $c) {
+            return new SearchFilter($c->get(CharNormalizer::class));
+        });
+
         $container->register(NormalizationJobManager::class, function (ServiceContainer $c) {
             return new NormalizationJobManager($c->get(BatchMigrator::class));
         });
@@ -67,14 +71,15 @@ class CharNormalizationModule extends AbstractModule
     public function sanitizeSettings(array $values): array
     {
         return [
-            'enabled'      => !empty($values['enabled']),
-            'teh_marbuta'  => !empty($values['teh_marbuta']),
+            'enabled'           => !empty($values['enabled']),
+            'normalize_on_save' => !empty($values['normalize_on_save']),
+            'teh_marbuta'       => !empty($values['teh_marbuta']),
         ];
     }
 
     public function boot(ServiceContainer $container): void
     {
-        if (apply_filters('persian_kit_char_normalization', true, 'wp_insert_post_data')) {
+        if ($this->setting('normalize_on_save') && apply_filters('persian_kit_char_normalization', true, 'wp_insert_post_data')) {
             add_filter('wp_insert_post_data', function (array $data, array $postarr) use ($container) {
                 if (!$this->shouldNormalize($data, $postarr)) {
                     return $data;
@@ -102,20 +107,8 @@ class CharNormalizationModule extends AbstractModule
             }, 10, 2);
         }
 
-        if (apply_filters('persian_kit_char_normalization', true, 'pre_get_posts')) {
-            add_action('pre_get_posts', function ($query) use ($container) {
-                if (is_admin() || !$query->is_search() || !$query->is_main_query()) {
-                    return;
-                }
-
-                $searchTerm = $query->get('s');
-                if (!is_string($searchTerm) || $searchTerm === '') {
-                    return;
-                }
-
-                $normalizer = $container->get(CharNormalizer::class);
-                $query->set('s', $normalizer->normalizeForSearch($searchTerm));
-            });
+        if (apply_filters('persian_kit_char_normalization', true, 'posts_search')) {
+            $container->get(SearchFilter::class)->register();
         }
 
         if (defined('WP_CLI') && WP_CLI) {

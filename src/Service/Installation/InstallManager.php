@@ -17,10 +17,13 @@ class InstallManager
 {
     public const DB_VERSION_OPTION = 'persian_kit_db_version';
 
+    /** Set on a fresh install; the settings page shows the welcome notice until it is dismissed. */
+    public const WELCOME_OPTION = 'persian_kit_show_welcome';
+
     /**
      * Bump when stored settings need a migration, and add the step to migrate().
      */
-    public const DB_VERSION = 1;
+    public const DB_VERSION = 2;
 
     /** @var array<class-string<\PersianKit\Contracts\ModuleInterface>> */
     private static array $modules = [
@@ -93,6 +96,7 @@ class InstallManager
                 $defaults[$moduleClass::key()] = $moduleClass::defaults();
             }
             $settings->updateModules($defaults);
+            update_option(self::WELCOME_OPTION, 1, false);
         } elseif ((int) $version < self::DB_VERSION) {
             self::migrate((int) $version, $settings);
         }
@@ -105,6 +109,20 @@ class InstallManager
      */
     private static function migrate(int $fromVersion, SettingsManager $settings): void
     {
-        // No stored-settings changes yet: version 1 only starts tracking.
+        if ($fromVersion < 2) {
+            // Version 2 made new installs start with digit conversion and
+            // normalize-on-save off. Existing sites keep what they had: write
+            // the old behaviour out explicitly so the new defaults don't apply.
+            $settings->updateModules([
+                DigitConversionModule::key() => array_replace(
+                    ['enabled' => true, 'dates' => false, 'numbers' => false, 'prices' => false],
+                    $settings->module(DigitConversionModule::key())
+                ),
+                CharNormalizationModule::key() => array_replace(
+                    ['enabled' => true, 'normalize_on_save' => true, 'teh_marbuta' => false],
+                    $settings->module(CharNormalizationModule::key())
+                ),
+            ]);
+        }
     }
 }

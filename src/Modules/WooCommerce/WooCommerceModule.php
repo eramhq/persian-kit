@@ -21,7 +21,7 @@ class WooCommerceModule extends AbstractModule
 
     public static function description(): string
     {
-        return __('Adds Jalali date tools for WooCommerce screens and customer-facing dates when WooCommerce is active', 'persian-kit');
+        return __('Jalali date fields and month filters on WooCommerce order, product and coupon screens, and Jalali dates on order pages and emails customers see. Does nothing unless WooCommerce is active.', 'persian-kit');
     }
 
     /**

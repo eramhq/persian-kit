@@ -4,6 +4,7 @@ namespace PersianKit;
 
 use PersianKit\Container\ServiceContainer;
 use PersianKit\Core\CoreServiceProvider;
+use PersianKit\Service\I18n\BundledTranslations;
 use PersianKit\Service\Installation\InstallManager;
 
 defined('ABSPATH') || exit;
@@ -29,6 +30,7 @@ class Bootstrap
         self::$initialized = true;
 
         self::registerLifecycleHooks();
+        BundledTranslations::register();
 
         add_action('plugins_loaded', [__CLASS__, 'setup'], 10);
     }

@@ -2,6 +2,8 @@
 
 namespace PersianKit\Service\Assets;
 
+use PersianKit\Service\I18n\BundledTranslations;
+
 defined('ABSPATH') || exit;
 
 class AssetManager
@@ -73,7 +75,12 @@ class AssetManager
             'before'
         );
 
-        wp_set_script_translations('persian-kit-admin', 'persian-kit');
+        $bundledPath = BundledTranslations::scriptPath();
+        if ($bundledPath === null) {
+            wp_set_script_translations('persian-kit-admin', 'persian-kit');
+        } else {
+            wp_set_script_translations('persian-kit-admin', 'persian-kit', $bundledPath);
+        }
     }
 
     /**

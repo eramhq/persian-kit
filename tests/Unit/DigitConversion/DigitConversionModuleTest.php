@@ -136,14 +136,62 @@ class DigitConversionModuleTest extends TestCase
         $this->assertFalse($this->makeModule()->filterTerms(false));
     }
 
-    private function makeModule(): DigitConversionModule
+    public function test_convert_content_keeps_digits_in_kbd_and_samp(): void
     {
-        return new DigitConversionModule(Mockery::mock(SettingsManager::class));
+        $this->assertSame(
+            '<p>کلید <kbd>Ctrl+1</kbd> در ۲ ثانیه <samp>Error 404</samp> ۳</p>',
+            DigitConversionModule::convertContent('<p>کلید <kbd>Ctrl+1</kbd> در 2 ثانیه <samp>Error 404</samp> 3</p>')
+        );
     }
 
-    private function bootModule(): DigitConversionModule
+    public function test_boot_registers_dates_counts_and_prices_when_enabled(): void
     {
-        $module = $this->makeModule();
+        Functions\when('is_admin')->justReturn(false);
+
+        $module = $this->bootModule();
+
+        $this->assertSame(99, has_filter('persian_kit_date_display', [$module, 'filterText']));
+        $this->assertSame(99, has_filter('number_format_i18n', [$module, 'filterText']));
+        $this->assertSame(99, has_filter('formatted_woocommerce_price', [$module, 'filterText']));
+    }
+
+    public function test_boot_skips_options_that_are_off(): void
+    {
+        Functions\when('is_admin')->justReturn(false);
+
+        $this->bootModule(['dates' => false, 'numbers' => false, 'prices' => false]);
+
+        $this->assertFalse(has_filter('persian_kit_date_display'));
+        $this->assertFalse(has_filter('number_format_i18n'));
+        $this->assertFalse(has_filter('formatted_woocommerce_price'));
+        $this->assertNotFalse(has_filter('the_content'));
+    }
+
+    public function test_new_installs_start_with_the_module_off(): void
+    {
+        $this->assertFalse(DigitConversionModule::defaults()['enabled']);
+    }
+
+    /**
+     * @param array<string, mixed> $settings
+     */
+    private function makeModule(array $settings = []): DigitConversionModule
+    {
+        $merged = array_replace(DigitConversionModule::defaults(), ['enabled' => true], $settings);
+        $manager = Mockery::mock(SettingsManager::class);
+        $manager->shouldReceive('module')->andReturnUsing(
+            static fn (string $key, ?string $subKey = null, mixed $default = null) => $subKey === null ? $merged : ($merged[$subKey] ?? $default)
+        );
+
+        return new DigitConversionModule($manager);
+    }
+
+    /**
+     * @param array<string, mixed> $settings
+     */
+    private function bootModule(array $settings = []): DigitConversionModule
+    {
+        $module = $this->makeModule($settings);
         $module->boot(Mockery::mock(ServiceContainer::class));
 
         return $module;

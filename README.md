@@ -8,9 +8,10 @@ Current release: `1.0.0-beta.2` (beta)
 
 - Jalali date conversion at the display layer
 - REST API Jalali companion fields
-- Persian digit conversion for content areas
-- Arabic-to-Persian character normalization
-- Batch normalization tools for existing content
+- Persian digit conversion for content, dates, counts and WooCommerce prices (off until turned on)
+- Search that matches both Arabic (ي ك) and Persian (ی ک) spellings
+- Arabic-to-Persian character normalization on save (off until turned on), with a batch tool for existing content
+- Persian (fa_IR) admin interface, bundled until a WordPress.org language pack exists
 - Vazirmatn-powered admin font support
 - ZWNJ editor shortcuts for Classic Editor and Gutenberg
 - Persian slug generation
@@ -47,7 +48,10 @@ composer test
 composer test:integration
 composer phpstan
 composer phpcs
+npm run test:js
 npm run build
+npm run build:pot
+npm run build:i18n   # compile languages/*.po into .mo, .l10n.php and script JSON
 npm run dist
 ```
 

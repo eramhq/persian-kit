@@ -63,7 +63,7 @@ class CompatibilityGuidanceTest extends WordPressIntegrationTestCase
 
         $this->assertIsString($output);
         $this->assertStringContainsString('Persian WooCommerce', $output);
-        $this->assertStringContainsString('Leave Global Date Conversion off in Persian Kit.', $output);
+        $this->assertStringContainsString('Leave Convert all dates (advanced) off in Persian Kit.', $output);
         $this->assertStringContainsString('No change needed for Digit Conversion.', $output);
         $this->assertStringContainsString('Let Persian WooCommerce handle Woo-specific dates.', $output);
         $this->assertStringContainsString('Turn off WooCommerce Support in Persian Kit.', $output);

@@ -9,6 +9,7 @@ use Brain\Monkey\Filters;
 use Mockery;
 use PersianKit\Core\SettingsManager;
 use PersianKit\Modules\CharNormalization\CharNormalizationModule;
+use PersianKit\Modules\CharNormalization\SearchFilter;
 use PersianKit\Container\ServiceContainer;
 use PersianKit\Dependencies\Eram\Abzar\Text\CharNormalizer;
 use PersianKit\Tests\Unit\Support\FailsPcre;
@@ -79,8 +80,9 @@ class CharNormalizationModuleTest extends TestCase
         $module = $this->makeModule();
 
         $this->assertSame([
-            'enabled'     => true,
-            'teh_marbuta' => false,
+            'enabled'           => true,
+            'normalize_on_save' => false,
+            'teh_marbuta'       => false,
         ], $module->sanitizeSettings([
             'enabled' => true,
         ]));
@@ -89,15 +91,18 @@ class CharNormalizationModuleTest extends TestCase
     /**
      * Register + boot the module with a mocked container.
      */
-    private function bootModule(): void
+    private function bootModule(array $settings = ['normalize_on_save' => true]): void
     {
         Functions\expect('apply_filters')
             ->with('persian_kit_char_normalization', true, Mockery::type('string'))
             ->andReturn(true);
 
-        $module = $this->makeModule();
+        $module = $this->makeModule($settings);
         $container = Mockery::mock(ServiceContainer::class);
         $container->shouldReceive('register')->andReturnSelf();
+        $searchFilter = Mockery::mock(SearchFilter::class);
+        $searchFilter->shouldReceive('register')->once();
+        $container->shouldReceive('get')->with(SearchFilter::class)->andReturn($searchFilter);
         $container->shouldReceive('get')->andReturn(Mockery::mock());
 
         $module->register($container);
@@ -111,11 +116,18 @@ class CharNormalizationModuleTest extends TestCase
         $this->assertTrue(has_filter('wp_insert_post_data'));
     }
 
-    public function test_boot_registers_pre_get_posts_action(): void
+    public function test_boot_leaves_saves_alone_by_default(): void
     {
-        $this->bootModule();
+        $this->bootModule([]);
 
-        $this->assertTrue(has_action('pre_get_posts'));
+        $this->assertFalse(has_filter('wp_insert_post_data'));
+    }
+
+    public function test_boot_registers_search_filter_without_rewriting_the_query(): void
+    {
+        $this->bootModule([]);
+
+        $this->assertFalse(has_action('pre_get_posts'));
     }
 
     public function test_boot_registers_rest_api_init(): void
@@ -136,9 +148,12 @@ class CharNormalizationModuleTest extends TestCase
         $container = Mockery::mock(ServiceContainer::class);
         $container->shouldReceive('register')->andReturnSelf();
         $container->shouldReceive('get')->with(CharNormalizer::class)->andReturn(new CharNormalizer());
+        $searchFilter = Mockery::mock(SearchFilter::class);
+        $searchFilter->shouldReceive('register');
+        $container->shouldReceive('get')->with(SearchFilter::class)->andReturn($searchFilter);
         $container->shouldReceive('get')->andReturn(Mockery::mock());
 
-        $this->makeModule()->boot($container);
+        $this->makeModule(['normalize_on_save' => true])->boot($container);
 
         $html = self::unsegmentableHtml();
         $data = self::withFailingPcre(fn () => $callback(

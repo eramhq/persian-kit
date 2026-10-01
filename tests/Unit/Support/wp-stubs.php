@@ -2,6 +2,11 @@
 
 // Minimal WordPress class stubs for unit tests that run without WordPress.
 
+if (!defined('WP_LANG_DIR')) {
+    // No language packs are installed in unit tests.
+    define('WP_LANG_DIR', sys_get_temp_dir() . '/persian-kit-unit-tests/languages');
+}
+
 if (!class_exists('WP_Query')) {
     class WP_Query
     {

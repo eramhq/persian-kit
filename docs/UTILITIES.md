@@ -139,6 +139,29 @@ Typical flow:
 
 ## Common Recipes
 
+### Guard calls when Persian Kit may be inactive
+
+The helpers exist only while Persian Kit is active. They are defined as soon as the plugin loads, before `persian_kit_loaded` fires, and they work even when the Utilities module is switched off (that switch only controls Persian slugs). A theme or plugin that should keep working without Persian Kit checks first and falls back:
+
+```php
+function mytheme_post_date(): string
+{
+    if (function_exists('persian_kit_date')) {
+        return persian_kit_date('j F Y', get_post_timestamp());
+    }
+
+    return get_the_date('j F Y');
+}
+```
+
+Code that needs Persian Kit's services (not just the helpers) can wait for the plugin:
+
+```php
+add_action('persian_kit_loaded', function () {
+    // Persian Kit is active and its services are registered.
+});
+```
+
 ### Accept Persian digits in a custom checkout field
 
 ```php

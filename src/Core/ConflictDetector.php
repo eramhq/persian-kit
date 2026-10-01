@@ -74,7 +74,7 @@ class ConflictDetector
                 ],
                 'recommendations' => [
                     ['key' => 'date_conversion', 'label' => __('Date Conversion', 'persian-kit'), 'action' => 'keep_on'],
-                    ['key' => 'date_conversion.global_conversion', 'label' => __('Global Date Conversion', 'persian-kit'), 'action' => 'leave_off'],
+                    ['key' => 'date_conversion.global_conversion', 'label' => __('Convert all dates (advanced)', 'persian-kit'), 'action' => 'leave_off'],
                     ['key' => 'digit_conversion', 'label' => __('Digit Conversion', 'persian-kit'), 'action' => 'no_change'],
                     ['key' => 'char_normalization', 'label' => __('Character Normalization', 'persian-kit'), 'action' => 'no_change'],
                     ['key' => 'admin_font', 'label' => __('Admin Font', 'persian-kit'), 'action' => 'no_change'],
@@ -169,7 +169,6 @@ class ConflictDetector
 
         if (function_exists('apply_filters')) {
             $policies = apply_filters('persian_kit_conflict_policies', $policies);
-            $policies = apply_filters('persian_kit_known_conflicts', $policies);
         }
 
         if (!is_array($policies)) {

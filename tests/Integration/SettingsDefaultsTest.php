@@ -12,6 +12,7 @@ use PersianKit\Modules\DigitConversion\DigitConversionModule;
 use PersianKit\Modules\Utilities\UtilitiesModule;
 use PersianKit\Modules\WooCommerce\WooCommerceModule;
 use PersianKit\Modules\ZWNJEditor\ZWNJEditorModule;
+use PersianKit\Service\I18n\BundledTranslations;
 use PersianKit\Tests\Integration\Support\WordPressIntegrationTestCase;
 
 class SettingsDefaultsTest extends WordPressIntegrationTestCase
@@ -86,6 +87,40 @@ class SettingsDefaultsTest extends WordPressIntegrationTestCase
         $this->assertSame(1, $writes);
         $this->assertFalse(get_option('persian_kit_settings')['date_conversion']['enabled']);
         $this->assertTrue(get_option('persian_kit_settings')['utilities']['enabled']);
+    }
+
+    public function test_settings_page_shows_the_welcome_until_dismissed(): void
+    {
+        update_option('persian_kit_show_welcome', 1);
+        $this->assertStringContainsString('Welcome to Persian Kit', $this->renderSettingsPage());
+
+        delete_option('persian_kit_show_welcome');
+        $this->assertStringNotContainsString('Welcome to Persian Kit', $this->renderSettingsPage());
+    }
+
+    public function test_settings_page_is_persian_for_a_persian_admin(): void
+    {
+        BundledTranslations::load('fa_IR');
+
+        try {
+            $output = $this->renderSettingsPage();
+        } finally {
+            unload_textdomain('persian-kit');
+        }
+
+        $this->assertStringContainsString('ذخیرهٔ تنظیمات', $output);
+        $this->assertStringContainsString('اعداد فارسی', $output);
+        $this->assertStringNotContainsString('Save Settings', $output);
+    }
+
+    public function test_plugins_screen_links_to_the_settings(): void
+    {
+        $this->adminPage()->register();
+
+        $links = apply_filters('plugin_action_links_' . plugin_basename(PERSIAN_KIT_MAIN_FILE), ['deactivate' => 'Deactivate']);
+
+        $this->assertSame(['settings', 'deactivate'], array_keys($links));
+        $this->assertStringContainsString('admin.php?page=persian-kit', $links['settings']);
     }
 
     private function renderSettingsPage(): string

@@ -371,6 +371,18 @@ Existing slugs are never rewritten. Turn the behavior off with the Persian slugs
 
 ## WordPress Hooks
 
+### `persian_kit_loaded`
+
+Fires on `plugins_loaded` (priority 10) once Persian Kit's services are registered. The modules boot later, on `after_setup_theme` (priority 20), so filters added here, or in a theme's `functions.php`, are in place before any module reads them.
+
+```php
+add_action('persian_kit_loaded', function () {
+    add_filter('persian_kit_digit_conversion', fn (bool $enabled, string $hook) => $hook === 'the_title' ? false : $enabled, 10, 2);
+});
+```
+
+The `persian_kit_*` helper functions are defined as soon as the plugin file loads, so they do not need this action. To keep a theme working while Persian Kit is inactive, guard each call with `function_exists()` (see [Utilities Guide](UTILITIES.md#guard-calls-when-persian-kit-may-be-inactive)).
+
 ### `persian_kit_date_display`
 
 Filters every Jalali date the plugin produces.
@@ -383,7 +395,9 @@ add_filter('persian_kit_date_display', function (string $date, string $format, i
 
 ### `persian_kit_digit_conversion`
 
-Return `false` to stop digit conversion on one hook. The second argument is the hook name: `the_content`, `the_title`, `get_the_excerpt`, `comment_text`, `widget_text`, `widget_text_content`, `human_time_diff` or `get_the_terms`.
+Return `false` to stop digit conversion on one hook. The second argument is the hook name: `the_content`, `the_title`, `get_the_excerpt`, `comment_text`, `widget_text`, `widget_text_content`, `human_time_diff` or `get_the_terms`. With the module's options on, also `persian_kit_date_display` (Jalali dates), `number_format_i18n` (counts) and `formatted_woocommerce_price` (WooCommerce prices).
+
+Text inside `<pre>`, `<code>`, `<kbd>` and `<samp>` elements keeps its digits.
 
 ```php
 add_filter('persian_kit_digit_conversion', function (bool $enabled, string $hook) {
@@ -395,7 +409,9 @@ Digit conversion never runs on admin screens, in REST responses or in feeds. The
 
 ### `persian_kit_char_normalization`
 
-Return `false` to stop character normalization on one integration point: `wp_insert_post_data` (on save) or `pre_get_posts` (search).
+Return `false` to stop character normalization on one integration point: `wp_insert_post_data` (on save, only registered when "Fix letters when posts are saved" is on) or `posts_search` (search that matches both Arabic and Persian Yeh and Kaf).
+
+Search does not rewrite the search terms. For each term it matches the term as typed, its Persian form (ی ک) and its Arabic form (ي ك), in the title, excerpt and content (or the query's `search_columns`). Digits are matched as typed; whether Persian and Latin digits match depends on the database collation. Media library searches that also match file names keep WordPress's own query.
 
 ### `persian_kit_should_normalize`
 
@@ -421,10 +437,6 @@ add_filter('persian_kit_utilities', function (bool $enabled, string $feature) {
 
 Filters the built-in compatibility guidance for other Persian plugins.
 
-### `persian_kit_known_conflicts`
-
-Alias-style extension point for adding or changing known conflict policies.
-
 ## WP-CLI
 
 Character normalization has a CLI command:
@@ -439,12 +451,16 @@ wp persian-kit normalize [--dry-run] [--post-type=post,page] [--batch-size=100] 
 
 ## Module Keys
 
-Settings are stored in the `persian_kit_settings` option, per module under these keys:
+Settings are stored in the `persian_kit_settings` option, per module under these keys. Stored values are read on top of each module's defaults, so a key added in an update takes its default until the settings are saved.
 
-- `date_conversion`
-- `digit_conversion`
-- `char_normalization`
-- `admin_font`
-- `zwnj_editor`
-- `woocommerce`
-- `utilities`
+| Module key | Settings (new-install default) |
+| --- | --- |
+| `date_conversion` | `enabled` (on), `global_conversion` (off) |
+| `digit_conversion` | `enabled` (off), `dates`, `numbers`, `prices` (on) |
+| `char_normalization` | `enabled` (on), `normalize_on_save` (off), `teh_marbuta` (off) |
+| `admin_font` | `enabled` (on), `font` (`vazirmatn`) |
+| `zwnj_editor` | `enabled` (on) |
+| `woocommerce` | `enabled` (on) |
+| `utilities` | `enabled` (on), `persian_slugs` (on) |
+
+`persian_kit_db_version` records the settings schema version. Sites upgraded from a version before 2 keep their earlier behaviour: digit conversion stays as it was (with the new `dates`, `numbers` and `prices` options off) and `normalize_on_save` is on.

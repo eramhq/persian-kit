@@ -18,8 +18,10 @@ Persian Kit is a modular WordPress plugin for Persian-language sites. It focuses
 
 * Jalali date conversion at the display layer
 * REST API Jalali companion fields
-* Persian digit conversion for content areas
-* Arabic-to-Persian character normalization (live and batch)
+* Persian digits in content, dates, counts and WooCommerce prices (off until you turn it on)
+* Search that finds words typed with either Arabic (ي ك) or Persian (ی ک) letters
+* Arabic-to-Persian character normalization on save (off until you turn it on) and for existing posts, with a dry-run count and a confirmation step
+* Persian admin interface
 * Vazirmatn-powered admin font support
 * ZWNJ editor shortcuts for Classic Editor and Gutenberg
 * Persian slugs that keep Persian letters readable (can be turned off)
@@ -60,7 +62,11 @@ Yes. Persian Kit declares HPOS compatibility and the Jalali order date filter wo
 
 = Where do translations come from? =
 
-Translations are loaded automatically by WordPress from the WordPress.org translation system. You do not need to manually load a language pack.
+Persian Kit ships a Persian (fa_IR) translation of its settings screen. Once a language pack for your language is available from translate.wordpress.org, WordPress installs it and Persian Kit uses that instead of the bundled file.
+
+= What does Persian Kit change when I activate it? =
+
+Nothing in your saved content. On a new install, dates are shown as Jalali, search matches both Arabic and Persian spellings of ی and ک, Persian slugs and the editor half-space shortcut are on, and the admin uses the Vazirmatn font when its language is Persian. Persian digits and fixing letters on save start off. The settings screen shows a short summary of each module the first time you open it. Sites upgrading from an earlier version keep their settings.
 
 = How does Persian Kit change slugs? =
 
@@ -69,6 +75,10 @@ With the Utilities module's "Persian slugs" option on (the default), new posts a
 = What does Persian Kit change in the admin? =
 
 With Date Conversion on, the dashboard's Activity widget, post lists and the admin bar show Jalali dates. The Activity widget is WordPress's own widget re-rendered with Jalali dates. The admin font applies only when the admin language is Persian or right-to-left.
+
+= Why do date archive titles show two months? =
+
+Date archives such as `/2025/03/` are Gregorian months, and every Gregorian month spans two Jalali months, so the title names both (for example "اسفند 1403 – فروردین 1404").
 
 = Do I need WooCommerce? =
 

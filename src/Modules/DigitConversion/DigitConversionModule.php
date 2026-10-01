@@ -23,7 +23,7 @@ class DigitConversionModule extends AbstractModule
 
     public static function description(): string
     {
-        return __('Converts English/Arabic digits to Persian in content', 'persian-kit');
+        return __('Shows Persian digits (۱۲۳) instead of English ones (123) in post titles, content, excerpts, comments, widgets and tags on your site. Admin screens, feeds and the REST API keep English digits.', 'persian-kit');
     }
 
     /**
@@ -31,7 +31,26 @@ class DigitConversionModule extends AbstractModule
      */
     public static function defaults(): array
     {
-        return ['enabled' => true];
+        return ['enabled' => false, 'dates' => true, 'numbers' => true, 'prices' => true];
+    }
+
+    public function settingsView(): ?string
+    {
+        return 'admin/partials/digit-conversion-settings';
+    }
+
+    /**
+     * @param array<string, mixed> $values
+     * @return array<string, mixed>
+     */
+    public function sanitizeSettings(array $values): array
+    {
+        return [
+            'enabled' => !empty($values['enabled']),
+            'dates'   => !empty($values['dates']),
+            'numbers' => !empty($values['numbers']),
+            'prices'  => !empty($values['prices']),
+        ];
     }
 
     public function register(ServiceContainer $container): void
@@ -52,6 +71,18 @@ class DigitConversionModule extends AbstractModule
         $this->registerFilter('widget_text_content', [$this, 'filterContent']);
         $this->registerFilter('human_time_diff', [$this, 'filterText']);
         $this->registerFilter('get_the_terms', [$this, 'filterTerms']);
+
+        if ($this->setting('dates')) {
+            $this->registerFilter('persian_kit_date_display', [$this, 'filterText']);
+        }
+
+        if ($this->setting('numbers')) {
+            $this->registerFilter('number_format_i18n', [$this, 'filterText']);
+        }
+
+        if ($this->setting('prices')) {
+            $this->registerFilter('formatted_woocommerce_price', [$this, 'filterText']);
+        }
     }
 
     public function filterContent(?string $html): ?string
@@ -91,12 +122,28 @@ class DigitConversionModule extends AbstractModule
 
     /**
      * Convert digits in HTML, leaving the content untouched when abzar cannot
-     * segment it (PCRE limits on very large or malformed markup).
+     * segment it (PCRE limits on very large or malformed markup). Keyboard
+     * input and program output (<kbd>, <samp>) keep their digits, as code does.
      */
     public static function convertContent(string $html): string
     {
         try {
-            return DigitConverter::convertContent($html);
+            if (stripos($html, '<kbd') === false && stripos($html, '<samp') === false) {
+                return DigitConverter::convertContent($html);
+            }
+
+            $parts = preg_split('/(<kbd[\s>][\s\S]*?<\/kbd\s*>|<samp[\s>][\s\S]*?<\/samp\s*>)/i', $html, -1, PREG_SPLIT_DELIM_CAPTURE);
+            if ($parts === false) {
+                return $html;
+            }
+
+            foreach ($parts as $index => $part) {
+                if ($index % 2 === 0 && $part !== '') {
+                    $parts[$index] = DigitConverter::convertContent($part);
+                }
+            }
+
+            return implode('', $parts);
         } catch (AbzarException) {
             return $html;
         }

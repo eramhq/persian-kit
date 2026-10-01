@@ -21,7 +21,7 @@ class UtilitiesModule extends AbstractModule
 
     public static function description(): string
     {
-        return __('Persian slug, validation, and formatting tools', 'persian-kit');
+        return __('Controls Persian slugs only. The persian_kit_* helper functions for developers are always available, even when this is off.', 'persian-kit');
     }
 
     /**

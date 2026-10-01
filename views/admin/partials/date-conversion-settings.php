@@ -22,12 +22,14 @@ $globalConversion = !empty($moduleSettings['global_conversion']);
             value="1"
             <?php checked($globalConversion); ?>
         >
-        <?php esc_html_e('Global date conversion (wp_date hook)', 'persian-kit'); ?>
+        <?php esc_html_e('Convert all dates (advanced)', 'persian-kit'); ?>
     </label>
-    <p class="description persian-kit-warning">
-        <?php esc_html_e(
-            'May cause Jalali dates in structured data (JSON-LD). Only enable if your theme doesn\'t use standard template tags.',
-            'persian-kit'
-        ); ?>
+    <p class="description">
+        <?php esc_html_e('By default only post, comment and admin dates are converted. Turn this on only if your theme or a plugin still shows Gregorian dates, because it converts every date WordPress formats with wp_date(). Known side effects:', 'persian-kit'); ?>
     </p>
+    <ul class="description persian-kit-warning persian-kit-warning-list">
+        <li><?php esc_html_e('Search engines may read Jalali dates in structured data (JSON-LD) from SEO plugins.', 'persian-kit'); ?></li>
+        <li><?php esc_html_e('Plugins that read back a date they formatted, such as event, booking or form plugins, can save or compare the wrong date.', 'persian-kit'); ?></li>
+        <li><?php esc_html_e('Dates in exports and in emails sent by other plugins become Jalali.', 'persian-kit'); ?></li>
+    </ul>
 </div>

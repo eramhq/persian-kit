@@ -21,7 +21,7 @@ class AdminFontModule extends AbstractModule
 
     public static function description(): string
     {
-        return __('Applies Vazirmatn Persian font to WP admin', 'persian-kit');
+        return __('Uses the Vazirmatn font in the admin when your admin language is Persian or right-to-left. Your site\'s theme is not affected.', 'persian-kit');
     }
 
     /**

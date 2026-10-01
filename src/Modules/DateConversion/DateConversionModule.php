@@ -21,7 +21,7 @@ class DateConversionModule extends AbstractModule
 
     public static function description(): string
     {
-        return __('Converts Gregorian dates to Jalali (Shamsi)', 'persian-kit');
+        return __('Shows post, comment and admin dates as Jalali (Shamsi). Stored dates are not changed, and feeds and structured data keep Gregorian dates.', 'persian-kit');
     }
 
     /**

@@ -21,7 +21,7 @@ class ZWNJEditorModule extends AbstractModule
 
     public static function description(): string
     {
-        return __('Adds a half-space keyboard shortcut to the Classic Editor and Block Editor', 'persian-kit');
+        return __('Type a half-space (ZWNJ) with Shift+Space in the Classic and Block editors. The Classic Editor also gets a toolbar button.', 'persian-kit');
     }
 
     /**

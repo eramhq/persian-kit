@@ -4,6 +4,7 @@ namespace PersianKit\Core;
 
 use PersianKit\Components\View;
 use PersianKit\Contracts\ModuleInterface;
+use PersianKit\Service\Installation\InstallManager;
 
 defined('ABSPATH') || exit;
 
@@ -32,6 +33,27 @@ class AdminPage
     {
         add_action('admin_menu', [$this, 'addMenu']);
         add_action('admin_post_persian_kit_save', [$this, 'handleSave']);
+        add_action('admin_post_persian_kit_dismiss_welcome', [$this, 'handleDismissWelcome']);
+        add_filter('plugin_action_links_' . plugin_basename(PERSIAN_KIT_MAIN_FILE), [$this, 'addSettingsLink']);
+    }
+
+    /**
+     * @param array<int|string, string> $links
+     * @return array<int|string, string>
+     */
+    public function addSettingsLink(array $links): array
+    {
+        if (!current_user_can('manage_options')) {
+            return $links;
+        }
+
+        return array_merge([
+            'settings' => sprintf(
+                '<a href="%s">%s</a>',
+                esc_url($this->pageUrl()),
+                esc_html__('Settings', 'persian-kit')
+            ),
+        ], $links);
     }
 
     public function addMenu(): void
@@ -42,7 +64,7 @@ class AdminPage
             'manage_options',
             self::MENU_SLUG,
             [$this, 'render'],
-            'dashicons-admin-generic',
+            'dashicons-translation',
             80
         );
 
@@ -70,8 +92,13 @@ class AdminPage
         }
 
         View::load('admin/settings', [
-            'modules'             => $moduleData,
+            'modules'              => $moduleData,
             'compatibilityReports' => $this->conflicts->reports($settingsByKey),
+            'showWelcome'          => (bool) get_option(InstallManager::WELCOME_OPTION, false),
+            'dismissWelcomeUrl'    => wp_nonce_url(
+                admin_url('admin-post.php?action=persian_kit_dismiss_welcome'),
+                'persian_kit_dismiss_welcome'
+            ),
         ]);
     }
 
@@ -109,12 +136,26 @@ class AdminPage
 
         $this->settings->updateModules($sanitized);
 
-        wp_safe_redirect(
-            add_query_arg(
-                ['page' => self::MENU_SLUG, 'updated' => '1'],
-                admin_url('admin.php')
-            )
-        );
+        wp_safe_redirect(add_query_arg('updated', '1', $this->pageUrl()));
         exit;
+    }
+
+    public function handleDismissWelcome(): void
+    {
+        if (!current_user_can('manage_options')) {
+            wp_die(esc_html__('You do not have permission to access this page.', 'persian-kit'));
+        }
+
+        check_admin_referer('persian_kit_dismiss_welcome');
+
+        delete_option(InstallManager::WELCOME_OPTION);
+
+        wp_safe_redirect($this->pageUrl());
+        exit;
+    }
+
+    private function pageUrl(): string
+    {
+        return admin_url('admin.php?page=' . self::MENU_SLUG);
     }
 }
