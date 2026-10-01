@@ -29,7 +29,7 @@ class DateConversionModule extends AbstractModule
      */
     public static function defaults(): array
     {
-        return ['enabled' => true, 'global_conversion' => false, 'jalali_archives' => true];
+        return ['enabled' => true, 'global_conversion' => false, 'jalali_archives' => true, 'jalali_permalinks' => false];
     }
 
     public function register(ServiceContainer $container): void
@@ -56,6 +56,10 @@ class DateConversionModule extends AbstractModule
 
         $container->register(JalaliDateArchive::class, function () {
             return new JalaliDateArchive();
+        });
+
+        $container->register(JalaliPermalinks::class, function () {
+            return new JalaliPermalinks();
         });
 
         $container->register(JalaliArchiveList::class, function () {
@@ -94,6 +98,7 @@ class DateConversionModule extends AbstractModule
             'enabled'           => !empty($values['enabled']),
             'global_conversion' => !empty($values['global_conversion']),
             'jalali_archives'   => !empty($values['jalali_archives']),
+            'jalali_permalinks' => !empty($values['jalali_permalinks']),
         ];
     }
 
@@ -106,6 +111,12 @@ class DateConversionModule extends AbstractModule
         $filters->registerAdminFilters();
         $container->get(DateArchiveFilter::class)->register();
         $container->get(JalaliDateArchive::class)->register();
+
+        $permalinks = $container->get(JalaliPermalinks::class);
+        $permalinks->register();
+        if ($this->usesJalaliPermalinks()) {
+            $permalinks->registerJalaliLinks();
+        }
 
         if ($this->showsJalaliArchives()) {
             $container->get(JalaliArchiveList::class)->register();
@@ -133,5 +144,14 @@ class DateConversionModule extends AbstractModule
     private function showsJalaliArchives(): bool
     {
         return (bool) $this->setting('jalali_archives') && (bool) apply_filters('persian_kit_jalali_archives', true);
+    }
+
+    /**
+     * Whether post permalinks use Jalali dates. Addresses in either calendar
+     * redirect to the current one whatever this returns.
+     */
+    private function usesJalaliPermalinks(): bool
+    {
+        return (bool) $this->setting('jalali_permalinks') && (bool) apply_filters('persian_kit_jalali_permalinks', true);
     }
 }

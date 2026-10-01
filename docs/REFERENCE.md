@@ -400,6 +400,19 @@ To keep the list and calendar Gregorian in code, use the [`persian_kit_jalali_ar
 
 With the option off, the list and calendar are WordPress's own. On a Jalali archive page, the calendar then shows the Gregorian month that overlaps the Jalali month most, the one its last day falls in (`/1405/07/` shows October 2026). This needs WordPress 6.8 or later; on earlier versions the calendar reads the Jalali year as Gregorian and shows an empty month.
 
+### Post permalinks
+
+With the module's **Use Jalali dates in post permalinks** option on (`jalali_permalinks`, off by default) and a permalink structure with the date, such as "Day and name", posts link to their Jalali date: `/1405/07/09/my-post/` instead of `/2026/10/01/my-post/`. "Month and name" gives `/1405/07/my-post/`.
+
+- Only `%year%`, `%monthnum%` and `%day%` change; they are read from the post's date in site time and zero-padded as in core. Structures without them are unchanged. Like core's `pre_post_link`, which this uses, it applies to posts, not pages or custom post types. The editor's permalink preview shows the Jalali date too.
+- Addresses built from the permalink follow it: the post's pages (`/2/`), comment pages, feed, embed and attachment pages. `url_to_postid()` resolves Jalali addresses, also in the admin.
+- An address in the other calendar redirects (301) to the current one, keeping the rest of the path and the query string. So with the option on, old Gregorian links reach the Jalali address, and after turning it off, Jalali links reach the Gregorian one. Previews are not redirected.
+- A post whose slug or date changed is found from its old address under a Jalali date, as WordPress does for Gregorian dates.
+
+The Jalali addresses only work while Persian Kit is active. If it is deactivated, WordPress reads `/1405/07/09/my-post/` as the year 1405 and returns "not found"; the Gregorian addresses work again.
+
+To keep post permalinks Gregorian in code, use the [`persian_kit_jalali_permalinks`](#persian_kit_jalali_permalinks) filter. Redirects between the calendars stay on either way.
+
 ## WordPress Hooks
 
 ### `persian_kit_loaded`
@@ -472,6 +485,14 @@ Return `false` to keep the archive list and calendar Gregorian, whatever the opt
 add_filter('persian_kit_jalali_archives', '__return_false');
 ```
 
+### `persian_kit_jalali_permalinks`
+
+Return `false` to keep post permalinks Gregorian, whatever the option says. It is read once, when the module boots, so add it in a theme's `functions.php` or on `persian_kit_loaded`. Jalali post addresses still open the post, and redirect to the Gregorian ones.
+
+```php
+add_filter('persian_kit_jalali_permalinks', '__return_false');
+```
+
 ### `persian_kit_conflict_policies`
 
 Filters the built-in compatibility guidance for other Persian plugins.
@@ -494,7 +515,7 @@ Settings are stored in the `persian_kit_settings` option, per module under these
 
 | Module key | Settings (new-install default) |
 | --- | --- |
-| `date_conversion` | `enabled` (on), `global_conversion` (off), `jalali_archives` (on) |
+| `date_conversion` | `enabled` (on), `global_conversion` (off), `jalali_archives` (on), `jalali_permalinks` (off) |
 | `digit_conversion` | `enabled` (off), `dates`, `numbers`, `prices` (on) |
 | `char_normalization` | `enabled` (on), `normalize_on_save` (off), `teh_marbuta` (off) |
 | `admin_font` | `enabled` (on), `font` (`vazirmatn`) |

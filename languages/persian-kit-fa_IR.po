@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Persian Kit 1.0.0-beta.3\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/persian-kit\n"
-"POT-Creation-Date: 2026-10-01T18:04:16+00:00\n"
+"POT-Creation-Date: 2026-10-01T18:18:03+00:00\n"
 "PO-Revision-Date: 2026-10-01 00:00+0000\n"
 "Last-Translator: Persian Kit contributors\n"
 "Language-Team: Persian (Iran)\n"
@@ -137,13 +137,13 @@ msgstr "بایگانی‌ها و پیوندهای یکتای شمسی"
 
 #: src/Core/ConflictDetector.php:64
 msgid ""
-"WP Jalali can also put Jalali dates in post permalinks. Persian Kit serves "
-"Jalali archive pages such as /1405/07/, but post permalinks keep their "
-"Gregorian dates."
+"Persian Kit also serves Jalali archive pages such as /1405/07/, and can put "
+"Jalali dates in post permalinks, as WP Jalali does: turn on \"Use Jalali "
+"dates in post permalinks\" under Date Conversion."
 msgstr ""
-"WP Jalali می‌تواند تاریخ شمسی را در پیوند یکتای نوشته‌ها هم بگذارد. Persian "
-"Kit برگه‌های بایگانی شمسی مثل /1405/07/ را نشان می‌دهد، اما تاریخ پیوند یکتای "
-"نوشته‌ها میلادی می‌ماند."
+"Persian Kit هم برگه‌های بایگانی شمسی مثل /1405/07/ را نشان می‌دهد و مثل WP "
+"Jalali می‌تواند تاریخ شمسی را در پیوند یکتای نوشته‌ها بگذارد: در بخش «تاریخ "
+"شمسی»، «تاریخ شمسی در پیوند یکتای نوشته‌ها» را روشن کنید."
 
 #: src/Core/ConflictDetector.php:69
 msgid ""
@@ -165,7 +165,7 @@ msgid "Some WooCommerce date display and email formatting"
 msgstr "بخشی از نمایش تاریخ‌ها و ایمیل‌های ووکامرس"
 
 #: src/Core/ConflictDetector.php:77
-#: views/admin/partials/date-conversion-settings.php:27
+#: views/admin/partials/date-conversion-settings.php:28
 msgid "Convert all dates (advanced)"
 msgstr "تبدیل همهٔ تاریخ‌ها (پیشرفته)"
 
@@ -512,7 +512,7 @@ msgstr "این افزونه این کارها را انجام می‌دهد:"
 msgid "Recommended Persian Kit settings"
 msgstr "تنظیمات پیشنهادی Persian Kit"
 
-#: views/admin/partials/date-conversion-settings.php:30
+#: views/admin/partials/date-conversion-settings.php:31
 msgid ""
 "By default only post, comment and admin dates are converted. Turn this on "
 "only if your theme or a plugin still shows Gregorian dates, because it "
@@ -522,7 +522,7 @@ msgstr ""
 "فقط وقتی روشن کنید که قالب یا افزونه‌ای هنوز تاریخ میلادی نشان می‌دهد، چون هر "
 "تاریخی را که وردپرس با wp_date() می‌سازد تبدیل می‌کند. اثرهای جانبی شناخته‌شده:"
 
-#: views/admin/partials/date-conversion-settings.php:33
+#: views/admin/partials/date-conversion-settings.php:34
 msgid ""
 "Search engines may read Jalali dates in structured data (JSON-LD) from SEO "
 "plugins."
@@ -530,7 +530,7 @@ msgstr ""
 "موتورهای جست‌وجو ممکن است در داده‌های ساختاریافتهٔ (JSON-LD) افزونه‌های سئو "
 "تاریخ شمسی ببینند."
 
-#: views/admin/partials/date-conversion-settings.php:34
+#: views/admin/partials/date-conversion-settings.php:35
 msgid ""
 "Plugins that read back a date they formatted, such as event, booking or form "
 "plugins, can save or compare the wrong date."
@@ -538,22 +538,36 @@ msgstr ""
 "افزونه‌هایی که تاریخی را که خودشان ساخته‌اند دوباره می‌خوانند، مثل افزونه‌های "
 "رویداد، رزرو یا فرم، ممکن است تاریخ اشتباه ذخیره یا مقایسه کنند."
 
-#: views/admin/partials/date-conversion-settings.php:35
+#: views/admin/partials/date-conversion-settings.php:36
 msgid "Dates in exports and in emails sent by other plugins become Jalali."
 msgstr ""
 "تاریخ‌ها در خروجی‌ها و در ایمیل‌هایی که افزونه‌های دیگر می‌فرستند شمسی می‌شوند."
 
-#: views/admin/partials/date-conversion-settings.php:47
+#: views/admin/partials/date-conversion-settings.php:48
 msgid "Show the archive list and calendar in Jalali"
 msgstr "نمایش فهرست بایگانی و تقویم به تاریخ شمسی"
 
-#: views/admin/partials/date-conversion-settings.php:50
+#: views/admin/partials/date-conversion-settings.php:51
 msgid ""
 "The Archives and Calendar widgets and blocks list Jalali months and days, "
 "and link to Jalali archive pages such as /1405/07/."
 msgstr ""
 "ابزارک‌ها و بلوک‌های «بایگانی» و «تقویم» ماه‌ها و روزهای شمسی را نشان می‌دهند و "
 "به برگه‌های بایگانی شمسی، مثل /1405/07/، پیوند می‌دهند."
+
+#: views/admin/partials/date-conversion-settings.php:63
+msgid "Use Jalali dates in post permalinks"
+msgstr "تاریخ شمسی در پیوند یکتای نوشته‌ها"
+
+#: views/admin/partials/date-conversion-settings.php:66
+msgid ""
+"For permalink structures with the date, such as Day and name: /1405/07/09/my-"
+"post/ instead of /2026/10/01/my-post/. Old links redirect to the new ones. "
+"If Persian Kit is deactivated, the Jalali links stop working."
+msgstr ""
+"برای ساختارهای پیوند یکتا که تاریخ دارند، مثل «روز و نام»: /1405/07/09/my-"
+"post/ به جای /2026/10/01/my-post/. پیوندهای قبلی به پیوندهای تازه هدایت "
+"می‌شوند. اگر Persian Kit غیرفعال شود، پیوندهای شمسی دیگر کار نمی‌کنند."
 
 #: views/admin/partials/digit-conversion-settings.php:17
 msgid "Dates"
@@ -674,6 +688,15 @@ msgstr "هیچ نوشته‌ای نیاز به اصلاح ندارد."
 msgid "%1$d post of %2$d checked would change."
 msgid_plural "%1$d posts of %2$d checked would change."
 msgstr[0] "%1$d نوشته از %2$d نوشتهٔ بررسی‌شده تغییر می‌کند."
+
+#~ msgid ""
+#~ "WP Jalali can also put Jalali dates in post permalinks. Persian Kit "
+#~ "serves Jalali archive pages such as /1405/07/, but post permalinks keep "
+#~ "their Gregorian dates."
+#~ msgstr ""
+#~ "WP Jalali می‌تواند تاریخ شمسی را در پیوند یکتای نوشته‌ها هم بگذارد. Persian "
+#~ "Kit برگه‌های بایگانی شمسی مثل /1405/07/ را نشان می‌دهد، اما تاریخ پیوند "
+#~ "یکتای نوشته‌ها میلادی می‌ماند."
 
 #~ msgid ""
 #~ "WP Jalali also changes archive and permalink behavior. Persian Kit does "

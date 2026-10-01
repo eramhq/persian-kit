@@ -14,6 +14,7 @@ $moduleSettings = $args['moduleSettings'] ?? [];
 
 $globalConversion = !empty($moduleSettings['global_conversion']);
 $jalaliArchives = !empty($moduleSettings['jalali_archives']);
+$jalaliPermalinks = !empty($moduleSettings['jalali_permalinks']);
 ?>
 <div class="persian-kit-setting-row">
     <label>
@@ -48,5 +49,20 @@ $jalaliArchives = !empty($moduleSettings['jalali_archives']);
     </label>
     <p class="description">
         <?php esc_html_e('The Archives and Calendar widgets and blocks list Jalali months and days, and link to Jalali archive pages such as /1405/07/.', 'persian-kit'); ?>
+    </p>
+</div>
+<div class="persian-kit-setting-row">
+    <label>
+        <input type="hidden" name="persian_kit_settings[date_conversion][jalali_permalinks]" value="0">
+        <input
+            type="checkbox"
+            name="persian_kit_settings[date_conversion][jalali_permalinks]"
+            value="1"
+            <?php checked($jalaliPermalinks); ?>
+        >
+        <?php esc_html_e('Use Jalali dates in post permalinks', 'persian-kit'); ?>
+    </label>
+    <p class="description">
+        <?php esc_html_e('For permalink structures with the date, such as Day and name: /1405/07/09/my-post/ instead of /2026/10/01/my-post/. Old links redirect to the new ones. If Persian Kit is deactivated, the Jalali links stop working.', 'persian-kit'); ?>
     </p>
 </div>

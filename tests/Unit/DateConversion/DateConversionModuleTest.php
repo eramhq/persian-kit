@@ -16,6 +16,7 @@ use PersianKit\Modules\DateConversion\GregorianCalendarMonth;
 use PersianKit\Modules\DateConversion\JalaliArchiveList;
 use PersianKit\Modules\DateConversion\JalaliCalendar;
 use PersianKit\Modules\DateConversion\JalaliDateArchive;
+use PersianKit\Modules\DateConversion\JalaliPermalinks;
 use PersianKit\Modules\DateConversion\MediaAttachmentDateFormatter;
 use PersianKit\Modules\DateConversion\MediaGridDateFilter;
 use PersianKit\Modules\DateConversion\PostTypeMonthFilter;
@@ -28,6 +29,7 @@ class DateConversionModuleTest extends TestCase
         DateFilters::class,
         DateArchiveFilter::class,
         JalaliDateArchive::class,
+        JalaliPermalinks::class,
         JalaliArchiveList::class,
         JalaliCalendar::class,
         RestApiExtension::class,
@@ -39,6 +41,8 @@ class DateConversionModuleTest extends TestCase
         MediaGridDateFilter::class,
         AdminDateScript::class,
     ];
+
+    private int $jalaliLinksRegistered = 0;
 
     protected function setUp(): void
     {
@@ -93,6 +97,31 @@ class DateConversionModuleTest extends TestCase
         $this->assertNotContains(JalaliCalendar::class, $fetched);
     }
 
+    public function test_boot_registers_redirects_but_gregorian_links_by_default(): void
+    {
+        Functions\when('is_admin')->justReturn(false);
+
+        $this->bootAndListFetched();
+        $this->assertSame(0, $this->jalaliLinksRegistered);
+    }
+
+    public function test_boot_registers_jalali_links_when_the_setting_is_on(): void
+    {
+        Functions\when('is_admin')->justReturn(false);
+
+        $this->bootAndListFetched(['jalali_permalinks' => true]);
+        $this->assertSame(1, $this->jalaliLinksRegistered);
+    }
+
+    public function test_boot_skips_jalali_links_when_filtered_off(): void
+    {
+        Functions\when('is_admin')->justReturn(false);
+        Filters\expectApplied('persian_kit_jalali_permalinks')->once()->with(true)->andReturn(false);
+
+        $this->bootAndListFetched(['jalali_permalinks' => true]);
+        $this->assertSame(0, $this->jalaliLinksRegistered);
+    }
+
     /**
      * @param array<string, mixed> $settings
      * @return list<string> Service ids fetched from the container, in order.
@@ -100,6 +129,7 @@ class DateConversionModuleTest extends TestCase
     private function bootAndListFetched(array $settings = []): array
     {
         $fetched = [];
+        $this->jalaliLinksRegistered = 0;
         $container = Mockery::mock(ServiceContainer::class);
         $container->shouldReceive('get')->andReturnUsing(function (string $id) use (&$fetched) {
             $fetched[] = $id;
@@ -113,6 +143,12 @@ class DateConversionModuleTest extends TestCase
 
             $service = Mockery::mock($id);
             $service->shouldReceive('register')->once();
+
+            if ($id === JalaliPermalinks::class) {
+                $service->shouldReceive('registerJalaliLinks')->andReturnUsing(function () {
+                    $this->jalaliLinksRegistered++;
+                });
+            }
 
             return $service;
         });
@@ -149,6 +185,7 @@ class DateConversionModuleTest extends TestCase
             'enabled'           => true,
             'global_conversion' => false,
             'jalali_archives'   => false,
+            'jalali_permalinks' => false,
         ], $module->sanitizeSettings([
             'enabled' => true,
         ]));
@@ -162,10 +199,12 @@ class DateConversionModuleTest extends TestCase
             'enabled'           => true,
             'global_conversion' => true,
             'jalali_archives'   => true,
+            'jalali_permalinks' => true,
         ], $module->sanitizeSettings([
             'enabled'           => true,
             'global_conversion' => '1',
             'jalali_archives'   => '1',
+            'jalali_permalinks' => '1',
         ]));
     }
 
@@ -185,6 +224,7 @@ class DateConversionModuleTest extends TestCase
             'enabled'           => true,
             'global_conversion' => false,
             'jalali_archives'   => false,
+            'jalali_permalinks' => false,
         ], $module->sanitizeSettings([
             'enabled'           => true,
             'global_conversion' => false,

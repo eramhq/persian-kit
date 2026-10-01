@@ -49,7 +49,9 @@ class JalaliDateArchive
 
     public function filterQuery(\WP_Query $query): void
     {
-        if (is_admin()) {
+        // In the admin only single-post lookups, such as url_to_postid() in
+        // admin-ajax, can carry a Jalali year from a permalink.
+        if (is_admin() && !$this->isSinglePostLookup($query)) {
             return;
         }
 
@@ -120,6 +122,11 @@ class JalaliDateArchive
             'month' => isset($jalali['month']) ? (int) $jalali['month'] : null,
             'day'   => isset($jalali['day']) ? (int) $jalali['day'] : null,
         ];
+    }
+
+    private function isSinglePostLookup(\WP_Query $query): bool
+    {
+        return (string) $query->get('name') !== '' || !empty($query->get('p')) || (string) $query->get('attachment') !== '';
     }
 
     /**
