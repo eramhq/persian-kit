@@ -27,13 +27,14 @@ defined('ABSPATH') || exit;
 
 // In production, wp-scoper generates packages/autoload.php.
 // In development, Composer's vendor/autoload.php is used instead.
-$composerAutoload = __DIR__ . '/packages/autoload.php';
-if (!file_exists($composerAutoload)) {
-    $composerAutoload = __DIR__ . '/vendor/autoload.php';
+$persian_kit_autoload = __DIR__ . '/packages/autoload.php';
+if (!file_exists($persian_kit_autoload)) {
+    $persian_kit_autoload = __DIR__ . '/vendor/autoload.php';
 }
-if (file_exists($composerAutoload)) {
-    require_once $composerAutoload;
+if (file_exists($persian_kit_autoload)) {
+    require_once $persian_kit_autoload;
 }
+unset($persian_kit_autoload);
 
 /*
 |--------------------------------------------------------------------------

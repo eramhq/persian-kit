@@ -7,6 +7,9 @@
 
 defined('ABSPATH') || exit;
 
+// Variables here are local to View::load(), not globals.
+// phpcs:disable WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound
+
 $globalConversion = !empty($moduleSettings['global_conversion']);
 ?>
 <div class="persian-kit-setting-row">

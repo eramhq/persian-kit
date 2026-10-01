@@ -49,6 +49,8 @@ class BatchMigrator
 
         $arabicPattern = '[\x{064A}\x{0643}\x{0660}-\x{0669}\x{0629}]';
 
+        // No WordPress API counts posts by a content REGEXP; the count is shown once per status check.
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
         $rows = $wpdb->get_results($wpdb->prepare(
             "SELECT post_type, COUNT(*) AS cnt FROM {$wpdb->posts}
              WHERE post_type IN (" . implode(',', array_fill(0, count($postTypes), '%s')) . ")
@@ -81,6 +83,8 @@ class BatchMigrator
 
         $cursor = $this->getCursor();
 
+        // Batch scan by ID cursor; each batch is read once, so caching would only waste memory.
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
         $posts = $wpdb->get_results($wpdb->prepare(
             "SELECT ID, post_title, post_content, post_excerpt
              FROM {$wpdb->posts}
@@ -117,6 +121,8 @@ class BatchMigrator
                     || $newContent !== $post->post_content;
 
             if ($changed && !$dryRun) {
+                // Direct update so the rewrite doesn't fire save hooks or create revisions; the cache is cleared below.
+                // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
                 $wpdb->update(
                     $wpdb->posts,
                     [

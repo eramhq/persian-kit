@@ -69,6 +69,7 @@ npm run dist
 - Source assets live in `resources/`.
 - Built assets live in `public/`.
 - `eram/abzar` and `eram/daynum` are copied into `packages/` under the `PersianKit\Dependencies\` namespace by wp-scoper after every `composer install`/`update`. The plugin loads them from there; `vendor/` is development-only.
+- `scripts/mark-bundled-libraries.php` then adds a `phpcs:ignoreFile` line to each copied library file, so Plugin Check reviews only Persian Kit's own code. Their exception messages are never printed, and as plain PHP libraries they can't use WordPress escaping.
 - Every JavaScript file in `public/js/` is built from `resources/`. `npm run build` empties `public/` first, so a new script must be added to `scripts/copy-assets.mjs` and `scripts/verify-build.mjs`.
 - `npm run build:pot` includes JavaScript strings. Scripts with translatable strings call `wp_set_script_translations()`.
 - The dist script respects `.distignore`.

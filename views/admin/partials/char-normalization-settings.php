@@ -7,6 +7,9 @@
 
 defined('ABSPATH') || exit;
 
+// Variables here are local to View::load(), not globals.
+// phpcs:disable WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound
+
 $tehMarbuta = !empty($moduleSettings['teh_marbuta']);
 ?>
 <div class="persian-kit-setting-row">

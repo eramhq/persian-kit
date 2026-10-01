@@ -8,6 +8,9 @@
  */
 
 defined('ABSPATH') || exit;
+
+// Variables here are local to View::load(), not globals.
+// phpcs:disable WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound
 ?>
 <div class="wrap persian-kit-wrap">
     <h1><?php esc_html_e('Persian Kit', 'persian-kit'); ?></h1>

@@ -54,8 +54,14 @@
         "test": "phpunit --testdox",
         "test:integration:setup": "bash tests/bin/setup-integration-tests.sh",
         "test:integration": "WP_TESTS_DIR=.wordpress-tests/wordpress-develop/tests/phpunit php .wordpress-tests/bin/phpunit-9.6.23.phar -c phpunit-integration.xml.dist --testsuite integration --testdox",
-        "post-install-cmd": "@composer wp-scope",
-        "post-update-cmd": "@composer wp-scope",
+        "post-install-cmd": [
+            "@composer wp-scope",
+            "@php scripts/mark-bundled-libraries.php"
+        ],
+        "post-update-cmd": [
+            "@composer wp-scope",
+            "@php scripts/mark-bundled-libraries.php"
+        ],
         "phpstan": "phpstan analyse --memory-limit=2G",
         "phpcs": "phpcs"
     },
