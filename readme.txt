@@ -4,7 +4,7 @@ Tags: persian, farsi, jalali, woocommerce, rtl
 Requires at least: 6.5
 Tested up to: 7.1
 Requires PHP: 8.1
-Stable tag: 1.0.0-beta.3
+Stable tag: 1.0.0-beta.4
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -96,8 +96,13 @@ No. WooCommerce features only activate when WooCommerce is installed and active.
 
 == Changelog ==
 
-= 1.0.0-beta.3 =
+= 1.0.0-beta.4 =
 * First WordPress.org release.
+* Jalali date archive pages: /1405/07/ lists the posts of Mehr 1405, /1405/ those of the Jalali year and /1405/07/09/ those of one day. Gregorian archive addresses keep working.
+* The Archives and Calendar widgets and blocks list Jalali months and days and link to the Jalali archive pages. An option keeps them Gregorian.
+* Optional Jalali dates in post permalinks (/1405/07/09/my-post/). Old links redirect to the new ones, and back again if the option is turned off.
+* The block editor shows the Jalali date as a "Publish" row of its own, also in the pre-publish and post-publish panels, and "Now" uses the site's time.
+* Fixed: the REST API's `date_jalali` and `date_modified_jalali` were empty when a request asked for them with `_fields` but not for `date` or `modified`.
 * Persian (fa_IR) admin interface, used until a WordPress.org language pack is available.
 * New installs start with Persian digits and fixing letters on save off, and show a short welcome that explains each module. Existing sites keep their settings.
 * Search finds words typed with either Arabic (ي ك) or Persian (ی ک) letters, without changing content.
@@ -127,5 +132,5 @@ No. WooCommerce features only activate when WooCommerce is installed and active.
 
 == Upgrade Notice ==
 
-= 1.0.0-beta.3 =
-Beta release. Persian admin interface, search that finds both spellings of ی and ک, and safer defaults for new installs; existing sites keep their settings. Fixes Jalali leap years in date pickers, date archive titles, and Jalali dates in feeds.
+= 1.0.0-beta.4 =
+Beta release. Jalali date archives, archive list and calendar, optional Jalali post permalinks, a Persian admin interface, search that finds both spellings of ی and ک, and safer defaults for new installs; existing sites keep their settings.

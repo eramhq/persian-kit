@@ -2,11 +2,12 @@
 
 Persian Kit is a modular WordPress plugin for Persian-language sites. It focuses on safe Jalali date display, digit conversion, character normalization, Persian editor tooling, admin typography, and developer-facing PHP utilities.
 
-Current release: `1.0.0-beta.3` (beta)
+Current release: `1.0.0-beta.4` (beta)
 
 ## What It Includes
 
 - Jalali date conversion at the display layer
+- Jalali date archive pages (`/1405/07/`), a Jalali archive list and calendar, and optional Jalali dates in post permalinks
 - REST API Jalali companion fields
 - Persian digit conversion for content, dates, counts and WooCommerce prices (off until turned on)
 - Search that matches both Arabic (ي ك) and Persian (ی ک) spellings
