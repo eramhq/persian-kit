@@ -40,18 +40,20 @@ class RestApiExtension
 
     public function getDateJalali(array $post): ?string
     {
-        $timestamp = $post['date_gmt'] ?? $post['date'] ?? null;
-        return $timestamp ? $this->formatIsoJalali($timestamp) : null;
+        return $this->formatIsoJalali($post['date_gmt'] ?? null, $post['date'] ?? null);
     }
 
     public function getModifiedDateJalali(array $post): ?string
     {
-        $timestamp = $post['modified_gmt'] ?? $post['modified'] ?? null;
-        return $timestamp ? $this->formatIsoJalali($timestamp) : null;
+        return $this->formatIsoJalali($post['modified_gmt'] ?? null, $post['modified'] ?? null);
     }
 
-    private function formatIsoJalali(string $timestamp): string
+    /**
+     * Drafts have no GMT date (null), so the local date is the fallback.
+     */
+    private function formatIsoJalali(?string $gmt, ?string $local): ?string
     {
-        return JalaliFormatter::format('Y-m-d', $timestamp) . 'T' . JalaliFormatter::format('H:i:s', $timestamp);
+        return JalaliFormatter::fromGmtMysql('Y-m-d\\TH:i:s', $gmt)
+            ?? JalaliFormatter::fromLocalMysql('Y-m-d\\TH:i:s', $local);
     }
 }

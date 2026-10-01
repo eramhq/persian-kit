@@ -63,96 +63,107 @@ class DateFilters
 
     public function filterPostDate(string $date, string $format, ?object $post = null): string
     {
-        if (!$post || $this->shouldBypassDisplayConversion($format)) {
+        if (!$post || DateDisplayGuard::shouldBypass($format)) {
             return $date;
         }
 
-        $format = $format ?: $this->defaultDateFormat;
-
-        return JalaliFormatter::format($format, $post->post_date_gmt ?: $post->post_date);
+        return $this->formatStored($format ?: $this->defaultDateFormat, $post->post_date ?? null, $post->post_date_gmt ?? null, $date);
     }
 
     public function filterTheDate(string $date, string $format, string $before, string $after): string
     {
-        $post = get_post();
-        if (!$post || $this->shouldBypassDisplayConversion($format)) {
+        // the_date() passes '' for every post after the first one of a day.
+        if ($date === '') {
             return $date;
         }
 
-        $format = $format ?: $this->defaultDateFormat;
+        $post = get_post();
+        if (!$post || DateDisplayGuard::shouldBypass($format)) {
+            return $date;
+        }
 
-        return $before . JalaliFormatter::format($format, $post->post_date_gmt ?: $post->post_date) . $after;
+        $formatted = JalaliFormatter::fromLocalMysql($format ?: $this->defaultDateFormat, $post->post_date ?? null);
+
+        return $formatted === null ? $date : $before . $formatted . $after;
     }
 
     public function filterPostTime(string $time, string $format, ?object $post = null): string
     {
-        if (!$post || $this->shouldBypassDisplayConversion($format)) {
+        if (!$post || DateDisplayGuard::shouldBypass($format)) {
             return $time;
         }
 
-        $format = $format ?: $this->defaultTimeFormat;
-
-        return JalaliFormatter::format($format, $post->post_date_gmt ?: $post->post_date);
+        return $this->formatStored($format ?: $this->defaultTimeFormat, $post->post_date ?? null, $post->post_date_gmt ?? null, $time);
     }
 
     public function filterModifiedDate(string $date, string $format, ?object $post = null): string
     {
-        if (!$post || $this->shouldBypassDisplayConversion($format)) {
+        if (!$post || DateDisplayGuard::shouldBypass($format)) {
             return $date;
         }
 
-        $format = $format ?: $this->defaultDateFormat;
-
-        return JalaliFormatter::format($format, $post->post_modified_gmt ?: $post->post_modified);
+        return $this->formatStored($format ?: $this->defaultDateFormat, $post->post_modified ?? null, $post->post_modified_gmt ?? null, $date);
     }
 
     public function filterModifiedTime(string $time, string $format, ?object $post = null): string
     {
-        if (!$post || $this->shouldBypassDisplayConversion($format)) {
+        if (!$post || DateDisplayGuard::shouldBypass($format)) {
             return $time;
         }
 
-        $format = $format ?: $this->defaultTimeFormat;
-
-        return JalaliFormatter::format($format, $post->post_modified_gmt ?: $post->post_modified);
+        return $this->formatStored($format ?: $this->defaultTimeFormat, $post->post_modified ?? null, $post->post_modified_gmt ?? null, $time);
     }
 
     public function filterCommentDate(string $date, string $format, ?object $comment = null): string
     {
-        if (!$comment || $this->shouldBypassDisplayConversion($format)) {
+        if (!$comment || DateDisplayGuard::shouldBypass($format)) {
             return $date;
         }
 
-        $format = $format ?: $this->defaultDateFormat;
-
-        return JalaliFormatter::format($format, $comment->comment_date);
+        return $this->formatStored($format ?: $this->defaultDateFormat, $comment->comment_date ?? null, $comment->comment_date_gmt ?? null, $date);
     }
 
     public function filterCommentTime(string $time, string $format, bool $gmt, bool $translate, ?object $comment = null): string
     {
-        if (!$comment || $this->shouldBypassDisplayConversion($format)) {
+        if (!$comment || DateDisplayGuard::shouldBypass($format)) {
             return $time;
         }
 
         $format = $format ?: $this->defaultTimeFormat;
-        $source = $gmt ? $comment->comment_date_gmt : $comment->comment_date;
 
-        return JalaliFormatter::format($format, $source);
+        if ($gmt) {
+            return JalaliFormatter::fromGmtMysql($format, $comment->comment_date_gmt ?? null, new \DateTimeZone('UTC')) ?? $time;
+        }
+
+        return $this->formatStored($format, $comment->comment_date ?? null, $comment->comment_date_gmt ?? null, $time);
     }
 
-    public function filterGetPostTime(string $time, string $format, bool $gmt): string
+    /**
+     * Core's get_post_time filter does not pass the post, so the global post is
+     * used only when $time is that post's date in $format. Otherwise the call was
+     * for another post and is left alone.
+     */
+    public function filterGetPostTime(mixed $time, string $format, bool $gmt): mixed
     {
-        $post = get_post();
-        if (!$post || $this->shouldBypassDisplayConversion($format)) {
+        if (!is_string($time) || $time === '' || DateDisplayGuard::shouldBypass($format)) {
             return $time;
         }
 
-        $format = $format ?: $this->defaultTimeFormat;
-        $source = $gmt
-            ? ($post->post_date_gmt ?: $post->post_date)
-            : $post->post_date;
+        $post = get_post();
+        $dateTime = $post ? get_post_datetime($post, 'date', $gmt ? 'gmt' : 'local') : false;
+        if (!$dateTime instanceof \DateTimeInterface) {
+            return $time;
+        }
 
-        return JalaliFormatter::format($format, $source);
+        if ($gmt) {
+            $dateTime = \DateTimeImmutable::createFromInterface($dateTime)->setTimezone(new \DateTimeZone('UTC'));
+        }
+
+        if (!$this->matchesCoreOutput($time, $format, $dateTime)) {
+            return $time;
+        }
+
+        return JalaliFormatter::formatDateTime($format, $dateTime);
     }
 
     public function filterPostDateBlock(string $blockContent, array $block, ?object $instance = null): string
@@ -164,7 +175,7 @@ class DateFilters
         $attrs = is_array($block['attrs'] ?? null) ? $block['attrs'] : [];
         $format = $attrs['format'] ?? $this->defaultDateFormat;
 
-        if ($format === 'human-diff' || $this->shouldBypassDisplayConversion($format)) {
+        if ($format === 'human-diff' || DateDisplayGuard::shouldBypass($format)) {
             return $blockContent;
         }
 
@@ -181,7 +192,7 @@ class DateFilters
 
     public function filterLatestCommentsBlock(string $blockContent, array $block, ?object $instance = null): string
     {
-        if ($this->shouldSkipFrontendBlockConversion() || $this->shouldBypassDisplayConversion($this->defaultDateFormat)) {
+        if ($this->shouldSkipFrontendBlockConversion() || DateDisplayGuard::shouldBypass($this->defaultDateFormat)) {
             return $blockContent;
         }
 
@@ -195,7 +206,7 @@ class DateFilters
 
     public function filterWpDate(string $date, string $format, int $timestamp, ?\DateTimeZone $timezone = null): string
     {
-        if (self::$inFilter) {
+        if (self::$inFilter || DateDisplayGuard::shouldBypass($format)) {
             return $date;
         }
 
@@ -254,14 +265,13 @@ class DateFilters
 
     public function filterDashboardDateI18n(string $date, string $format, int $timestamp, bool $gmt = false): string
     {
-        if (self::$inFilter || $this->shouldBypassDisplayConversion($format)) {
+        if (self::$inFilter || DateDisplayGuard::shouldBypass($format)) {
             return $date;
         }
 
         self::$inFilter = true;
         try {
-            $timezone = $gmt ? new \DateTimeZone('UTC') : null;
-            $result = JalaliFormatter::format($format, $timestamp, $timezone);
+            $result = JalaliFormatter::fromOffsetTimestamp($format, $timestamp, $gmt);
         } finally {
             self::$inFilter = false;
         }
@@ -269,32 +279,32 @@ class DateFilters
         return $result;
     }
 
-    private function shouldBypassDisplayConversion(string $format): bool
+    /**
+     * Format a stored local/GMT MySQL datetime pair, preferring the local value
+     * as core does. Falls back to core's output when neither parses.
+     */
+    private function formatStored(string $format, ?string $local, ?string $gmt, string $fallback): string
     {
-        static $machineFormats = null;
+        return JalaliFormatter::fromLocalMysql($format, $local)
+            ?? JalaliFormatter::fromGmtMysql($format, $gmt)
+            ?? $fallback;
+    }
 
-        if ($machineFormats === null) {
-            $machineFormats = array_values(array_unique(array_filter([
-                'U',
-                'c',
-                'r',
-                \DATE_ATOM,
-                \DATE_COOKIE,
-                \DATE_ISO8601,
-                defined('DATE_ISO8601_EXPANDED') ? \DATE_ISO8601_EXPANDED : null,
-                \DATE_RFC822,
-                \DATE_RFC850,
-                \DATE_RFC1036,
-                \DATE_RFC1123,
-                'D, d M Y H:i:s \\G\\M\\T',
-                \DATE_RFC2822,
-                \DATE_RFC3339,
-                \DATE_RFC3339_EXTENDED,
-                \DATE_W3C,
-            ], static fn ($value) => is_string($value) && $value !== '')));
+    private function matchesCoreOutput(string $time, string $format, \DateTimeInterface $dateTime): bool
+    {
+        if ($dateTime->format($format) === $time) {
+            return true;
         }
 
-        return in_array($format, $machineFormats, true);
+        // Translated output ($translate = true) comes from wp_date(); keep our own
+        // wp_date filter out of the comparison.
+        $previous = self::$inFilter;
+        self::$inFilter = true;
+        try {
+            return wp_date($format, $dateTime->getTimestamp(), $dateTime->getTimezone()) === $time;
+        } finally {
+            self::$inFilter = $previous;
+        }
     }
 
     private function shouldSkipFrontendBlockConversion(): bool

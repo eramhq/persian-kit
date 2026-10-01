@@ -9,6 +9,11 @@ defined('ABSPATH') || exit;
 
 class WooDateHelper
 {
+    /**
+     * Gregorian first/last day (Y-m-d) of a Jalali month given as "YYYYMM".
+     *
+     * @return array{start: string, end: string}|null
+     */
     public static function jalaliMonthToGregorianRange(string $jalaliYearMonth): ?array
     {
         $jalaliYearMonth = DigitConverter::toEnglish(trim($jalaliYearMonth));
@@ -24,8 +29,12 @@ class WooDateHelper
             return null;
         }
 
-        $start = CivilDateTime::fromJalali($year, $month, 1);
-        $end = $start->jalali()->endOfMonth();
+        try {
+            $start = CivilDateTime::fromJalali($year, $month, 1);
+            $end = $start->jalali()->endOfMonth();
+        } catch (\Throwable $exception) {
+            return null;
+        }
 
         return [
             'start' => $start->toDateTimeImmutable()->format('Y-m-d'),

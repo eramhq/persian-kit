@@ -2,6 +2,7 @@
 
 namespace PersianKit\Modules\WooCommerce;
 
+use PersianKit\Modules\DateConversion\DateDisplayGuard;
 use PersianKit\Modules\DateConversion\JalaliFormatter;
 
 defined('ABSPATH') || exit;
@@ -26,16 +27,14 @@ class WooDateDisplayFilter
 
     public function filterDateI18n(string $date, string $format, int $timestamp, bool $gmt = false): string
     {
-        if (self::$inFilter || $this->shouldBypassDisplayConversion($format) || !$this->isWooDateContext()) {
+        if (self::$inFilter || DateDisplayGuard::shouldBypass($format) || !$this->isWooDateContext()) {
             return $date;
         }
 
         self::$inFilter = true;
 
         try {
-            $timezone = $gmt ? new \DateTimeZone('UTC') : null;
-
-            return JalaliFormatter::format($format, $timestamp, $timezone);
+            return JalaliFormatter::fromOffsetTimestamp($format, $timestamp, $gmt);
         } finally {
             self::$inFilter = false;
         }
@@ -91,33 +90,5 @@ class WooDateDisplayFilter
         }
 
         return false;
-    }
-
-    private function shouldBypassDisplayConversion(string $format): bool
-    {
-        static $machineFormats = null;
-
-        if ($machineFormats === null) {
-            $machineFormats = array_values(array_unique(array_filter([
-                'U',
-                'c',
-                'r',
-                \DATE_ATOM,
-                \DATE_COOKIE,
-                \DATE_ISO8601,
-                defined('DATE_ISO8601_EXPANDED') ? \DATE_ISO8601_EXPANDED : null,
-                \DATE_RFC822,
-                \DATE_RFC850,
-                \DATE_RFC1036,
-                \DATE_RFC1123,
-                'D, d M Y H:i:s \\G\\M\\T',
-                \DATE_RFC2822,
-                \DATE_RFC3339,
-                \DATE_RFC3339_EXTENDED,
-                \DATE_W3C,
-            ], static fn ($value) => is_string($value) && $value !== '')));
-        }
-
-        return in_array($format, $machineFormats, true);
     }
 }

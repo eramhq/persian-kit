@@ -21,6 +21,63 @@ class DateConversionIntegrationTest extends WordPressIntegrationTestCase
         require_once ABSPATH . 'wp-admin/includes/dashboard.php';
     }
 
+    public function test_feed_timestamps_stay_gregorian(): void
+    {
+        update_option('timezone_string', 'Asia/Tehran');
+
+        self::factory()->post->create([
+            'post_title'    => 'نمونه',
+            'post_status'   => 'publish',
+            'post_date'     => '2025-03-20 23:00:00',
+            'post_date_gmt' => '2025-03-20 19:30:00',
+        ]);
+
+        $this->go_to(get_feed_link('rss2'));
+        $this->assertTrue(is_feed());
+
+        the_post();
+
+        // Exactly what feed-rss2.php and feed-atom.php print.
+        $this->assertSame(
+            'Thu, 20 Mar 2025 19:30:00 +0000',
+            mysql2date('D, d M Y H:i:s +0000', get_post_time('Y-m-d H:i:s', true), false)
+        );
+        $this->assertSame('2025-03-20T19:30:00Z', get_post_time('Y-m-d\TH:i:s\Z', true));
+        $this->assertSame('2025-03-20', get_the_date('Y-m-d'));
+    }
+
+    public function test_post_and_comment_dates_match_wp_date_in_site_timezone(): void
+    {
+        update_option('timezone_string', 'Asia/Tehran');
+
+        $postId = self::factory()->post->create([
+            'post_status'   => 'publish',
+            'post_date'     => '2025-03-20 23:00:00',
+            'post_date_gmt' => '2025-03-20 19:30:00',
+        ]);
+        $commentId = self::factory()->comment->create([
+            'comment_post_ID'  => $postId,
+            'comment_date'     => '2025-03-20 23:00:00',
+            'comment_date_gmt' => '2025-03-20 19:30:00',
+        ]);
+
+        $this->assertSame('1403/12/30', get_the_date('Y/m/d', $postId));
+        $this->assertSame('23:00', get_the_time('H:i', $postId));
+        $this->assertSame('1403/12/30', get_comment_date('Y/m/d', $commentId));
+    }
+
+    public function test_draft_date_has_no_negative_year(): void
+    {
+        $draftId = self::factory()->post->create([
+            'post_status'   => 'draft',
+            'post_date'     => '2025-03-21 15:30:00',
+            'post_date_gmt' => '0000-00-00 00:00:00',
+        ]);
+
+        $this->assertSame('1404', get_the_date('Y', $draftId));
+        $this->assertMatchesRegularExpression('/^14\d\d$/', get_the_modified_date('Y', $draftId));
+    }
+
     public function test_month_archive_title_is_jalali(): void
     {
         self::factory()->post->create([

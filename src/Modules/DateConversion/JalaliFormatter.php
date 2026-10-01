@@ -85,11 +85,51 @@ class JalaliFormatter
      */
     public static function format(string $format, int|string $timestamp = '', ?\DateTimeZone $timezone = null): string
     {
-        $dateTime = self::resolveDateTime($timestamp, $timezone);
-        $instant = CivilDateTime::fromDateTime($dateTime);
-        $result = self::formatCompat($format, $dateTime, $instant);
+        return self::formatDateTime($format, self::resolveDateTime($timestamp, $timezone));
+    }
 
-        return apply_filters('persian_kit_date_display', $result, $format, (int) $dateTime->format('U'), $dateTime->getTimezone());
+    public static function formatDateTime(string $format, \DateTimeInterface $dateTime): string
+    {
+        $result = self::formatCompat($format, $dateTime, CivilDateTime::fromDateTime($dateTime));
+
+        return apply_filters('persian_kit_date_display', $result, $format, $dateTime->getTimestamp(), $dateTime->getTimezone());
+    }
+
+    /**
+     * Format a site-local MySQL datetime (post_date, comment_date), read in the
+     * site timezone. Null when the value is empty, all zeros or unparseable.
+     */
+    public static function fromLocalMysql(string $format, ?string $local): ?string
+    {
+        $dateTime = self::parseMysql($local, wp_timezone());
+
+        return $dateTime ? self::formatDateTime($format, $dateTime) : null;
+    }
+
+    /**
+     * Format a UTC MySQL datetime (post_date_gmt, comment_date_gmt), shown in
+     * $displayTimezone (the site timezone by default). Null when the value is
+     * empty, all zeros (drafts) or unparseable.
+     */
+    public static function fromGmtMysql(string $format, ?string $gmt, ?\DateTimeZone $displayTimezone = null): ?string
+    {
+        $dateTime = self::parseMysql($gmt, new \DateTimeZone('UTC'));
+
+        return $dateTime
+            ? self::formatDateTime($format, $dateTime->setTimezone($displayTimezone ?? wp_timezone()))
+            : null;
+    }
+
+    /**
+     * Format a "timestamp with offset" as passed to the date_i18n filter: the
+     * offset is already added, so its UTC wall clock is the local time.
+     */
+    public static function fromOffsetTimestamp(string $format, int $timestampWithOffset, bool $gmt = false): string
+    {
+        $timezone = $gmt ? new \DateTimeZone('UTC') : wp_timezone();
+        $dateTime = new \DateTimeImmutable(gmdate('Y-m-d H:i:s', $timestampWithOffset), $timezone);
+
+        return self::formatDateTime($format, $dateTime);
     }
 
     /**
@@ -100,6 +140,21 @@ class JalaliFormatter
     public static function gregorianFormat(string $format, int|string $timestamp = '', ?\DateTimeZone $timezone = null): string
     {
         return self::resolveDateTime($timestamp, $timezone)->format($format);
+    }
+
+    private static function parseMysql(?string $value, \DateTimeZone $timezone): ?\DateTimeImmutable
+    {
+        $value = trim((string) $value);
+
+        if ($value === '' || str_starts_with($value, '0000-00-00')) {
+            return null;
+        }
+
+        try {
+            return new \DateTimeImmutable($value, $timezone);
+        } catch (\Exception) {
+            return null;
+        }
     }
 
     private static function resolveDateTime(int|string $timestamp, ?\DateTimeZone $timezone): \DateTime

@@ -4,6 +4,7 @@ namespace PersianKit\Modules\DateConversion;
 
 use PersianKit\Dependencies\Eram\Daynum\CivilDateTime;
 use PersianKit\Dependencies\Eram\Abzar\Digits\DigitConverter;
+use PersianKit\Modules\WooCommerce\WooDateHelper;
 
 defined('ABSPATH') || exit;
 
@@ -127,12 +128,12 @@ class PostTypeMonthFilter
             return null;
         }
 
-        return $this->jalaliMonthToGregorianRange($jalaliYearMonth);
+        return WooDateHelper::jalaliMonthToGregorianRange($jalaliYearMonth);
     }
 
     public function gregorianRangeForJalaliMonth(string $jalaliYearMonth): ?array
     {
-        return $this->jalaliMonthToGregorianRange($jalaliYearMonth);
+        return WooDateHelper::jalaliMonthToGregorianRange($jalaliYearMonth);
     }
 
     public function selectedJalaliMonth(): ?string
@@ -235,31 +236,4 @@ class PostTypeMonthFilter
 
         return $object->labels->filter_by_date ?? __('Filter by date');
     }
-
-    private function jalaliMonthToGregorianRange(string $jalaliYearMonth): ?array
-    {
-        if (!preg_match('/^\d{6}$/', $jalaliYearMonth)) {
-            return null;
-        }
-
-        $year = (int) substr($jalaliYearMonth, 0, 4);
-        $month = (int) substr($jalaliYearMonth, 4, 2);
-
-        if ($month < 1 || $month > 12) {
-            return null;
-        }
-
-        try {
-            $start = CivilDateTime::fromJalali($year, $month, 1);
-            $end = $start->jalali()->endOfMonth();
-        } catch (\Throwable $exception) {
-            return null;
-        }
-
-        return [
-            'start' => $start->toDateTimeImmutable()->format('Y-m-d'),
-            'end' => $end->toDateTimeImmutable()->format('Y-m-d'),
-        ];
-    }
-
 }

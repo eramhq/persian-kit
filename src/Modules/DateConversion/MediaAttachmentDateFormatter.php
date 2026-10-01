@@ -20,7 +20,8 @@ class MediaAttachmentDateFormatter
             return $response;
         }
 
-        $response['dateFormatted'] = JalaliFormatter::format(__('F j, Y'), $attachment->post_date);
+        $response['dateFormatted'] = JalaliFormatter::fromLocalMysql(__('F j, Y'), $attachment->post_date)
+            ?? $response['dateFormatted'];
 
         return $response;
     }

@@ -28,6 +28,17 @@ All notable changes to this project will be documented in this file.
   - `pk_ordinal_word(30)` returns `سی‌ام` (was `سی اُم`).
   - `pk_words_to_number()` returns `null` for text that is not a number (`دو سه`) and for values past `PHP_INT_MAX`.
 
+### Date correctness
+
+- RSS, Atom and other feeds show Gregorian dates again. Every date filter steps aside inside feeds, and `Y-m-d H:i:s`, `Y-m-d\TH:i:s\Z`, `G` and `U` are never converted.
+- Post and comment dates are read in the site timezone. A comment at 23:00 no longer moves to the next day, and post times match `wp_date()`.
+- Drafts (whose GMT date is `0000-00-00 00:00:00`) no longer show year −1. A date that cannot be parsed keeps WordPress's own output instead of turning into 1970.
+- Dates passed through `date_i18n` (the dashboard Activity widget, WooCommerce) no longer get the timezone offset added twice.
+- `get_post_time()` only converts the date of the current post, and honours `$gmt`.
+- `the_date()` prints the date once per day again.
+- The REST `date_jalali` field uses the local date for drafts, and media library dates use the site timezone.
+- An out-of-range Jalali month in the WooCommerce order filter is ignored instead of causing a fatal error.
+
 ## [1.0.0-beta.1] - 2026-04-17
 
 - Replaced the plugin's internal Persian utility classes with the `eram/abzar` library.
