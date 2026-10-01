@@ -4,8 +4,9 @@
  * Adds a Jalali (Shamsi) "Publish" row to the post sidebar, and the Jalali
  * date to the pre-publish and post-publish panels, through the editor's
  * plugin slots. Core's Gregorian "Publish" row is hidden by
- * gutenberg-jalali.css; if that rule stops matching, both rows show and both
- * still work.
+ * gutenberg-jalali.css, and core's Gregorian "Publish:" panel in the
+ * pre-publish checks by hideCoreSchedulePanel(). If either stops matching,
+ * both show and both still work.
  *
  * Dates are the editor's site-local strings (YYYY-MM-DDTHH:MM:SS) and are
  * never parsed with Date, so the browser's timezone plays no part.
@@ -261,6 +262,38 @@
         );
     }
 
+    /**
+     * Hide core's Gregorian "Publish:" panel in the pre-publish checks. It has
+     * no class of its own and its neighbours share its markup, so it is found
+     * by its title, core's own translated string. If nothing matches, both
+     * panels show and both work.
+     */
+    function hideCoreSchedulePanel() {
+        var title = __('Publish:');
+        var panels = document.querySelectorAll(
+            '.editor-post-publish-panel__prepublish > .components-panel__body:not(.persian-kit-jalali-date__panel)'
+        );
+
+        for (var i = 0; i < panels.length; i++) {
+            var heading = panels[i].querySelector('.components-panel__body-title');
+            // React does not manage this element's style, so it keeps the change.
+            if (heading && heading.textContent.trim().indexOf(title) === 0) {
+                panels[i].style.display = 'none';
+            }
+        }
+    }
+
+    /**
+     * The date in the pre-publish panel's title. The title renders whenever
+     * the pre-publish checks open (the panel body only when expanded), so
+     * this is where core's panel is hidden.
+     */
+    function PrePublishDateValue(props) {
+        useEffect(hideCoreSchedulePanel);
+
+        return el('span', { className: 'persian-kit-jalali-date__value' }, props.label);
+    }
+
     function JalaliPrePublishPanel() {
         var info = usePublishDate();
         if (!PluginPrePublishPanel || !shouldShow(info)) {
@@ -270,7 +303,7 @@
         return el(PluginPrePublishPanel, {
             className: 'persian-kit-jalali-date__panel',
             initialOpen: false,
-            title: [__('Publish:'), ' ', el('span', { key: 'date', className: 'persian-kit-jalali-date__value' }, dateLabel(info))]
+            title: [__('Publish:'), ' ', el(PrePublishDateValue, { key: 'date', label: dateLabel(info) })]
         }, el(JalaliDateForm));
     }
 
