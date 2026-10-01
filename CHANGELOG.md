@@ -39,6 +39,16 @@ All notable changes to this project will be documented in this file.
 - The REST `date_jalali` field uses the local date for drafts, and media library dates use the site timezone.
 - An out-of-range Jalali month in the WooCommerce order filter is ignored instead of causing a fatal error.
 
+### Scope, robustness and performance
+
+- Digit conversion no longer runs on admin screens (front-end AJAX still converts), in REST responses, feeds, or content filtered while `wp_mail` is being sent. Callbacks accept `null`.
+- Digit conversion renames copies of terms instead of the cached `WP_Term` objects, and no longer runs twice on excerpts (`the_excerpt` is dropped; `get_the_excerpt` covers it).
+- WooCommerce orders: the Jalali month filter only changes the HPOS orders list query, not every `wc_get_orders()` call. Each orders screen shows a single month select: WooCommerce's Gregorian drop-down is replaced on HPOS, and the legacy screen uses the shared post-type filter. The oldest-order lookup asks for an ID only.
+- WooCommerce date display decides its context from the current screen and from WooCommerce template and order-confirmation block rendering, instead of calling `debug_backtrace()` on every `date_i18n()`.
+- The Jalali month list on post screens caches its `SELECT DISTINCT DATE(post_date)` query until posts change.
+- The admin font loads only for Persian or right-to-left admin languages.
+- Batch normalization: opening the settings page no longer resumes an unfinished job automatically; it shows a Resume button instead. `wp persian-kit normalize` records its progress in the same job, so the settings page shows it, and `--batch-size` is clamped to 1–500.
+
 ## [1.0.0-beta.1] - 2026-04-17
 
 - Replaced the plugin's internal Persian utility classes with the `eram/abzar` library.

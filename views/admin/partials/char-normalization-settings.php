@@ -91,6 +91,9 @@ $tehMarbuta = !empty($moduleSettings['teh_marbuta']);
         <span x-text="progressText"></span>
     </p>
 
+    <!-- Paused: a job was started earlier and has not finished -->
+    <p x-show="paused && !running" class="description" x-text="progressText"></p>
+
     <!-- Done -->
     <div x-show="done" class="notice notice-success inline">
         <p x-text="doneText"></p>
@@ -107,6 +110,7 @@ function persianKitNormalize() {
     return {
         nextBatchTimer: null,
         running: false,
+        paused: false,
         done: false,
         counts: null,
         isResuming: false,
@@ -136,14 +140,15 @@ function persianKitNormalize() {
             this.totalProcessed = job.processed || 0;
             this.totalModified = job.modified || 0;
 
-            if (job.status === 'running') {
-                this.running = true;
+            // A "running" job on the server only means it has not finished; batches
+            // run while this page drives them, and a reload pauses the job.
+            this.paused = job.status === 'running';
+
+            if (this.paused) {
                 this.done = false;
                 this.progressText = `Processed ${this.totalProcessed} posts (${this.totalModified} modified)...`;
                 return;
             }
-
-            this.running = false;
 
             if (job.status === 'completed') {
                 this.done = true;
@@ -196,6 +201,7 @@ function persianKitNormalize() {
                 await this.fetchApi('normalize/restart', 'POST');
                 this.clearNextBatch();
                 this.running = false;
+                this.paused = false;
                 this.isResuming = false;
                 this.done = false;
                 this.counts = null;
@@ -229,11 +235,7 @@ function persianKitNormalize() {
         },
 
         init() {
-            this.checkStatus(true).then(() => {
-                if (this.running) {
-                    this.queueNextBatch();
-                }
-            });
+            this.checkStatus(true);
         },
     };
 }

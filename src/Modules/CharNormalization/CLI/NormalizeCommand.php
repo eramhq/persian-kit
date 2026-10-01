@@ -3,16 +3,19 @@
 namespace PersianKit\Modules\CharNormalization\CLI;
 
 use PersianKit\Modules\CharNormalization\BatchMigrator;
+use PersianKit\Modules\CharNormalization\NormalizationJobManager;
 
 defined('ABSPATH') || exit;
 
 class NormalizeCommand
 {
     private BatchMigrator $migrator;
+    private NormalizationJobManager $jobs;
 
-    public function __construct(BatchMigrator $migrator)
+    public function __construct(BatchMigrator $migrator, NormalizationJobManager $jobs)
     {
         $this->migrator = $migrator;
+        $this->jobs = $jobs;
     }
 
     /**
@@ -30,13 +33,13 @@ class NormalizeCommand
      * ---
      *
      * [--batch-size=<size>]
-     * : Posts per batch.
+     * : Posts per batch (1–500).
      * ---
      * default: 100
      * ---
      *
      * [--restart]
-     * : Clear saved cursor and start fresh.
+     * : Clear the saved job and cursor and start fresh.
      *
      * ## EXAMPLES
      *
@@ -51,12 +54,12 @@ class NormalizeCommand
     {
         $dryRun    = \WP_CLI\Utils\get_flag_value($assocArgs, 'dry-run', false);
         $postTypes = explode(',', \WP_CLI\Utils\get_flag_value($assocArgs, 'post-type', 'post,page'));
-        $batchSize = (int) \WP_CLI\Utils\get_flag_value($assocArgs, 'batch-size', 100);
+        $batchSize = max(1, (int) \WP_CLI\Utils\get_flag_value($assocArgs, 'batch-size', 100));
         $restart   = \WP_CLI\Utils\get_flag_value($assocArgs, 'restart', false);
 
         if ($restart) {
-            $this->migrator->clearCursor();
-            \WP_CLI::log('Cursor cleared. Starting fresh.');
+            $this->jobs->restart();
+            \WP_CLI::log('Job cleared. Starting fresh.');
         }
 
         if ($dryRun) {
@@ -83,39 +86,35 @@ class NormalizeCommand
         \WP_CLI::log(sprintf('Total: %d posts need normalization.', $total));
     }
 
+    /**
+     * Runs the batches through the job manager, so the settings screen shows
+     * the same progress and can resume a run the CLI left unfinished.
+     */
     private function run(array $postTypes, int $batchSize): void
     {
-        $cursor = $this->migrator->getCursor();
-        if ($cursor > 0) {
-            \WP_CLI::log(sprintf('Resuming from post ID %d...', $cursor));
-        }
+        $status = $this->jobs->status($postTypes);
+        $processed = ($status['job']['status'] ?? '') === 'running' ? (int) ($status['job']['processed'] ?? 0) : 0;
 
-        $totalProcessed = 0;
-        $totalModified  = 0;
+        if ($status['is_resuming']) {
+            \WP_CLI::log(sprintf('Resuming from post ID %d...', $status['cursor']));
+        }
 
         $progress = \WP_CLI\Utils\make_progress_bar('Normalizing posts', 0);
 
         do {
-            $result = $this->migrator->processBatch($postTypes, $batchSize);
+            $data = $this->jobs->runBatch($postTypes, $batchSize);
+            $job = $data['job'];
 
-            $totalProcessed += $result->processed;
-            $totalModified  += $result->modified;
-
-            $progress->tick($result->processed, sprintf(
-                'Processed %d posts (%d modified)...',
-                $totalProcessed,
-                $totalModified
-            ));
-        } while ($result->hasMore);
+            $progress->tick(max(0, (int) $job['processed'] - $processed));
+            $processed = (int) $job['processed'];
+        } while ($data['has_more']);
 
         $progress->finish();
 
-        $this->migrator->clearCursor();
-
         \WP_CLI::success(sprintf(
             'Done! %d posts processed, %d modified.',
-            $totalProcessed,
-            $totalModified
+            (int) $job['processed'],
+            (int) $job['modified']
         ));
     }
 }

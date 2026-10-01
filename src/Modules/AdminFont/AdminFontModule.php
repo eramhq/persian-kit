@@ -56,6 +56,10 @@ class AdminFontModule extends AbstractModule
 
     public function enqueueFont(): void
     {
+        if (!$this->isPersianOrRtlAdmin()) {
+            return;
+        }
+
         wp_enqueue_style(
             'persian-kit-admin-font',
             PERSIAN_KIT_URL . 'public/css/admin-font.css',
@@ -67,5 +71,16 @@ class AdminFontModule extends AbstractModule
             'persian-kit-admin-font',
             ":root { --pk-admin-font: 'Vazirmatn'; }"
         );
+    }
+
+    /**
+     * The font only covers Persian/Arabic script, so other admin languages keep
+     * WordPress's default font stack.
+     */
+    private function isPersianOrRtlAdmin(): bool
+    {
+        $locale = get_user_locale();
+
+        return $locale === 'fa' || str_starts_with($locale, 'fa_') || is_rtl();
     }
 }

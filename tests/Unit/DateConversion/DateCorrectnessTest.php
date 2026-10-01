@@ -218,12 +218,8 @@ class DateCorrectnessTest extends TestCase
 
     public function test_woo_date_i18n_does_not_apply_offset_twice(): void
     {
-        $filter = new class extends WooDateDisplayFilter {
-            protected function debugTrace(): array
-            {
-                return [['class' => 'WC_DateTime', 'function' => 'date_i18n']];
-            }
-        };
+        $filter = new WooDateDisplayFilter();
+        $filter->enterTemplate();
 
         $this->assertSame('1403/12/30 23:00', $filter->filterDateI18n('x', 'Y/m/d H:i', $this->offsetTimestamp('2025-03-20 23:00:00')));
     }

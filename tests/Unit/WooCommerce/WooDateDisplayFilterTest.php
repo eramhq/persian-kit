@@ -9,15 +9,16 @@ use PHPUnit\Framework\TestCase;
 
 class WooDateDisplayFilterTest extends TestCase
 {
+    /** 2026-03-21 00:00 local, as the offset timestamp date_i18n receives. */
+    private const NOWRUZ_1405 = 1774051200;
+
     protected function setUp(): void
     {
         parent::setUp();
         Monkey\setUp();
 
-        Functions\when('apply_filters')->alias(static function ($hook, $value) {
-            return $value;
-        });
         Functions\when('wp_timezone')->justReturn(new \DateTimeZone('Asia/Tehran'));
+        Functions\when('wc_get_order_types')->justReturn(['shop_order', 'shop_order_refund']);
     }
 
     protected function tearDown(): void
@@ -26,88 +27,103 @@ class WooDateDisplayFilterTest extends TestCase
         parent::tearDown();
     }
 
-    public function test_register_adds_date_i18n_filter(): void
+    public function test_register_adds_context_hooks(): void
     {
         $filter = new WooDateDisplayFilter();
         $filter->register();
 
-        $this->assertTrue(has_filter('date_i18n'));
+        $this->assertNotFalse(has_filter('date_i18n', [$filter, 'filterDateI18n']));
+        $this->assertNotFalse(has_action('current_screen', [$filter, 'detectScreen']));
+        $this->assertNotFalse(has_action('woocommerce_before_template_part', [$filter, 'enterTemplate']));
+        $this->assertNotFalse(has_action('woocommerce_after_template_part', [$filter, 'leaveTemplate']));
+        $this->assertNotFalse(has_filter('render_block_data', [$filter, 'enterBlock']));
+        $this->assertNotFalse(has_filter('render_block', [$filter, 'leaveBlock']));
     }
 
-    public function test_is_woo_date_context_detects_wc_datetime_calls(): void
+    public function test_dates_outside_woocommerce_contexts_are_untouched(): void
     {
         $filter = new WooDateDisplayFilter();
 
-        $this->assertTrue($filter->isWooDateContext([
-            ['class' => 'WC_DateTime', 'function' => 'date_i18n'],
-        ]));
-
-        $this->assertTrue($filter->isWooDateContext([
-            ['file' => '/var/www/html/wp-content/plugins/woocommerce/templates/order/tracking.php'],
-        ]));
-
-        $this->assertTrue($filter->isWooDateContext([
-            ['file' => '/var/www/html/wp-content/plugins/woocommerce/src/Blocks/BlockTypes/OrderConfirmation/Downloads.php'],
-        ]));
-
-        $this->assertFalse($filter->isWooDateContext([
-            ['class' => 'WP_Date_Query', 'function' => 'build_mysql_datetime'],
-        ]));
+        $this->assertFalse($filter->isWooDateContext());
+        $this->assertSame('Mar 21, 2026', $filter->filterDateI18n('Mar 21, 2026', 'M j, Y', self::NOWRUZ_1405));
     }
 
-    public function test_filter_date_i18n_converts_visible_woocommerce_dates_only(): void
+    /**
+     * @dataProvider wooScreens
+     */
+    public function test_woocommerce_admin_screens_convert_dates(string $id, string $postType): void
     {
-        $filter = new class extends WooDateDisplayFilter {
-            protected function debugTrace(): array
-            {
-                return [
-                    ['class' => 'WC_DateTime', 'function' => 'date_i18n'],
-                ];
-            }
-        };
+        $filter = new WooDateDisplayFilter();
+        $filter->detectScreen($this->screen($id, $postType));
 
-        $formatted = $filter->filterDateI18n('Mar 21, 2026', 'M j, Y', strtotime('2026-03-21 00:00:00'), false);
-
-        $this->assertNotSame('Mar 21, 2026', $formatted);
-        $this->assertStringContainsString('1405', $formatted);
+        $this->assertTrue($filter->isWooDateContext());
+        $this->assertSame('1405/01/01', $filter->filterDateI18n('2026/03/21', 'Y/m/d', self::NOWRUZ_1405));
     }
 
-    public function test_filter_date_i18n_converts_customer_template_dates(): void
+    public static function wooScreens(): array
     {
-        $filter = new class extends WooDateDisplayFilter {
-            protected function debugTrace(): array
-            {
-                return [
-                    ['file' => '/var/www/html/wp-content/plugins/woocommerce/templates/emails/email-downloads.php'],
-                ];
-            }
-        };
-
-        $formatted = $filter->filterDateI18n('March 21, 2026', 'F j, Y', strtotime('2026-03-21 00:00:00'), false);
-
-        $this->assertNotSame('March 21, 2026', $formatted);
-        $this->assertStringContainsString('1405', $formatted);
+        return [
+            'hpos orders'   => ['woocommerce_page_wc-orders', ''],
+            'legacy orders' => ['edit-shop_order', 'shop_order'],
+            'legacy edit'   => ['shop_order', 'shop_order'],
+        ];
     }
 
-    public function test_filter_date_i18n_preserves_machine_formats_and_non_woo_contexts(): void
+    public function test_other_admin_screens_do_not_convert(): void
     {
-        $filter = new class extends WooDateDisplayFilter {
-            protected function debugTrace(): array
-            {
-                return [
-                    ['class' => 'Some_Other_Class', 'function' => 'render'],
-                ];
-            }
-        };
+        $filter = new WooDateDisplayFilter();
+        $filter->detectScreen($this->screen('woocommerce_page_wc-orders', ''));
+        $filter->detectScreen($this->screen('edit-post', 'post'));
+
+        $this->assertFalse($filter->isWooDateContext());
+    }
+
+    public function test_template_parts_convert_dates_while_rendering(): void
+    {
+        $filter = new WooDateDisplayFilter();
+
+        $filter->enterTemplate();
+        $filter->enterTemplate();
+        $filter->leaveTemplate();
+        $this->assertSame('1405/01/01', $filter->filterDateI18n('2026/03/21', 'Y/m/d', self::NOWRUZ_1405));
+
+        $filter->leaveTemplate();
+        $filter->leaveTemplate();
+        $this->assertFalse($filter->isWooDateContext());
+    }
+
+    public function test_order_confirmation_blocks_convert_dates_while_rendering(): void
+    {
+        $filter = new WooDateDisplayFilter();
+        $block = ['blockName' => 'woocommerce/order-confirmation-downloads'];
+
+        $this->assertSame(['blockName' => 'core/paragraph'], $filter->enterBlock(['blockName' => 'core/paragraph']));
+        $this->assertFalse($filter->isWooDateContext());
+
+        $this->assertSame($block, $filter->enterBlock($block));
+        $this->assertTrue($filter->isWooDateContext());
+
+        $this->assertSame('<p>html</p>', $filter->leaveBlock('<p>html</p>', $block));
+        $this->assertFalse($filter->isWooDateContext());
+    }
+
+    public function test_machine_formats_are_preserved_in_woocommerce_contexts(): void
+    {
+        $filter = new WooDateDisplayFilter();
+        $filter->enterTemplate();
 
         $this->assertSame(
             '2026-03-21T00:00:00+00:00',
-            $filter->filterDateI18n('2026-03-21T00:00:00+00:00', DATE_RFC3339, strtotime('2026-03-21 00:00:00'), true)
+            $filter->filterDateI18n('2026-03-21T00:00:00+00:00', DATE_RFC3339, self::NOWRUZ_1405, true)
         );
+    }
 
-        $this->assertSame(
-            'Mar 21, 2026',
-            $filter->filterDateI18n('Mar 21, 2026', 'M j, Y', strtotime('2026-03-21 00:00:00'), false)
-        );
+    private function screen(string $id, string $postType): \WP_Screen
+    {
+        $screen = new \WP_Screen();
+        $screen->id = $id;
+        $screen->post_type = $postType;
+
+        return $screen;
     }
 }

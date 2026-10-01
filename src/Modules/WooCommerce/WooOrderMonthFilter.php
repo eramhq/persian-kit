@@ -13,12 +13,16 @@ class WooOrderMonthFilter
     private const SCREEN_LEGACY = 'edit-shop_order';
     private const SCREEN_HPOS = 'woocommerce_page_wc-orders';
 
+    /**
+     * The legacy (posts-based) orders screen is covered by
+     * {@see \PersianKit\Modules\DateConversion\PostTypeMonthFilter}, which renders
+     * the Jalali select for every post type. This class handles the HPOS screen.
+     */
     public function register(): void
     {
         add_action('woocommerce_order_list_table_restrict_manage_orders', [$this, 'renderHposFilter'], 20, 2);
-        add_filter('woocommerce_order_query_args', [$this, 'filterOrderQueryArgs'], 20);
-        add_action('restrict_manage_posts', [$this, 'renderLegacyFilter'], 20, 2);
-        add_action('pre_get_posts', [$this, 'filterLegacyOrderQuery'], 20);
+        add_filter('woocommerce_order_list_table_prepare_items_query_args', [$this, 'filterOrderQueryArgs'], 20);
+        add_action('current_screen', [$this, 'disableCoreMonthsFilter']);
         add_action('admin_enqueue_scripts', [$this, 'enqueueAssets']);
     }
 
@@ -37,6 +41,21 @@ class WooOrderMonthFilter
         );
     }
 
+    /**
+     * The Jalali select replaces WooCommerce's Gregorian months drop-down, as
+     * it does on the posts screens.
+     */
+    public function disableCoreMonthsFilter(?\WP_Screen $screen = null): void
+    {
+        if ($screen === null || $screen->id !== self::SCREEN_HPOS || !function_exists('wc_get_order_types')) {
+            return;
+        }
+
+        foreach (wc_get_order_types('view-orders') as $orderType) {
+            add_filter("woocommerce_{$orderType}_list_table_disable_months_filter", '__return_true');
+        }
+    }
+
     private function isOrdersScreen(\WP_Screen $screen): bool
     {
         return $screen->id === self::SCREEN_LEGACY || $screen->id === self::SCREEN_HPOS;
@@ -51,15 +70,13 @@ class WooOrderMonthFilter
         $this->renderFilterSelect();
     }
 
-    public function renderLegacyFilter(string $postType, string $which): void
-    {
-        if ($which !== 'top' || $postType !== 'shop_order') {
-            return;
-        }
-
-        $this->renderFilterSelect();
-    }
-
+    /**
+     * Runs only for the HPOS orders list table query, never for other
+     * wc_get_orders() calls.
+     *
+     * @param array<string, mixed> $args
+     * @return array<string, mixed>
+     */
     public function filterOrderQueryArgs(array $args): array
     {
         $range = $this->selectedGregorianRange();
@@ -70,31 +87,6 @@ class WooOrderMonthFilter
         $args['date_created'] = $range['start'] . '...' . $range['end'];
 
         return $args;
-    }
-
-    public function filterLegacyOrderQuery(\WP_Query $query): void
-    {
-        if (!is_admin() || !$query->is_main_query()) {
-            return;
-        }
-
-        $postType = $query->get('post_type');
-        if ($postType !== 'shop_order') {
-            return;
-        }
-
-        $range = $this->selectedGregorianRange();
-        if ($range === null) {
-            return;
-        }
-
-        $query->set('date_query', [
-            [
-                'after' => $range['start'],
-                'before' => $range['end'],
-                'inclusive' => true,
-            ],
-        ]);
     }
 
     public function selectedGregorianRange(): ?array
@@ -128,14 +120,15 @@ class WooOrderMonthFilter
             return [];
         }
 
-        $orders = wc_get_orders([
+        $orderIds = wc_get_orders([
             'limit' => 1,
             'orderby' => 'date',
             'order' => 'ASC',
-            'return' => 'objects',
+            'return' => 'ids',
         ]);
 
-        $oldestOrder = is_array($orders) ? reset($orders) : null;
+        $oldestId = is_array($orderIds) ? reset($orderIds) : false;
+        $oldestOrder = $oldestId ? $this->loadOrder((int) $oldestId) : null;
         if (!$oldestOrder || !method_exists($oldestOrder, 'get_date_created') || !$oldestOrder->get_date_created()) {
             return [];
         }
@@ -165,6 +158,13 @@ class WooOrderMonthFilter
     protected function currentDateTime(): \DateTimeInterface
     {
         return new \DateTime('now', wp_timezone());
+    }
+
+    protected function loadOrder(int $orderId): ?object
+    {
+        $order = wc_get_order($orderId);
+
+        return is_object($order) ? $order : null;
     }
 
     protected function canQueryOrders(): bool

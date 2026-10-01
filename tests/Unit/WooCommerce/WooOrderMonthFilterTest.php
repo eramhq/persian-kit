@@ -26,6 +26,32 @@ class WooOrderMonthFilterTest extends TestCase
         parent::tearDown();
     }
 
+    public function test_register_targets_hpos_list_table_query_only(): void
+    {
+        (new WooOrderMonthFilter())->register();
+
+        $this->assertNotFalse(has_filter('woocommerce_order_list_table_prepare_items_query_args'));
+        $this->assertFalse(has_filter('woocommerce_order_query_args'));
+        $this->assertFalse(has_action('restrict_manage_posts'), 'PostTypeMonthFilter renders the legacy screen select');
+        $this->assertFalse(has_action('pre_get_posts'));
+    }
+
+    public function test_core_months_drop_down_is_disabled_on_hpos_screen_only(): void
+    {
+        Functions\when('wc_get_order_types')->justReturn(['shop_order']);
+        $filter = new WooOrderMonthFilter();
+
+        $other = new \WP_Screen();
+        $other->id = 'edit-post';
+        $filter->disableCoreMonthsFilter($other);
+        $this->assertFalse(has_filter('woocommerce_shop_order_list_table_disable_months_filter'));
+
+        $hpos = new \WP_Screen();
+        $hpos->id = 'woocommerce_page_wc-orders';
+        $filter->disableCoreMonthsFilter($hpos);
+        $this->assertNotFalse(has_filter('woocommerce_shop_order_list_table_disable_months_filter', '__return_true'));
+    }
+
     public function test_filter_order_query_args_returns_original_args_without_selected_month(): void
     {
         $filter = new WooOrderMonthFilter();
@@ -97,7 +123,11 @@ class WooOrderMonthFilterTest extends TestCase
     {
         $tz = new \DateTimeZone('Asia/Tehran');
 
-        Functions\when('wc_get_orders')->justReturn([
+        Functions\expect('wc_get_orders')
+            ->once()
+            ->with(\Mockery::on(static fn (array $args): bool => $args['return'] === 'ids' && $args['limit'] === 1))
+            ->andReturn([42]);
+        Functions\expect('wc_get_order')->once()->with(42)->andReturn(
             new class($orderDate, $tz) {
                 public function __construct(private string $date, private \DateTimeZone $tz) {}
 
@@ -105,8 +135,8 @@ class WooOrderMonthFilterTest extends TestCase
                 {
                     return new \DateTimeImmutable($this->date, $this->tz);
                 }
-            },
-        ]);
+            }
+        );
         Functions\when('wp_timezone')->justReturn($tz);
 
         return new class($currentDate, $tz) extends WooOrderMonthFilter {

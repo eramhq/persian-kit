@@ -1,208 +1,239 @@
 <?php
 
-namespace PersianKit\Tests\Unit\DateConversion {
+namespace PersianKit\Tests\Unit\DateConversion;
 
-    use Brain\Monkey;
-    use Brain\Monkey\Functions;
-    use PersianKit\Modules\DateConversion\PostTypeMonthFilter;
-    use PHPUnit\Framework\TestCase;
+use Brain\Monkey;
+use Brain\Monkey\Functions;
+use PersianKit\Modules\DateConversion\PostTypeMonthFilter;
+use PHPUnit\Framework\TestCase;
 
-    class PostTypeMonthFilterTest extends TestCase
+class PostTypeMonthFilterTest extends TestCase
+{
+    protected function setUp(): void
     {
-        protected function setUp(): void
-        {
-            parent::setUp();
-            Monkey\setUp();
+        parent::setUp();
+        Monkey\setUp();
 
-            Functions\when('sanitize_text_field')->returnArg();
-            Functions\when('sanitize_key')->returnArg();
-            Functions\when('wp_unslash')->returnArg();
-            Functions\when('is_admin')->justReturn(true);
-            Functions\when('post_type_exists')->alias(function (string $postType): bool {
-                return in_array($postType, ['post', 'page', 'book', 'attachment'], true);
-            });
-            Functions\when('wp_timezone')->justReturn(new \DateTimeZone('Asia/Tehran'));
-            Functions\when('get_post_type_object')->alias(function () {
-                return (object) [
-                    'labels' => (object) [
-                        'filter_by_date' => 'Filter by date',
-                    ],
+        Functions\when('sanitize_text_field')->returnArg();
+        Functions\when('sanitize_key')->returnArg();
+        Functions\when('wp_unslash')->returnArg();
+        Functions\when('is_admin')->justReturn(true);
+        Functions\when('post_type_exists')->alias(function (string $postType): bool {
+            return in_array($postType, ['post', 'page', 'book', 'attachment'], true);
+        });
+        Functions\when('wp_timezone')->justReturn(new \DateTimeZone('Asia/Tehran'));
+        Functions\when('get_post_type_object')->alias(function () {
+            return (object) [
+                'labels' => (object) [
+                    'filter_by_date' => 'Filter by date',
+                ],
+            ];
+        });
+        Functions\when('esc_html')->returnArg();
+        Functions\when('esc_attr')->returnArg();
+        Functions\when('esc_html__')->alias(fn (string $text, ?string $domain = null): string => $text);
+        Functions\when('__')->alias(fn (string $text, ?string $domain = null): string => $text);
+        Functions\when('selected')->alias(function (mixed $selected, mixed $current, bool $display = false): string {
+            return (string) $selected === (string) $current ? 'selected="selected"' : '';
+        });
+    }
+
+    protected function tearDown(): void
+    {
+        unset($_GET['persian_kit_jalali_month'], $_GET['post_status']);
+        unset($GLOBALS['pagenow']);
+
+        Monkey\tearDown();
+        parent::tearDown();
+    }
+
+    public function test_register_adds_hooks(): void
+    {
+        $filter = new PostTypeMonthFilter();
+        $filter->register();
+
+        $this->assertTrue(has_filter('pre_months_dropdown_query'));
+        $this->assertTrue(has_action('restrict_manage_posts'));
+        $this->assertTrue(has_action('pre_get_posts'));
+    }
+
+    public function test_suppress_core_dropdown_replaces_supported_post_type_months(): void
+    {
+        $filter = new PostTypeMonthFilter();
+
+        $this->assertSame([], $filter->suppressCoreDropdown(false, 'post'));
+        $this->assertSame([], $filter->suppressCoreDropdown('keep', 'attachment'));
+        $this->assertSame('keep', $filter->suppressCoreDropdown('keep', 'missing-post-type'));
+    }
+
+    public function test_month_options_build_unique_jalali_months_from_post_days(): void
+    {
+        $filter = new class() extends PostTypeMonthFilter {
+            protected function queryDistinctPostDays(string $postType): array
+            {
+                return [
+                    '2026-04-20',
+                    '2026-03-25',
+                    '2026-03-21',
+                    '2026-03-19',
                 ];
-            });
-            Functions\when('esc_html')->returnArg();
-            Functions\when('esc_attr')->returnArg();
-            Functions\when('esc_html__')->alias(fn (string $text, ?string $domain = null): string => $text);
-            Functions\when('__')->alias(fn (string $text, ?string $domain = null): string => $text);
-            Functions\when('selected')->alias(function (mixed $selected, mixed $current, bool $display = false): string {
-                return (string) $selected === (string) $current ? 'selected="selected"' : '';
-            });
-        }
+            }
+        };
 
-        protected function tearDown(): void
-        {
-            unset($_GET['persian_kit_jalali_month'], $_GET['post_status']);
-            unset($GLOBALS['pagenow']);
+        $this->assertSame([
+            [
+                'value' => '140501',
+                'label' => 'فروردین ۱۴۰۵',
+            ],
+            [
+                'value' => '140412',
+                'label' => 'اسفند ۱۴۰۴',
+            ],
+        ], $filter->monthOptions('post'));
+    }
 
-            Monkey\tearDown();
-            parent::tearDown();
-        }
+    public function test_selected_gregorian_range_accepts_persian_digits(): void
+    {
+        $_GET['persian_kit_jalali_month'] = '۱۴۰۵۰۱';
 
-        public function test_register_adds_hooks(): void
-        {
-            $filter = new PostTypeMonthFilter();
-            $filter->register();
+        $filter = new PostTypeMonthFilter();
 
-            $this->assertTrue(has_filter('pre_months_dropdown_query'));
-            $this->assertTrue(has_action('restrict_manage_posts'));
-            $this->assertTrue(has_action('pre_get_posts'));
-        }
+        $this->assertSame([
+            'start' => '2026-03-21',
+            'end' => '2026-04-20',
+        ], $filter->selectedGregorianRange());
+    }
 
-        public function test_suppress_core_dropdown_replaces_supported_post_type_months(): void
-        {
-            $filter = new PostTypeMonthFilter();
+    public function test_filter_posts_query_appends_date_query_for_selected_jalali_month(): void
+    {
+        $_GET['persian_kit_jalali_month'] = '140501';
+        $GLOBALS['pagenow'] = 'edit.php';
 
-            $this->assertSame([], $filter->suppressCoreDropdown(false, 'post'));
-            $this->assertSame([], $filter->suppressCoreDropdown('keep', 'attachment'));
-            $this->assertSame('keep', $filter->suppressCoreDropdown('keep', 'missing-post-type'));
-        }
-
-        public function test_month_options_build_unique_jalali_months_from_post_days(): void
-        {
-            $filter = new class() extends PostTypeMonthFilter {
-                protected function queryDistinctPostDays(string $postType): array
-                {
-                    return [
-                        '2026-04-20',
-                        '2026-03-25',
-                        '2026-03-21',
-                        '2026-03-19',
-                    ];
-                }
-            };
-
-            $this->assertSame([
-                [
-                    'value' => '140501',
-                    'label' => 'فروردین ۱۴۰۵',
-                ],
-                [
-                    'value' => '140412',
-                    'label' => 'اسفند ۱۴۰۴',
-                ],
-            ], $filter->monthOptions('post'));
-        }
-
-        public function test_selected_gregorian_range_accepts_persian_digits(): void
-        {
-            $_GET['persian_kit_jalali_month'] = '۱۴۰۵۰۱';
-
-            $filter = new PostTypeMonthFilter();
-
-            $this->assertSame([
-                'start' => '2026-03-21',
-                'end' => '2026-04-20',
-            ], $filter->selectedGregorianRange());
-        }
-
-        public function test_filter_posts_query_appends_date_query_for_selected_jalali_month(): void
-        {
-            $_GET['persian_kit_jalali_month'] = '140501';
-            $GLOBALS['pagenow'] = 'edit.php';
-
-            $query = new \WP_Query([
-                'post_type' => 'page',
-                'date_query' => [
-                    [
-                        'column' => 'post_modified',
-                    ],
-                ],
-            ]);
-
-            $filter = new PostTypeMonthFilter();
-            $filter->filterPostsQuery($query);
-
-            $this->assertSame('', $query->get('m'));
-            $this->assertSame([
+        $query = new \WP_Query([
+            'post_type' => 'page',
+            'date_query' => [
                 [
                     'column' => 'post_modified',
                 ],
-                [
-                    'after' => '2026-03-21',
-                    'before' => '2026-04-20',
-                    'inclusive' => true,
-                ],
-            ], $query->get('date_query'));
-        }
+            ],
+        ]);
 
-        public function test_filter_posts_query_appends_date_query_for_attachments_on_upload_screen(): void
-        {
-            $_GET['persian_kit_jalali_month'] = '140501';
-            $_GET['attachment-filter'] = 'trash';
-            $GLOBALS['pagenow'] = 'upload.php';
+        $filter = new PostTypeMonthFilter();
+        $filter->filterPostsQuery($query);
 
-            $query = new \WP_Query([
-                'post_type' => 'attachment',
-            ]);
+        $this->assertSame('', $query->get('m'));
+        $this->assertSame([
+            [
+                'column' => 'post_modified',
+            ],
+            [
+                'after' => '2026-03-21',
+                'before' => '2026-04-20',
+                'inclusive' => true,
+            ],
+        ], $query->get('date_query'));
+    }
 
-            $filter = new PostTypeMonthFilter();
-            $filter->filterPostsQuery($query);
+    public function test_filter_posts_query_appends_date_query_for_attachments_on_upload_screen(): void
+    {
+        $_GET['persian_kit_jalali_month'] = '140501';
+        $_GET['attachment-filter'] = 'trash';
+        $GLOBALS['pagenow'] = 'upload.php';
 
-            $this->assertSame('', $query->get('m'));
-            $this->assertSame([
-                [
-                    'after' => '2026-03-21',
-                    'before' => '2026-04-20',
-                    'inclusive' => true,
-                ],
-            ], $query->get('date_query'));
-        }
+        $query = new \WP_Query([
+            'post_type' => 'attachment',
+        ]);
 
-        public function test_render_filter_outputs_jalali_dropdown_markup(): void
-        {
-            $_GET['persian_kit_jalali_month'] = '140501';
+        $filter = new PostTypeMonthFilter();
+        $filter->filterPostsQuery($query);
 
-            $filter = new class() extends PostTypeMonthFilter {
-                public function monthOptions(string $postType): array
-                {
-                    return [
-                        [
-                            'value' => '140501',
-                            'label' => 'فروردین ۱۴۰۵',
-                        ],
-                    ];
-                }
-            };
+        $this->assertSame('', $query->get('m'));
+        $this->assertSame([
+            [
+                'after' => '2026-03-21',
+                'before' => '2026-04-20',
+                'inclusive' => true,
+            ],
+        ], $query->get('date_query'));
+    }
 
-            ob_start();
-            $filter->renderFilter('post', 'top');
-            $output = (string) ob_get_clean();
+    public function test_render_filter_outputs_jalali_dropdown_markup(): void
+    {
+        $_GET['persian_kit_jalali_month'] = '140501';
 
-            $this->assertStringContainsString('name="persian_kit_jalali_month"', $output);
-            $this->assertStringContainsString('All dates', $output);
-            $this->assertStringContainsString('فروردین ۱۴۰۵', $output);
-            $this->assertStringContainsString('selected="selected"', $output);
-        }
+        $filter = new class() extends PostTypeMonthFilter {
+            public function monthOptions(string $postType): array
+            {
+                return [
+                    [
+                        'value' => '140501',
+                        'label' => 'فروردین ۱۴۰۵',
+                    ],
+                ];
+            }
+        };
 
-        public function test_render_filter_outputs_attachment_dropdown_in_media_bar(): void
-        {
-            $filter = new class() extends PostTypeMonthFilter {
-                public function monthOptions(string $postType): array
-                {
-                    return [
-                        [
-                            'value' => '140412',
-                            'label' => 'اسفند ۱۴۰۴',
-                        ],
-                    ];
-                }
-            };
+        ob_start();
+        $filter->renderFilter('post', 'top');
+        $output = (string) ob_get_clean();
 
-            ob_start();
-            $filter->renderFilter('attachment', 'bar');
-            $output = (string) ob_get_clean();
+        $this->assertStringContainsString('name="persian_kit_jalali_month"', $output);
+        $this->assertStringContainsString('All dates', $output);
+        $this->assertStringContainsString('فروردین ۱۴۰۵', $output);
+        $this->assertStringContainsString('selected="selected"', $output);
+    }
 
-            $this->assertStringContainsString('name="persian_kit_jalali_month"', $output);
-            $this->assertStringContainsString('اسفند ۱۴۰۴', $output);
-        }
+    public function test_render_filter_outputs_attachment_dropdown_in_media_bar(): void
+    {
+        $filter = new class() extends PostTypeMonthFilter {
+            public function monthOptions(string $postType): array
+            {
+                return [
+                    [
+                        'value' => '140412',
+                        'label' => 'اسفند ۱۴۰۴',
+                    ],
+                ];
+            }
+        };
+
+        ob_start();
+        $filter->renderFilter('attachment', 'bar');
+        $output = (string) ob_get_clean();
+
+        $this->assertStringContainsString('name="persian_kit_jalali_month"', $output);
+        $this->assertStringContainsString('اسفند ۱۴۰۴', $output);
+    }
+
+    public function test_distinct_post_days_are_cached_until_posts_change(): void
+    {
+        $cache = [];
+        Functions\when('wp_cache_get_last_changed')->justReturn('123');
+        Functions\when('wp_cache_get')->alias(function (string $key) use (&$cache) {
+            return $cache[$key] ?? false;
+        });
+        Functions\when('wp_cache_set')->alias(function (string $key, $value) use (&$cache) {
+            $cache[$key] = $value;
+            return true;
+        });
+
+        $wpdb = \Mockery::mock('wpdb');
+        $wpdb->posts = 'wp_posts';
+        $wpdb->shouldReceive('prepare')->once()->andReturn('SELECT ...');
+        $wpdb->shouldReceive('get_col')->once()->andReturn(['2026-03-21', '2026-02-01']);
+        $GLOBALS['wpdb'] = $wpdb;
+
+        $filter = new class extends PostTypeMonthFilter {
+            public function days(string $postType): array
+            {
+                return $this->queryDistinctPostDays($postType);
+            }
+        };
+
+        $this->assertSame(['2026-03-21', '2026-02-01'], $filter->days('post'));
+        $this->assertSame(['2026-03-21', '2026-02-01'], $filter->days('post'));
+        $this->assertArrayHasKey('post_days:post:any:123', $cache);
+
+        unset($GLOBALS['wpdb']);
     }
 }

@@ -55,3 +55,34 @@ if (!class_exists('WP_Query')) {
         }
     }
 }
+
+if (!class_exists('WP_Screen')) {
+    class WP_Screen
+    {
+        public string $id = '';
+        public string $base = '';
+        public string $post_type = '';
+    }
+}
+
+if (!class_exists('WP_CLI')) {
+    class WP_CLI
+    {
+        /** @var list<array{0: string, 1: string}> */
+        public static array $messages = [];
+
+        public static function log(string $message): void
+        {
+            self::$messages[] = ['log', $message];
+        }
+
+        public static function success(string $message): void
+        {
+            self::$messages[] = ['success', $message];
+        }
+
+        public static function add_command(string $name, $callable): void
+        {
+        }
+    }
+}

@@ -37,28 +37,53 @@ class DigitConversionModule extends AbstractModule
 
     public function boot(ServiceContainer $container): void
     {
-        $this->registerFilter('the_content', [self::class, 'convertContent']);
-        $this->registerFilter('the_title', [DigitConverter::class, 'toPersian']);
-        $this->registerFilter('the_excerpt', [self::class, 'convertContent']);
-        $this->registerFilter('get_the_excerpt', [self::class, 'convertContent']);
-        $this->registerFilter('comment_text', [self::class, 'convertContent']);
-        $this->registerFilter('widget_text', [self::class, 'convertContent']);
-        $this->registerFilter('widget_text_content', [self::class, 'convertContent']);
-        $this->registerFilter('human_time_diff', [DigitConverter::class, 'toPersian']);
+        if (!$this->isFrontendRequest()) {
+            return;
+        }
 
-        $this->registerFilter('get_the_terms', function ($terms) {
-            if (!is_array($terms)) {
-                return $terms;
-            }
+        $this->registerFilter('the_content', [$this, 'filterContent']);
+        $this->registerFilter('the_title', [$this, 'filterText']);
+        $this->registerFilter('get_the_excerpt', [$this, 'filterContent']);
+        $this->registerFilter('comment_text', [$this, 'filterContent']);
+        $this->registerFilter('widget_text', [$this, 'filterContent']);
+        $this->registerFilter('widget_text_content', [$this, 'filterContent']);
+        $this->registerFilter('human_time_diff', [$this, 'filterText']);
+        $this->registerFilter('get_the_terms', [$this, 'filterTerms']);
+    }
 
-            foreach ($terms as $term) {
-                if (isset($term->name)) {
-                    $term->name = DigitConverter::toPersian($term->name);
-                }
-            }
+    public function filterContent(?string $html): ?string
+    {
+        return $html === null || $html === '' || !$this->shouldConvertNow() ? $html : self::convertContent($html);
+    }
 
+    public function filterText(?string $text): ?string
+    {
+        return $text === null || $text === '' || !$this->shouldConvertNow() ? $text : DigitConverter::toPersian($text);
+    }
+
+    /**
+     * Renames copies of the terms: the WP_Term objects themselves live in the
+     * object cache and are shared with every other caller.
+     *
+     * @param mixed $terms
+     * @return mixed
+     */
+    public function filterTerms($terms)
+    {
+        if (!is_array($terms) || !$this->shouldConvertNow()) {
             return $terms;
-        });
+        }
+
+        return array_map(static function ($term) {
+            if (!is_object($term) || !isset($term->name) || !is_string($term->name)) {
+                return $term;
+            }
+
+            $term = clone $term;
+            $term->name = DigitConverter::toPersian($term->name);
+
+            return $term;
+        }, $terms);
     }
 
     /**
@@ -72,6 +97,42 @@ class DigitConversionModule extends AbstractModule
         } catch (AbzarException) {
             return $html;
         }
+    }
+
+    /**
+     * Admin screens keep Latin digits; admin-ajax counts as front end only when
+     * the request came from outside wp-admin (infinite scroll, load-more).
+     */
+    private function isFrontendRequest(): bool
+    {
+        if (!is_admin()) {
+            return true;
+        }
+
+        if (!wp_doing_ajax()) {
+            return false;
+        }
+
+        $referer = (string) wp_get_raw_referer();
+
+        return $referer !== '' && !str_starts_with($referer, admin_url());
+    }
+
+    /**
+     * REST responses, feeds and outgoing mail are read by machines or mail
+     * clients, so their digits stay as stored.
+     */
+    private function shouldConvertNow(): bool
+    {
+        if (function_exists('wp_is_serving_rest_request') ? wp_is_serving_rest_request() : (defined('REST_REQUEST') && REST_REQUEST)) {
+            return false;
+        }
+
+        if (isset($GLOBALS['wp_query']) && is_feed()) {
+            return false;
+        }
+
+        return !doing_filter('wp_mail');
     }
 
     private function registerFilter(string $hook, callable $callback): void

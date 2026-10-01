@@ -16,6 +16,8 @@ class AdminFontModuleTest extends TestCase
     {
         parent::setUp();
         Monkey\setUp();
+        Functions\when('get_user_locale')->justReturn('fa_IR');
+        Functions\when('is_rtl')->justReturn(true);
     }
 
     protected function tearDown(): void
@@ -125,6 +127,28 @@ class AdminFontModuleTest extends TestCase
 
         $this->assertStringContainsString('--pk-admin-font', $capturedCss);
         $this->assertStringContainsString('Vazirmatn', $capturedCss);
+    }
+
+    public function test_enqueue_font_skips_non_persian_ltr_admin(): void
+    {
+        Functions\when('get_user_locale')->justReturn('en_US');
+        Functions\when('is_rtl')->justReturn(false);
+        Functions\expect('wp_enqueue_style')->never();
+
+        $this->makeModule()->enqueueFont();
+
+        $this->assertTrue(true);
+    }
+
+    public function test_enqueue_font_loads_for_rtl_admin_in_other_languages(): void
+    {
+        Functions\when('get_user_locale')->justReturn('ar');
+        Functions\expect('wp_enqueue_style')->once();
+        Functions\expect('wp_add_inline_style')->once();
+
+        $this->makeModule()->enqueueFont();
+
+        $this->assertTrue(true);
     }
 
     public function test_sanitize_settings_falls_back_to_known_font(): void

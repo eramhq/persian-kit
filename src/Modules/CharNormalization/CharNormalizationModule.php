@@ -113,7 +113,8 @@ class CharNormalizationModule extends AbstractModule
 
         if (defined('WP_CLI') && WP_CLI) {
             \WP_CLI::add_command('persian-kit normalize', new CLI\NormalizeCommand(
-                $container->get(BatchMigrator::class)
+                $container->get(BatchMigrator::class),
+                $container->get(NormalizationJobManager::class)
             ));
         }
 

@@ -152,8 +152,20 @@ class PostTypeMonthFilter
     {
         global $wpdb;
 
-        $extraChecks = "AND post_status != 'auto-draft'";
         $postStatus = $this->requestedStatus($postType);
+        $cacheKey = sprintf(
+            'post_days:%s:%s:%s',
+            $postType,
+            $postStatus === 'trash' ? 'trash' : 'any',
+            wp_cache_get_last_changed('posts')
+        );
+
+        $cached = wp_cache_get($cacheKey, 'persian_kit');
+        if (is_array($cached)) {
+            return $cached;
+        }
+
+        $extraChecks = "AND post_status != 'auto-draft'";
 
         if ($postStatus !== 'trash') {
             $extraChecks .= " AND post_status != 'trash'";
@@ -172,7 +184,10 @@ class PostTypeMonthFilter
             )
         );
 
-        return array_values(array_filter(array_map('strval', (array) $results)));
+        $days = array_values(array_filter(array_map('strval', (array) $results)));
+        wp_cache_set($cacheKey, $days, 'persian_kit');
+
+        return $days;
     }
 
     protected function supportsPostType(string $postType): bool
