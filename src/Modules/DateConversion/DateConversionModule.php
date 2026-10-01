@@ -62,6 +62,10 @@ class DateConversionModule extends AbstractModule
             return new JalaliArchiveList();
         });
 
+        $container->register(JalaliCalendar::class, function () {
+            return new JalaliCalendar();
+        });
+
         $container->register(RestApiExtension::class, function () {
             return new RestApiExtension();
         });
@@ -101,6 +105,7 @@ class DateConversionModule extends AbstractModule
 
         if ($this->showsJalaliArchives()) {
             $container->get(JalaliArchiveList::class)->register();
+            $container->get(JalaliCalendar::class)->register();
         }
 
         $container->get(RestApiExtension::class)->register();

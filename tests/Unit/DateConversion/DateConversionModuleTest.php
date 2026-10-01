@@ -13,6 +13,7 @@ use PersianKit\Modules\DateConversion\DateArchiveFilter;
 use PersianKit\Modules\DateConversion\DateConversionModule;
 use PersianKit\Modules\DateConversion\DateFilters;
 use PersianKit\Modules\DateConversion\JalaliArchiveList;
+use PersianKit\Modules\DateConversion\JalaliCalendar;
 use PersianKit\Modules\DateConversion\JalaliDateArchive;
 use PersianKit\Modules\DateConversion\MediaAttachmentDateFormatter;
 use PersianKit\Modules\DateConversion\MediaGridDateFilter;
@@ -27,6 +28,7 @@ class DateConversionModuleTest extends TestCase
         DateArchiveFilter::class,
         JalaliDateArchive::class,
         JalaliArchiveList::class,
+        JalaliCalendar::class,
         RestApiExtension::class,
     ];
 
@@ -73,7 +75,9 @@ class DateConversionModuleTest extends TestCase
     {
         Functions\when('is_admin')->justReturn(false);
 
-        $this->assertNotContains(JalaliArchiveList::class, $this->bootAndListFetched(['jalali_archives' => false]));
+        $fetched = $this->bootAndListFetched(['jalali_archives' => false]);
+        $this->assertNotContains(JalaliArchiveList::class, $fetched);
+        $this->assertNotContains(JalaliCalendar::class, $fetched);
         $this->assertContains(JalaliDateArchive::class, $this->bootAndListFetched(['jalali_archives' => false]));
     }
 
@@ -82,7 +86,9 @@ class DateConversionModuleTest extends TestCase
         Functions\when('is_admin')->justReturn(false);
         Filters\expectApplied('persian_kit_jalali_archives')->once()->with(true)->andReturn(false);
 
-        $this->assertNotContains(JalaliArchiveList::class, $this->bootAndListFetched());
+        $fetched = $this->bootAndListFetched();
+        $this->assertNotContains(JalaliArchiveList::class, $fetched);
+        $this->assertNotContains(JalaliCalendar::class, $fetched);
     }
 
     /**

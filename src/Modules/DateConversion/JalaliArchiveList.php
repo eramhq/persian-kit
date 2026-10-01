@@ -222,7 +222,7 @@ class JalaliArchiveList
 
         // The JOIN and WHERE are core's own wp_get_archives() clauses, already
         // prepared and filtered; the result is cached above until posts change.
-        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.PreparedSQL.NotPrepared
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.PreparedSQL.NotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter
         $rows = $wpdb->get_results($query);
 
         $days = [];

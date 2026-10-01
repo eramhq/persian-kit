@@ -374,7 +374,7 @@ Existing slugs are never rewritten. Turn the behavior off with the Persian slugs
 While the Date Conversion module is on, date archive URLs whose year is below 1700 are read as Jalali:
 
 - `/1405/` lists the posts of the Jalali year 1405, `/1405/07/` those of Mehr 1405 (23 September to 22 October 2026), and `/1405/07/09/` those of one day. With plain permalinks, `?m=140507` does the same.
-- Days that do not exist in the Gregorian calendar, such as 31 Shahrivar (`/1404/06/31/`), load; days that do not exist in the Jalali calendar, such as 31 Mehr, are a 404.
+- Days that do not exist in the Gregorian calendar, such as 31 Shahrivar (`/1404/06/31/`), load; days that do not exist in the Jalali calendar, such as 31 Mehr, redirect to the month, as an invalid Gregorian day does.
 - The page is a normal date archive: `is_month()`, `get_query_var('year')`, `get_query_var('monthnum')` and the `$year` and `$monthnum` globals hold the Jalali parts. The title reads "مهر 1405".
 - Gregorian URLs (`/2026/10/`) work as before. Their title names the Jalali months they cover ("مهر – آبان 1405").
 
@@ -388,7 +388,15 @@ With the module's **Show the archive list and calendar in Jalali** option on (`j
 - `limit`, `order`, `format`, `before`, `after`, `show_post_count` and `post_type` work as in core. The entry for the archive being viewed is selected.
 - The list is built from core's own query clauses after `getarchives_where` and `getarchives_join`, so conditions other plugins add there, such as a language plugin's, still apply. Each entry goes through `get_archives_link()` and its filter.
 
-To keep the list Gregorian in code, use the [`persian_kit_jalali_archives`](#persian_kit_jalali_archives) filter.
+### Calendar
+
+With the same option on, `get_calendar()`, and with it the Calendar widget and block, shows a Jalali month:
+
+- On a Jalali month archive, that month. On a Gregorian month archive, or for a Calendar block set to a Gregorian month, the Jalali month in which that Gregorian month starts. Elsewhere, the current month.
+- The table has core's markup (`table#wp-calendar.wp-calendar-table`, `td#today`, `td.pad`, `nav.wp-calendar-nav`), so theme and block styles apply. Weekdays start on the site's **Week Starts On** setting, usually Saturday on Persian sites.
+- Days with posts link to the Jalali day archive; the previous and next links go to the nearest Jalali months with posts. Numbers and month names go through `persian_kit_date_display`.
+
+To keep the list and calendar Gregorian in code, use the [`persian_kit_jalali_archives`](#persian_kit_jalali_archives) filter.
 
 ## WordPress Hooks
 

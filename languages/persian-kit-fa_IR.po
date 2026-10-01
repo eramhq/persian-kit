@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Persian Kit 1.0.0-beta.3\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/persian-kit\n"
-"POT-Creation-Date: 2026-10-01T17:48:56+00:00\n"
+"POT-Creation-Date: 2026-10-01T17:53:23+00:00\n"
 "PO-Revision-Date: 2026-10-01 00:00+0000\n"
 "Last-Translator: Persian Kit contributors\n"
 "Language-Team: Persian (Iran)\n"
@@ -285,6 +285,16 @@ msgstr ""
 msgid "Activity"
 msgstr "فعالیت"
 
+#. translators: Post calendar label. %s: Date.
+#: src/Modules/DateConversion/JalaliCalendar.php:144
+#, php-format
+msgid "Posts published on %s"
+msgstr "نوشته‌های منتشرشده در %s"
+
+#: src/Modules/DateConversion/JalaliCalendar.php:165
+msgid "Previous and next months"
+msgstr "ماه‌های قبل و بعد"
+
 #: src/Modules/DateConversion/JalaliScript.php:32
 msgid "Year"
 msgstr "سال"
@@ -540,8 +550,8 @@ msgid ""
 "The Archives and Calendar widgets and blocks list Jalali months and days, "
 "and link to Jalali archive pages such as /1405/07/."
 msgstr ""
-"ابزارک‌ها و بلوک‌های «بایگانی» و «تقویم» ماه‌ها و روزهای شمسی را نشان "
-"می‌دهند و به برگه‌های بایگانی شمسی، مثل /1405/07/، پیوند می‌دهند."
+"ابزارک‌ها و بلوک‌های «بایگانی» و «تقویم» ماه‌ها و روزهای شمسی را نشان می‌دهند و "
+"به برگه‌های بایگانی شمسی، مثل /1405/07/، پیوند می‌دهند."
 
 #: views/admin/partials/digit-conversion-settings.php:17
 msgid "Dates"

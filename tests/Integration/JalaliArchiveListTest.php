@@ -2,14 +2,13 @@
 
 namespace PersianKit\Tests\Integration;
 
-use PersianKit\Bootstrap;
-use PersianKit\Core\SettingsManager;
-use PersianKit\Modules\DateConversion\DateConversionModule;
-use PersianKit\Modules\DateConversion\JalaliArchiveList;
+use PersianKit\Tests\Integration\Support\BootsDateConversion;
 use PersianKit\Tests\Integration\Support\WordPressIntegrationTestCase;
 
 class JalaliArchiveListTest extends WordPressIntegrationTestCase
 {
+    use BootsDateConversion;
+
     /** @var array<string, int> */
     private array $posts = [];
 
@@ -116,7 +115,7 @@ class JalaliArchiveListTest extends WordPressIntegrationTestCase
 
     public function test_setting_off_keeps_the_gregorian_list(): void
     {
-        $this->bootModuleWith(['jalali_archives' => false]);
+        $this->bootDateConversionWith(['jalali_archives' => false]);
 
         $output = $this->archives();
 
@@ -127,7 +126,7 @@ class JalaliArchiveListTest extends WordPressIntegrationTestCase
     public function test_filter_off_keeps_the_gregorian_list(): void
     {
         add_filter('persian_kit_jalali_archives', '__return_false');
-        $this->bootModuleWith([]);
+        $this->bootDateConversionWith([]);
 
         $this->assertStringContainsString(home_url('/2025/04/'), $this->archives());
     }
@@ -150,28 +149,5 @@ class JalaliArchiveListTest extends WordPressIntegrationTestCase
         preg_match_all("#<li><a href='([^']+)'[^>]*>([^<]+)</a>([^<]*)</li>#u", $output, $matches, PREG_SET_ORDER);
 
         return array_map(static fn (array $match): array => [$match[1], $match[2], $match[3]], $matches);
-    }
-
-    /**
-     * Boot the module again with these settings, without the list the
-     * plugin registered at load. Hooks added here are removed after the test.
-     *
-     * @param array<string, mixed> $values
-     */
-    private function bootModuleWith(array $values): void
-    {
-        $list = Bootstrap::get(JalaliArchiveList::class);
-        remove_filter('getarchives_where', [$list, 'captureWhere'], PHP_INT_MAX);
-        remove_filter('getarchives_join', [$list, 'captureJoin'], PHP_INT_MAX);
-        remove_filter('get_archives_link', [$list, 'filterArchivesLink'], PHP_INT_MAX);
-
-        update_option('persian_kit_settings', [
-            DateConversionModule::key() => array_replace(DateConversionModule::defaults(), $values),
-        ]);
-
-        $settings = new SettingsManager();
-        $settings->registerDefaults(DateConversionModule::key(), DateConversionModule::defaults());
-
-        (new DateConversionModule($settings))->boot(Bootstrap::container());
     }
 }
