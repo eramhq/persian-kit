@@ -1,0 +1,177 @@
+<?php
+
+namespace PersianKit\Tests\Integration;
+
+use PersianKit\Bootstrap;
+use PersianKit\Core\SettingsManager;
+use PersianKit\Modules\DateConversion\DateConversionModule;
+use PersianKit\Modules\DateConversion\JalaliArchiveList;
+use PersianKit\Tests\Integration\Support\WordPressIntegrationTestCase;
+
+class JalaliArchiveListTest extends WordPressIntegrationTestCase
+{
+    /** @var array<string, int> */
+    private array $posts = [];
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        update_option('timezone_string', 'Asia/Tehran');
+        $this->set_permalink_structure('/%year%/%monthnum%/%day%/%postname%/');
+
+        // 29 Esfand 1403, 1 Farvardin 1404 and 5 Ordibehesht 1404.
+        foreach (['esfand' => '2025-03-19 10:00:00', 'farvardin' => '2025-03-21 10:00:00', 'ordibehesht' => '2025-04-25 10:00:00'] as $name => $date) {
+            $this->posts[$name] = self::factory()->post->create(['post_status' => 'publish', 'post_date' => $date]);
+        }
+    }
+
+    public function test_monthly_list_names_jalali_months_with_counts(): void
+    {
+        $output = $this->archives(['show_post_count' => true]);
+
+        $this->assertSame(
+            [
+                [home_url('/1404/02/'), 'اردیبهشت 1404', '&nbsp;(1)'],
+                [home_url('/1404/01/'), 'فروردین 1404', '&nbsp;(1)'],
+                [home_url('/1403/12/'), 'اسفند 1403', '&nbsp;(1)'],
+            ],
+            $this->entries($output)
+        );
+        $this->assertStringNotContainsString('/2025/', $output);
+    }
+
+    public function test_limit_and_order_apply_to_jalali_months(): void
+    {
+        $this->assertSame(['اردیبهشت 1404'], array_column($this->entries($this->archives(['limit' => 1])), 1));
+        $this->assertSame(
+            ['اسفند 1403', 'فروردین 1404', 'اردیبهشت 1404'],
+            array_column($this->entries($this->archives(['order' => 'ASC'])), 1)
+        );
+    }
+
+    public function test_option_format_for_dropdowns(): void
+    {
+        $output = $this->archives(['format' => 'option', 'show_post_count' => true]);
+
+        $this->assertSame(3, substr_count($output, '<option '));
+        $this->assertStringContainsString("<option value='" . home_url('/1404/01/') . "'> فروردین 1404 &nbsp;(1)</option>", $output);
+    }
+
+    public function test_the_current_jalali_month_is_selected(): void
+    {
+        $this->go_to(home_url('/1404/01/'));
+
+        $output = $this->archives();
+
+        $this->assertMatchesRegularExpression("#<a href='" . preg_quote(home_url('/1404/01/'), '#') . "' aria-current=\"page\">فروردین 1404</a>#", $output);
+        $this->assertSame(1, substr_count($output, 'aria-current'));
+    }
+
+    public function test_yearly_and_daily_lists(): void
+    {
+        update_option('date_format', 'j F Y');
+
+        $this->assertSame(
+            [[home_url('/1404/'), '1404', '&nbsp;(2)'], [home_url('/1403/'), '1403', '&nbsp;(1)']],
+            $this->entries($this->archives(['type' => 'yearly', 'show_post_count' => true]))
+        );
+        $this->assertSame(
+            [[home_url('/1404/02/05/'), '5 اردیبهشت 1404', ''], [home_url('/1404/01/01/'), '1 فروردین 1404', ''], [home_url('/1403/12/29/'), '29 اسفند 1403', '']],
+            $this->entries($this->archives(['type' => 'daily']))
+        );
+    }
+
+    public function test_other_plugins_where_clauses_are_kept(): void
+    {
+        $excluded = $this->posts['farvardin'];
+        add_filter('getarchives_where', static fn (string $where): string => $where . ' AND ID != ' . $excluded);
+
+        $this->assertSame(['اردیبهشت 1404', 'اسفند 1403'], array_column($this->entries($this->archives()), 1));
+    }
+
+    public function test_weekly_and_post_lists_are_left_alone(): void
+    {
+        $this->assertStringContainsString('?m=2025', $this->archives(['type' => 'weekly']));
+        $this->assertSame(3, substr_count($this->archives(['type' => 'postbypost']), '<li>'));
+    }
+
+    public function test_later_archive_links_are_not_swallowed(): void
+    {
+        $this->archives();
+
+        $this->assertStringContainsString('/custom/', get_archives_link(home_url('/custom/'), 'Custom'));
+    }
+
+    public function test_archives_block_lists_jalali_months(): void
+    {
+        $list = do_blocks('<!-- wp:archives {"showPostCounts":true} /-->');
+        $dropdown = do_blocks('<!-- wp:archives {"displayAsDropdown":true} /-->');
+
+        $this->assertStringContainsString('اردیبهشت 1404', $list);
+        $this->assertStringContainsString(home_url('/1403/12/'), $list);
+        $this->assertStringNotContainsString('/2025/', $list);
+        $this->assertSame(3, substr_count($dropdown, "<option value='" . home_url('/14')));
+    }
+
+    public function test_setting_off_keeps_the_gregorian_list(): void
+    {
+        $this->bootModuleWith(['jalali_archives' => false]);
+
+        $output = $this->archives();
+
+        $this->assertStringContainsString(home_url('/2025/03/'), $output);
+        $this->assertStringNotContainsString('فروردین', $output);
+    }
+
+    public function test_filter_off_keeps_the_gregorian_list(): void
+    {
+        add_filter('persian_kit_jalali_archives', '__return_false');
+        $this->bootModuleWith([]);
+
+        $this->assertStringContainsString(home_url('/2025/04/'), $this->archives());
+    }
+
+    /**
+     * @param array<string, mixed> $args
+     */
+    private function archives(array $args = []): string
+    {
+        return (string) wp_get_archives(['echo' => false] + $args);
+    }
+
+    /**
+     * [url, text, after] of each list entry.
+     *
+     * @return list<array{string, string, string}>
+     */
+    private function entries(string $output): array
+    {
+        preg_match_all("#<li><a href='([^']+)'[^>]*>([^<]+)</a>([^<]*)</li>#u", $output, $matches, PREG_SET_ORDER);
+
+        return array_map(static fn (array $match): array => [$match[1], $match[2], $match[3]], $matches);
+    }
+
+    /**
+     * Boot the module again with these settings, without the list the
+     * plugin registered at load. Hooks added here are removed after the test.
+     *
+     * @param array<string, mixed> $values
+     */
+    private function bootModuleWith(array $values): void
+    {
+        $list = Bootstrap::get(JalaliArchiveList::class);
+        remove_filter('getarchives_where', [$list, 'captureWhere'], PHP_INT_MAX);
+        remove_filter('getarchives_join', [$list, 'captureJoin'], PHP_INT_MAX);
+        remove_filter('get_archives_link', [$list, 'filterArchivesLink'], PHP_INT_MAX);
+
+        update_option('persian_kit_settings', [
+            DateConversionModule::key() => array_replace(DateConversionModule::defaults(), $values),
+        ]);
+
+        $settings = new SettingsManager();
+        $settings->registerDefaults(DateConversionModule::key(), DateConversionModule::defaults());
+
+        (new DateConversionModule($settings))->boot(Bootstrap::container());
+    }
+}

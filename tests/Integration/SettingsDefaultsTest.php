@@ -67,6 +67,31 @@ class SettingsDefaultsTest extends WordPressIntegrationTestCase
         $this->assertSame(['enabled' => false, 'persian_slugs' => true], get_option('persian_kit_settings')['utilities']);
     }
 
+    public function test_jalali_archives_is_on_for_stored_settings_without_it_and_saved_as_a_boolean(): void
+    {
+        delete_option('persian_kit_settings');
+        remove_all_filters('sanitize_option_persian_kit_settings');
+        update_option('persian_kit_settings', ['date_conversion' => ['enabled' => true, 'global_conversion' => false]]);
+
+        $this->assertTrue($this->settings()->module('date_conversion', 'jalali_archives'));
+        $this->assertMatchesRegularExpression(
+            '/<input type="hidden" name="persian_kit_settings\[date_conversion\]\[jalali_archives\]" value="0">\s*<input\s+type="checkbox"\s+name="persian_kit_settings\[date_conversion\]\[jalali_archives\]"[^>]*checked/s',
+            $this->renderSettingsPage()
+        );
+    }
+
+    public function test_an_unticked_jalali_archives_box_is_saved_as_false(): void
+    {
+        update_option('persian_kit_settings', $this->formInput([
+            'date_conversion' => ['enabled' => '1', 'global_conversion' => '0', 'jalali_archives' => '0'],
+        ]));
+
+        $this->assertSame(
+            ['enabled' => true, 'global_conversion' => false, 'jalali_archives' => false],
+            get_option('persian_kit_settings')['date_conversion']
+        );
+    }
+
     public function test_bool_options_of_modules_without_their_own_sanitizer_are_booleans(): void
     {
         update_option('persian_kit_settings', $this->formInput([
@@ -88,7 +113,7 @@ class SettingsDefaultsTest extends WordPressIntegrationTestCase
         update_option('persian_kit_settings', ['utilities' => ['enabled' => '0', 'persian_slugs' => '0']]);
 
         $stored = get_option('persian_kit_settings');
-        $this->assertSame(['enabled' => true, 'global_conversion' => true], $stored['date_conversion']);
+        $this->assertSame(['enabled' => true, 'global_conversion' => true, 'jalali_archives' => true], $stored['date_conversion']);
         $this->assertSame(['enabled' => false, 'persian_slugs' => false], $stored['utilities']);
     }
 

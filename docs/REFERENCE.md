@@ -380,6 +380,16 @@ While the Date Conversion module is on, date archive URLs whose year is below 17
 
 Themes that build archive links from the displayed date, such as `get_month_link(get_the_time('Y'), get_the_time('m'))`, get the Jalali archive. `get_year_link()`, `get_month_link()` and `get_day_link()` accept Persian or Arabic digits.
 
+### Archive list
+
+With the module's **Show the archive list and calendar in Jalali** option on (`jalali_archives`, the default), `wp_get_archives()` lists Jalali periods and links to the Jalali archive pages. This covers the Archives widget and block, in list and dropdown form, and themes that call the function. The `monthly`, `yearly` and `daily` types are Jalali; `weekly`, `postbypost` and `alpha` are unchanged.
+
+- Entries read "مهر 1405" (monthly), "1405" (yearly) or the site's date format (daily), and go through `persian_kit_date_display`, so the Digit Conversion **Jalali dates** option applies.
+- `limit`, `order`, `format`, `before`, `after`, `show_post_count` and `post_type` work as in core. The entry for the archive being viewed is selected.
+- The list is built from core's own query clauses after `getarchives_where` and `getarchives_join`, so conditions other plugins add there, such as a language plugin's, still apply. Each entry goes through `get_archives_link()` and its filter.
+
+To keep the list Gregorian in code, use the [`persian_kit_jalali_archives`](#persian_kit_jalali_archives) filter.
+
 ## WordPress Hooks
 
 ### `persian_kit_loaded`
@@ -444,6 +454,14 @@ add_filter('persian_kit_utilities', function (bool $enabled, string $feature) {
 }, 10, 2);
 ```
 
+### `persian_kit_jalali_archives`
+
+Return `false` to keep the archive list and calendar Gregorian, whatever the option says. It is read once, when the module boots, so add it in a theme's `functions.php` or on `persian_kit_loaded`. The Jalali archive pages still work.
+
+```php
+add_filter('persian_kit_jalali_archives', '__return_false');
+```
+
 ### `persian_kit_conflict_policies`
 
 Filters the built-in compatibility guidance for other Persian plugins.
@@ -466,7 +484,7 @@ Settings are stored in the `persian_kit_settings` option, per module under these
 
 | Module key | Settings (new-install default) |
 | --- | --- |
-| `date_conversion` | `enabled` (on), `global_conversion` (off) |
+| `date_conversion` | `enabled` (on), `global_conversion` (off), `jalali_archives` (on) |
 | `digit_conversion` | `enabled` (off), `dates`, `numbers`, `prices` (on) |
 | `char_normalization` | `enabled` (on), `normalize_on_save` (off), `teh_marbuta` (off) |
 | `admin_font` | `enabled` (on), `font` (`vazirmatn`) |

@@ -29,7 +29,7 @@ class DateConversionModule extends AbstractModule
      */
     public static function defaults(): array
     {
-        return ['enabled' => true, 'global_conversion' => false];
+        return ['enabled' => true, 'global_conversion' => false, 'jalali_archives' => true];
     }
 
     public function register(ServiceContainer $container): void
@@ -58,6 +58,10 @@ class DateConversionModule extends AbstractModule
             return new JalaliDateArchive();
         });
 
+        $container->register(JalaliArchiveList::class, function () {
+            return new JalaliArchiveList();
+        });
+
         $container->register(RestApiExtension::class, function () {
             return new RestApiExtension();
         });
@@ -81,6 +85,7 @@ class DateConversionModule extends AbstractModule
         return [
             'enabled'           => !empty($values['enabled']),
             'global_conversion' => !empty($values['global_conversion']),
+            'jalali_archives'   => !empty($values['jalali_archives']),
         ];
     }
 
@@ -93,6 +98,11 @@ class DateConversionModule extends AbstractModule
         $filters->registerAdminFilters();
         $container->get(DateArchiveFilter::class)->register();
         $container->get(JalaliDateArchive::class)->register();
+
+        if ($this->showsJalaliArchives()) {
+            $container->get(JalaliArchiveList::class)->register();
+        }
+
         $container->get(RestApiExtension::class)->register();
 
         // Admin screens, admin-ajax (the media grid) and admin-post only.
@@ -103,5 +113,14 @@ class DateConversionModule extends AbstractModule
             $container->get(MediaGridDateFilter::class)->register();
             $container->get(AdminDateScript::class)->register();
         }
+    }
+
+    /**
+     * Whether the archive list and calendar show Jalali periods. The Jalali
+     * archive pages work either way.
+     */
+    private function showsJalaliArchives(): bool
+    {
+        return (bool) $this->setting('jalali_archives') && (bool) apply_filters('persian_kit_jalali_archives', true);
     }
 }

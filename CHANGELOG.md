@@ -15,6 +15,7 @@ All notable changes to this project will be documented in this file.
 ### Jalali archives
 
 - Jalali date archive pages: `/1405/07/` lists exactly the posts of Mehr 1405, `/1405/` those of the Jalali year and `/1405/07/09/` those of one day (`?m=140507` with plain permalinks). A year below 1700 is read as Jalali; Gregorian archive URLs work as before. The title of a Jalali archive names its period ("مهر 1405"). 31 Shahrivar and the other days past the 30th of a Gregorian month no longer 404 or redirect.
+- The archive list is Jalali: `wp_get_archives()`, and with it the Archives widget and block (list and dropdown), lists Jalali months ("مهر 1405"), years or days with their post counts, linked to the Jalali archive pages. `limit`, `order`, `format`, `show_post_count` and `post_type` work as before, and conditions other plugins add through `getarchives_where` are kept. A new option under Date Conversion, "Show the archive list and calendar in Jalali", is on by default, also for existing sites; the `persian_kit_jalali_archives` filter turns it off in code.
 - Changed: date links built from Jalali parts, such as `get_month_link(get_the_time('Y'), get_the_time('m'))` in a theme, now lead to the Jalali archive (`/1403/12/`) instead of redirecting to a Gregorian month (`/2025/03/`).
 
 ### Robustness

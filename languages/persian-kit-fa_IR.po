@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Persian Kit 1.0.0-beta.3\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/persian-kit\n"
-"POT-Creation-Date: 2026-10-01T15:04:51+00:00\n"
+"POT-Creation-Date: 2026-10-01T17:48:56+00:00\n"
 "PO-Revision-Date: 2026-10-01 00:00+0000\n"
 "Last-Translator: Persian Kit contributors\n"
 "Language-Team: Persian (Iran)\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. Plugin Name of the plugin
-#: persian-kit.php src/Core/AdminPage.php:62 src/Core/AdminPage.php:63
+#: persian-kit.php src/Core/AdminPage.php:61 src/Core/AdminPage.php:62
 #: src/Core/ConflictDetector.php:144 src/Service/Assets/AssetManager.php:45
 #: views/admin/settings.php:21
 msgid "Persian Kit"
@@ -46,11 +46,11 @@ msgstr ""
 msgid "https://flavor.dev"
 msgstr ""
 
-#: src/Core/AdminPage.php:54
+#: src/Core/AdminPage.php:53
 msgid "Settings"
 msgstr "تنظیمات"
 
-#: src/Core/AdminPage.php:108 src/Core/AdminPage.php:146
+#: src/Core/AdminPage.php:107
 msgid "You do not have permission to access this page."
 msgstr "شما اجازهٔ دسترسی به این صفحه را ندارید."
 
@@ -163,7 +163,7 @@ msgid "Some WooCommerce date display and email formatting"
 msgstr "بخشی از نمایش تاریخ‌ها و ایمیل‌های ووکامرس"
 
 #: src/Core/ConflictDetector.php:77
-#: views/admin/partials/date-conversion-settings.php:25
+#: views/admin/partials/date-conversion-settings.php:27
 msgid "Convert all dates (advanced)"
 msgstr "تبدیل همهٔ تاریخ‌ها (پیشرفته)"
 
@@ -267,7 +267,7 @@ msgid "Choose at least one public post type."
 msgstr "دست‌کم یک نوع نوشتهٔ عمومی را انتخاب کنید."
 
 #. translators: 1: start of a date range, 2: end of a date range.
-#: src/Modules/DateConversion/DateArchiveFilter.php:138
+#: src/Modules/DateConversion/DateArchiveFilter.php:163
 #, php-format
 msgctxt "date range"
 msgid "%1$s – %2$s"
@@ -377,11 +377,11 @@ msgstr ""
 "تا وقتی این بخش روشن است، جست‌وجو هر دو املا را پیدا می‌کند. این کار هیچ "
 "محتوایی را تغییر نمی‌دهد."
 
-#: views/admin/partials/char-normalization-settings.php:38
+#: views/admin/partials/char-normalization-settings.php:39
 msgid "Fix letters when posts are saved"
 msgstr "اصلاح حروف هنگام ذخیرهٔ نوشته‌ها"
 
-#: views/admin/partials/char-normalization-settings.php:41
+#: views/admin/partials/char-normalization-settings.php:42
 msgid ""
 "Replaces Arabic ي and ك with Persian ی and ک, and Arabic-Indic digits with "
 "Persian digits, in the title, excerpt and content of public posts each time "
@@ -391,12 +391,12 @@ msgstr ""
 "را با ی و ک فارسی، و اعداد عربی را با اعداد فارسی جایگزین می‌کند. بلوک‌های کد "
 "و برچسب‌های HTML دست نمی‌خورند."
 
-#: views/admin/partials/char-normalization-settings.php:53
+#: views/admin/partials/char-normalization-settings.php:55
 msgid ""
 "When fixing letters, also replace Arabic Teh Marbuta (ة) with Persian Heh (ه)"
 msgstr "هنگام اصلاح حروف، ة عربی را هم با ه فارسی جایگزین کن"
 
-#: views/admin/partials/char-normalization-settings.php:56
+#: views/admin/partials/char-normalization-settings.php:58
 msgid ""
 "Warning: This may corrupt Arabic or Quranic text. Only enable if your "
 "content is exclusively Persian."
@@ -404,11 +404,11 @@ msgstr ""
 "هشدار: این کار ممکن است متن عربی یا آیه‌های قرآن را خراب کند. فقط وقتی روشنش "
 "کنید که همهٔ محتوای سایت فارسی است."
 
-#: views/admin/partials/char-normalization-settings.php:69
+#: views/admin/partials/char-normalization-settings.php:71
 msgid "Fix existing posts"
 msgstr "اصلاح نوشته‌های موجود"
 
-#: views/admin/partials/char-normalization-settings.php:71
+#: views/admin/partials/char-normalization-settings.php:73
 msgid ""
 "Rewrites posts that are already saved, using the saved settings above. Count "
 "first to see how many posts would change."
@@ -416,27 +416,27 @@ msgstr ""
 "نوشته‌هایی را که قبلاً ذخیره شده‌اند با تنظیمات ذخیره‌شدهٔ بالا بازنویسی می‌کند. "
 "اول بشمارید تا ببینید چند نوشته تغییر می‌کند."
 
-#: views/admin/partials/char-normalization-settings.php:75
+#: views/admin/partials/char-normalization-settings.php:77
 msgid "Post types"
 msgstr "نوع‌های نوشته"
 
-#: views/admin/partials/char-normalization-settings.php:91
+#: views/admin/partials/char-normalization-settings.php:93
 msgid "Count posts to fix"
 msgstr "شمردن نوشته‌هایی که باید اصلاح شوند"
 
-#: views/admin/partials/char-normalization-settings.php:100
+#: views/admin/partials/char-normalization-settings.php:102
 msgid "Resume fixing posts…"
 msgstr "ادامهٔ اصلاح نوشته‌ها…"
 
-#: views/admin/partials/char-normalization-settings.php:101
+#: views/admin/partials/char-normalization-settings.php:103
 msgid "Fix posts…"
 msgstr "اصلاح نوشته‌ها…"
 
-#: views/admin/partials/char-normalization-settings.php:110
+#: views/admin/partials/char-normalization-settings.php:112
 msgid "Start Over"
 msgstr "شروع دوباره"
 
-#: views/admin/partials/char-normalization-settings.php:115
+#: views/admin/partials/char-normalization-settings.php:117
 msgid ""
 "You have unsaved changes. Save your settings before fixing posts, because "
 "the fix uses the saved settings."
@@ -444,11 +444,11 @@ msgstr ""
 "تغییرهای ذخیره‌نشده دارید. پیش از اصلاح نوشته‌ها تنظیمات را ذخیره کنید، چون "
 "اصلاح با تنظیمات ذخیره‌شده انجام می‌شود."
 
-#: views/admin/partials/char-normalization-settings.php:121
+#: views/admin/partials/char-normalization-settings.php:123
 msgid "This changes your saved posts and cannot be undone."
 msgstr "این کار نوشته‌های ذخیره‌شدهٔ شما را تغییر می‌دهد و برگشت‌پذیر نیست."
 
-#: views/admin/partials/char-normalization-settings.php:122
+#: views/admin/partials/char-normalization-settings.php:124
 msgid ""
 "Posts are updated directly in the database, without revisions. Back up your "
 "database before you continue."
@@ -456,27 +456,27 @@ msgstr ""
 "نوشته‌ها مستقیم در پایگاه داده به‌روز می‌شوند و رونوشتی از نسخهٔ قبلی ساخته "
 "نمی‌شود. پیش از ادامه از پایگاه داده پشتیبان بگیرید."
 
-#: views/admin/partials/char-normalization-settings.php:127
+#: views/admin/partials/char-normalization-settings.php:129
 msgid "I have a recent backup of my database"
 msgstr "از پایگاه داده‌ام پشتیبان تازه دارم"
 
-#: views/admin/partials/char-normalization-settings.php:132
+#: views/admin/partials/char-normalization-settings.php:134
 msgid "Fix posts now"
 msgstr "همین حالا اصلاح کن"
 
-#: views/admin/partials/char-normalization-settings.php:135
+#: views/admin/partials/char-normalization-settings.php:137
 msgid "Cancel"
 msgstr "انصراف"
 
-#: views/admin/partials/char-normalization-settings.php:143
+#: views/admin/partials/char-normalization-settings.php:145
 msgid "Posts that would change, by post type"
 msgstr "نوشته‌هایی که تغییر می‌کنند، به تفکیک نوع نوشته"
 
-#: views/admin/partials/char-normalization-settings.php:146
+#: views/admin/partials/char-normalization-settings.php:148
 msgid "Post type"
 msgstr "نوع نوشته"
 
-#: views/admin/partials/char-normalization-settings.php:147
+#: views/admin/partials/char-normalization-settings.php:149
 msgid "Posts to fix"
 msgstr "نوشته‌های نیازمند اصلاح"
 
@@ -500,7 +500,7 @@ msgstr "این افزونه این کارها را انجام می‌دهد:"
 msgid "Recommended Persian Kit settings"
 msgstr "تنظیمات پیشنهادی Persian Kit"
 
-#: views/admin/partials/date-conversion-settings.php:28
+#: views/admin/partials/date-conversion-settings.php:30
 msgid ""
 "By default only post, comment and admin dates are converted. Turn this on "
 "only if your theme or a plugin still shows Gregorian dates, because it "
@@ -510,7 +510,7 @@ msgstr ""
 "فقط وقتی روشن کنید که قالب یا افزونه‌ای هنوز تاریخ میلادی نشان می‌دهد، چون هر "
 "تاریخی را که وردپرس با wp_date() می‌سازد تبدیل می‌کند. اثرهای جانبی شناخته‌شده:"
 
-#: views/admin/partials/date-conversion-settings.php:31
+#: views/admin/partials/date-conversion-settings.php:33
 msgid ""
 "Search engines may read Jalali dates in structured data (JSON-LD) from SEO "
 "plugins."
@@ -518,7 +518,7 @@ msgstr ""
 "موتورهای جست‌وجو ممکن است در داده‌های ساختاریافتهٔ (JSON-LD) افزونه‌های سئو "
 "تاریخ شمسی ببینند."
 
-#: views/admin/partials/date-conversion-settings.php:32
+#: views/admin/partials/date-conversion-settings.php:34
 msgid ""
 "Plugins that read back a date they formatted, such as event, booking or form "
 "plugins, can save or compare the wrong date."
@@ -526,10 +526,22 @@ msgstr ""
 "افزونه‌هایی که تاریخی را که خودشان ساخته‌اند دوباره می‌خوانند، مثل افزونه‌های "
 "رویداد، رزرو یا فرم، ممکن است تاریخ اشتباه ذخیره یا مقایسه کنند."
 
-#: views/admin/partials/date-conversion-settings.php:33
+#: views/admin/partials/date-conversion-settings.php:35
 msgid "Dates in exports and in emails sent by other plugins become Jalali."
 msgstr ""
 "تاریخ‌ها در خروجی‌ها و در ایمیل‌هایی که افزونه‌های دیگر می‌فرستند شمسی می‌شوند."
+
+#: views/admin/partials/date-conversion-settings.php:47
+msgid "Show the archive list and calendar in Jalali"
+msgstr "نمایش فهرست بایگانی و تقویم به تاریخ شمسی"
+
+#: views/admin/partials/date-conversion-settings.php:50
+msgid ""
+"The Archives and Calendar widgets and blocks list Jalali months and days, "
+"and link to Jalali archive pages such as /1405/07/."
+msgstr ""
+"ابزارک‌ها و بلوک‌های «بایگانی» و «تقویم» ماه‌ها و روزهای شمسی را نشان "
+"می‌دهند و به برگه‌های بایگانی شمسی، مثل /1405/07/، پیوند می‌دهند."
 
 #: views/admin/partials/digit-conversion-settings.php:17
 msgid "Dates"
@@ -564,15 +576,15 @@ msgstr ""
 msgid "Also use Persian digits in"
 msgstr "اعداد فارسی در این موارد هم استفاده شود"
 
-#: views/admin/partials/digit-conversion-settings.php:47
+#: views/admin/partials/digit-conversion-settings.php:48
 msgid "Text inside code, <kbd> and <samp> elements keeps its digits."
 msgstr "اعداد داخل کد و عنصرهای <kbd> و <samp> تغییر نمی‌کنند."
 
-#: views/admin/partials/utilities-settings.php:25
+#: views/admin/partials/utilities-settings.php:26
 msgid "Persian slugs"
 msgstr "نامک فارسی"
 
-#: views/admin/partials/utilities-settings.php:28
+#: views/admin/partials/utilities-settings.php:29
 msgid ""
 "Keeps Persian letters in post and term slugs instead of percent-encoding "
 "them, and turns a half-space into \"-\". Other slugs are left to WordPress. "
@@ -622,11 +634,7 @@ msgstr ""
 "هر بخش را روشن یا خاموش کنید و ذخیره کنید. تغییرها بلافاصله روی سایت اعمال "
 "می‌شوند."
 
-#: views/admin/settings.php:28
-msgid "Settings saved."
-msgstr "تنظیمات ذخیره شد."
-
-#: views/admin/settings.php:68
+#: views/admin/settings.php:66
 msgid "Save Settings"
 msgstr "ذخیرهٔ تنظیمات"
 
@@ -654,3 +662,6 @@ msgstr "هیچ نوشته‌ای نیاز به اصلاح ندارد."
 msgid "%1$d post of %2$d checked would change."
 msgid_plural "%1$d posts of %2$d checked would change."
 msgstr[0] "%1$d نوشته از %2$d نوشتهٔ بررسی‌شده تغییر می‌کند."
+
+#~ msgid "Settings saved."
+#~ msgstr "تنظیمات ذخیره شد."
