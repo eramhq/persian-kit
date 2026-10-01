@@ -12,6 +12,7 @@ use PersianKit\Modules\DateConversion\AdminDateScript;
 use PersianKit\Modules\DateConversion\DateArchiveFilter;
 use PersianKit\Modules\DateConversion\DateConversionModule;
 use PersianKit\Modules\DateConversion\DateFilters;
+use PersianKit\Modules\DateConversion\GregorianCalendarMonth;
 use PersianKit\Modules\DateConversion\JalaliArchiveList;
 use PersianKit\Modules\DateConversion\JalaliCalendar;
 use PersianKit\Modules\DateConversion\JalaliDateArchive;
@@ -78,7 +79,8 @@ class DateConversionModuleTest extends TestCase
         $fetched = $this->bootAndListFetched(['jalali_archives' => false]);
         $this->assertNotContains(JalaliArchiveList::class, $fetched);
         $this->assertNotContains(JalaliCalendar::class, $fetched);
-        $this->assertContains(JalaliDateArchive::class, $this->bootAndListFetched(['jalali_archives' => false]));
+        $this->assertContains(JalaliDateArchive::class, $fetched);
+        $this->assertContains(GregorianCalendarMonth::class, $fetched);
     }
 
     public function test_boot_skips_the_jalali_archive_list_when_filtered_off(): void

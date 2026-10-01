@@ -398,6 +398,8 @@ With the same option on, `get_calendar()`, and with it the Calendar widget and b
 
 To keep the list and calendar Gregorian in code, use the [`persian_kit_jalali_archives`](#persian_kit_jalali_archives) filter.
 
+With the option off, the list and calendar are WordPress's own. On a Jalali archive page, the calendar then shows the Gregorian month that overlaps the Jalali month most, the one its last day falls in (`/1405/07/` shows October 2026). This needs WordPress 6.8 or later; on earlier versions the calendar reads the Jalali year as Gregorian and shows an empty month.
+
 ## WordPress Hooks
 
 ### `persian_kit_loaded`

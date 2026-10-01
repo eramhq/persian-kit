@@ -110,6 +110,41 @@ class JalaliCalendarTest extends WordPressIntegrationTestCase
         $this->assertStringNotContainsString('مهر', $calendar);
     }
 
+    public function test_setting_off_shows_the_gregorian_month_of_a_jalali_archive(): void
+    {
+        $this->bootDateConversionWith(['jalali_archives' => false]);
+        // Mehr 1404 runs from 23 September to 22 October 2025.
+        $this->go_to(home_url('/1404/07/'));
+
+        $calendar = $this->calendar();
+
+        $this->assertStringContainsString('<caption>October 2025</caption>', $calendar);
+        $this->assertStringContainsString(home_url('/2025/10/01/'), $calendar);
+        $this->assertSame(1404, (int) $GLOBALS['year']);
+        $this->assertSame(7, (int) $GLOBALS['monthnum']);
+    }
+
+    public function test_setting_off_with_the_m_var(): void
+    {
+        $this->bootDateConversionWith(['jalali_archives' => false]);
+        $this->set_permalink_structure('');
+        $this->go_to(home_url('/?m=140407'));
+
+        $this->assertStringContainsString('<caption>October 2025</caption>', $this->calendar());
+    }
+
+    public function test_classic_calendar_widget_shows_the_jalali_month(): void
+    {
+        $this->go_to(home_url('/1404/07/'));
+
+        ob_start();
+        the_widget('WP_Widget_Calendar', ['title' => '']);
+        $widget = (string) ob_get_clean();
+
+        $this->assertStringContainsString('<caption>مهر 1404</caption>', $widget);
+        $this->assertStringContainsString(home_url('/1404/07/09/'), $widget);
+    }
+
     private function calendar(): string
     {
         return (string) get_calendar(['display' => false]);

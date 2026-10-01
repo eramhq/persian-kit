@@ -66,6 +66,10 @@ class DateConversionModule extends AbstractModule
             return new JalaliCalendar();
         });
 
+        $container->register(GregorianCalendarMonth::class, function () {
+            return new GregorianCalendarMonth();
+        });
+
         $container->register(RestApiExtension::class, function () {
             return new RestApiExtension();
         });
@@ -106,6 +110,8 @@ class DateConversionModule extends AbstractModule
         if ($this->showsJalaliArchives()) {
             $container->get(JalaliArchiveList::class)->register();
             $container->get(JalaliCalendar::class)->register();
+        } else {
+            $container->get(GregorianCalendarMonth::class)->register();
         }
 
         $container->get(RestApiExtension::class)->register();

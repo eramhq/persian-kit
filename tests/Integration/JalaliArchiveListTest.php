@@ -113,6 +113,21 @@ class JalaliArchiveListTest extends WordPressIntegrationTestCase
         $this->assertSame(3, substr_count($dropdown, "<option value='" . home_url('/14')));
     }
 
+    public function test_classic_archives_widget_lists_jalali_months(): void
+    {
+        ob_start();
+        the_widget('WP_Widget_Archives', ['count' => 1]);
+        $list = (string) ob_get_clean();
+
+        ob_start();
+        the_widget('WP_Widget_Archives', ['dropdown' => 1]);
+        $dropdown = (string) ob_get_clean();
+
+        $this->assertSame(['اردیبهشت 1404', 'فروردین 1404', 'اسفند 1403'], array_column($this->entries($list), 1));
+        $this->assertStringNotContainsString('/2025/', $list);
+        $this->assertSame(3, substr_count($dropdown, "<option value='" . home_url('/14')));
+    }
+
     public function test_setting_off_keeps_the_gregorian_list(): void
     {
         $this->bootDateConversionWith(['jalali_archives' => false]);
