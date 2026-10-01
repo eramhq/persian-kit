@@ -68,6 +68,12 @@ All notable changes to this project will be documented in this file.
 - PHPUnit configuration migrated to the 10.5 schema; integration tests use `phpunit-integration.xml.dist` for WordPress's PHPUnit 9.6 runner.
 - Dev dependencies: wp-scoper 1.4.2, PHPUnit 10.5.65, Mockery 1.6.15, Alpine.js 3.17, Vazirmatn 5.3, Vite 6.4.3.
 
+### Documentation
+
+- `docs/REFERENCE.md` and `docs/UTILITIES.md` describe abzar's `ValidationResult`: `detail()` returns an object with read-only properties (`->details()` no longer exists), plus `warnings()`, `errorCodes()` and `isStrictlyValid()`.
+- Documented the nine helpers added in 1.0.0-beta.1, the `persian_kit_utilities` filter and the Persian slug behavior. Formatters are documented as throwing `FormatException` (a `RuntimeException`).
+- `README.md` lists the 1.0.0 release and WordPress 6.5+; `docs/DEVELOPMENT.md` covers PHPStan, PHPCS, CI and the release checklist.
+
 ## [1.0.0-beta.1] - 2026-04-17
 
 - Replaced the plugin's internal Persian utility classes with the `eram/abzar` library.

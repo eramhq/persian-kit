@@ -7,9 +7,11 @@ This guide is for developers integrating Persian Kit utilities into themes, plug
 Use the utility layer when you need one of these behaviors in your own code:
 
 - Normalize user-entered Persian text before storage or comparison
-- Validate Iranian identifiers and bank-related inputs
+- Validate Iranian identifiers, bank details, postal codes, licence plates and bill IDs
 - Generate Persian-safe slugs
-- Render Persian numeric or relative-time strings
+- Render Persian numbers, currency amounts or relative-time strings
+- Fix half-spaces and text typed with the wrong keyboard layout
+- Sort lists in Persian alphabetical order
 - Detect whether text is Persian or Arabic
 
 These helpers are most useful when your own code handles user input outside the plugin's built-in WordPress hooks.
@@ -29,7 +31,7 @@ if (!$result->isValid()) {
     );
 }
 
-$mobile = $result->details()['normalized_e164'];
+$mobile = $result->detail()->normalizedE164;
 ```
 
 Use this pattern for:
@@ -60,7 +62,7 @@ Prefer:
 $result = pk_validate_card_number($input);
 
 if ($result->isValid()) {
-    $bank = $result->details()['bank'];
+    $bank = $result->detail()?->bank; // null when the BIN isn't listed
 }
 ```
 
@@ -70,9 +72,7 @@ Do not infer validity from formatter output alone.
 
 ### Validators
 
-All validators return `ValidationResult` instead of throwing for common invalid user input.
-
-That means they are safe to use directly in request handlers.
+All validators return abzar's `ValidationResult` instead of throwing for invalid user input, so they are safe to use directly in request handlers.
 
 Current validators:
 
@@ -81,54 +81,50 @@ Current validators:
 - `pk_validate_phone`
 - `pk_validate_card_number`
 - `pk_validate_iban`
+- `pk_validate_postal_code`
+- `pk_validate_plate_number`
+- `pk_validate_bill_id`
 
-#### Detail payloads
+#### Details
 
-`pk_validate_national_id`:
+`$result->detail()` returns an object with read-only properties, or `null`. Call `jsonSerialize()` on it when you need an array.
 
-- `city_code`
-- `city`
-- `province`
+| Helper | Detail properties |
+| --- | --- |
+| `pk_validate_national_id` | `value`, `cityCode`, `city`, `province` |
+| `pk_validate_legal_id` | `value` |
+| `pk_validate_phone` | `type`, `normalizedLocal`, `normalizedE164`, `operator`, `areaCode`, `city`, `province` |
+| `pk_validate_card_number` | `value`, `bin`, `bank` |
+| `pk_validate_iban` | `value`, `bankCode`, `bank` |
+| `pk_validate_postal_code` | `postalCode`, `zoneCode` |
+| `pk_validate_plate_number` | `twoDigit`, `letter`, `threeDigit`, `cityCode`, `type`, `province`, `provinces` |
+| `pk_validate_bill_id` | `billId`, `paymentId`, `type` |
 
-`pk_validate_phone`:
+#### Warnings
 
-- `normalized_local`
-- `normalized_e164`
-- `operator`
-- `type`
-
-`pk_validate_card_number`:
-
-- `bank`
-- `bin`
-
-`pk_validate_iban`:
-
-- `bank_code`
-- `bank`
-
-`pk_validate_legal_id`:
-
-- no detail payload currently
+Well-formed, checksum-valid input is valid even when a lookup fails: an unlisted national-ID city prefix, IBAN bank code or landline area code. The result then carries a warning (`warnings()`, `warningCodes()`) and the lookup property is `null`. Use `isStrictlyValid()` when you need every lookup to resolve.
 
 ### Formatters
 
-These helpers are stricter and may throw exceptions when the input is malformed:
+These helpers are stricter and throw abzar's `FormatException` when the input is malformed:
 
 - `pk_number_format`
+- `pk_number_to_words`
 - `pk_time_ago`
 - `pk_ordinal_word`
 - `pk_ordinal_short`
 
-Wrap them when the source input is user-controlled:
+`FormatException` extends `\RuntimeException`. Wrap these helpers when the input is user-controlled:
 
 ```php
 try {
     $formatted = pk_number_format($userValue, '٬');
-} catch (\InvalidArgumentException $e) {
+} catch (\RuntimeException $e) {
     $formatted = null;
 }
 ```
+
+`pk_words_to_number` doesn't throw; it returns `null` for text that isn't a number. The currency helpers throw `InvalidArgumentException` for a unit other than `toman` or `rial`.
 
 ### Text helpers
 
@@ -151,7 +147,7 @@ $result = pk_validate_phone($_POST['billing_mobile'] ?? '');
 if (!$result->isValid()) {
     wc_add_notice(implode(' ', $result->errors()), 'error');
 } else {
-    $_POST['billing_mobile'] = $result->details()['normalized_local'];
+    $_POST['billing_mobile'] = $result->detail()->normalizedLocal;
 }
 ```
 
@@ -167,8 +163,22 @@ update_post_meta($postId, '_searchable_value', $searchable);
 ### Generate a Persian-preserving slug outside the post editor
 
 ```php
-$slug = pk_slug($label);
+$slug = pk_slug($label); // a ZWNJ becomes "-"
 ```
+
+### Show a price in toman
+
+```php
+echo esc_html(pk_currency_format($priceInToman)); // ۱،۵۰۰،۰۰۰ تومان
+```
+
+### Sort terms by their Persian names
+
+```php
+$sorted = pk_persian_sort($terms, static fn (WP_Term $term): string => $term->name);
+```
+
+This needs the `intl` extension for correct Persian order; without it the sort falls back to byte order.
 
 ### Render a relative timestamp in Persian
 
@@ -180,7 +190,7 @@ echo esc_html(pk_time_ago(get_post_timestamp($post)));
 
 ### Validation strings are Persian
 
-Current error messages are Persian-language strings. If your integration needs machine-readable error codes, map them in your own adapter layer.
+Error and warning messages are Persian strings. For machine-readable results use `errorCodes()` and `warningCodes()`, which return abzar `ErrorCode` enum cases.
 
 ### `pk_normalize_persian` is intentionally narrower than full content normalization
 

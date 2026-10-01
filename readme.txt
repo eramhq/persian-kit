@@ -70,13 +70,23 @@ No. WooCommerce features only activate when WooCommerce is installed and active.
 
 = 1.0.0 =
 * First WordPress.org release.
-* Switched core utilities to the `eram/abzar` and `eram/daynum` libraries.
+* Switched core utilities to the `eram/abzar` (0.8) and `eram/daynum` (1.0.0-beta.3) libraries.
 * Added `pk_*` helpers: `pk_currency_format`, `pk_currency_convert`, `pk_words_to_number`, `pk_validate_postal_code`, `pk_validate_plate_number`, `pk_validate_bill_id`, `pk_half_space_fix`, `pk_keyboard_fix`, `pk_persian_sort`.
-* Declared WooCommerce HPOS compatibility.
-* Hardened WooCommerce classic admin date handling.
+* Persian slugs turn a half-space (ZWNJ) into `-`. Slugs saved by earlier versions keep working, and posts created before activation load again.
+* Latin slugs and WooCommerce attribute names (`pa_color`) are left to WordPress, which fixes attributes being renamed to `pa-color`.
+* Fixed: feeds (RSS, Atom) showed Jalali dates.
+* Fixed: post and comment times were off by the site's timezone offset, so late-evening comments showed the next day.
+* Fixed: drafts showed year −1, and the dashboard Activity widget and WooCommerce dates added the timezone offset twice.
+* Fixed: `the_date()` printed the date for every post instead of once per day.
+* Digit conversion no longer runs in the admin, REST API, feeds or outgoing email.
+* WooCommerce: one Jalali month filter per orders screen (HPOS and legacy); declared HPOS compatibility.
+* The admin font loads only for Persian or right-to-left admin languages.
+* Batch normalization no longer resumes by itself when the settings page opens; WP-CLI and the settings page share progress.
+* Uninstalling removes all Persian Kit options, on every site in a network.
+* All interface text is translatable, including JavaScript strings.
 * Added Jalali media library date filters.
 
 == Upgrade Notice ==
 
 = 1.0.0 =
-First WordPress.org release.
+First WordPress.org release. Fixes Jalali dates in feeds and timezone offsets. New Persian slugs use "-" instead of a half-space; existing URLs keep working.
