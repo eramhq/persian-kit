@@ -4,20 +4,20 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "3980e9be29bd4ca4f36c656c754bac4a",
+    "content-hash": "1f6d9014fe7cbd5503def46ebecdf734",
     "packages": [
         {
             "name": "eram/abzar",
-            "version": "0.5.0-beta",
+            "version": "0.8.0-beta",
             "source": {
                 "type": "git",
                 "url": "https://github.com/eramhq/abzar-php.git",
-                "reference": "b2a4a5e3e32241ad3fbf8fc4c394d3831b7d63b6"
+                "reference": "1cbf980e8c82a4b7195b7ca2b10fbbc5e537c62d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/eramhq/abzar-php/zipball/b2a4a5e3e32241ad3fbf8fc4c394d3831b7d63b6",
-                "reference": "b2a4a5e3e32241ad3fbf8fc4c394d3831b7d63b6",
+                "url": "https://api.github.com/repos/eramhq/abzar-php/zipball/1cbf980e8c82a4b7195b7ca2b10fbbc5e537c62d",
+                "reference": "1cbf980e8c82a4b7195b7ca2b10fbbc5e537c62d",
                 "shasum": ""
             },
             "require": {
@@ -32,7 +32,7 @@
                 "phpunit/phpunit": "^10.5"
             },
             "suggest": {
-                "eramhq/daynum": "Jalali / Shamsi calendar utilities (date parsing, month names, conversions) — companion to abzar.",
+                "eram/daynum": "Jalali / Shamsi calendar utilities (date parsing, month names, conversions) — companion to abzar.",
                 "ext-intl": "Required for PersianCollator and CharNormalizer::normalizeToNfc (Unicode NFC normalization); everything else is pure PHP."
             },
             "type": "library",
@@ -45,45 +45,59 @@
             "license": [
                 "MIT"
             ],
-            "description": "Zero-runtime-dependency Persian (Farsi) utility toolkit for PHP 8.1+: validators (national ID, IBAN, bank card, phone), formatters (number-to-words, time-ago, ordinals), text utilities (slug, script detection, char normalization), and digit conversion.",
+            "description": "Zero-runtime-dependency Persian (Farsi) toolkit for PHP 8.1+: validators for national ID, legal ID, bank card, Sheba/IBAN, phone, postal code, bill ID and license plate; Toman/Rial money with an Amount value object; formatters (number to words and back, ordinals, time-ago); text tools (slug, script detection, character normalization, ZWNJ half-space, keyboard-layout fix) and digit conversion.",
             "homepage": "https://github.com/eramhq/abzar-php",
             "keywords": [
                 "IBAN",
+                "License-plate",
+                "bill-id",
+                "card-number",
                 "digit-conversion",
                 "farsi",
                 "iran",
+                "keyboard-layout",
+                "money",
                 "national-id",
                 "number-to-words",
+                "ordinal",
                 "persian",
+                "persian-digits",
                 "phone",
+                "postal-code",
+                "rial",
+                "sheba",
                 "slug",
+                "toman",
                 "utilities",
-                "validation"
+                "validation",
+                "words-to-number",
+                "zwnj"
             ],
             "support": {
                 "issues": "https://github.com/eramhq/abzar-php/issues",
                 "source": "https://github.com/eramhq/abzar-php"
             },
-            "time": "2026-04-17T05:24:48+00:00"
+            "time": "2026-10-01T09:14:38+00:00"
         },
         {
             "name": "eram/daynum",
-            "version": "v1.0.0-beta.1",
+            "version": "v1.0.0-beta.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/eramhq/daynum.git",
-                "reference": "5b4222aeaffc391c34ded992731dfd483c4c83bf"
+                "reference": "aad2084cbc7f4f97db4509f04e82a29ce66b711e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/eramhq/daynum/zipball/5b4222aeaffc391c34ded992731dfd483c4c83bf",
-                "reference": "5b4222aeaffc391c34ded992731dfd483c4c83bf",
+                "url": "https://api.github.com/repos/eramhq/daynum/zipball/aad2084cbc7f4f97db4509f04e82a29ce66b711e",
+                "reference": "aad2084cbc7f4f97db4509f04e82a29ce66b711e",
                 "shasum": ""
             },
             "require": {
                 "php": ">=8.1"
             },
             "require-dev": {
+                "friendsofphp/php-cs-fixer": "^3.95",
                 "phpstan/phpstan": "^2.1",
                 "phpunit/phpunit": "^10.5"
             },
@@ -120,7 +134,7 @@
                 "issues": "https://github.com/eramhq/daynum/issues",
                 "source": "https://github.com/eramhq/daynum"
             },
-            "time": "2026-04-12T07:07:55+00:00"
+            "time": "2026-10-01T09:20:39+00:00"
         }
     ],
     "packages-dev": [
@@ -2914,16 +2928,16 @@
         },
         {
             "name": "veronalabs/wp-scoper",
-            "version": "1.2.6",
+            "version": "1.4.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/veronalabs/wp-scoper.git",
-                "reference": "214fee917ac4bbcf54237e4021fe9fa86670027a"
+                "reference": "081666ede7540ca52d67aca20bc698f62a0a571f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/veronalabs/wp-scoper/zipball/214fee917ac4bbcf54237e4021fe9fa86670027a",
-                "reference": "214fee917ac4bbcf54237e4021fe9fa86670027a",
+                "url": "https://api.github.com/repos/veronalabs/wp-scoper/zipball/081666ede7540ca52d67aca20bc698f62a0a571f",
+                "reference": "081666ede7540ca52d67aca20bc698f62a0a571f",
                 "shasum": ""
             },
             "require": {
@@ -2962,9 +2976,9 @@
             "description": "A Composer plugin that prefixes namespaces in WordPress plugin dependencies to prevent conflicts",
             "support": {
                 "issues": "https://github.com/veronalabs/wp-scoper/issues",
-                "source": "https://github.com/veronalabs/wp-scoper/tree/v1.2.6"
+                "source": "https://github.com/veronalabs/wp-scoper/tree/v1.4.2"
             },
-            "time": "2026-04-18T05:19:28+00:00"
+            "time": "2026-07-21T20:35:44+00:00"
         },
         {
             "name": "yoast/phpunit-polyfills",
@@ -3045,5 +3059,5 @@
     "platform-overrides": {
         "php": "8.1"
     },
-    "plugin-api-version": "2.6.0"
+    "plugin-api-version": "2.9.0"
 }

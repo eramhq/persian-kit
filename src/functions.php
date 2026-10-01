@@ -1,14 +1,14 @@
 <?php
 
-use PersianKit\Dependencies\Eram\Abzar\AbzarEnvironmentException;
 use PersianKit\Dependencies\Eram\Abzar\Digits\DigitConverter;
-use PersianKit\Dependencies\Eram\Abzar\Format\Currency;
-use PersianKit\Dependencies\Eram\Abzar\Format\CurrencyUnit;
+use PersianKit\Dependencies\Eram\Abzar\Exception\EnvironmentException;
 use PersianKit\Dependencies\Eram\Abzar\Format\NumberFormatter;
 use PersianKit\Dependencies\Eram\Abzar\Format\NumberToWords;
 use PersianKit\Dependencies\Eram\Abzar\Format\OrdinalNumber;
 use PersianKit\Dependencies\Eram\Abzar\Format\TimeAgo;
 use PersianKit\Dependencies\Eram\Abzar\Format\WordsToNumber;
+use PersianKit\Dependencies\Eram\Abzar\Money\Currency;
+use PersianKit\Dependencies\Eram\Abzar\Money\Unit;
 use PersianKit\Dependencies\Eram\Abzar\Text\CharNormalizer;
 use PersianKit\Dependencies\Eram\Abzar\Text\HalfSpaceFixer;
 use PersianKit\Dependencies\Eram\Abzar\Text\KeyboardFixer;
@@ -108,7 +108,7 @@ function pk_persian_sort(array $items, ?callable $key = null): array
         return $key === null
             ? $collator->sort($items)
             : $collator->sortBy($items, $key);
-    } catch (AbzarEnvironmentException) {
+    } catch (EnvironmentException) {
         if ($key === null) {
             sort($items);
             return $items;
@@ -148,8 +148,16 @@ function pk_ordinal_word(int $n): string
     return OrdinalNumber::toWord($n);
 }
 
-function pk_ordinal_short(int $n, string $digits = 'persian'): string
+/**
+ * @param bool|string $digits true for Persian digits, false for English. The legacy
+ *                            strings 'persian' / 'english' are still accepted.
+ */
+function pk_ordinal_short(int $n, bool|string $digits = true): string
 {
+    if (is_string($digits)) {
+        $digits = strtolower($digits) !== 'english';
+    }
+
     return OrdinalNumber::toShort($n, $digits);
 }
 
@@ -175,11 +183,11 @@ function pk_currency_convert(int|float $amount, string $from, string $to): int|f
 /**
  * @internal
  */
-function pk_currency_unit(string $unit): CurrencyUnit
+function pk_currency_unit(string $unit): Unit
 {
     return match (strtolower($unit)) {
-        'toman' => CurrencyUnit::TOMAN,
-        'rial'  => CurrencyUnit::RIAL,
+        'toman' => Unit::TOMAN,
+        'rial'  => Unit::RIAL,
         default => throw new \InvalidArgumentException(
             sprintf('Unknown currency unit "%s". Use "toman" or "rial".', $unit)
         ),

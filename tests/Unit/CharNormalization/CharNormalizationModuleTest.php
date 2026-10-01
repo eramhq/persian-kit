@@ -10,9 +10,13 @@ use Mockery;
 use PersianKit\Core\SettingsManager;
 use PersianKit\Modules\CharNormalization\CharNormalizationModule;
 use PersianKit\Container\ServiceContainer;
+use PersianKit\Dependencies\Eram\Abzar\Text\CharNormalizer;
+use PersianKit\Tests\Unit\Support\FailsPcre;
 
 class CharNormalizationModuleTest extends TestCase
 {
+    use FailsPcre;
+
     protected function setUp(): void
     {
         parent::setUp();
@@ -119,5 +123,30 @@ class CharNormalizationModuleTest extends TestCase
         $this->bootModule();
 
         $this->assertTrue(has_action('rest_api_init'));
+    }
+
+    public function test_insert_post_data_saves_unsegmentable_content_unchanged(): void
+    {
+        $callback = null;
+        Filters\expectAdded('wp_insert_post_data')->once()->whenHappen(function ($cb) use (&$callback) {
+            $callback = $cb;
+        });
+        Functions\when('get_post_type_object')->justReturn((object) ['public' => true]);
+
+        $container = Mockery::mock(ServiceContainer::class);
+        $container->shouldReceive('register')->andReturnSelf();
+        $container->shouldReceive('get')->with(CharNormalizer::class)->andReturn(new CharNormalizer());
+        $container->shouldReceive('get')->andReturn(Mockery::mock());
+
+        $this->makeModule()->boot($container);
+
+        $html = self::unsegmentableHtml();
+        $data = self::withFailingPcre(fn () => $callback(
+            ['post_type' => 'post', 'post_status' => 'publish', 'post_title' => 'كتاب', 'post_content' => $html],
+            []
+        ));
+
+        $this->assertSame('کتاب', $data['post_title']);
+        $this->assertSame($html, $data['post_content']);
     }
 }

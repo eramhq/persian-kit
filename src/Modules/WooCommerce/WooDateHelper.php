@@ -2,7 +2,7 @@
 
 namespace PersianKit\Modules\WooCommerce;
 
-use PersianKit\Dependencies\Eram\Daynum\Instant;
+use PersianKit\Dependencies\Eram\Daynum\CivilDateTime;
 use PersianKit\Dependencies\Eram\Abzar\Digits\DigitConverter;
 
 defined('ABSPATH') || exit;
@@ -24,7 +24,7 @@ class WooDateHelper
             return null;
         }
 
-        $start = Instant::fromJalali($year, $month, 1);
+        $start = CivilDateTime::fromJalali($year, $month, 1);
         $end = $start->jalali()->endOfMonth();
 
         return [
@@ -58,7 +58,7 @@ class WooDateHelper
         }
 
         try {
-            return Instant::fromJalali($year, $month, $day)->toDateTimeImmutable()->format('Y-m-d');
+            return CivilDateTime::fromJalali($year, $month, $day)->toDateTimeImmutable()->format('Y-m-d');
         } catch (\Throwable $exception) {
             return $value;
         }

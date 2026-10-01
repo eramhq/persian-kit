@@ -2,7 +2,7 @@
 
 namespace PersianKit\Modules\DateConversion;
 
-use PersianKit\Dependencies\Eram\Daynum\Instant;
+use PersianKit\Dependencies\Eram\Daynum\CivilDateTime;
 
 defined('ABSPATH') || exit;
 
@@ -86,7 +86,7 @@ class JalaliFormatter
     public static function format(string $format, int|string $timestamp = '', ?\DateTimeZone $timezone = null): string
     {
         $dateTime = self::resolveDateTime($timestamp, $timezone);
-        $instant = Instant::fromDateTime($dateTime);
+        $instant = CivilDateTime::fromDateTime($dateTime);
         $result = self::formatCompat($format, $dateTime, $instant);
 
         return apply_filters('persian_kit_date_display', $result, $format, (int) $dateTime->format('U'), $dateTime->getTimezone());
@@ -126,7 +126,7 @@ class JalaliFormatter
         return $timestamp;
     }
 
-    private static function formatCompat(string $format, \DateTimeInterface $dateTime, Instant $instant): string
+    private static function formatCompat(string $format, \DateTimeInterface $dateTime, CivilDateTime $instant): string
     {
         $jalali = $instant->jalali();
         $year = $jalali->year();

@@ -37,4 +37,6 @@ if (file_exists($wpTestsDir . '/includes/functions.php')) {
     if (file_exists($packagesAutoload)) {
         require_once $packagesAutoload;
     }
+
+    require_once __DIR__ . '/Unit/Support/wp-stubs.php';
 }

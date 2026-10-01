@@ -9,9 +9,12 @@ use Mockery;
 use PersianKit\Dependencies\Eram\Abzar\Text\CharNormalizer;
 use PersianKit\Modules\CharNormalization\BatchMigrator;
 use PersianKit\Modules\CharNormalization\BatchResult;
+use PersianKit\Tests\Unit\Support\FailsPcre;
 
 class BatchMigratorTest extends TestCase
 {
+    use FailsPcre;
+
     private CharNormalizer $normalizer;
 
     protected function setUp(): void
@@ -160,6 +163,51 @@ class BatchMigratorTest extends TestCase
         $this->assertSame(0, $result->processed);
         $this->assertSame(0, $result->modified);
         $this->assertFalse($result->hasMore);
+
+        unset($GLOBALS['wpdb']);
+    }
+
+    public function test_process_batch_skips_post_whose_content_cannot_be_segmented(): void
+    {
+        Functions\expect('get_option')
+            ->with('persian_kit_normalize_cursor', 0)
+            ->andReturn(0);
+
+        Functions\expect('update_option')->once()->with('persian_kit_normalize_cursor', 2, false);
+        Functions\expect('clean_post_cache')->once()->with(2);
+
+        $wpdb = Mockery::mock('wpdb');
+        $wpdb->posts = 'wp_posts';
+        $wpdb->shouldReceive('prepare')->once()->andReturn('SELECT ...');
+        $wpdb->shouldReceive('get_results')->once()->andReturn([
+            (object) [
+                'ID'           => 1,
+                'post_title'   => "كتاب",
+                'post_content' => self::unsegmentableHtml(),
+                'post_excerpt' => '',
+            ],
+            (object) [
+                'ID'           => 2,
+                'post_title'   => "كتاب",
+                'post_content' => 'كتاب',
+                'post_excerpt' => '',
+            ],
+        ]);
+        $wpdb->shouldReceive('update')->once()->with(
+            'wp_posts',
+            Mockery::type('array'),
+            ['ID' => 2],
+            ['%s', '%s', '%s'],
+            ['%d']
+        );
+
+        $GLOBALS['wpdb'] = $wpdb;
+
+        $result = self::withFailingPcre(fn () => $this->makeMigrator()->processBatch(['post'], 2));
+
+        $this->assertSame(2, $result->processed);
+        $this->assertSame(1, $result->modified);
+        $this->assertSame(2, $result->lastId);
 
         unset($GLOBALS['wpdb']);
     }

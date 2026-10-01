@@ -2,7 +2,7 @@
 
 namespace PersianKit\Modules\DateConversion;
 
-use PersianKit\Dependencies\Eram\Daynum\Instant;
+use PersianKit\Dependencies\Eram\Daynum\CivilDateTime;
 use PersianKit\Dependencies\Eram\Abzar\Digits\DigitConverter;
 
 defined('ABSPATH') || exit;
@@ -98,7 +98,7 @@ class PostTypeMonthFilter
 
         foreach ($this->queryDistinctPostDays($postType) as $postDay) {
             try {
-                $jalali = Instant::fromDateTime(
+                $jalali = CivilDateTime::fromDateTime(
                     new \DateTimeImmutable($postDay . ' 00:00:00', wp_timezone())
                 )->jalali();
             } catch (\Throwable $exception) {
@@ -250,7 +250,7 @@ class PostTypeMonthFilter
         }
 
         try {
-            $start = Instant::fromJalali($year, $month, 1);
+            $start = CivilDateTime::fromJalali($year, $month, 1);
             $end = $start->jalali()->endOfMonth();
         } catch (\Throwable $exception) {
             return null;

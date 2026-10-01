@@ -2,6 +2,7 @@
 
 namespace PersianKit\Modules\CharNormalization;
 
+use PersianKit\Dependencies\Eram\Abzar\Exception\AbzarException;
 use PersianKit\Dependencies\Eram\Abzar\Text\CharNormalizer;
 
 defined('ABSPATH') || exit;
@@ -107,7 +108,13 @@ class BatchMigrator
 
             $newTitle   = $this->normalizer->normalize($post->post_title);
             $newExcerpt = $this->normalizer->normalize($post->post_excerpt);
-            $newContent = $this->normalizer->normalizeContent($post->post_content);
+
+            try {
+                $newContent = $this->normalizer->normalizeContent($post->post_content);
+            } catch (AbzarException) {
+                // Content abzar cannot segment is left alone; the batch moves on.
+                continue;
+            }
 
             $changed = $newTitle !== $post->post_title
                     || $newExcerpt !== $post->post_excerpt

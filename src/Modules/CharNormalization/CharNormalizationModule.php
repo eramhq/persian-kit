@@ -2,6 +2,7 @@
 
 namespace PersianKit\Modules\CharNormalization;
 
+use PersianKit\Dependencies\Eram\Abzar\Exception\AbzarException;
 use PersianKit\Dependencies\Eram\Abzar\Text\CharNormalizer;
 use PersianKit\Abstracts\AbstractModule;
 use PersianKit\Container\ServiceContainer;
@@ -83,7 +84,11 @@ class CharNormalizationModule extends AbstractModule
                 }
 
                 if (isset($data['post_content']) && is_string($data['post_content'])) {
-                    $data['post_content'] = $normalizer->normalizeContent($data['post_content']);
+                    try {
+                        $data['post_content'] = $normalizer->normalizeContent($data['post_content']);
+                    } catch (AbzarException) {
+                        // Markup abzar cannot segment is saved as-is rather than blocking the save.
+                    }
                 }
 
                 return $data;

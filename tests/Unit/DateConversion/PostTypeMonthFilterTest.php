@@ -1,34 +1,5 @@
 <?php
 
-namespace {
-    if (!class_exists('WP_Query')) {
-        class WP_Query
-        {
-            private array $vars;
-
-            public function __construct(array $vars = [], private bool $mainQuery = true)
-            {
-                $this->vars = $vars;
-            }
-
-            public function is_main_query(): bool
-            {
-                return $this->mainQuery;
-            }
-
-            public function get(string $key): mixed
-            {
-                return $this->vars[$key] ?? null;
-            }
-
-            public function set(string $key, mixed $value): void
-            {
-                $this->vars[$key] = $value;
-            }
-        }
-    }
-}
-
 namespace PersianKit\Tests\Unit\DateConversion {
 
     use Brain\Monkey;

@@ -2,7 +2,6 @@
 
 namespace PersianKit\Modules\Utilities;
 
-use PersianKit\Dependencies\Eram\Abzar\Text\Slug;
 use PersianKit\Abstracts\AbstractModule;
 use PersianKit\Container\ServiceContainer;
 
@@ -32,15 +31,15 @@ class UtilitiesModule extends AbstractModule
 
     public function register(ServiceContainer $container): void
     {
+        $container->register(PersianSlugFilter::class, function () {
+            return new PersianSlugFilter();
+        });
     }
 
     public function boot(ServiceContainer $container): void
     {
         if (apply_filters('persian_kit_utilities', true, 'sanitize_title')) {
-            remove_filter('sanitize_title', 'sanitize_title_with_dashes', 10);
-            add_filter('sanitize_title', static function ($title, $raw_title, $context) {
-                return Slug::generate((string) $title);
-            }, 10, 3);
+            $container->get(PersianSlugFilter::class)->register();
         }
     }
 }

@@ -3,6 +3,7 @@
 namespace PersianKit\Modules\DigitConversion;
 
 use PersianKit\Dependencies\Eram\Abzar\Digits\DigitConverter;
+use PersianKit\Dependencies\Eram\Abzar\Exception\AbzarException;
 use PersianKit\Abstracts\AbstractModule;
 use PersianKit\Container\ServiceContainer;
 
@@ -36,13 +37,13 @@ class DigitConversionModule extends AbstractModule
 
     public function boot(ServiceContainer $container): void
     {
-        $this->registerFilter('the_content', [DigitConverter::class, 'convertContent']);
+        $this->registerFilter('the_content', [self::class, 'convertContent']);
         $this->registerFilter('the_title', [DigitConverter::class, 'toPersian']);
-        $this->registerFilter('the_excerpt', [DigitConverter::class, 'convertContent']);
-        $this->registerFilter('get_the_excerpt', [DigitConverter::class, 'convertContent']);
-        $this->registerFilter('comment_text', [DigitConverter::class, 'convertContent']);
-        $this->registerFilter('widget_text', [DigitConverter::class, 'convertContent']);
-        $this->registerFilter('widget_text_content', [DigitConverter::class, 'convertContent']);
+        $this->registerFilter('the_excerpt', [self::class, 'convertContent']);
+        $this->registerFilter('get_the_excerpt', [self::class, 'convertContent']);
+        $this->registerFilter('comment_text', [self::class, 'convertContent']);
+        $this->registerFilter('widget_text', [self::class, 'convertContent']);
+        $this->registerFilter('widget_text_content', [self::class, 'convertContent']);
         $this->registerFilter('human_time_diff', [DigitConverter::class, 'toPersian']);
 
         $this->registerFilter('get_the_terms', function ($terms) {
@@ -58,6 +59,19 @@ class DigitConversionModule extends AbstractModule
 
             return $terms;
         });
+    }
+
+    /**
+     * Convert digits in HTML, leaving the content untouched when abzar cannot
+     * segment it (PCRE limits on very large or malformed markup).
+     */
+    public static function convertContent(string $html): string
+    {
+        try {
+            return DigitConverter::convertContent($html);
+        } catch (AbzarException) {
+            return $html;
+        }
     }
 
     private function registerFilter(string $hook, callable $callback): void

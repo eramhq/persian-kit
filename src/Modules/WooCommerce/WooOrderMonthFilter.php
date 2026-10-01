@@ -2,7 +2,7 @@
 
 namespace PersianKit\Modules\WooCommerce;
 
-use PersianKit\Dependencies\Eram\Daynum\Instant;
+use PersianKit\Dependencies\Eram\Daynum\CivilDateTime;
 use PersianKit\Dependencies\Eram\Abzar\Digits\DigitConverter;
 
 defined('ABSPATH') || exit;
@@ -140,8 +140,8 @@ class WooOrderMonthFilter
             return [];
         }
 
-        $oldestMonth = Instant::fromDateTime($oldestOrder->get_date_created())->jalali()->startOfMonth()->withTime(0, 0, 0);
-        $currentMonth = Instant::fromDateTime($this->currentDateTime())->jalali()->startOfMonth()->withTime(0, 0, 0);
+        $oldestMonth = CivilDateTime::fromDateTime($oldestOrder->get_date_created())->jalali()->startOfMonth()->withTime(0, 0, 0);
+        $currentMonth = CivilDateTime::fromDateTime($this->currentDateTime())->jalali()->startOfMonth()->withTime(0, 0, 0);
 
         $options = [];
         $cursor = $currentMonth;
