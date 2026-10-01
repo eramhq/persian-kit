@@ -2,7 +2,7 @@
 
 All notable changes to this project will be documented in this file.
 
-## [1.0.0] - Unreleased
+## [1.0.0-beta.2] - Unreleased
 
 - Prepared the plugin for WordPress.org submission: added `readme.txt`, `uninstall.php`, and `Tested up to:` plugin header.
 - Bumped `Requires at least:` to WordPress 6.5 (for `wp_is_serving_rest_request()`).
@@ -54,7 +54,7 @@ All notable changes to this project will be documented in this file.
 - Uninstalling deletes the options the plugin actually uses (`persian_kit_settings`, `persian_kit_normalize_job`, `persian_kit_normalize_cursor`) on every site of a multisite network. It previously deleted two option names that were never used.
 - The release zip no longer includes the WordPress test install, `docs/`, `README.md`, `CHANGELOG.md` or the libraries' dev config files.
 - The media library grid filter script now lives in `resources/js/` and is copied by the build, so `npm run build` no longer deletes it.
-- Version 1.0.0 in the plugin header, `PERSIAN_KIT_VERSION`, `Stable tag` and `package.json`; `Tested up to: 7.1`. Fixed the abzar link in `readme.txt`.
+- Version 1.0.0-beta.2 in the plugin header, `PERSIAN_KIT_VERSION`, `Stable tag` and `package.json`; `Tested up to: 7.1`. Fixed the abzar link in `readme.txt`.
 - Settings saves unslash `$_POST` before sanitizing; the permission message and the admin-bar date are escaped.
 - WooCommerce date normalization: the variations handler verifies WooCommerce's nonce before touching `$_POST`, and values are written back slashed so WooCommerce's own `wp_unslash()` doesn't strip them twice.
 - The batch normalization panel's script moved from an inline `<script>` into the admin bundle; settings are passed with `wp_add_inline_script()`.
@@ -72,7 +72,7 @@ All notable changes to this project will be documented in this file.
 
 - `docs/REFERENCE.md` and `docs/UTILITIES.md` describe abzar's `ValidationResult`: `detail()` returns an object with read-only properties (`->details()` no longer exists), plus `warnings()`, `errorCodes()` and `isStrictlyValid()`.
 - Documented the nine helpers added in 1.0.0-beta.1, the `persian_kit_utilities` filter and the Persian slug behavior. Formatters are documented as throwing `FormatException` (a `RuntimeException`).
-- `README.md` lists the 1.0.0 release and WordPress 6.5+; `docs/DEVELOPMENT.md` covers PHPStan, PHPCS, CI and the release checklist.
+- `README.md` lists the 1.0.0-beta.2 release and WordPress 6.5+; `docs/DEVELOPMENT.md` covers PHPStan, PHPCS, CI and the release checklist.
 
 ## [1.0.0-beta.1] - 2026-04-17
 

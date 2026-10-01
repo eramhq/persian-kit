@@ -4,7 +4,7 @@ Tags: persian, farsi, jalali, woocommerce, rtl
 Requires at least: 6.5
 Tested up to: 7.1
 Requires PHP: 8.1
-Stable tag: 1.0.0
+Stable tag: 1.0.0-beta.2
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -68,7 +68,7 @@ No. WooCommerce features only activate when WooCommerce is installed and active.
 
 == Changelog ==
 
-= 1.0.0 =
+= 1.0.0-beta.2 =
 * First WordPress.org release.
 * Switched core utilities to the `eram/abzar` (0.8) and `eram/daynum` (1.0.0-beta.3) libraries.
 * Added `pk_*` helpers: `pk_currency_format`, `pk_currency_convert`, `pk_words_to_number`, `pk_validate_postal_code`, `pk_validate_plate_number`, `pk_validate_bill_id`, `pk_half_space_fix`, `pk_keyboard_fix`, `pk_persian_sort`.
@@ -88,5 +88,5 @@ No. WooCommerce features only activate when WooCommerce is installed and active.
 
 == Upgrade Notice ==
 
-= 1.0.0 =
-First WordPress.org release. Fixes Jalali dates in feeds and timezone offsets. New Persian slugs use "-" instead of a half-space; existing URLs keep working.
+= 1.0.0-beta.2 =
+Beta release. Fixes Jalali dates in feeds and timezone offsets. New Persian slugs use "-" instead of a half-space; existing URLs keep working.
