@@ -101,13 +101,18 @@ class AssetManagerTest extends TestCase
             ->with(
                 'persian-kit-admin',
                 PERSIAN_KIT_URL . 'public/js/admin.js',
-                [],
+                ['wp-i18n'],
                 PERSIAN_KIT_VERSION,
                 true
             );
 
-        Functions\expect('wp_print_inline_script_tag')
-            ->once();
+        Functions\expect('wp_add_inline_script')
+            ->once()
+            ->with('persian-kit-admin', \Mockery::pattern('/^var persianKitSettings = \{/'), 'before');
+
+        Functions\expect('wp_set_script_translations')
+            ->once()
+            ->with('persian-kit-admin', 'persian-kit');
 
         $manager->enqueueAdmin('toplevel_page_persian-kit');
         $this->addToAssertionCount(1);

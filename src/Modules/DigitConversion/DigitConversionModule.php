@@ -124,7 +124,7 @@ class DigitConversionModule extends AbstractModule
      */
     private function shouldConvertNow(): bool
     {
-        if (function_exists('wp_is_serving_rest_request') ? wp_is_serving_rest_request() : (defined('REST_REQUEST') && REST_REQUEST)) {
+        if (wp_is_serving_rest_request()) {
             return false;
         }
 

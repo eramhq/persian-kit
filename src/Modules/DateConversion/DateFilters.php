@@ -228,7 +228,7 @@ class DateFilters
 
         $adminBar->add_node([
             'id'     => 'persian-kit-date',
-            'title'  => $jalaliDate,
+            'title'  => esc_html($jalaliDate),
             'parent' => 'top-secondary',
             'meta'   => ['class' => 'persian-kit-admin-date'],
         ]);
@@ -243,7 +243,7 @@ class DateFilters
         remove_meta_box('dashboard_activity', 'dashboard', 'normal');
         wp_add_dashboard_widget(
             'dashboard_activity',
-            __('Activity'),
+            __('Activity'), // phpcs:ignore WordPress.WP.I18n.MissingArgDomain -- Replaces core's widget; keeps its translated title.
             [$this, 'renderDashboardActivityWidget'],
             null,
             null,

@@ -34,9 +34,4 @@ class InstallManager
             $settings->setDefaults($moduleClass::key(), $moduleClass::defaults());
         }
     }
-
-    public static function deactivate(): void
-    {
-        // Cleanup on deactivation (clear transients, etc.)
-    }
 }

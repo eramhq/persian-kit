@@ -14,9 +14,6 @@ class ServiceContainer
     /** @var array<string, object> */
     private array $instances = [];
 
-    /** @var array<string, string> */
-    private array $aliases = [];
-
     private function __construct()
     {
     }
@@ -42,18 +39,8 @@ class ServiceContainer
         return $this;
     }
 
-    public function alias(string $alias, string $target): self
-    {
-        $this->aliases[$alias] = $target;
-        return $this;
-    }
-
     public function get(string $id): mixed
     {
-        if (isset($this->aliases[$id])) {
-            $id = $this->aliases[$id];
-        }
-
         if (isset($this->instances[$id])) {
             return $this->instances[$id];
         }
@@ -68,20 +55,6 @@ class ServiceContainer
 
     public function has(string $id): bool
     {
-        if (isset($this->aliases[$id])) {
-            $id = $this->aliases[$id];
-        }
-
         return isset($this->instances[$id]) || isset($this->factories[$id]);
-    }
-
-    public function __get(string $name): mixed
-    {
-        return $this->get($name);
-    }
-
-    public function reset(): void
-    {
-        $this->instances = [];
     }
 }

@@ -15,7 +15,10 @@ class WooPostedDateNormalizerTest extends TestCase
         Monkey\setUp();
 
         Functions\when('sanitize_text_field')->returnArg();
-        Functions\when('wp_unslash')->returnArg();
+        Functions\when('wp_unslash')->alias('stripslashes');
+        Functions\when('wp_slash')->alias('addslashes');
+        Functions\when('check_ajax_referer')->justReturn(1);
+        Functions\when('current_user_can')->justReturn(true);
     }
 
     protected function tearDown(): void
@@ -94,6 +97,25 @@ class WooPostedDateNormalizerTest extends TestCase
         $this->assertSame('2026-05-22', $_POST['variable_sale_price_dates_from'][0]);
         $this->assertSame('', $_POST['variable_sale_price_dates_from'][1]);
         $this->assertSame('2026-06-21', $_POST['variable_sale_price_dates_to'][0]);
+    }
+
+    public function test_variation_dates_are_left_alone_without_a_valid_nonce(): void
+    {
+        Functions\when('check_ajax_referer')->justReturn(false);
+        $_POST['variable_sale_price_dates_from'] = [0 => '1405-03-01'];
+
+        (new WooPostedDateNormalizer())->normalizeVariationDates();
+
+        $this->assertSame('1405-03-01', $_POST['variable_sale_price_dates_from'][0]);
+    }
+
+    public function test_values_stay_slashed_for_woocommerce_to_unslash(): void
+    {
+        $_POST['expiry_date'] = addslashes('O\'Brien\\x');
+
+        (new WooPostedDateNormalizer())->normalizeCouponDates();
+
+        $this->assertSame('O\'Brien\\x', stripslashes($_POST['expiry_date']));
     }
 
     public function test_normalize_order_download_expiry_dates_converts_each_row(): void

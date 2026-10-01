@@ -55,6 +55,11 @@ const copies = [
         src: 'resources/js/woocommerce-date-fields.js',
         dest: 'public/js/woocommerce-date-fields.js',
     },
+    // Media library grid Jalali month filter
+    {
+        src: 'resources/js/media-grid-date-filter.js',
+        dest: 'public/js/media-grid-date-filter.js',
+    },
     // Gutenberg Jalali date editor styles
     {
         src: 'resources/css/gutenberg-jalali.css',

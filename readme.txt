@@ -2,9 +2,9 @@
 Contributors: navidkashani
 Tags: persian, farsi, jalali, woocommerce, rtl
 Requires at least: 6.5
-Tested up to: 6.7
+Tested up to: 7.1
 Requires PHP: 8.1
-Stable tag: X.Y.Z
+Stable tag: 1.0.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -30,7 +30,7 @@ Persian Kit is a modular WordPress plugin for Persian-language sites. It focuses
 
 Persian Kit ships and credits the following third-party components:
 
-* [eram/abzar](https://github.com/eramhq/abzar) — MIT-licensed PHP utilities for Persian text and digit handling.
+* [eram/abzar](https://github.com/eramhq/abzar-php) — MIT-licensed PHP utilities for Persian text and digit handling.
 * [eram/daynum](https://github.com/eramhq/daynum) — MIT-licensed PHP Jalali date library.
 * [Alpine.js](https://alpinejs.dev) — MIT-licensed JavaScript framework, bundled into the admin script.
 * [Vazirmatn](https://github.com/rastikerdar/vazirmatn) — Persian font by Saber Rastikerdar, licensed under the SIL Open Font License 1.1.
@@ -52,7 +52,7 @@ Full source, build instructions, and issue tracker:
 
 = Does Persian Kit support multisite? =
 
-Persian Kit is built for single-site installations in this release. Network activation works at the plugin level, but per-site defaults and uninstall cleanup are not propagated to subsites. Activate and configure the plugin per site.
+Persian Kit is configured per site. Network activation works at the plugin level, but default settings are created only on the site where the plugin is activated; configure each site from its own Persian Kit screen. Uninstalling the plugin removes its options from every site in the network.
 
 = Is Persian Kit compatible with WooCommerce HPOS (custom order tables)? =
 
@@ -68,7 +68,7 @@ No. WooCommerce features only activate when WooCommerce is installed and active.
 
 == Changelog ==
 
-= X.Y.Z =
+= 1.0.0 =
 * First WordPress.org release.
 * Switched core utilities to the `eram/abzar` and `eram/daynum` libraries.
 * Added `pk_*` helpers: `pk_currency_format`, `pk_currency_convert`, `pk_words_to_number`, `pk_validate_postal_code`, `pk_validate_plate_number`, `pk_validate_bill_id`, `pk_half_space_fix`, `pk_keyboard_fix`, `pk_persian_sort`.
@@ -78,5 +78,5 @@ No. WooCommerce features only activate when WooCommerce is installed and active.
 
 == Upgrade Notice ==
 
-= X.Y.Z =
+= 1.0.0 =
 First WordPress.org release.

@@ -4,12 +4,18 @@ if (!defined('WP_UNINSTALL_PLUGIN')) {
     exit;
 }
 
-$options = [
-    'persian_kit_settings',
-    'persian_kit_normalization_state',
-    'persian_kit_normalization_cursor',
-];
+$persianKitDeleteOptions = static function (): void {
+    foreach (['persian_kit_settings', 'persian_kit_normalize_job', 'persian_kit_normalize_cursor'] as $option) {
+        delete_option($option);
+    }
+};
 
-foreach ($options as $option) {
-    delete_option($option);
+if (is_multisite()) {
+    foreach (get_sites(['fields' => 'ids', 'number' => 0]) as $persianKitSiteId) {
+        switch_to_blog((int) $persianKitSiteId);
+        $persianKitDeleteOptions();
+        restore_current_blog();
+    }
+} else {
+    $persianKitDeleteOptions();
 }

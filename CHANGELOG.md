@@ -2,10 +2,10 @@
 
 All notable changes to this project will be documented in this file.
 
-## [X.Y.Z] - Unreleased
+## [1.0.0] - Unreleased
 
 - Prepared the plugin for WordPress.org submission: added `readme.txt`, `uninstall.php`, and `Tested up to:` plugin header.
-- Bumped `Requires at least:` to WordPress 6.5 to match `wp_enqueue_script_module()` usage.
+- Bumped `Requires at least:` to WordPress 6.5 (for `wp_is_serving_rest_request()`).
 - Declared WooCommerce HPOS compatibility via `before_woocommerce_init`.
 - Removed `load_plugin_textdomain()` call; translations are auto-loaded by WordPress core for hosted plugins.
 - Replaced the inline `<style>` in the WooCommerce orders Jalali month filter with a conditionally enqueued stylesheet.
@@ -48,6 +48,18 @@ All notable changes to this project will be documented in this file.
 - The Jalali month list on post screens caches its `SELECT DISTINCT DATE(post_date)` query until posts change.
 - The admin font loads only for Persian or right-to-left admin languages.
 - Batch normalization: opening the settings page no longer resumes an unfinished job automatically; it shows a Resume button instead. `wp persian-kit normalize` records its progress in the same job, so the settings page shows it, and `--batch-size` is clamped to 1–500.
+
+### WordPress.org readiness
+
+- Uninstalling deletes the options the plugin actually uses (`persian_kit_settings`, `persian_kit_normalize_job`, `persian_kit_normalize_cursor`) on every site of a multisite network. It previously deleted two option names that were never used.
+- The release zip no longer includes the WordPress test install, `docs/`, `README.md`, `CHANGELOG.md` or the libraries' dev config files.
+- The media library grid filter script now lives in `resources/js/` and is copied by the build, so `npm run build` no longer deletes it.
+- Version 1.0.0 in the plugin header, `PERSIAN_KIT_VERSION`, `Stable tag` and `package.json`; `Tested up to: 7.1`. Fixed the abzar link in `readme.txt`.
+- Settings saves unslash `$_POST` before sanitizing; the permission message and the admin-bar date are escaped.
+- WooCommerce date normalization: the variations handler verifies WooCommerce's nonce before touching `$_POST`, and values are written back slashed so WooCommerce's own `wp_unslash()` doesn't strip them twice.
+- The batch normalization panel's script moved from an inline `<script>` into the admin bundle; settings are passed with `wp_add_inline_script()`.
+- All user-facing strings are translatable, including the JavaScript ones (`wp_set_script_translations()`), the compatibility guidance cards and the ZWNJ editor button tooltip. Placeholders have translators comments, and the POT now includes JavaScript strings.
+- Removed dead code: `ViteHelper`, `BatchMigrator::isComplete()`, `ConflictDetector::detect()`, the container's unused alias/`__get`/`reset`, and the empty deactivation hook. `ModuleInterface` now declares `isEnabled()` and `settingsView()`.
 
 ## [1.0.0-beta.1] - 2026-04-17
 

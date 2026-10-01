@@ -29,7 +29,7 @@ $tehMarbuta = !empty($moduleSettings['teh_marbuta']);
 
 <hr class="persian-kit-setting-separator">
 
-<div class="persian-kit-setting-row" x-data="persianKitNormalize()" x-init="init()">
+<div class="persian-kit-setting-row" x-data="persianKitNormalize">
     <h4 class="persian-kit-setting-row__title"><?php esc_html_e('Batch Normalization', 'persian-kit'); ?></h4>
     <p class="description" style="margin-bottom: 1em;">
         <?php esc_html_e('Normalize Arabic characters in existing posts. New posts are normalized automatically on save.', 'persian-kit'); ?>
@@ -52,7 +52,8 @@ $tehMarbuta = !empty($moduleSettings['teh_marbuta']);
             :disabled="running"
             x-show="!done"
         >
-            <span x-text="isResuming ? '<?php echo esc_js(__('Resume Normalization', 'persian-kit')); ?>' : '<?php echo esc_js(__('Run Normalization', 'persian-kit')); ?>'"></span>
+            <span x-show="isResuming"><?php esc_html_e('Resume Normalization', 'persian-kit'); ?></span>
+            <span x-show="!isResuming"><?php esc_html_e('Run Normalization', 'persian-kit'); ?></span>
         </button>
 
         <a
@@ -104,139 +105,3 @@ $tehMarbuta = !empty($moduleSettings['teh_marbuta']);
         <p x-text="error"></p>
     </div>
 </div>
-
-<script>
-function persianKitNormalize() {
-    return {
-        nextBatchTimer: null,
-        running: false,
-        paused: false,
-        done: false,
-        counts: null,
-        isResuming: false,
-        progressText: '',
-        doneText: '',
-        error: '',
-        totalProcessed: 0,
-        totalModified: 0,
-
-        async fetchApi(endpoint, method = 'GET') {
-            const response = await fetch(persianKitSettings.restUrl + endpoint, {
-                method: method,
-                headers: {
-                    'X-WP-Nonce': persianKitSettings.nonce,
-                    'Content-Type': 'application/json',
-                },
-            });
-            if (!response.ok) throw new Error(response.statusText);
-            return response.json();
-        },
-
-        applyStatus(data) {
-            const job = data.job || { status: 'idle' };
-
-            this.counts = data.counts ?? this.counts;
-            this.isResuming = !!data.is_resuming;
-            this.totalProcessed = job.processed || 0;
-            this.totalModified = job.modified || 0;
-
-            // A "running" job on the server only means it has not finished; batches
-            // run while this page drives them, and a reload pauses the job.
-            this.paused = job.status === 'running';
-
-            if (this.paused) {
-                this.done = false;
-                this.progressText = `Processed ${this.totalProcessed} posts (${this.totalModified} modified)...`;
-                return;
-            }
-
-            if (job.status === 'completed') {
-                this.done = true;
-                this.doneText = `Done! ${this.totalProcessed} posts processed, ${this.totalModified} modified.`;
-                this.isResuming = false;
-                return;
-            }
-        },
-
-        async checkStatus(silent = false) {
-            if (!silent) {
-                this.error = '';
-            }
-
-            try {
-                const data = await this.fetchApi('normalize/status');
-                this.applyStatus(data);
-            } catch (e) {
-                if (!silent) {
-                    this.error = e.message;
-                }
-            }
-        },
-
-        async runNormalization() {
-            this.clearNextBatch();
-            this.done = false;
-            this.error = '';
-            this.running = true;
-
-            try {
-                const data = await this.fetchApi('normalize/run', 'POST');
-                this.applyStatus(data);
-
-                if (data.has_more) {
-                    this.queueNextBatch();
-                    return;
-                }
-
-                this.running = false;
-            } catch (e) {
-                this.error = e.message;
-                this.running = false;
-            }
-        },
-
-        async restart() {
-            this.error = '';
-            try {
-                await this.fetchApi('normalize/restart', 'POST');
-                this.clearNextBatch();
-                this.running = false;
-                this.paused = false;
-                this.isResuming = false;
-                this.done = false;
-                this.counts = null;
-                this.totalProcessed = 0;
-                this.totalModified = 0;
-                this.progressText = '';
-                this.doneText = '';
-            } catch (e) {
-                this.error = e.message;
-            }
-        },
-
-        queueNextBatch() {
-            if (this.nextBatchTimer !== null) {
-                return;
-            }
-
-            this.nextBatchTimer = setTimeout(() => {
-                this.nextBatchTimer = null;
-                this.runNormalization();
-            }, 300);
-        },
-
-        clearNextBatch() {
-            if (this.nextBatchTimer === null) {
-                return;
-            }
-
-            clearTimeout(this.nextBatchTimer);
-            this.nextBatchTimer = null;
-        },
-
-        init() {
-            this.checkStatus(true);
-        },
-    };
-}
-</script>

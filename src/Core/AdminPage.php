@@ -79,12 +79,14 @@ class AdminPage
     public function handleSave(): void
     {
         if (!current_user_can('manage_options')) {
-            wp_die(__('You do not have permission to access this page.', 'persian-kit'));
+            wp_die(esc_html__('You do not have permission to access this page.', 'persian-kit'));
         }
 
         check_admin_referer('persian_kit_settings');
 
-        $modules = $_POST['modules'] ?? [];
+        // Each module's sanitizeSettings() sanitizes its own values below.
+        // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+        $modules = isset($_POST['modules']) ? wp_unslash($_POST['modules']) : [];
 
         if (!is_array($modules)) {
             $modules = [];

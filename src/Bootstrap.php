@@ -52,15 +52,9 @@ class Bootstrap
         InstallManager::activate($networkWide);
     }
 
-    public static function deactivate(): void
-    {
-        InstallManager::deactivate();
-    }
-
     private static function registerLifecycleHooks(): void
     {
         register_activation_hook(PERSIAN_KIT_MAIN_FILE, [__CLASS__, 'activate']);
-        register_deactivation_hook(PERSIAN_KIT_MAIN_FILE, [__CLASS__, 'deactivate']);
     }
 
     private static function initializeServices(): void

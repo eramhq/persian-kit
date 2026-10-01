@@ -21,7 +21,7 @@
         // Toolbar button (TinyMCE 4 API)
         editor.addButton('persian_kit_zwnj', {
             text: 'ZWNJ',
-            tooltip: 'Insert Zero-Width Non-Joiner (Shift+Space)',
+            tooltip: (window.persianKitZwnj && window.persianKitZwnj.tooltip) || 'Insert Zero-Width Non-Joiner (Shift+Space)',
             onclick: insertZwnj
         });
     });

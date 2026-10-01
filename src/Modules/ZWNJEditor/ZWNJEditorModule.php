@@ -76,6 +76,16 @@ class ZWNJEditorModule extends AbstractModule
             PERSIAN_KIT_VERSION,
             true
         );
+
+        // The TinyMCE plugin is loaded by TinyMCE itself, not as a script handle,
+        // so its strings travel with this script.
+        wp_add_inline_script(
+            'persian-kit-text-editor-zwnj',
+            'window.persianKitZwnj = ' . wp_json_encode([
+                'tooltip' => __('Insert Zero-Width Non-Joiner (Shift+Space)', 'persian-kit'),
+            ]) . ';',
+            'before'
+        );
     }
 
     public function enqueueBlockEditorScript(): void

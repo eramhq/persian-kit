@@ -62,15 +62,18 @@ class AssetManager
         wp_enqueue_script(
             'persian-kit-admin',
             PERSIAN_KIT_URL . 'public/js/admin.js',
-            [],
+            ['wp-i18n'],
             PERSIAN_KIT_VERSION,
             true
         );
 
-        wp_print_inline_script_tag(
+        wp_add_inline_script(
+            'persian-kit-admin',
             'var persianKitSettings = ' . wp_json_encode($this->getLocalizedData()) . ';',
-            ['id' => 'persian-kit-settings-data']
+            'before'
         );
+
+        wp_set_script_translations('persian-kit-admin', 'persian-kit');
     }
 
     private function getLocalizedData(): array

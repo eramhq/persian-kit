@@ -42,6 +42,16 @@ composer.lock
 
 # Tests
 tests/
+.wordpress-tests/
+
+# Repository docs (readme.txt is the shipped readme)
+docs/
+README.md
+CHANGELOG.md
+
+# Library dev config inside the scoped packages
+packages/**/infection.json5
+packages/**/phpbench.json
 
 # Build output dir
 dist/

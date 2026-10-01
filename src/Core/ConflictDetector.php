@@ -6,72 +6,75 @@ defined('ABSPATH') || exit;
 
 class ConflictDetector
 {
-    private const DEFAULT_POLICIES = [
-        'wp-parsidate/wp-parsidate.php' => [
-            'name'    => 'WP-Parsidate',
-            'type'    => 'overlap',
-            'summary' => 'WP-Parsidate is already handling some Persian date and text features.',
-            'handles' => [
-                'Jalali dates',
-                'Digit conversion in content',
-                'Arabic-to-Persian text normalization',
-                'Admin and editor font styling',
-            ],
-            'recommendations' => [
-                ['key' => 'date_conversion', 'label' => 'Date Conversion', 'action' => 'turn_off'],
-                ['key' => 'digit_conversion', 'label' => 'Digit Conversion', 'action' => 'turn_off'],
-                ['key' => 'char_normalization', 'label' => 'Character Normalization', 'action' => 'turn_off'],
-                ['key' => 'admin_font', 'label' => 'Admin Font', 'action' => 'turn_off'],
-                ['key' => 'zwnj_editor', 'label' => 'ZWNJ Editor Support', 'action' => 'keep_on'],
-                ['key' => 'utilities', 'label' => 'Utilities', 'action' => 'keep_on'],
-            ],
-        ],
-        'wp-jalali/wp-jalali.php' => [
-            'name'    => 'WP Jalali',
-            'type'    => 'overlap',
-            'summary' => 'WP Jalali is already handling some Persian date and text features.',
-            'handles' => [
-                'Jalali dates',
-                'Digit conversion in content',
-                'Arabic-to-Persian text normalization',
-                'Some admin and editor styling',
-                'Jalali archive and permalink behavior',
-            ],
-            'recommendations' => [
-                ['key' => 'date_conversion', 'label' => 'Date Conversion', 'action' => 'turn_off'],
-                ['key' => 'digit_conversion', 'label' => 'Digit Conversion', 'action' => 'turn_off'],
-                ['key' => 'char_normalization', 'label' => 'Character Normalization', 'action' => 'turn_off'],
-                ['key' => 'admin_font', 'label' => 'Admin Font', 'action' => 'turn_off'],
-                ['key' => 'zwnj_editor', 'label' => 'ZWNJ Editor Support', 'action' => 'keep_on'],
-                ['key' => 'utilities', 'label' => 'Utilities', 'action' => 'keep_on'],
-            ],
-            'note' => 'WP Jalali also changes archive and permalink behavior. Persian Kit does not replace that yet.',
-        ],
-        'persian-woocommerce/persian-woocommerce.php' => [
-            'name'    => 'Persian WooCommerce',
-            'type'    => 'supplementary',
-            'summary' => 'Persian WooCommerce is already handling WooCommerce-specific Persian date features.',
-            'handles' => [
-                'WooCommerce Jalali date inputs',
-                'Order, product, and coupon date editing',
-                'Some WooCommerce date display and email formatting',
-            ],
-            'recommendations' => [
-                ['key' => 'date_conversion', 'label' => 'Date Conversion', 'action' => 'keep_on'],
-                ['key' => 'date_conversion.global_conversion', 'label' => 'Global Date Conversion', 'action' => 'leave_off'],
-                ['key' => 'digit_conversion', 'label' => 'Digit Conversion', 'action' => 'no_change'],
-                ['key' => 'char_normalization', 'label' => 'Character Normalization', 'action' => 'no_change'],
-                ['key' => 'admin_font', 'label' => 'Admin Font', 'action' => 'no_change'],
-                ['key' => 'zwnj_editor', 'label' => 'ZWNJ Editor Support', 'action' => 'no_change'],
-                ['key' => 'utilities', 'label' => 'Utilities', 'action' => 'keep_on'],
-            ],
-            'note' => 'Let Persian WooCommerce handle Woo-specific dates. Persian Kit can still handle normal WordPress dates.',
-        ],
-    ];
-
-    public function detect(): array
+    /**
+     * Built at runtime so the guidance text can be translated.
+     *
+     * @return array<string, array<string, mixed>>
+     */
+    private function defaultPolicies(): array
     {
-        return $this->reports();
+        return [
+            'wp-parsidate/wp-parsidate.php' => [
+                'name'    => 'WP-Parsidate',
+                'type'    => 'overlap',
+                'summary' => __('WP-Parsidate is already handling some Persian date and text features.', 'persian-kit'),
+                'handles' => [
+                    __('Jalali dates', 'persian-kit'),
+                    __('Digit conversion in content', 'persian-kit'),
+                    __('Arabic-to-Persian text normalization', 'persian-kit'),
+                    __('Admin and editor font styling', 'persian-kit'),
+                ],
+                'recommendations' => [
+                    ['key' => 'date_conversion', 'label' => __('Date Conversion', 'persian-kit'), 'action' => 'turn_off'],
+                    ['key' => 'digit_conversion', 'label' => __('Digit Conversion', 'persian-kit'), 'action' => 'turn_off'],
+                    ['key' => 'char_normalization', 'label' => __('Character Normalization', 'persian-kit'), 'action' => 'turn_off'],
+                    ['key' => 'admin_font', 'label' => __('Admin Font', 'persian-kit'), 'action' => 'turn_off'],
+                    ['key' => 'zwnj_editor', 'label' => __('ZWNJ Editor Support', 'persian-kit'), 'action' => 'keep_on'],
+                    ['key' => 'utilities', 'label' => __('Utilities', 'persian-kit'), 'action' => 'keep_on'],
+                ],
+            ],
+            'wp-jalali/wp-jalali.php' => [
+                'name'    => 'WP Jalali',
+                'type'    => 'overlap',
+                'summary' => __('WP Jalali is already handling some Persian date and text features.', 'persian-kit'),
+                'handles' => [
+                    __('Jalali dates', 'persian-kit'),
+                    __('Digit conversion in content', 'persian-kit'),
+                    __('Arabic-to-Persian text normalization', 'persian-kit'),
+                    __('Some admin and editor styling', 'persian-kit'),
+                    __('Jalali archive and permalink behavior', 'persian-kit'),
+                ],
+                'recommendations' => [
+                    ['key' => 'date_conversion', 'label' => __('Date Conversion', 'persian-kit'), 'action' => 'turn_off'],
+                    ['key' => 'digit_conversion', 'label' => __('Digit Conversion', 'persian-kit'), 'action' => 'turn_off'],
+                    ['key' => 'char_normalization', 'label' => __('Character Normalization', 'persian-kit'), 'action' => 'turn_off'],
+                    ['key' => 'admin_font', 'label' => __('Admin Font', 'persian-kit'), 'action' => 'turn_off'],
+                    ['key' => 'zwnj_editor', 'label' => __('ZWNJ Editor Support', 'persian-kit'), 'action' => 'keep_on'],
+                    ['key' => 'utilities', 'label' => __('Utilities', 'persian-kit'), 'action' => 'keep_on'],
+                ],
+                'note' => __('WP Jalali also changes archive and permalink behavior. Persian Kit does not replace that yet.', 'persian-kit'),
+            ],
+            'persian-woocommerce/persian-woocommerce.php' => [
+                'name'    => 'Persian WooCommerce',
+                'type'    => 'supplementary',
+                'summary' => __('Persian WooCommerce is already handling WooCommerce-specific Persian date features.', 'persian-kit'),
+                'handles' => [
+                    __('WooCommerce Jalali date inputs', 'persian-kit'),
+                    __('Order, product, and coupon date editing', 'persian-kit'),
+                    __('Some WooCommerce date display and email formatting', 'persian-kit'),
+                ],
+                'recommendations' => [
+                    ['key' => 'date_conversion', 'label' => __('Date Conversion', 'persian-kit'), 'action' => 'keep_on'],
+                    ['key' => 'date_conversion.global_conversion', 'label' => __('Global Date Conversion', 'persian-kit'), 'action' => 'leave_off'],
+                    ['key' => 'digit_conversion', 'label' => __('Digit Conversion', 'persian-kit'), 'action' => 'no_change'],
+                    ['key' => 'char_normalization', 'label' => __('Character Normalization', 'persian-kit'), 'action' => 'no_change'],
+                    ['key' => 'admin_font', 'label' => __('Admin Font', 'persian-kit'), 'action' => 'no_change'],
+                    ['key' => 'zwnj_editor', 'label' => __('ZWNJ Editor Support', 'persian-kit'), 'action' => 'no_change'],
+                    ['key' => 'utilities', 'label' => __('Utilities', 'persian-kit'), 'action' => 'keep_on'],
+                ],
+                'note' => __('Let Persian WooCommerce handle Woo-specific dates. Persian Kit can still handle normal WordPress dates.', 'persian-kit'),
+            ],
+        ];
     }
 
     public function reports(array $currentSettings = []): array
@@ -139,7 +142,7 @@ class ConflictDetector
 
     private function policies(): array
     {
-        $policies = self::DEFAULT_POLICIES;
+        $policies = $this->defaultPolicies();
 
         if (function_exists('apply_filters')) {
             $policies = apply_filters('persian_kit_conflict_policies', $policies);
@@ -147,7 +150,7 @@ class ConflictDetector
         }
 
         if (!is_array($policies)) {
-            $policies = self::DEFAULT_POLICIES;
+            $policies = $this->defaultPolicies();
         }
 
         $normalizedPolicies = [];
@@ -196,6 +199,7 @@ class ConflictDetector
             'type'            => in_array($policy['type'] ?? '', ['overlap', 'supplementary'], true) ? $policy['type'] : 'overlap',
             'summary'         => is_string($policy['summary'] ?? null) && $policy['summary'] !== ''
                 ? $policy['summary']
+                /* translators: %s: name of another plugin. */
                 : sprintf(__('%s is already handling some of the same features.', 'persian-kit'), $name),
             'handles'         => array_values(array_filter($handles, static fn ($handle) => is_string($handle) && $handle !== '')),
             'recommendations' => $normalizedRecommendations,
@@ -267,9 +271,13 @@ class ConflictDetector
     private function instructionLabel(string $label, string $action): string
     {
         return match ($action) {
+            /* translators: %s: Persian Kit module name. */
             'turn_off' => sprintf(__('Turn off %s in Persian Kit.', 'persian-kit'), $label),
+            /* translators: %s: Persian Kit module name. */
             'keep_on' => sprintf(__('Keep %s enabled in Persian Kit.', 'persian-kit'), $label),
+            /* translators: %s: Persian Kit module name. */
             'leave_off' => sprintf(__('Leave %s off in Persian Kit.', 'persian-kit'), $label),
+            /* translators: %s: Persian Kit module name. */
             default => sprintf(__('No change needed for %s.', 'persian-kit'), $label),
         };
     }

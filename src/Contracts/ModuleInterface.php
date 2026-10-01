@@ -16,6 +16,13 @@ interface ModuleInterface
 
     public static function defaults(): array;
 
+    public function isEnabled(): bool;
+
+    /**
+     * View path (relative to views/) for the module's extra settings, or null.
+     */
+    public function settingsView(): ?string;
+
     public function sanitizeSettings(array $values): array;
 
     public function register(ServiceContainer $container): void;

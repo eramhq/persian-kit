@@ -16,6 +16,8 @@ class ZWNJEditorModuleTest extends TestCase
     {
         parent::setUp();
         Monkey\setUp();
+        Functions\when('wp_json_encode')->alias('json_encode');
+        Functions\when('__')->returnArg();
     }
 
     protected function tearDown(): void
@@ -154,6 +156,10 @@ class ZWNJEditorModuleTest extends TestCase
                 true
             );
 
+        Functions\expect('wp_add_inline_script')
+            ->once()
+            ->with('persian-kit-text-editor-zwnj', Mockery::pattern('/^window\.persianKitZwnj = \{"tooltip":/'), 'before');
+
         $module = $this->makeModule();
         $module->enqueueTextEditorScript('post.php');
 
@@ -173,6 +179,7 @@ class ZWNJEditorModuleTest extends TestCase
 
         Functions\expect('get_current_screen')->once()->andReturn($screen);
         Functions\expect('wp_enqueue_script')->once();
+        Functions\expect('wp_add_inline_script')->once();
 
         $module = $this->makeModule();
         $module->enqueueTextEditorScript('post-new.php');

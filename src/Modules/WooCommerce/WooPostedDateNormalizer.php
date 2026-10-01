@@ -6,6 +6,19 @@ use PersianKit\Dependencies\Eram\Abzar\Digits\DigitConverter;
 
 defined('ABSPATH') || exit;
 
+/**
+ * Converts Jalali dates typed into WooCommerce admin forms to Gregorian before
+ * WooCommerce reads them from $_POST.
+ *
+ * The woocommerce_process_*_meta actions fire only after WooCommerce verified
+ * woocommerce_meta_nonce. The variations AJAX handler checks its nonce itself,
+ * after our early callback, so that callback verifies the same nonce first.
+ *
+ * Values are written back slashed, as WordPress keeps $_POST, because
+ * WooCommerce unslashes them again when it reads them.
+ *
+ * phpcs:disable WordPress.Security.NonceVerification.Missing
+ */
 class WooPostedDateNormalizer
 {
     private const LOCALIZED_DATE_PATTERN = '[0-9۰-۹٠-٩]{4}-(?:[0۰٠][1-9۱-۹١-٩]|[1۱١][0-2۰-۲٠-٢])-(?:[0۰٠][1-9۱-۹١-٩]|[12۱۲١٢][0-9۰-۹٠-٩]|[3۳٣][01۰۱٠١])';
@@ -41,6 +54,10 @@ class WooPostedDateNormalizer
 
     public function normalizeVariationDates(): void
     {
+        if (!check_ajax_referer('save-variations', 'security', false) || !current_user_can('edit_products')) {
+            return;
+        }
+
         $this->normalizeArrayPostField('variable_sale_price_dates_from');
         $this->normalizeArrayPostField('variable_sale_price_dates_to');
     }
@@ -57,7 +74,7 @@ class WooPostedDateNormalizer
         }
 
         foreach ($_POST[$key] as $index => $value) {
-            $_POST[$key][$index] = WooDateHelper::normalizeDateInputForWooSave($this->sanitizeScalar($value));
+            $_POST[$key][$index] = wp_slash(WooDateHelper::normalizeDateInputForWooSave($this->sanitizeScalar($value)));
         }
     }
 
@@ -67,7 +84,7 @@ class WooPostedDateNormalizer
             return;
         }
 
-        $_POST[$key] = WooDateHelper::normalizeDateInputForWooSave($this->sanitizeScalar($_POST[$key]));
+        $_POST[$key] = wp_slash(WooDateHelper::normalizeDateInputForWooSave($this->sanitizeScalar($_POST[$key])));
     }
 
     private function normalizeDigitsField(string $key): void
@@ -76,7 +93,7 @@ class WooPostedDateNormalizer
             return;
         }
 
-        $_POST[$key] = DigitConverter::toEnglish($this->sanitizeScalar($_POST[$key]));
+        $_POST[$key] = wp_slash(DigitConverter::toEnglish($this->sanitizeScalar($_POST[$key])));
     }
 
     private function sanitizeScalar(mixed $value): string

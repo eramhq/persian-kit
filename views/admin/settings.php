@@ -15,7 +15,7 @@ defined('ABSPATH') || exit;
         <?php esc_html_e('Enable or disable modules and configure their settings.', 'persian-kit'); ?>
     </p>
 
-    <?php if (isset($_GET['updated'])) : ?>
+    <?php if (isset($_GET['updated'])) : // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Display-only flag set by our own redirect. ?>
         <div class="notice notice-success is-dismissible">
             <p><?php esc_html_e('Settings saved.', 'persian-kit'); ?></p>
         </div>

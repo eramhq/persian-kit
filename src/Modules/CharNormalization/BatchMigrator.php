@@ -149,14 +149,4 @@ class BatchMigrator
 
         return new BatchResult(count($posts), $modified, $lastId, $hasMore);
     }
-
-    public function isComplete(): bool
-    {
-        global $wpdb;
-
-        $cursor = $this->getCursor();
-        $maxId = (int) $wpdb->get_var("SELECT MAX(ID) FROM {$wpdb->posts}");
-
-        return $cursor >= $maxId;
-    }
 }

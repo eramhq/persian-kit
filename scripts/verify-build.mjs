@@ -14,6 +14,7 @@ const requiredOutputs = [
     'public/js/gutenberg-jalali-panel.js',
     'public/js/gutenberg-zwnj.js',
     'public/js/jalali.js',
+    'public/js/media-grid-date-filter.js',
     'public/js/text-editor-zwnj.js',
     'public/js/tinymce-zwnj.js',
     'public/js/woocommerce-date-fields.js',
