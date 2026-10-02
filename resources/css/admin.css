@@ -792,10 +792,6 @@ a.persian-kit-version:focus {
     margin: 2px 0 0;
 }
 
-.persian-kit-provinces[aria-disabled="true"] {
-    opacity: 0.55;
-}
-
 .persian-kit-wrap .persian-kit-provinces__hint {
     margin-block: 2px 0;
     margin-inline: 24px 0;
