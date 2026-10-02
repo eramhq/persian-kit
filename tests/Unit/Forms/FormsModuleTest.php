@@ -7,6 +7,7 @@ use Brain\Monkey\Functions;
 use Mockery;
 use PersianKit\Container\ServiceContainer;
 use PersianKit\Core\SettingsManager;
+use PersianKit\Modules\Forms\AcfDateFields;
 use PersianKit\Modules\Forms\Cf7DateField;
 use PersianKit\Modules\Forms\Cf7InputNormalizer;
 use PersianKit\Modules\Forms\Cf7IranianFields;
@@ -25,6 +26,8 @@ class FormsModuleTest extends TestCase
             define('WPCF7_VERSION', '6.1.7');
         }
         Functions\when('wpcf7_add_form_tag')->justReturn(null);
+        // ACF counts as active when its field type API exists.
+        Functions\when('acf_get_field_type')->justReturn(null);
     }
 
     protected function tearDown(): void
@@ -33,30 +36,36 @@ class FormsModuleTest extends TestCase
         parent::tearDown();
     }
 
-    public function test_defaults_turn_on_contact_form_7(): void
+    public function test_defaults_turn_on_contact_form_7_and_acf(): void
     {
-        $this->assertSame(['enabled' => true, 'cf7' => true], FormsModule::defaults());
+        $this->assertSame(['enabled' => true, 'cf7' => true, 'acf' => true], FormsModule::defaults());
     }
 
-    public function test_boot_registers_the_contact_form_7_services(): void
+    public function test_boot_registers_the_contact_form_7_and_acf_services(): void
     {
         $this->assertSame([
             Cf7DateField::class,
             Cf7InputNormalizer::class,
             Cf7IranianFields::class,
+            AcfDateFields::class,
         ], $this->bootAndListFetched());
     }
 
-    public function test_the_contact_form_7_option_turns_them_off(): void
+    public function test_each_option_turns_its_services_off(): void
     {
-        $this->assertSame([], $this->bootAndListFetched(['cf7' => false]));
+        $this->assertSame([AcfDateFields::class], $this->bootAndListFetched(['cf7' => false]));
+        $this->assertSame([
+            Cf7DateField::class,
+            Cf7InputNormalizer::class,
+            Cf7IranianFields::class,
+        ], $this->bootAndListFetched(['acf' => false]));
     }
 
     public function test_sanitize_settings_stores_booleans(): void
     {
         $this->assertSame(
-            ['enabled' => true, 'cf7' => false],
-            $this->makeModule()->sanitizeSettings(['enabled' => '1', 'cf7' => '0', 'unknown' => '1'])
+            ['enabled' => true, 'cf7' => false, 'acf' => true],
+            $this->makeModule()->sanitizeSettings(['enabled' => '1', 'cf7' => '0', 'acf' => '1', 'unknown' => '1'])
         );
     }
 
@@ -73,8 +82,10 @@ class FormsModuleTest extends TestCase
 
             $this->makeModule([], $dateConversion)->register($container);
             $field = $factories[Cf7DateField::class]($container);
+            $acf = $factories[AcfDateFields::class]($container);
 
             $this->assertSame($dateConversion, (fn () => $this->jalaliMail)->call($field));
+            $this->assertSame($dateConversion, (fn () => $this->jalaliValues)->call($acf));
         }
     }
 

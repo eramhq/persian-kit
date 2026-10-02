@@ -66,6 +66,8 @@ jobs:
       PERSIAN_KIT_TESTS_WOOCOMMERCE_DIR: /tmp/wordpress/wp-content/plugins/woocommerce
       CF7_VERSION: '6.1.7'
       PERSIAN_KIT_TESTS_CF7_DIR: /tmp/wordpress/wp-content/plugins/contact-form-7
+      ACF_VERSION: '6.8.10'
+      PERSIAN_KIT_TESTS_ACF_DIR: /tmp/wordpress/wp-content/plugins/advanced-custom-fields
       WP_TEST_DB_HOST: 127.0.0.1
       WP_TEST_DB_USER: root
       WP_TEST_DB_PASSWORD: root
@@ -97,6 +99,12 @@ jobs:
           curl -sSfL -o /tmp/contact-form-7.zip "https://downloads.wordpress.org/plugin/contact-form-7.${CF7_VERSION}.zip"
           unzip -q /tmp/contact-form-7.zip -d "$WP_CORE_DIR/wp-content/plugins"
           test -f "$PERSIAN_KIT_TESTS_CF7_DIR/wp-contact-form-7.php"
+
+      - name: Download ACF
+        run: |
+          curl -sSfL -o /tmp/acf.zip "https://downloads.wordpress.org/plugin/advanced-custom-fields.${ACF_VERSION}.zip"
+          unzip -q /tmp/acf.zip -d "$WP_CORE_DIR/wp-content/plugins"
+          test -f "$PERSIAN_KIT_TESTS_ACF_DIR/acf.php"
 
       - name: Set up WordPress test library
         run: composer test:integration:setup

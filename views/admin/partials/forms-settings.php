@@ -17,6 +17,10 @@ $checkboxes = [
         'label'       => __('Contact Form 7', 'persian-kit'),
         'description' => __('Date fields get a Jalali date picker and still send a Gregorian date, which emails show as a Jalali date while Date Conversion is on. Adds [mobile_ir], [national_id], [postcode_ir], [card_ir] and [iban_ir] fields that check what is typed, and turns Persian digits into English digits in date, phone and number fields. Write [date name gregorian] to keep a Gregorian date field.', 'persian-kit'),
     ],
+    'acf' => [
+        'label'       => __('ACF date fields', 'persian-kit'),
+        'description' => __('Date Picker and Date Time Picker fields get a Jalali date picker, on edit screens and in acf_form(). Values are stored as before. While Date Conversion is on, get_field() and the_field() return Jalali dates in the field\'s return format, except formats such as Ymd that code reads.', 'persian-kit'),
+    ],
 ];
 ?>
 <?php foreach ($checkboxes as $settingKey => $checkbox) : ?>

@@ -22,7 +22,7 @@ class FormsModule extends AbstractModule
 
     public static function description(): string
     {
-        return __('A Jalali date picker and Iranian field checks in Contact Form 7. Dates are still saved and sent as Gregorian dates. Does nothing unless Contact Form 7 is active.', 'persian-kit');
+        return __('A Jalali date picker in Contact Form 7 and ACF date fields, and Iranian field checks in Contact Form 7. Dates are still saved and sent as Gregorian dates. Does nothing unless Contact Form 7 or ACF is active.', 'persian-kit');
     }
 
     /**
@@ -33,6 +33,7 @@ class FormsModule extends AbstractModule
         return [
             'enabled' => true,
             'cf7'     => true,
+            'acf'     => true,
         ];
     }
 
@@ -52,6 +53,9 @@ class FormsModule extends AbstractModule
         $container->register(Cf7IranianFields::class, function () {
             return new Cf7IranianFields();
         });
+        $container->register(AcfDateFields::class, function () {
+            return new AcfDateFields($this->showsJalaliDates());
+        });
     }
 
     public function boot(ServiceContainer $container): void
@@ -62,11 +66,16 @@ class FormsModule extends AbstractModule
             $container->get(Cf7InputNormalizer::class)->register();
             $container->get(Cf7IranianFields::class)->register();
         }
+
+        // Admin edit screens, acf_form() on the front end and templates.
+        if ($this->setting('acf') && $this->supportsAcf()) {
+            $container->get(AcfDateFields::class)->register();
+        }
     }
 
     /**
-     * Submitted dates are shown as Jalali dates where people read them, such
-     * as in emails, only while Date Conversion is on.
+     * Dates are shown as Jalali dates where people read them, such as in
+     * emails and ACF values in templates, only while Date Conversion is on.
      */
     private function showsJalaliDates(): bool
     {
@@ -76,5 +85,10 @@ class FormsModule extends AbstractModule
     private function supportsContactForm7(): bool
     {
         return defined('WPCF7_VERSION') && function_exists('wpcf7_add_form_tag');
+    }
+
+    private function supportsAcf(): bool
+    {
+        return function_exists('acf_get_field_type');
     }
 }

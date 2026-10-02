@@ -132,10 +132,10 @@
 
         // Labels pointing at the input name and focus the picker instead;
         // the input keeps its id for scripts that read the value by id.
-        var inputLabels = input.labels ? Array.prototype.slice.call(input.labels) : [];
+        // Read by id: a hidden input (ACF's) has no labels.
         if (input.id) {
             picker.id = input.id + '-picker';
-            inputLabels.forEach(function (label) {
+            Array.prototype.forEach.call(document.querySelectorAll('label[for]'), function (label) {
                 if (label.htmlFor === input.id) {
                     label.htmlFor = picker.id;
                 }
