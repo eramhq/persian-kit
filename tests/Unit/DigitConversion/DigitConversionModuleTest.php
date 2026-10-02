@@ -215,6 +215,9 @@ class DigitConversionModuleTest extends TestCase
         $this->assertNotFalse(has_filter('woocommerce_email_format_string'));
         $this->assertNotFalse(has_filter('woocommerce_order_number'));
         $this->assertNotFalse(has_action('woocommerce_before_template_part', [WooCommerceEmailDigits::class, 'enterTemplate']));
+        $this->assertNotFalse(has_filter('woocommerce_email_editor_register_personalization_tags', [WooCommerceEmailDigits::class, 'scopeOrderTags']));
+        $this->assertSame(31, has_filter('woocommerce_email_editor_register_personalization_tags', WooCommerceEmailDigits::class . '->filterMoneyTags()'));
+        $this->assertNotFalse(has_filter('woocommerce_mail_content'));
         $this->assertFalse(has_filter('the_content'), 'the admin still keeps its digits');
     }
 
@@ -226,6 +229,9 @@ class DigitConversionModuleTest extends TestCase
 
         $this->assertFalse(has_filter('woocommerce_email_format_string'));
         $this->assertNotFalse(has_action('woocommerce_before_template_part', [WooCommerceEmailDigits::class, 'enterTemplate']));
+        $this->assertSame(30, has_filter('woocommerce_email_editor_register_personalization_tags', [WooCommerceEmailDigits::class, 'scopeOrderTags']), 'block email tags too');
+        $this->assertFalse(has_filter('woocommerce_email_editor_register_personalization_tags', WooCommerceEmailDigits::class . '->filterMoneyTags()'));
+        $this->assertFalse(has_filter('woocommerce_mail_content'));
     }
 
     public function test_email_digits_need_woocommerce(): void

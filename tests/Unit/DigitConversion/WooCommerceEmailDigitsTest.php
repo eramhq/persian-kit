@@ -2,6 +2,8 @@
 
 namespace PersianKit\Tests\Unit\DigitConversion;
 
+use Automattic\WooCommerce\EmailEditor\Engine\PersonalizationTags\Personalization_Tag;
+use Automattic\WooCommerce\EmailEditor\Engine\PersonalizationTags\Personalization_Tags_Registry;
 use Brain\Monkey;
 use Brain\Monkey\Functions;
 use PersianKit\Modules\DigitConversion\WooCommerceEmailDigits;
@@ -39,14 +41,127 @@ class WooCommerceEmailDigitsTest extends TestCase
         $this->assertSame(PHP_INT_MAX, has_filter('woocommerce_order_number', [$digits, 'filterText']));
         $this->assertSame(PHP_INT_MAX, has_filter('clean_url', [$digits, 'filterUrl']));
         $this->assertSame(PHP_INT_MAX, has_filter('woocommerce_structured_data_order', [$digits, 'filterStructuredData']));
+        $this->assertSame(31, has_filter('woocommerce_email_editor_register_personalization_tags', [$digits, 'filterMoneyTags']));
+        $this->assertSame(PHP_INT_MAX, has_filter('woocommerce_mail_style_inline_callback', [$digits, 'filterStyleInlineCallback']));
+        $this->assertSame(PHP_INT_MAX, has_filter('woocommerce_mail_content', [$digits, 'filterMailContent']));
     }
 
-    public function test_tracking_hooks_the_template_parts(): void
+    public function test_tracking_hooks_the_template_parts_and_the_order_tags(): void
     {
         WooCommerceEmailDigits::trackRendering();
 
         $this->assertNotFalse(has_action('woocommerce_before_template_part', [WooCommerceEmailDigits::class, 'enterTemplate']));
         $this->assertNotFalse(has_action('woocommerce_after_template_part', [WooCommerceEmailDigits::class, 'leaveTemplate']));
+        $this->assertSame(30, has_filter('woocommerce_email_editor_register_personalization_tags', [WooCommerceEmailDigits::class, 'scopeOrderTags']));
+    }
+
+    public function test_order_tags_render_as_part_of_the_email(): void
+    {
+        $registry = $this->registry([
+            'woocommerce/order-number' => static fn (): string => WooCommerceEmailDigits::isRendering() ? 'inside' : 'outside',
+            'woocommerce/site-title'   => static fn (): string => WooCommerceEmailDigits::isRendering() ? 'inside' : 'outside',
+        ]);
+
+        WooCommerceEmailDigits::scopeOrderTags($registry);
+
+        $this->assertSame('inside', $registry->get_by_token('[woocommerce/order-number]')->execute_callback([]));
+        $this->assertSame('outside', $registry->get_by_token('[woocommerce/site-title]')->execute_callback([]), 'only order tags');
+        $this->assertFalse(WooCommerceEmailDigits::isRendering());
+    }
+
+    public function test_the_order_tag_scope_closes_when_a_tag_throws(): void
+    {
+        $registry = $this->registry([
+            'woocommerce/order-number' => static function (): string {
+                throw new \RuntimeException('no order');
+            },
+        ]);
+        WooCommerceEmailDigits::scopeOrderTags($registry);
+
+        try {
+            $registry->get_by_token('[woocommerce/order-number]')->execute_callback([]);
+            $this->fail('the exception passes through');
+        } catch (\RuntimeException $e) {
+            $this->assertSame('no order', $e->getMessage());
+        }
+
+        $this->assertFalse(WooCommerceEmailDigits::isRendering());
+    }
+
+    public function test_money_tags_get_persian_digits_in_persian_emails(): void
+    {
+        $registry = $this->registry([
+            'woocommerce/order-total'    => static fn (): string => '220000.00',
+            'woocommerce/order-shipping' => static fn (): string => '<span class="amount"><bdi>20,000&nbsp;<span>&#36;</span></bdi></span>',
+            'woocommerce/order-number'   => static fn (): string => '109',
+        ]);
+        (new WooCommerceEmailDigits())->filterMoneyTags($registry);
+
+        $this->assertSame('۲۲۰۰۰۰.۰۰', $registry->get_by_token('[woocommerce/order-total]')->execute_callback([]));
+        $this->assertSame(
+            '<span class="amount"><bdi>۲۰,۰۰۰&nbsp;<span>&#36;</span></bdi></span>',
+            $registry->get_by_token('[woocommerce/order-shipping]')->execute_callback([]),
+            'wc_price() markup is kept'
+        );
+        $this->assertSame('109', $registry->get_by_token('[woocommerce/order-number]')->execute_callback([]), 'the order number has its own filter');
+
+        Functions\when('determine_locale')->justReturn('en_US');
+        $this->assertSame('220000.00', $registry->get_by_token('[woocommerce/order-total]')->execute_callback([]));
+    }
+
+    public function test_links_in_the_finished_email_keep_english_digits(): void
+    {
+        if (!class_exists(\WP_HTML_Tag_Processor::class)) {
+            $this->markTestSkipped('Needs the WordPress HTML API; the integration tests cover it too.');
+        }
+
+        $html = '<p>سفارش ۱۰۹</p><a href="https://example.test/?o=۱۰۹&amp;p=1" title="سفارش ۱۰۹">سفارش ۱۰۹</a>';
+
+        $this->assertSame(
+            '<p>سفارش ۱۰۹</p><a href="https://example.test/?o=109&#038;p=1" title="سفارش ۱۰۹">سفارش ۱۰۹</a>',
+            (new WooCommerceEmailDigits())->filterMailContent($html)
+        );
+    }
+
+    public function test_the_style_inliner_gets_the_content_through_the_email_once_more(): void
+    {
+        $digits = new WooCommerceEmailDigits();
+        $email = new class ($digits) {
+            /** @var list<mixed> */
+            public array $callbacks = [];
+            public \Closure $default;
+
+            public function __construct(private WooCommerceEmailDigits $digits)
+            {
+                $this->default = static fn (string $content): string => '<inlined>' . $content;
+            }
+
+            public function style_inline(string $content): string
+            {
+                // As WC_Email: the filter picks the callback, here the default.
+                $callback = $this->digits->filterStyleInlineCallback($this->default, $content, $this);
+                $this->callbacks[] = $callback;
+
+                return $callback($content);
+            }
+        };
+
+        $this->assertSame('<inlined><a href="https://example.test/?o=109">109</a>', $email->style_inline('<a href="https://example.test/?o=109">109</a>'));
+        $this->assertCount(2, $email->callbacks, 'the replacement inlines through the email again');
+        $this->assertNotSame($email->default, $email->callbacks[0]);
+        $this->assertSame($email->default, $email->callbacks[1], 'the second time, the default inliner');
+        $this->assertSame('<inlined>x', $email->style_inline('x'), 'and again on the next email');
+
+        $this->assertSame('callback', $digits->filterStyleInlineCallback('callback', 'x', null), 'needs the email');
+    }
+
+    public function test_messages_without_persian_digits_in_links_are_left_alone(): void
+    {
+        $digits = new WooCommerceEmailDigits();
+
+        $this->assertSame('<a href="https://example.test/?o=109">109</a>', $digits->filterMailContent('<a href="https://example.test/?o=109">109</a>'));
+        $this->assertSame("سفارش ۱۰۹\nhttps://example.test/?o=109", $digits->filterMailContent("سفارش ۱۰۹\nhttps://example.test/?o=109"));
+        $this->assertNull($digits->filterMailContent(null));
     }
 
     public function test_values_are_left_alone_outside_an_email(): void
@@ -197,6 +312,21 @@ class WooCommerceEmailDigitsTest extends TestCase
 
         $this->assertSame(['eligibleQuantity' => ['value' => '<del>2</del>']], $digits->filterStructuredData(['eligibleQuantity' => ['value' => '<del>۲</del>']]));
         $this->assertNull($digits->filterStructuredData(null));
+    }
+
+    /**
+     * @param array<string, callable> $callbacks By token.
+     */
+    private function registry(array $callbacks): Personalization_Tags_Registry
+    {
+        require_once dirname(__DIR__) . '/Support/email-editor-stubs.php';
+
+        $registry = new Personalization_Tags_Registry();
+        foreach ($callbacks as $token => $callback) {
+            $registry->register(new Personalization_Tag($token, $token, 'Order', $callback));
+        }
+
+        return $registry;
     }
 
     private function enterEmail(string $template = 'emails/email-header.php'): void

@@ -11,7 +11,8 @@ defined('ABSPATH') || exit;
  * Converts date_i18n() output to Jalali while WooCommerce renders dates: on
  * WooCommerce admin screens, inside WooCommerce template parts (shop pages,
  * My Account, emails) and inside the order-confirmation blocks. Also the
- * order date in email subjects and headings.
+ * order date in email subjects and headings, and the block email editor's
+ * order date tag.
  *
  * The context is tracked with flags set by screen and render hooks, so the
  * date_i18n filter itself does no work outside those contexts.
@@ -19,6 +20,7 @@ defined('ABSPATH') || exit;
 class WooDateDisplayFilter
 {
     private const ORDER_CONFIRMATION_BLOCK_PREFIX = 'woocommerce/order-confirmation';
+    private const ORDER_DATE_TAG = '[woocommerce/order-date]';
 
     private static bool $inFilter = false;
 
@@ -35,6 +37,29 @@ class WooDateDisplayFilter
         add_filter('render_block_data', [$this, 'enterBlock']);
         add_filter('render_block', [$this, 'leaveBlock'], 10, 2);
         add_filter('woocommerce_email_format_string', [$this, 'filterEmailOrderDate'], 10, 2);
+        add_filter('woocommerce_email_editor_register_personalization_tags', [$this, 'filterPersonalizationTags'], 20);
+    }
+
+    /**
+     * The block email editor's order date tag is filled in outside any
+     * template part, so its callback runs as one: the date comes out Jalali,
+     * in the tag's own format.
+     */
+    public function filterPersonalizationTags(mixed $registry): mixed
+    {
+        return EmailEditorTags::wrap(
+            $registry,
+            static fn (string $token): bool => $token === self::ORDER_DATE_TAG,
+            function (callable $original, mixed $context, mixed $args): mixed {
+                $this->enterTemplate();
+
+                try {
+                    return $original($context, $args);
+                } finally {
+                    $this->leaveTemplate();
+                }
+            }
+        );
     }
 
     public function filterDateI18n(string $date, string $format, int $timestamp, bool $gmt = false): string

@@ -4,6 +4,7 @@ namespace PersianKit\Modules\DigitConversion;
 
 use PersianKit\Dependencies\Eram\Abzar\Digits\DigitConverter;
 use PersianKit\Modules\DateConversion\DateDisplayGuard;
+use PersianKit\Modules\WooCommerce\EmailEditorTags;
 
 defined('ABSPATH') || exit;
 
@@ -17,7 +18,9 @@ defined('ABSPATH') || exit;
  * Every email body (HTML, plain text and the multipart plain part) is built
  * from template parts named emails/…, so the converters work only while one
  * renders, and only for emails in Persian: WooCommerce switches to the
- * customer's locale for customer emails.
+ * customer's locale for customer emails. In the block email editor, the
+ * personalization tags (order number, date, totals) are filled in after the
+ * template parts, so their callbacks count as rendering too.
  */
 class WooCommerceEmailDigits
 {
@@ -27,7 +30,20 @@ class WooCommerceEmailDigits
     private const ORDER_NUMBER_PLACEHOLDER = '{order_number}';
     private const ORDER_DATE_PLACEHOLDER = '{order_date}';
 
+    private const PERSONALIZATION_TAGS_FILTER = 'woocommerce_email_editor_register_personalization_tags';
+
+    /** Block email editor tags whose values are amounts of money. */
+    private const MONEY_TAGS = [
+        '[woocommerce/order-subtotal]',
+        '[woocommerce/order-tax]',
+        '[woocommerce/order-discount]',
+        '[woocommerce/order-shipping]',
+        '[woocommerce/order-total]',
+    ];
+
     private static int $depth = 0;
+
+    private bool $inlining = false;
 
     public function __construct(private bool $orderNumbers = true)
     {
@@ -41,6 +57,38 @@ class WooCommerceEmailDigits
     {
         add_action('woocommerce_before_template_part', [self::class, 'enterTemplate']);
         add_action('woocommerce_after_template_part', [self::class, 'leaveTemplate']);
+        add_filter(self::PERSONALIZATION_TAGS_FILTER, [self::class, 'scopeOrderTags'], 30);
+    }
+
+    /**
+     * The block email editor's order tags run as part of the email, so the
+     * order number and date filters reach them, and the site-wide ones don't.
+     */
+    public static function scopeOrderTags(mixed $registry): mixed
+    {
+        return EmailEditorTags::wrap(
+            $registry,
+            [EmailEditorTags::class, 'isOrderTag'],
+            static fn (callable $original, mixed $context, mixed $args): mixed => self::during(
+                static fn (): mixed => $original($context, $args)
+            )
+        );
+    }
+
+    /**
+     * @template T
+     * @param callable(): T $fn
+     * @return T
+     */
+    public static function during(callable $fn): mixed
+    {
+        self::$depth++;
+
+        try {
+            return $fn();
+        } finally {
+            self::$depth = max(0, self::$depth - 1);
+        }
     }
 
     public static function isRendering(): bool
@@ -79,6 +127,86 @@ class WooCommerceEmailDigits
         // plugin converted them.
         add_filter('clean_url', [$this, 'filterUrl'], PHP_INT_MAX);
         add_filter('woocommerce_structured_data_order', [$this, 'filterStructuredData'], PHP_INT_MAX);
+
+        // After the order tags are scoped (priority 30).
+        add_filter(self::PERSONALIZATION_TAGS_FILTER, [$this, 'filterMoneyTags'], 31);
+        add_filter('woocommerce_mail_style_inline_callback', [$this, 'filterStyleInlineCallback'], PHP_INT_MAX, 3);
+        add_filter('woocommerce_mail_content', [$this, 'filterMailContent'], PHP_INT_MAX);
+    }
+
+    /**
+     * The block email editor's money tags: the subtotal, tax and total are raw
+     * numbers ("220000.00"), which keep their format and only change digits.
+     * The discount and shipping are wc_price() HTML, whose markup is kept.
+     */
+    public function filterMoneyTags(mixed $registry): mixed
+    {
+        return EmailEditorTags::wrap(
+            $registry,
+            static fn (string $token): bool => in_array($token, self::MONEY_TAGS, true),
+            static function (callable $original, mixed $context, mixed $args): mixed {
+                $value = $original($context, $args);
+
+                return is_string($value) && self::isPersianEmail() ? DigitConversionModule::convertContent($value) : $value;
+            }
+        );
+    }
+
+    /**
+     * Links built from a block email editor tag get the tag's value as their
+     * href after the email has rendered. WooCommerce's style inliner then
+     * percent-encodes their Persian digits, which can't be told apart from a
+     * permalink's, so links go back to English digits before it runs. The
+     * default inliner is private, so the email inlines again, and this filter
+     * then keeps the callback it gets.
+     */
+    public function filterStyleInlineCallback(mixed $callback, mixed $content = null, mixed $email = null): mixed
+    {
+        if ($this->inlining || !is_object($email) || !method_exists($email, 'style_inline')) {
+            return $callback;
+        }
+
+        return function (mixed $content) use ($email): mixed {
+            $this->inlining = true;
+
+            try {
+                return $email->style_inline($this->filterMailContent($content));
+            } finally {
+                $this->inlining = false;
+            }
+        };
+    }
+
+    /**
+     * Links keep English digits: before the style inliner, and in the
+     * finished email for plugins that convert the whole message. Only href
+     * attributes change: text and other attributes keep their digits.
+     */
+    public function filterMailContent(mixed $content): mixed
+    {
+        if (
+            !is_string($content)
+            || stripos($content, 'href') === false
+            || !preg_match('/[\x{06F0}-\x{06F9}\x{0660}-\x{0669}]/u', $content)
+            || !class_exists(\WP_HTML_Tag_Processor::class)
+        ) {
+            return $content;
+        }
+
+        $processor = new \WP_HTML_Tag_Processor($content);
+        while ($processor->next_tag()) {
+            $href = $processor->get_attribute('href');
+            if (!is_string($href)) {
+                continue;
+            }
+
+            $english = DigitConverter::toEnglish($href);
+            if ($english !== $href) {
+                $processor->set_attribute('href', $english);
+            }
+        }
+
+        return $processor->get_updated_html();
     }
 
     /**
