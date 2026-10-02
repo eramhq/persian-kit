@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Persian Kit 1.0.0-beta.4\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/persian-kit\n"
-"POT-Creation-Date: 2026-10-01T18:18:03+00:00\n"
+"POT-Creation-Date: 2026-10-02T03:08:32+00:00\n"
 "PO-Revision-Date: 2026-10-01 00:00+0000\n"
 "Last-Translator: Persian Kit contributors\n"
 "Language-Team: Persian (Iran)\n"
@@ -94,7 +94,7 @@ msgstr "اعداد فارسی"
 
 #: src/Core/ConflictDetector.php:38 src/Core/ConflictDetector.php:59
 #: src/Core/ConflictDetector.php:79
-#: src/Modules/CharNormalization/CharNormalizationModule.php:21
+#: src/Modules/CharNormalization/CharNormalizationModule.php:20
 msgid "Character Normalization"
 msgstr "یکسان‌سازی ی و ک"
 
@@ -256,13 +256,16 @@ msgstr ""
 "وقتی زبان پیشخوان فارسی یا راست‌به‌چپ است، پیشخوان با فونت وزیرمتن نمایش داده "
 "می‌شود. روی قالب سایت اثری ندارد."
 
-#: src/Modules/CharNormalization/CharNormalizationModule.php:26
+#: src/Modules/CharNormalization/CharNormalizationModule.php:25
 msgid ""
-"Search finds words typed with either Arabic (ي ك) or Persian (ی ک) letters. "
-"Can also fix the letters when posts are saved."
+"Search finds words typed with either Arabic (ي ك) or Persian (ی ک) letters, "
+"and numbers typed with either Persian or English digits. Can also fix the "
+"letters when posts, comments and terms are saved."
 msgstr ""
 "جست‌وجوی سایت کلمه‌ها را پیدا می‌کند، چه با ي و ك عربی نوشته شده باشند چه با ی "
-"و ک فارسی. می‌تواند هنگام ذخیرهٔ نوشته‌ها حروف را هم اصلاح کند."
+"و ک فارسی، و عددها را، چه با رقم‌های فارسی نوشته شده باشند چه با رقم‌های "
+"انگلیسی. می‌تواند هنگام ذخیرهٔ نوشته‌ها، دیدگاه‌ها، دسته‌ها و برچسب‌ها حروف را هم "
+"اصلاح کند."
 
 #: src/Modules/CharNormalization/NormalizationRestController.php:125
 msgid "Choose at least one public post type."
@@ -343,15 +346,67 @@ msgstr ""
 "فقط نامک‌های فارسی را کنترل می‌کند. توابع persian_kit_* برای توسعه‌دهندگان "
 "همیشه در دسترس‌اند، حتی وقتی این بخش خاموش است."
 
+#. translators: %s: field label, such as "Billing phone".
+#: src/Modules/WooCommerce/CheckoutValidator.php:98
+#, php-format
+msgid "%s is not a valid Iranian phone number."
+msgstr "%s یک شمارهٔ تلفن معتبر ایرانی نیست."
+
+#: src/Modules/WooCommerce/CheckoutValidator.php:99
+msgid "Shipping phone"
+msgstr "تلفن آدرس ارسال"
+
+#: src/Modules/WooCommerce/CheckoutValidator.php:99
+msgid "Billing phone"
+msgstr "تلفن صورت‌حساب"
+
+#. translators: %s: field label, such as "Billing postcode".
+#: src/Modules/WooCommerce/CheckoutValidator.php:109
+#, php-format
+msgid "%s is not a valid Iranian postcode. Postcodes have 10 digits."
+msgstr "%s یک کد پستی معتبر ایرانی نیست. کد پستی ۱۰ رقم دارد."
+
+#: src/Modules/WooCommerce/CheckoutValidator.php:110
+msgid "Shipping postcode"
+msgstr "کد پستی آدرس ارسال"
+
+#: src/Modules/WooCommerce/CheckoutValidator.php:110
+msgid "Billing postcode"
+msgstr "کد پستی صورت‌حساب"
+
+#: src/Modules/WooCommerce/CheckoutValidator.php:128
+msgid "The national ID is not valid. Check the 10 digits on the national card."
+msgstr "کد ملی معتبر نیست. ۱۰ رقم روی کارت ملی را بررسی کنید."
+
+#: src/Modules/WooCommerce/CityField.php:100
+#: src/Modules/WooCommerce/CityField.php:117
+msgid "Select a city…"
+msgstr "یک شهر انتخاب کنید…"
+
+#: src/Modules/WooCommerce/NationalIdField.php:90
+#: src/Modules/WooCommerce/NationalIdField.php:118
+#: src/Modules/WooCommerce/NationalIdField.php:216
+msgid "National ID"
+msgstr "کد ملی"
+
+#: src/Modules/WooCommerce/NationalIdField.php:91
+msgid "National ID (optional)"
+msgstr "کد ملی (اختیاری)"
+
+#: src/Modules/WooCommerce/NationalIdField.php:198
+msgid "National ID:"
+msgstr "کد ملی:"
+
 #: src/Modules/WooCommerce/WooCommerceModule.php:24
 msgid ""
 "Jalali date fields and month filters on WooCommerce order, product and "
-"coupon screens, and Jalali dates on order pages and emails customers see. "
-"Does nothing unless WooCommerce is active."
+"coupon screens, Jalali dates on order pages and emails customers see, and "
+"checkout fields that work for Iranian addresses. Does nothing unless "
+"WooCommerce is active."
 msgstr ""
-"فیلدهای تاریخ شمسی و فیلتر ماه در صفحه‌های سفارش، محصول و کد تخفیف ووکامرس، و "
-"تاریخ شمسی در صفحه‌ها و ایمیل‌های سفارش که مشتری می‌بیند. بدون ووکامرس کاری "
-"انجام نمی‌دهد."
+"فیلدهای تاریخ شمسی و فیلتر ماه در صفحه‌های سفارش، محصول و کد تخفیف ووکامرس، "
+"تاریخ شمسی در صفحه‌ها و ایمیل‌های سفارش که مشتری می‌بیند، و فیلدهای صفحهٔ پرداخت "
+"که برای آدرس‌های ایران درست کار می‌کنند. بدون ووکامرس کاری انجام نمی‌دهد."
 
 #: src/Modules/WooCommerce/WooOrderMonthFilter.php:199
 msgid "All Jalali dates"
@@ -381,34 +436,38 @@ msgstr ""
 msgid "Admin font"
 msgstr "فونت پیشخوان"
 
-#: views/admin/partials/char-normalization-settings.php:27
+#: views/admin/partials/char-normalization-settings.php:28
 msgid ""
-"Search always matches both spellings while this module is on. It does not "
-"change any content."
+"Search always matches both spellings, and Persian and English digits, while "
+"this module is on. It does not change any content."
 msgstr ""
-"تا وقتی این بخش روشن است، جست‌وجو هر دو املا را پیدا می‌کند. این کار هیچ "
-"محتوایی را تغییر نمی‌دهد."
+"تا وقتی این بخش روشن است، جست‌وجو هر دو املا، و هم رقم‌های فارسی و هم انگلیسی "
+"را پیدا می‌کند. این کار هیچ محتوایی را تغییر نمی‌دهد."
 
-#: views/admin/partials/char-normalization-settings.php:39
-msgid "Fix letters when posts are saved"
-msgstr "اصلاح حروف هنگام ذخیرهٔ نوشته‌ها"
+#: views/admin/partials/char-normalization-settings.php:40
+msgid "Fix letters when content is saved"
+msgstr "اصلاح حروف هنگام ذخیرهٔ محتوا"
 
-#: views/admin/partials/char-normalization-settings.php:42
+#: views/admin/partials/char-normalization-settings.php:43
 msgid ""
 "Replaces Arabic ي and ك with Persian ی and ک, and Arabic-Indic digits with "
-"Persian digits, in the title, excerpt and content of public posts each time "
-"they are saved. Code blocks and HTML tags are left alone."
+"Persian digits, each time something is saved: the title, excerpt and content "
+"of public posts and menu items, new comments and their author names, and the "
+"names and descriptions of categories, tags and other terms, WooCommerce "
+"product categories included. Code blocks and HTML tags are left alone."
 msgstr ""
-"هر بار که نوشته‌ای عمومی ذخیره می‌شود، در عنوان، خلاصه و محتوای آن ي و ك عربی "
-"را با ی و ک فارسی، و اعداد عربی را با اعداد فارسی جایگزین می‌کند. بلوک‌های کد "
-"و برچسب‌های HTML دست نمی‌خورند."
+"هر بار که چیزی ذخیره می‌شود، ي و ك عربی را با ی و ک فارسی، و اعداد عربی را با "
+"اعداد فارسی جایگزین می‌کند: در عنوان، خلاصه و محتوای نوشته‌های عمومی و آیتم‌های "
+"فهرست، دیدگاه‌های تازه و نام نویسندهٔ آن‌ها، و نام و توضیح دسته‌ها، برچسب‌ها و "
+"دیگر طبقه‌بندی‌ها، از جمله دسته‌های محصولات ووکامرس. بلوک‌های کد و برچسب‌های HTML "
+"دست نمی‌خورند."
 
-#: views/admin/partials/char-normalization-settings.php:55
+#: views/admin/partials/char-normalization-settings.php:56
 msgid ""
 "When fixing letters, also replace Arabic Teh Marbuta (ة) with Persian Heh (ه)"
 msgstr "هنگام اصلاح حروف، ة عربی را هم با ه فارسی جایگزین کن"
 
-#: views/admin/partials/char-normalization-settings.php:58
+#: views/admin/partials/char-normalization-settings.php:59
 msgid ""
 "Warning: This may corrupt Arabic or Quranic text. Only enable if your "
 "content is exclusively Persian."
@@ -416,39 +475,58 @@ msgstr ""
 "هشدار: این کار ممکن است متن عربی یا آیه‌های قرآن را خراب کند. فقط وقتی روشنش "
 "کنید که همهٔ محتوای سایت فارسی است."
 
-#: views/admin/partials/char-normalization-settings.php:71
+#: views/admin/partials/char-normalization-settings.php:75
+msgid "Add half-spaces when posts are saved"
+msgstr "افزودن نیم‌فاصله هنگام ذخیرهٔ نوشته‌ها"
+
+#: views/admin/partials/char-normalization-settings.php:78
+msgid ""
+"Replaces the space with a half-space (ZWNJ) after the prefixes می and نمی "
+"and before suffixes such as ها, تر and ترین, in the title, excerpt and "
+"content of public posts. The rules are simple and can join words that should "
+"stay apart, such as می (wine) in poetry. Code blocks and HTML tags are left "
+"alone."
+msgstr ""
+"در عنوان، خلاصه و محتوای نوشته‌های عمومی، فاصلهٔ بعد از پیشوندهای «می» و «نمی» "
+"و قبل از پسوندهایی مثل «ها»، «تر» و «ترین» را به نیم‌فاصله تبدیل می‌کند. "
+"قاعده‌ها ساده‌اند و ممکن است کلمه‌هایی را که باید جدا بمانند به هم بچسبانند، "
+"مثل «می» (شراب) در شعر. بلوک‌های کد و برچسب‌های HTML دست نمی‌خورند."
+
+#: views/admin/partials/char-normalization-settings.php:88
 msgid "Fix existing posts"
 msgstr "اصلاح نوشته‌های موجود"
 
-#: views/admin/partials/char-normalization-settings.php:73
+#: views/admin/partials/char-normalization-settings.php:90
 msgid ""
-"Rewrites posts that are already saved, using the saved settings above. Count "
-"first to see how many posts would change."
+"Fixes the letters of posts that are already saved, using the saved Teh "
+"Marbuta setting above. Half-spaces are not added. Count first to see how "
+"many posts would change."
 msgstr ""
-"نوشته‌هایی را که قبلاً ذخیره شده‌اند با تنظیمات ذخیره‌شدهٔ بالا بازنویسی می‌کند. "
-"اول بشمارید تا ببینید چند نوشته تغییر می‌کند."
+"حروف نوشته‌هایی را که قبلاً ذخیره شده‌اند اصلاح می‌کند و برای ة از تنظیم "
+"ذخیره‌شدهٔ بالا پیروی می‌کند. نیم‌فاصله اضافه نمی‌شود. اول بشمارید تا ببینید چند "
+"نوشته تغییر می‌کند."
 
-#: views/admin/partials/char-normalization-settings.php:77
+#: views/admin/partials/char-normalization-settings.php:94
 msgid "Post types"
 msgstr "نوع‌های نوشته"
 
-#: views/admin/partials/char-normalization-settings.php:93
+#: views/admin/partials/char-normalization-settings.php:110
 msgid "Count posts to fix"
 msgstr "شمردن نوشته‌هایی که باید اصلاح شوند"
 
-#: views/admin/partials/char-normalization-settings.php:102
+#: views/admin/partials/char-normalization-settings.php:119
 msgid "Resume fixing posts…"
 msgstr "ادامهٔ اصلاح نوشته‌ها…"
 
-#: views/admin/partials/char-normalization-settings.php:103
+#: views/admin/partials/char-normalization-settings.php:120
 msgid "Fix posts…"
 msgstr "اصلاح نوشته‌ها…"
 
-#: views/admin/partials/char-normalization-settings.php:112
+#: views/admin/partials/char-normalization-settings.php:129
 msgid "Start Over"
 msgstr "شروع دوباره"
 
-#: views/admin/partials/char-normalization-settings.php:117
+#: views/admin/partials/char-normalization-settings.php:134
 msgid ""
 "You have unsaved changes. Save your settings before fixing posts, because "
 "the fix uses the saved settings."
@@ -456,11 +534,11 @@ msgstr ""
 "تغییرهای ذخیره‌نشده دارید. پیش از اصلاح نوشته‌ها تنظیمات را ذخیره کنید، چون "
 "اصلاح با تنظیمات ذخیره‌شده انجام می‌شود."
 
-#: views/admin/partials/char-normalization-settings.php:123
+#: views/admin/partials/char-normalization-settings.php:140
 msgid "This changes your saved posts and cannot be undone."
 msgstr "این کار نوشته‌های ذخیره‌شدهٔ شما را تغییر می‌دهد و برگشت‌پذیر نیست."
 
-#: views/admin/partials/char-normalization-settings.php:124
+#: views/admin/partials/char-normalization-settings.php:141
 msgid ""
 "Posts are updated directly in the database, without revisions. Back up your "
 "database before you continue."
@@ -468,27 +546,27 @@ msgstr ""
 "نوشته‌ها مستقیم در پایگاه داده به‌روز می‌شوند و رونوشتی از نسخهٔ قبلی ساخته "
 "نمی‌شود. پیش از ادامه از پایگاه داده پشتیبان بگیرید."
 
-#: views/admin/partials/char-normalization-settings.php:129
+#: views/admin/partials/char-normalization-settings.php:146
 msgid "I have a recent backup of my database"
 msgstr "از پایگاه داده‌ام پشتیبان تازه دارم"
 
-#: views/admin/partials/char-normalization-settings.php:134
+#: views/admin/partials/char-normalization-settings.php:151
 msgid "Fix posts now"
 msgstr "همین حالا اصلاح کن"
 
-#: views/admin/partials/char-normalization-settings.php:137
+#: views/admin/partials/char-normalization-settings.php:154
 msgid "Cancel"
 msgstr "انصراف"
 
-#: views/admin/partials/char-normalization-settings.php:145
+#: views/admin/partials/char-normalization-settings.php:162
 msgid "Posts that would change, by post type"
 msgstr "نوشته‌هایی که تغییر می‌کنند، به تفکیک نوع نوشته"
 
-#: views/admin/partials/char-normalization-settings.php:148
+#: views/admin/partials/char-normalization-settings.php:165
 msgid "Post type"
 msgstr "نوع نوشته"
 
-#: views/admin/partials/char-normalization-settings.php:149
+#: views/admin/partials/char-normalization-settings.php:166
 msgid "Posts to fix"
 msgstr "نوشته‌های نیازمند اصلاح"
 
@@ -592,11 +670,11 @@ msgstr "قیمت‌های ووکامرس"
 
 #: views/admin/partials/digit-conversion-settings.php:26
 msgid ""
-"Product, cart and order prices. Prices drawn by the block cart and checkout "
-"keep English digits."
+"Product, cart and order prices. In the block cart and checkout, a small "
+"script converts the prices the blocks draw in the browser."
 msgstr ""
-"قیمت محصول، سبد خرید و سفارش. قیمت‌هایی که سبد خرید و پرداختِ بلوکی نشان "
-"می‌دهند اعداد انگلیسی می‌مانند."
+"قیمت محصول، سبد خرید و سفارش. در سبد خرید و صفحهٔ پرداختِ بلوکی، یک اسکریپت "
+"کوچک قیمت‌هایی را که بلوک‌ها در مرورگر نشان می‌دهند تبدیل می‌کند."
 
 #: views/admin/partials/digit-conversion-settings.php:31
 msgid "Also use Persian digits in"
@@ -652,6 +730,74 @@ msgstr ""
 msgid "Got it, hide this"
 msgstr "متوجه شدم، پنهانش کن"
 
+#: views/admin/partials/woocommerce-settings.php:17
+msgid "Fix what customers type at checkout"
+msgstr "اصلاح نوشته‌های مشتری در صفحهٔ پرداخت"
+
+#: views/admin/partials/woocommerce-settings.php:18
+msgid ""
+"Turns Persian and Arabic digits in phone numbers and postcodes into English "
+"digits, removes spaces and dashes from postcodes, and replaces Arabic ي and "
+"ك with Persian ی and ک in names and addresses. Applies to the classic and "
+"block checkout and to addresses edited in My Account."
+msgstr ""
+"اعداد فارسی و عربی را در شمارهٔ تلفن و کد پستی به اعداد انگلیسی تبدیل می‌کند، "
+"فاصله و خط تیره را از کد پستی حذف می‌کند و در نام‌ها و آدرس‌ها ي و ك عربی را با "
+"ی و ک فارسی جایگزین می‌کند. در صفحهٔ پرداخت کلاسیک و بلوکی و در آدرس‌های «حساب "
+"کاربری من» کار می‌کند."
+
+#: views/admin/partials/woocommerce-settings.php:21
+msgid "Check Iranian phone numbers and postcodes"
+msgstr "بررسی شمارهٔ تلفن و کد پستی ایرانی"
+
+#: views/admin/partials/woocommerce-settings.php:22
+msgid ""
+"For addresses in Iran, the phone must be a valid mobile or landline number "
+"and the postcode must have 10 valid digits. Addresses in other countries are "
+"not checked."
+msgstr ""
+"برای آدرس‌های ایران، تلفن باید شمارهٔ موبایل یا تلفن ثابت معتبر باشد و کد پستی "
+"باید ۱۰ رقم معتبر داشته باشد. آدرس‌های کشورهای دیگر بررسی نمی‌شوند."
+
+#: views/admin/partials/woocommerce-settings.php:25
+msgid "City dropdown for Iranian addresses"
+msgstr "فهرست کشویی شهرها برای آدرس‌های ایران"
+
+#: views/admin/partials/woocommerce-settings.php:26
+msgid ""
+"Lists the cities of the chosen province in the classic checkout and in My "
+"Account. The block checkout keeps a text field for the city, because "
+"WooCommerce does not let plugins change it."
+msgstr ""
+"شهرهای استان انتخاب‌شده را در صفحهٔ پرداخت کلاسیک و «حساب کاربری من» فهرست "
+"می‌کند. صفحهٔ پرداخت بلوکی برای شهر همان فیلد متنی را نگه می‌دارد، چون ووکامرس "
+"اجازهٔ تغییر آن را به افزونه‌ها نمی‌دهد."
+
+#: views/admin/partials/woocommerce-settings.php:31
+msgid "Off"
+msgstr "خاموش"
+
+#: views/admin/partials/woocommerce-settings.php:32
+msgid "Optional"
+msgstr "اختیاری"
+
+#: views/admin/partials/woocommerce-settings.php:33
+msgid "Required"
+msgstr "الزامی"
+
+#: views/admin/partials/woocommerce-settings.php:56
+msgid "National ID field at checkout"
+msgstr "فیلد کد ملی در صفحهٔ پرداخت"
+
+#: views/admin/partials/woocommerce-settings.php:66
+msgid ""
+"Asks for the customer's national ID (کد ملی) and checks it. Required asks "
+"every customer, in any country. The ID is shown on the order screen and in "
+"order emails."
+msgstr ""
+"کد ملی مشتری را می‌پرسد و آن را بررسی می‌کند. «الزامی» آن را از همهٔ مشتری‌ها، "
+"در هر کشوری، می‌خواهد. کد ملی در صفحهٔ سفارش و ایمیل‌های سفارش نشان داده می‌شود."
+
 #: views/admin/settings.php:23
 msgid ""
 "Turn each module on or off, then save. Changes take effect on your site "
@@ -688,22 +834,3 @@ msgstr "هیچ نوشته‌ای نیاز به اصلاح ندارد."
 msgid "%1$d post of %2$d checked would change."
 msgid_plural "%1$d posts of %2$d checked would change."
 msgstr[0] "%1$d نوشته از %2$d نوشتهٔ بررسی‌شده تغییر می‌کند."
-
-#~ msgid ""
-#~ "WP Jalali can also put Jalali dates in post permalinks. Persian Kit "
-#~ "serves Jalali archive pages such as /1405/07/, but post permalinks keep "
-#~ "their Gregorian dates."
-#~ msgstr ""
-#~ "WP Jalali می‌تواند تاریخ شمسی را در پیوند یکتای نوشته‌ها هم بگذارد. Persian "
-#~ "Kit برگه‌های بایگانی شمسی مثل /1405/07/ را نشان می‌دهد، اما تاریخ پیوند "
-#~ "یکتای نوشته‌ها میلادی می‌ماند."
-
-#~ msgid ""
-#~ "WP Jalali also changes archive and permalink behavior. Persian Kit does "
-#~ "not replace that yet."
-#~ msgstr ""
-#~ "WP Jalali رفتار بایگانی‌ها و پیوندهای یکتا را هم تغییر می‌دهد. Persian Kit "
-#~ "هنوز جایگزینی برای این بخش ندارد."
-
-#~ msgid "Settings saved."
-#~ msgstr "تنظیمات ذخیره شد."

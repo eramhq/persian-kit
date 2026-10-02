@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-10-01T18:36:07+00:00\n"
+"POT-Creation-Date: 2026-10-02T03:08:32+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: persian-kit\n"
@@ -96,7 +96,7 @@ msgstr ""
 #: src/Core/ConflictDetector.php:38
 #: src/Core/ConflictDetector.php:59
 #: src/Core/ConflictDetector.php:79
-#: src/Modules/CharNormalization/CharNormalizationModule.php:21
+#: src/Modules/CharNormalization/CharNormalizationModule.php:20
 msgid "Character Normalization"
 msgstr ""
 
@@ -239,8 +239,8 @@ msgstr ""
 msgid "Uses the Vazirmatn font in the admin when your admin language is Persian or right-to-left. Your site's theme is not affected."
 msgstr ""
 
-#: src/Modules/CharNormalization/CharNormalizationModule.php:26
-msgid "Search finds words typed with either Arabic (ي ك) or Persian (ی ک) letters. Can also fix the letters when posts are saved."
+#: src/Modules/CharNormalization/CharNormalizationModule.php:25
+msgid "Search finds words typed with either Arabic (ي ك) or Persian (ی ک) letters, and numbers typed with either Persian or English digits. Can also fix the letters when posts, comments and terms are saved."
 msgstr ""
 
 #: src/Modules/CharNormalization/NormalizationRestController.php:125
@@ -308,8 +308,59 @@ msgstr ""
 msgid "Controls Persian slugs only. The persian_kit_* helper functions for developers are always available, even when this is off."
 msgstr ""
 
+#. translators: %s: field label, such as "Billing phone".
+#: src/Modules/WooCommerce/CheckoutValidator.php:98
+#, php-format
+msgid "%s is not a valid Iranian phone number."
+msgstr ""
+
+#: src/Modules/WooCommerce/CheckoutValidator.php:99
+msgid "Shipping phone"
+msgstr ""
+
+#: src/Modules/WooCommerce/CheckoutValidator.php:99
+msgid "Billing phone"
+msgstr ""
+
+#. translators: %s: field label, such as "Billing postcode".
+#: src/Modules/WooCommerce/CheckoutValidator.php:109
+#, php-format
+msgid "%s is not a valid Iranian postcode. Postcodes have 10 digits."
+msgstr ""
+
+#: src/Modules/WooCommerce/CheckoutValidator.php:110
+msgid "Shipping postcode"
+msgstr ""
+
+#: src/Modules/WooCommerce/CheckoutValidator.php:110
+msgid "Billing postcode"
+msgstr ""
+
+#: src/Modules/WooCommerce/CheckoutValidator.php:128
+msgid "The national ID is not valid. Check the 10 digits on the national card."
+msgstr ""
+
+#: src/Modules/WooCommerce/CityField.php:100
+#: src/Modules/WooCommerce/CityField.php:117
+msgid "Select a city…"
+msgstr ""
+
+#: src/Modules/WooCommerce/NationalIdField.php:90
+#: src/Modules/WooCommerce/NationalIdField.php:118
+#: src/Modules/WooCommerce/NationalIdField.php:216
+msgid "National ID"
+msgstr ""
+
+#: src/Modules/WooCommerce/NationalIdField.php:91
+msgid "National ID (optional)"
+msgstr ""
+
+#: src/Modules/WooCommerce/NationalIdField.php:198
+msgid "National ID:"
+msgstr ""
+
 #: src/Modules/WooCommerce/WooCommerceModule.php:24
-msgid "Jalali date fields and month filters on WooCommerce order, product and coupon screens, and Jalali dates on order pages and emails customers see. Does nothing unless WooCommerce is active."
+msgid "Jalali date fields and month filters on WooCommerce order, product and coupon screens, Jalali dates on order pages and emails customers see, and checkout fields that work for Iranian addresses. Does nothing unless WooCommerce is active."
 msgstr ""
 
 #: src/Modules/WooCommerce/WooOrderMonthFilter.php:199
@@ -332,87 +383,95 @@ msgstr ""
 msgid "Admin font"
 msgstr ""
 
-#: views/admin/partials/char-normalization-settings.php:27
-msgid "Search always matches both spellings while this module is on. It does not change any content."
+#: views/admin/partials/char-normalization-settings.php:28
+msgid "Search always matches both spellings, and Persian and English digits, while this module is on. It does not change any content."
 msgstr ""
 
-#: views/admin/partials/char-normalization-settings.php:39
-msgid "Fix letters when posts are saved"
+#: views/admin/partials/char-normalization-settings.php:40
+msgid "Fix letters when content is saved"
 msgstr ""
 
-#: views/admin/partials/char-normalization-settings.php:42
-msgid "Replaces Arabic ي and ك with Persian ی and ک, and Arabic-Indic digits with Persian digits, in the title, excerpt and content of public posts each time they are saved. Code blocks and HTML tags are left alone."
+#: views/admin/partials/char-normalization-settings.php:43
+msgid "Replaces Arabic ي and ك with Persian ی and ک, and Arabic-Indic digits with Persian digits, each time something is saved: the title, excerpt and content of public posts and menu items, new comments and their author names, and the names and descriptions of categories, tags and other terms, WooCommerce product categories included. Code blocks and HTML tags are left alone."
 msgstr ""
 
-#: views/admin/partials/char-normalization-settings.php:55
+#: views/admin/partials/char-normalization-settings.php:56
 msgid "When fixing letters, also replace Arabic Teh Marbuta (ة) with Persian Heh (ه)"
 msgstr ""
 
-#: views/admin/partials/char-normalization-settings.php:58
+#: views/admin/partials/char-normalization-settings.php:59
 msgid "Warning: This may corrupt Arabic or Quranic text. Only enable if your content is exclusively Persian."
 msgstr ""
 
-#: views/admin/partials/char-normalization-settings.php:71
+#: views/admin/partials/char-normalization-settings.php:75
+msgid "Add half-spaces when posts are saved"
+msgstr ""
+
+#: views/admin/partials/char-normalization-settings.php:78
+msgid "Replaces the space with a half-space (ZWNJ) after the prefixes می and نمی and before suffixes such as ها, تر and ترین, in the title, excerpt and content of public posts. The rules are simple and can join words that should stay apart, such as می (wine) in poetry. Code blocks and HTML tags are left alone."
+msgstr ""
+
+#: views/admin/partials/char-normalization-settings.php:88
 msgid "Fix existing posts"
 msgstr ""
 
-#: views/admin/partials/char-normalization-settings.php:73
-msgid "Rewrites posts that are already saved, using the saved settings above. Count first to see how many posts would change."
+#: views/admin/partials/char-normalization-settings.php:90
+msgid "Fixes the letters of posts that are already saved, using the saved Teh Marbuta setting above. Half-spaces are not added. Count first to see how many posts would change."
 msgstr ""
 
-#: views/admin/partials/char-normalization-settings.php:77
+#: views/admin/partials/char-normalization-settings.php:94
 msgid "Post types"
 msgstr ""
 
-#: views/admin/partials/char-normalization-settings.php:93
+#: views/admin/partials/char-normalization-settings.php:110
 msgid "Count posts to fix"
 msgstr ""
 
-#: views/admin/partials/char-normalization-settings.php:102
+#: views/admin/partials/char-normalization-settings.php:119
 msgid "Resume fixing posts…"
 msgstr ""
 
-#: views/admin/partials/char-normalization-settings.php:103
+#: views/admin/partials/char-normalization-settings.php:120
 msgid "Fix posts…"
 msgstr ""
 
-#: views/admin/partials/char-normalization-settings.php:112
+#: views/admin/partials/char-normalization-settings.php:129
 msgid "Start Over"
 msgstr ""
 
-#: views/admin/partials/char-normalization-settings.php:117
+#: views/admin/partials/char-normalization-settings.php:134
 msgid "You have unsaved changes. Save your settings before fixing posts, because the fix uses the saved settings."
 msgstr ""
 
-#: views/admin/partials/char-normalization-settings.php:123
+#: views/admin/partials/char-normalization-settings.php:140
 msgid "This changes your saved posts and cannot be undone."
 msgstr ""
 
-#: views/admin/partials/char-normalization-settings.php:124
+#: views/admin/partials/char-normalization-settings.php:141
 msgid "Posts are updated directly in the database, without revisions. Back up your database before you continue."
 msgstr ""
 
-#: views/admin/partials/char-normalization-settings.php:129
+#: views/admin/partials/char-normalization-settings.php:146
 msgid "I have a recent backup of my database"
 msgstr ""
 
-#: views/admin/partials/char-normalization-settings.php:134
+#: views/admin/partials/char-normalization-settings.php:151
 msgid "Fix posts now"
 msgstr ""
 
-#: views/admin/partials/char-normalization-settings.php:137
+#: views/admin/partials/char-normalization-settings.php:154
 msgid "Cancel"
 msgstr ""
 
-#: views/admin/partials/char-normalization-settings.php:145
+#: views/admin/partials/char-normalization-settings.php:162
 msgid "Posts that would change, by post type"
 msgstr ""
 
-#: views/admin/partials/char-normalization-settings.php:148
+#: views/admin/partials/char-normalization-settings.php:165
 msgid "Post type"
 msgstr ""
 
-#: views/admin/partials/char-normalization-settings.php:149
+#: views/admin/partials/char-normalization-settings.php:166
 msgid "Posts to fix"
 msgstr ""
 
@@ -489,7 +548,7 @@ msgid "WooCommerce prices"
 msgstr ""
 
 #: views/admin/partials/digit-conversion-settings.php:26
-msgid "Product, cart and order prices. Prices drawn by the block cart and checkout keep English digits."
+msgid "Product, cart and order prices. In the block cart and checkout, a small script converts the prices the blocks draw in the browser."
 msgstr ""
 
 #: views/admin/partials/digit-conversion-settings.php:31
@@ -530,6 +589,50 @@ msgstr ""
 
 #: views/admin/partials/welcome.php:38
 msgid "Got it, hide this"
+msgstr ""
+
+#: views/admin/partials/woocommerce-settings.php:17
+msgid "Fix what customers type at checkout"
+msgstr ""
+
+#: views/admin/partials/woocommerce-settings.php:18
+msgid "Turns Persian and Arabic digits in phone numbers and postcodes into English digits, removes spaces and dashes from postcodes, and replaces Arabic ي and ك with Persian ی and ک in names and addresses. Applies to the classic and block checkout and to addresses edited in My Account."
+msgstr ""
+
+#: views/admin/partials/woocommerce-settings.php:21
+msgid "Check Iranian phone numbers and postcodes"
+msgstr ""
+
+#: views/admin/partials/woocommerce-settings.php:22
+msgid "For addresses in Iran, the phone must be a valid mobile or landline number and the postcode must have 10 valid digits. Addresses in other countries are not checked."
+msgstr ""
+
+#: views/admin/partials/woocommerce-settings.php:25
+msgid "City dropdown for Iranian addresses"
+msgstr ""
+
+#: views/admin/partials/woocommerce-settings.php:26
+msgid "Lists the cities of the chosen province in the classic checkout and in My Account. The block checkout keeps a text field for the city, because WooCommerce does not let plugins change it."
+msgstr ""
+
+#: views/admin/partials/woocommerce-settings.php:31
+msgid "Off"
+msgstr ""
+
+#: views/admin/partials/woocommerce-settings.php:32
+msgid "Optional"
+msgstr ""
+
+#: views/admin/partials/woocommerce-settings.php:33
+msgid "Required"
+msgstr ""
+
+#: views/admin/partials/woocommerce-settings.php:56
+msgid "National ID field at checkout"
+msgstr ""
+
+#: views/admin/partials/woocommerce-settings.php:66
+msgid "Asks for the customer's national ID (کد ملی) and checks it. Required asks every customer, in any country. The ID is shown on the order screen and in order emails."
 msgstr ""
 
 #: views/admin/settings.php:23
