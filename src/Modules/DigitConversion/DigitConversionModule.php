@@ -82,7 +82,34 @@ class DigitConversionModule extends AbstractModule
 
         if ($this->setting('prices')) {
             $this->registerFilter('formatted_woocommerce_price', [$this, 'filterText']);
+
+            if (apply_filters('persian_kit_digit_conversion', true, 'woocommerce_block_prices')) {
+                add_action('wp_enqueue_scripts', [$this, 'enqueueBlockPriceScript']);
+            }
         }
+    }
+
+    /**
+     * The cart and checkout blocks format prices in the browser, so a script
+     * converts their digits. Loaded on the cart and checkout pages only.
+     */
+    public function enqueueBlockPriceScript(): void
+    {
+        if (!function_exists('is_cart') || !(is_cart() || is_checkout())) {
+            return;
+        }
+
+        if (!has_block('woocommerce/cart') && !has_block('woocommerce/checkout')) {
+            return;
+        }
+
+        wp_enqueue_script(
+            'persian-kit-woocommerce-block-prices',
+            PERSIAN_KIT_URL . 'public/js/woocommerce-block-prices.js',
+            [],
+            PERSIAN_KIT_VERSION,
+            ['in_footer' => true, 'strategy' => 'defer']
+        );
     }
 
     public function filterContent(?string $html): ?string

@@ -15,6 +15,7 @@ New options under WooCommerce Support. They apply to the classic checkout, the b
 - Check Iranian phone numbers and postcodes (on by default): for an address in Iran, the phone must be a valid mobile or landline number and the postcode must have 10 valid digits. Errors name the field. The `persian_kit_woocommerce_validate` filter skips one rule.
 - National ID field (off by default; optional or required): asks for the customer's national ID (کد ملی) and checks it. The block checkout gets a WooCommerce additional checkout field (`persian-kit/national-id`); the classic checkout a billing field. Both save the ID in English digits under the order and customer meta key `_wc_other/persian-kit/national-id`, read with `NationalIdField::get($order)`. It is shown on the order screen and in order emails.
 - City dropdown (off by default): for Iranian addresses in the classic checkout and My Account, the city is a dropdown of the province's cities, refilled when the province changes and turned back into a text field for other countries. The list holds the 1,454 cities of the Statistical Centre of Iran's 1403 country-divisions list. The block checkout keeps a text field, because WooCommerce does not let plugins change it.
+- With Digit Conversion's WooCommerce prices option on, prices in the cart and checkout blocks show Persian digits too. A small script, loaded on those pages only, converts the prices the blocks draw in the browser.
 
 ### Character normalization
 

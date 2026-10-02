@@ -17,6 +17,7 @@ const requiredOutputs = [
     'public/js/media-grid-date-filter.js',
     'public/js/text-editor-zwnj.js',
     'public/js/tinymce-zwnj.js',
+    'public/js/woocommerce-block-prices.js',
     'public/js/woocommerce-city-select.js',
     'public/js/woocommerce-date-fields.js',
     'public/data/ir-cities.json',

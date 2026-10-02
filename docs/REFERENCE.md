@@ -442,7 +442,7 @@ add_filter('persian_kit_date_display', function (string $date, string $format, i
 
 ### `persian_kit_digit_conversion`
 
-Return `false` to stop digit conversion on one hook. The second argument is the hook name: `the_content`, `the_title`, `get_the_excerpt`, `comment_text`, `widget_text`, `widget_text_content`, `human_time_diff` or `get_the_terms`. With the module's options on, also `persian_kit_date_display` (Jalali dates), `number_format_i18n` (counts) and `formatted_woocommerce_price` (WooCommerce prices).
+Return `false` to stop digit conversion on one hook. The second argument is the hook name: `the_content`, `the_title`, `get_the_excerpt`, `comment_text`, `widget_text`, `widget_text_content`, `human_time_diff` or `get_the_terms`. With the module's options on, also `persian_kit_date_display` (Jalali dates), `number_format_i18n` (counts), `formatted_woocommerce_price` (WooCommerce prices) and `woocommerce_block_prices` (the script that converts prices drawn by the cart and checkout blocks, loaded on those pages only).
 
 Text inside `<pre>`, `<code>`, `<kbd>` and `<samp>` elements keeps its digits.
 

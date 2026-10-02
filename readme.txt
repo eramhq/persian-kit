@@ -31,6 +31,7 @@ Persian Kit is a modular WordPress plugin for Persian-language sites. It focuses
 * PHP validation and formatting helpers for common Iranian data
 * WooCommerce Jalali date support for supported screens (HPOS-compatible)
 * WooCommerce checkout for Iran: Persian digits in phone numbers and postcodes are saved as English digits, Iranian phone numbers and postcodes are checked, an optional national ID (کد ملی) field, and an optional city dropdown for each province (classic checkout)
+* Persian digits in the WooCommerce cart and checkout blocks' prices
 
 = Bundled software =
 

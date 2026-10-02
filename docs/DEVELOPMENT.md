@@ -36,7 +36,7 @@ npm ci
 npm run test:js
 ```
 
-The tests in `tests/js/` run on Node's test runner. The city dropdown script is tested in a [jsdom](https://github.com/jsdom/jsdom) page with the jQuery release WordPress ships; both are dev dependencies only.
+The tests in `tests/js/` run on Node's test runner. The WooCommerce scripts are tested in a [jsdom](https://github.com/jsdom/jsdom) page, the city dropdown with the jQuery release WordPress ships; both are dev dependencies only.
 
 ### Static analysis and coding standards
 

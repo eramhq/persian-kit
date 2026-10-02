@@ -153,6 +153,30 @@ class DigitConversionModuleTest extends TestCase
         $this->assertSame(99, has_filter('persian_kit_date_display', [$module, 'filterText']));
         $this->assertSame(99, has_filter('number_format_i18n', [$module, 'filterText']));
         $this->assertSame(99, has_filter('formatted_woocommerce_price', [$module, 'filterText']));
+        $this->assertNotFalse(has_action('wp_enqueue_scripts', [$module, 'enqueueBlockPriceScript']));
+    }
+
+    public function test_block_price_script_loads_on_block_cart_and_checkout_only(): void
+    {
+        $enqueued = [];
+        Functions\when('wp_enqueue_script')->alias(function (string $handle) use (&$enqueued) {
+            $enqueued[] = $handle;
+        });
+        Functions\when('is_checkout')->justReturn(false);
+        $module = $this->makeModule();
+
+        Functions\when('is_cart')->justReturn(false);
+        $module->enqueueBlockPriceScript();
+        $this->assertSame([], $enqueued, 'not on other pages');
+
+        Functions\when('is_cart')->justReturn(true);
+        Functions\when('has_block')->justReturn(false);
+        $module->enqueueBlockPriceScript();
+        $this->assertSame([], $enqueued, 'not on the shortcode cart, whose prices the server converts');
+
+        Functions\when('has_block')->alias(fn (string $block) => $block === 'woocommerce/cart');
+        $module->enqueueBlockPriceScript();
+        $this->assertSame(['persian-kit-woocommerce-block-prices'], $enqueued);
     }
 
     public function test_boot_skips_options_that_are_off(): void
@@ -164,6 +188,7 @@ class DigitConversionModuleTest extends TestCase
         $this->assertFalse(has_filter('persian_kit_date_display'));
         $this->assertFalse(has_filter('number_format_i18n'));
         $this->assertFalse(has_filter('formatted_woocommerce_price'));
+        $this->assertFalse(has_action('wp_enqueue_scripts'));
         $this->assertNotFalse(has_filter('the_content'));
     }
 

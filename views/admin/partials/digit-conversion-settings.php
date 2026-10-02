@@ -23,7 +23,7 @@ $options = [
     ],
     'prices'  => [
         'label'       => __('WooCommerce prices', 'persian-kit'),
-        'description' => __('Product, cart and order prices. Prices drawn by the block cart and checkout keep English digits.', 'persian-kit'),
+        'description' => __('Product, cart and order prices. In the block cart and checkout, a small script converts the prices the blocks draw in the browser.', 'persian-kit'),
     ],
 ];
 ?>

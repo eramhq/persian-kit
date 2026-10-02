@@ -65,6 +65,11 @@ const copies = [
         src: 'resources/js/woocommerce-city-select.js',
         dest: 'public/js/woocommerce-city-select.js',
     },
+    // WooCommerce block cart and checkout Persian price digits
+    {
+        src: 'resources/js/woocommerce-block-prices.js',
+        dest: 'public/js/woocommerce-block-prices.js',
+    },
     // Iranian cities by WooCommerce state code
     {
         src: 'resources/data/ir-cities.json',
