@@ -56,6 +56,8 @@ class AdminPage
         'acf'                => 'fields',
         'yoast'              => 'search',
         'rank_math'          => 'search',
+        'wpml'               => 'globe',
+        'polylang'           => 'globe',
     ];
 
     public const REPO_URL = 'https://github.com/eramhq/persian-kit';
@@ -145,13 +147,15 @@ class AdminPage
             $key = $module::key();
             $plugin = $module->requiredPlugins()[0] ?? [];
             $slug = $plugin['slug'] ?? '';
+            $directoryUrl = $slug !== '' ? 'https://wordpress.org/plugins/' . rawurlencode($slug) . '/' : '';
 
             $moduleData[$key] = [
                 'key'         => $key,
                 'label'       => $module::label(),
                 'icon'        => self::ICONS[$key] ?? '',
-                // The integrated plugin's page on WordPress.org.
-                'pluginUrl'   => $slug !== '' ? 'https://wordpress.org/plugins/' . rawurlencode($slug) . '/' : '',
+                // The integrated plugin's page on WordPress.org, or its own
+                // website when it is not there.
+                'pluginUrl'   => $plugin['url'] ?? $directoryUrl,
                 'description' => $module::description(),
                 'instance'    => $module,
                 'settings'    => $this->settings->module($key),

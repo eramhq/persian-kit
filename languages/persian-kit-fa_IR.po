@@ -474,6 +474,19 @@ msgstr "Yoast SEO"
 msgid "Prices in rials in the schema search engines read. Dates in schema, Open Graph and sitemaps stay Gregorian."
 msgstr "قیمت‌ها به ریال در اسکیمایی که موتورهای جستجو می‌خوانند. تاریخ‌ها در اسکیما، Open Graph و نقشه سایت میلادی می‌مانند."
 
+#: src/Modules/Multilingual/WpmlModule.php:23
+msgid "WPML"
+msgstr "WPML"
+
+#: src/Modules/Multilingual/PolylangModule.php:23
+msgid "Polylang"
+msgstr "Polylang"
+
+#: src/Modules/Multilingual/PolylangModule.php:28
+#: src/Modules/Multilingual/WpmlModule.php:28
+msgid "Dates, digits and Persian writing tools follow each page's language."
+msgstr "تاریخ‌ها، اعداد و ابزارهای نگارش فارسی از زبان هر صفحه پیروی می‌کنند."
+
 #: src/Modules/Utilities/UtilitiesModule.php:24
 msgid "Keep Persian letters in post and category addresses."
 msgstr "حروف فارسی در نشانی نوشته‌ها و دسته‌ها می‌ماند."
@@ -747,9 +760,13 @@ msgid "%1$s form uses Persian Kit fields: %2$s. While this is off, those fields 
 msgid_plural "%1$s forms use Persian Kit fields: %2$s. While this is off, those fields accept any text."
 msgstr[0] "%1$s فرم از فیلدهای Persian Kit استفاده می‌کند: %2$s. تا وقتی این خاموش است، این فیلدها هر متنی را می‌پذیرند."
 
-#: views/admin/partials/integration-card.php:187
+#: views/admin/partials/integration-card.php:190
 msgid "Plugin page on WordPress.org"
 msgstr "صفحه افزونه در وردپرس"
+
+#: views/admin/partials/integration-card.php:192
+msgid "Plugin website"
+msgstr "وب‌سایت افزونه"
 
 #: views/admin/partials/integrations-tab.php:28
 msgid "None of the supported plugins are active on this site."

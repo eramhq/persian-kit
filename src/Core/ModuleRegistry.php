@@ -8,6 +8,8 @@ use PersianKit\Modules\DateConversion\DateConversionModule;
 use PersianKit\Modules\DigitConversion\DigitConversionModule;
 use PersianKit\Modules\Forms\AcfModule;
 use PersianKit\Modules\Forms\Cf7Module;
+use PersianKit\Modules\Multilingual\PolylangModule;
+use PersianKit\Modules\Multilingual\WpmlModule;
 use PersianKit\Modules\Seo\RankMathModule;
 use PersianKit\Modules\Seo\YoastModule;
 use PersianKit\Modules\Utilities\UtilitiesModule;
@@ -34,6 +36,8 @@ final class ModuleRegistry
         AcfModule::class,
         YoastModule::class,
         RankMathModule::class,
+        WpmlModule::class,
+        PolylangModule::class,
         UtilitiesModule::class,
     ];
 }

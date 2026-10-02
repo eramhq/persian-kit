@@ -7,7 +7,8 @@
  *                off if forms use its fields
  *   unavailable  the plugin is too old or needs an add-on: a disabled
  *                toggle and the reason
- *   inactive     the plugin is not active: a link to it on WordPress.org
+ *   inactive     the plugin is not active: a link to it on WordPress.org,
+ *                or to its website when it is not there
  * Integrations in the compat category have no toggle: they are on
  * whenever their plugin is.
  *
@@ -184,7 +185,13 @@ $newTab = __('(opens in a new tab)', 'persian-kit');
 
     <?php if ($state === 'inactive' && $card['pluginUrl'] !== '') : ?>
         <a class="persian-kit-integration__link" href="<?php echo esc_url($card['pluginUrl']); ?>" target="_blank" rel="noopener noreferrer">
-            <?php esc_html_e('Plugin page on WordPress.org', 'persian-kit'); ?>
+            <?php
+            if (str_starts_with($card['pluginUrl'], 'https://wordpress.org/')) {
+                esc_html_e('Plugin page on WordPress.org', 'persian-kit');
+            } else {
+                esc_html_e('Plugin website', 'persian-kit');
+            }
+            ?>
             <span class="screen-reader-text"><?php echo esc_html($newTab); ?></span>
         </a>
     <?php endif; ?>

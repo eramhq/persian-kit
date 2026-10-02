@@ -61,7 +61,7 @@ jobs:
     env:
       WP_CORE_DIR: /tmp/wordpress
       WP_VERSION: ${{ matrix.wp }}
-      # The checkout, form and SEO integration tests run against these releases.
+      # The checkout, form, SEO and multilingual integration tests run against these releases.
       WOOCOMMERCE_VERSION: '10.6.2'
       PERSIAN_KIT_TESTS_WOOCOMMERCE_DIR: /tmp/wordpress/wp-content/plugins/woocommerce
       CF7_VERSION: '6.1.7'
@@ -72,6 +72,9 @@ jobs:
       PERSIAN_KIT_TESTS_YOAST_DIR: /tmp/wordpress/wp-content/plugins/wordpress-seo
       RANK_MATH_VERSION: '1.0.279'
       PERSIAN_KIT_TESTS_RANK_MATH_DIR: /tmp/wordpress/wp-content/plugins/seo-by-rank-math
+      # Loaded only for the multilingual run.
+      POLYLANG_VERSION: '3.8.10'
+      PERSIAN_KIT_TESTS_POLYLANG_DIR: /tmp/wordpress/wp-content/plugins/polylang
       WP_TEST_DB_HOST: 127.0.0.1
       WP_TEST_DB_USER: root
       WP_TEST_DB_PASSWORD: root
@@ -122,11 +125,20 @@ jobs:
           unzip -q /tmp/seo-by-rank-math.zip -d "$WP_CORE_DIR/wp-content/plugins"
           test -f "$PERSIAN_KIT_TESTS_RANK_MATH_DIR/rank-math.php"
 
+      - name: Download Polylang
+        run: |
+          curl -sSfL -o /tmp/polylang.zip "https://downloads.wordpress.org/plugin/polylang.${POLYLANG_VERSION}.zip"
+          unzip -q /tmp/polylang.zip -d "$WP_CORE_DIR/wp-content/plugins"
+          test -f "$PERSIAN_KIT_TESTS_POLYLANG_DIR/polylang.php"
+
       - name: Set up WordPress test library
         run: composer test:integration:setup
 
       - name: Integration tests
         run: composer test:integration
+
+      - name: Integration tests (Polylang)
+        run: composer test:integration:polylang
 
   js:
     name: JavaScript tests

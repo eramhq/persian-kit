@@ -444,9 +444,46 @@ With the module's **Jalali dates in post links** option on (`jalali_permalinks`,
 - A post whose slug or date changed is found from its old address under a Jalali date, as WordPress does for Gregorian dates.
 - A cut-off address under a Jalali date, such as `/1405/07/09/my-po/`, redirects (301) to the post on that date whose slug starts with it, as WordPress does for Gregorian dates.
 
+On [multilingual sites](#multilingual-sites), only posts in Persian get Jalali links; the others keep Gregorian ones, and their Jalali addresses redirect to them.
+
 The Jalali addresses only work while Persian Kit is active. If it is deactivated, WordPress reads `/1405/07/09/my-post/` as the year 1405 and returns "not found"; the Gregorian addresses work again.
 
 To keep post permalinks Gregorian in code, use the [`persian_kit_jalali_permalinks`](#persian_kit_jalali_permalinks) filter. Redirects between the calendars stay on either way.
+
+## Multilingual Sites
+
+On a site with WPML or Polylang and at least one language set up, Persian Kit follows the language instead of converting everything: an English page keeps Gregorian dates and English digits, and an Arabic post keeps its ي and ك. Other sites, including those where WPML or Polylang is installed but no language is set up yet, are unchanged. The WPML and Polylang cards on the Integrations tab show it is on; they have no switch.
+
+| What | Follows |
+| --- | --- |
+| Pages: digits, post and comment dates, `wp_date()` with global conversion, date archive titles (and Yoast's `%%date%%`, Rank Math's `%date%`), the archive list and calendar, the admin bar clock, WooCommerce dates on shop pages and My Account, the Contact Form 7 and ACF date pickers and ACF values | The page's language |
+| Emails: WooCommerce email digits and dates | The email's language: a locale switched for it (`switch_to_locale()`, as WooCommerce and Polylang for WooCommerce do), or a language WPML switched to (`wpml_switch_language`, as WooCommerce Multilingual does) |
+| Contact Form 7 date mail tags | The language of the page the form was on |
+| Admin screens: date pickers, month filters, media dates, WooCommerce order, product and coupon dates | The admin's own language (Users › Profile › Language), also in the block editor |
+| Jalali post permalinks | Each post's language |
+| Writing tools: the ی/ک and half-space fixes on save, Fix letters in existing posts, Persian slugs, the half-space key | The language of what is saved, whoever saves it: an admin with an English profile still gets the fixes on a Persian post |
+
+Persian means `fa` or a locale of it (`fa_IR`, `fa_AF`); [`persian_kit_is_persian_locale`](#persian_kit_is_persian_locale) changes that.
+
+When a language is not known yet:
+
+- **Reading** takes, in order: a switched locale, a language WPML switched to, the admin's language on admin screens, the page's language, the site's default language, then WordPress's locale ([`persian_kit_current_locale`](#persian_kit_current_locale)).
+- **Writing** takes the language the request gives the object (Polylang's and WPML's language boxes, Quick Edit and Bulk Edit, a new translation, the block editor's `lang` parameter), then its own language (a comment's is its post's), the post open in the editor, the current and the default language ([`persian_kit_content_locale`](#persian_kit_content_locale)). Unknown counts as Persian.
+- **Permalinks and Fix letters** take the post's language, else the default one. Unknown counts as Persian.
+
+Polylang may know a page's language only once the query has run ("The language is set from the content"), so each check runs when its filter does. With the language in the address (a directory, subdomain or domain), page caches already keep each language apart.
+
+Unchanged in every language: `persian_kit_date()` and the other functions above, the REST API's `date_jalali` fields, search that matches both spellings, percent-encoded links, Iranian currencies and checkout fields, and typed Jalali dates, which are read in any language.
+
+Limitations:
+
+- Some lookups run their own query without a language condition, so they count posts in every language: the Jalali calendar's days and previous and next months on Persian pages, the admin month filters, and finding a post by its old slug or a cut-off address under a Jalali date. Pages in other languages get WordPress's calendar, which Polylang and WPML filter.
+- Fix letters in existing posts scans posts in every language, so the number it scanned can be higher than the posts it could change.
+- A language changed in the editor counts for the half-space key after the page reloads.
+- If WPML's translation editor saves a translation before WPML has given it a language, the save fixes may apply to it; return `false` from [`persian_kit_should_normalize`](#persian_kit_should_normalize) for those.
+- Weglot translates the finished page and keeps the site's locale, so its languages can't be told apart. TranslatePress and other plugins that set WordPress's locale per language can opt in with `add_filter('persian_kit_multilingual', '__return_true');`: pages then follow the locale, and the writing tools treat content as Persian.
+
+Polylang is covered by integration tests (`composer test:integration:polylang`). WPML is commercial, so it is covered by unit tests against its documented filters.
 
 ## WordPress Hooks
 
@@ -498,7 +535,7 @@ Search does not rewrite the search terms. For each term it matches the term as t
 
 ### `persian_kit_should_normalize`
 
-Return `false` to skip normalization (and half-spaces) for one post or menu item on save. Public post types and `nav_menu_item` are normalized; auto-drafts, revisions and autosaves never are.
+Return `false` to skip normalization (and half-spaces) for one post or menu item on save. Public post types and `nav_menu_item` are normalized; auto-drafts, revisions and autosaves never are. On multilingual sites the first argument is whether the post is in Persian; return `true` to fix a post anyway.
 
 ```php
 add_filter('persian_kit_should_normalize', function (bool $shouldNormalize, $postContext, array $data, array $postarr) {
@@ -530,6 +567,44 @@ Return `false` to keep post permalinks Gregorian, whatever the option says. It i
 
 ```php
 add_filter('persian_kit_jalali_permalinks', '__return_false');
+```
+
+### `persian_kit_multilingual`
+
+Whether Persian Kit follows each page's language (see [Multilingual Sites](#multilingual-sites)). True on sites with WPML or Polylang and at least one language set up. Return `true` for another plugin that sets WordPress's locale per language, such as TranslatePress, or `false` to convert every page as on a single-language site. Add it in a theme's `functions.php` or a plugin.
+
+```php
+add_filter('persian_kit_multilingual', '__return_true');
+```
+
+### `persian_kit_is_persian_locale`
+
+Whether a locale counts as Persian: `fa` and `fa_*` do. For example, to convert only the Iranian Persian pages of a site that also has Dari (`fa_AF`):
+
+```php
+add_filter('persian_kit_is_persian_locale', function (bool $persian, string $locale) {
+    return $locale === 'fa_IR';
+}, 10, 2);
+```
+
+### `persian_kit_current_locale`
+
+The language people read in this request, on multilingual sites: the page's, the email's, or the admin's on admin screens. Dates and digits are converted when it is Persian.
+
+```php
+add_filter('persian_kit_current_locale', function (string $locale) {
+    return $locale;
+});
+```
+
+### `persian_kit_content_locale`
+
+The language of what is being saved or edited, for the writing tools: a locale, or `null` when unknown, which counts as Persian. `$objectType` is `post` or `term`; `$objectId` is `0` for the object the request saves.
+
+```php
+add_filter('persian_kit_content_locale', function (?string $locale, string $objectType, int $objectId) {
+    return $locale;
+}, 10, 3);
 ```
 
 ### `persian_kit_woocommerce_validate`
@@ -629,7 +704,7 @@ If Persian Kit is deactivated while the store uses `IRHT` or `IRHR`, prices show
 
 Display › Persian digits › WooCommerce emails (`emails`, off by default) gives WooCommerce emails Persian digits where people read them: order numbers, prices, quantities (also refunded ones, `<del>2</del> <ins>1</ins>`) and dates, Jalali or Gregorian, in the HTML and plain-text body, and the order number and date in the subject and heading. It applies to every email WooCommerce builds from its `emails/…` template parts, whoever sends it: an admin changing an order's status, the classic or block checkout, cron and WP-CLI.
 
-- **Persian emails only.** Digits are converted while the email's language is Persian (`determine_locale()` starts with `fa`). WooCommerce switches to the customer's language for customer emails, so on a bilingual store an English email keeps English digits.
+- **Persian emails only.** Digits are converted while the email's language is Persian (`fa` or `fa_*`). WooCommerce builds customer emails in the site's language; on a multilingual store, Polylang for WooCommerce and WooCommerce Multilingual switch to the customer's, so an English email keeps English digits and Gregorian dates (see [Multilingual Sites](#multilingual-sites)).
 - **Values, not the body.** Each value is converted where WooCommerce formats it (`formatted_woocommerce_price`, `woocommerce_email_order_item_quantity`, `woocommerce_order_number` at `PHP_INT_MAX`, `date_i18n`), never the whole body. Formats machines read, such as `<time datetime>`, keep English digits.
 - **Subject and heading.** Only the values of `{order_number}` and `{order_date}` are converted (`woocommerce_email_format_string`), not the site title or other text. `{order_date}` is a Jalali date while the WooCommerce module is on, as in the body.
 - **What keeps English digits:** phone numbers, postcodes, email addresses, national IDs, coupon codes, SKUs, product options (such as "Size: 42"), bank details, tracking numbers, the "downloads remaining" count, attachments such as PDF invoices, and SMS. Links keep English digits too: while an email renders, `esc_url()` output (`clean_url`) turns Persian digits back into English, so a link built from an order number or a price still works.
@@ -643,15 +718,15 @@ Another plugin that converts digits in emails, such as Persian WooCommerce's Per
 
 ## Integrations
 
-An integration is a module that works with another plugin: WooCommerce (`woocommerce`), Contact Form 7 (`cf7`), ACF (`acf`), Yoast SEO (`yoast`) and Rank Math (`rank_math`). Each turns on by itself when its plugin is active, and does nothing while it is not. The plugin is checked when the page loads, by its classes, functions and constants, so a network-activated plugin counts on every site.
+An integration is a module that works with another plugin: WooCommerce (`woocommerce`), Contact Form 7 (`cf7`), ACF (`acf`), Yoast SEO (`yoast`), Rank Math (`rank_math`), WPML (`wpml`) and Polylang (`polylang`). Each turns on by itself when its plugin is active, and does nothing while it is not. The plugin is checked when the page loads, by its classes, functions and constants, so a network-activated plugin counts on every site.
 
 - WooCommerce has its own tab on the settings page, shown only while WooCommerce is active, with a card for each section: Checkout and addresses, Prices and currency, Dates. `?tab=woocommerce#checkout` (`#prices`, `#dates`) links to one. While WooCommerce is inactive, `?tab=woocommerce` opens the first tab. Under Dates, `dates_admin` turns the Jalali date pickers on the order, product and coupon screens, and the month filter on the orders list, on or off; dates on orders and in emails follow the Jalali dates module.
 - The Integrations tab has a card for each other integration, grouped as Forms, Store and Compatibility. A plugin that is active but too old, or that needs an add-on (such as a Pro version), has a card that says why, with its switch disabled.
-- Plugins that are not active are listed under "Also works with", each with a link to its WordPress.org page. One that was set up on this site before says its settings are kept: stored settings stay until the plugin is active again.
+- Plugins that are not active are listed under "Also works with", each with a link to its WordPress.org page, or to its website when it is not on WordPress.org (WPML). One that was set up on this site before says its settings are kept: stored settings stay until the plugin is active again.
 - A card is marked New until the Integrations or WooCommerce tab is opened once after its plugin was activated. The keys of the integrations that have been seen are stored per site in the `persian_kit_seen_integrations` option.
 - Integrations add no admin notices. Advice about another Persian plugin that does the same work is shown at the top of the settings page, as before, and on the card or tab of the integration it concerns.
 
-- Yoast SEO and Rank Math are compatibility integrations (category `compat`): their cards have no switch, and they work whenever their plugin is active. See [SEO plugins](#seo-plugins).
+- Yoast SEO, Rank Math, WPML and Polylang are compatibility integrations (category `compat`): their cards have no switch, and they work whenever their plugin is active. See [SEO plugins](#seo-plugins) and [Multilingual Sites](#multilingual-sites).
 
 Values are stored in their standard form, with English digits and Gregorian dates, and shown as Persian digits and Jalali dates where people read them. Exports and other plugins keep working with the stored values.
 
@@ -676,7 +751,7 @@ If Persian Kit itself is deactivated, its field types are gone: Contact Form 7 t
 A module becomes an integration by returning a category and the plugins it needs (`src/Contracts/ModuleInterface.php`):
 
 - `category()`: `forms`, `commerce` or `compat`; `null` for modules that need no other plugin.
-- `requiredPlugins()`: the plugin it integrates with, then any add-on it also needs. Each has a `name`, a `check` callable, and optionally a `version` callable, a `minVersion` and its WordPress.org `slug` (for the link on its card).
+- `requiredPlugins()`: the plugin it integrates with, then any add-on it also needs. Each has a `name`, a `check` callable, and optionally a `version` callable, a `minVersion`, and its WordPress.org `slug` or, for a plugin not on WordPress.org, its website's `url` (for the link on its card).
 - `isAvailable()` and `unavailableReason()` (built on `requiredPlugins()` in `AbstractModule`): the reason's code is `AbstractModule::REASON_INACTIVE`, `REASON_OUTDATED` or `REASON_MISSING`.
 - `boot()` runs while the module is on and its plugins are available. `bootDisabled()` runs while it is off and they are available: register fallbacks there, such as plain inputs for its field types.
 - `formsUsingFields()`: the forms that use its field types, for the warning shown when it is switched off.
