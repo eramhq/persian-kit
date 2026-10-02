@@ -16,9 +16,6 @@ trait ReadsSeoOutput
 {
     use BootsDateConversion;
 
-    /** A Jalali year (13xx, 14xx) or a Persian or Arabic digit. */
-    private const NOT_FOR_MACHINES = '/(?:^|\D)1[34]\d\d-\d\d|[۰-۹٠-٩]/u';
-
     /**
      * Jalali dates everywhere (global conversion) and Persian digits in
      * dates, counts and prices. Hooks added here are removed after the test.
@@ -96,7 +93,8 @@ trait ReadsSeoOutput
     {
         $this->assertIsString($date);
         $this->assertMatchesRegularExpression('/^20\d\d-\d\d-\d\dT\d\d:\d\d:\d\d[+-]\d\d:\d\d$/', $date);
-        $this->assertDoesNotMatchRegularExpression(self::NOT_FOR_MACHINES, $date);
+        // No Jalali year (13xx, 14xx) and no Persian or Arabic digit.
+        $this->assertDoesNotMatchRegularExpression('/(?:^|\D)1[34]\d\d-\d\d|[۰-۹٠-٩]/u', $date);
     }
 
     /**
