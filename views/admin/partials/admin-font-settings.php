@@ -21,7 +21,7 @@ $currentFont = $moduleSettings['font'] ?? 'vazirmatn';
 <ul class="persian-kit-options">
     <li class="persian-kit-option persian-kit-option--select">
         <label class="persian-kit-option__label" for="persian-kit-admin-font">
-            <?php esc_html_e('Admin font', 'persian-kit'); ?>
+            <?php esc_html_e('Font', 'persian-kit'); ?>
         </label>
         <select id="persian-kit-admin-font" name="persian_kit_settings[admin_font][font]">
             <?php foreach ($availableFonts as $value => $label) : ?>

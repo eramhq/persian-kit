@@ -16,12 +16,12 @@ class AdminFontModule extends AbstractModule
 
     public static function label(): string
     {
-        return __('Admin Font', 'persian-kit');
+        return __('Admin font', 'persian-kit');
     }
 
     public static function description(): string
     {
-        return __('Uses the Vazirmatn font in the admin when your admin language is Persian or right-to-left. Your site\'s theme is not affected.', 'persian-kit');
+        return __('Vazirmatn when the admin is in Persian.', 'persian-kit');
     }
 
     /**

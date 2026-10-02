@@ -15,7 +15,7 @@ $compatibilityReports = $args['compatibilityReports'] ?? [];
 <section id="persian-kit-compatibility" class="persian-kit-compatibility">
     <h2><?php esc_html_e('Compatibility', 'persian-kit'); ?></h2>
     <p class="persian-kit-compatibility__intro">
-        <?php esc_html_e('Another Persian plugin is already handling some of the same features. To avoid mixed results, use only one plugin for each feature area.', 'persian-kit'); ?>
+        <?php esc_html_e('Another Persian plugin does some of the same things. Use one plugin for each feature.', 'persian-kit'); ?>
     </p>
 
     <div class="persian-kit-compatibility__cards">

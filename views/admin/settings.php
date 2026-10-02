@@ -40,7 +40,7 @@ $panelAttributes = static function (string $tab) use ($activeTab): string {
 <div class="wrap persian-kit-wrap" x-data="persianKitTabs">
     <h1><?php esc_html_e('Persian Kit', 'persian-kit'); ?></h1>
     <p class="persian-kit-page-description">
-        <?php esc_html_e('Turn each module on or off, then save. Changes take effect on your site right away.', 'persian-kit'); ?>
+        <?php esc_html_e('Changes apply when you save.', 'persian-kit'); ?>
     </p>
 
     <?php
@@ -51,7 +51,6 @@ $panelAttributes = static function (string $tab) use ($activeTab): string {
     <?php if ($showWelcome) : ?>
         <?php
         \PersianKit\Components\View::load('admin/partials/welcome', [
-            'modules'           => $modules,
             'dismissWelcomeUrl' => $args['dismissWelcomeUrl'] ?? '',
         ]);
         ?>
@@ -105,7 +104,7 @@ $panelAttributes = static function (string $tab) use ($activeTab): string {
         <?php endforeach; ?>
 
         <div class="persian-kit-savebar"<?php echo $activeTab === 'tools' ? ' hidden' : ''; ?>>
-            <?php submit_button(__('Save Settings', 'persian-kit'), 'primary', 'submit', false); ?>
+            <?php submit_button(__('Save changes', 'persian-kit'), 'primary', 'submit', false); ?>
             <span class="persian-kit-savebar__status" x-show="dirty" x-cloak>
                 <?php esc_html_e('Unsaved changes', 'persian-kit'); ?>
             </span>

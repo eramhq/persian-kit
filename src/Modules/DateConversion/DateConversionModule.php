@@ -16,12 +16,12 @@ class DateConversionModule extends AbstractModule
 
     public static function label(): string
     {
-        return __('Date Conversion', 'persian-kit');
+        return __('Jalali dates', 'persian-kit');
     }
 
     public static function description(): string
     {
-        return __('Shows post, comment and admin dates as Jalali (Shamsi). Stored dates are not changed, and feeds and structured data keep Gregorian dates.', 'persian-kit');
+        return __('Post, comment and admin dates in the Shamsi calendar. Saved dates stay Gregorian.', 'persian-kit');
     }
 
     /**

@@ -16,12 +16,12 @@ class UtilitiesModule extends AbstractModule
 
     public static function label(): string
     {
-        return __('Utilities', 'persian-kit');
+        return __('Persian slugs', 'persian-kit');
     }
 
     public static function description(): string
     {
-        return __('Controls Persian slugs only. The persian_kit_* helper functions for developers are always available, even when this is off.', 'persian-kit');
+        return __('Keep Persian letters in post and category addresses.', 'persian-kit');
     }
 
     /**
