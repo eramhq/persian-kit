@@ -554,6 +554,14 @@ add_filter('persian_kit_woocommerce_cities', function (array $cities) {
 });
 ```
 
+### `persian_kit_schema_rial_prices`
+
+Return `false` to keep the store's own currency in structured data instead of rials. `$currency` is the node's currency code: `IRT`, `IRHT` or `IRHR`. See [WooCommerce Prices](#woocommerce-prices).
+
+```php
+add_filter('persian_kit_schema_rial_prices', '__return_false');
+```
+
 ### `persian_kit_acf_jalali_value`
 
 Return `false` to keep an ACF date field's template value Gregorian. `$field` is the ACF field array. See [ACF](#acf).
@@ -595,6 +603,25 @@ $nationalId = \PersianKit\Modules\WooCommerce\NationalIdField::get($order); // '
 ```
 
 WooCommerce shows the block field on the order screen, in emails and in My Account for orders placed through the block checkout. Persian Kit shows it on the order screen and in order emails for the other orders, and for every order while the field is off.
+
+## WooCommerce Prices
+
+WooCommerce lists two more currencies under WooCommerce › Settings › General › Currency, while WooCommerce is active, whether the module is on or off:
+
+| Code | Name | Symbol | Rials in one unit |
+| --- | --- | --- | --- |
+| `IRHT` | Iranian thousand toman | هزار تومان | 10,000 |
+| `IRHR` | Iranian thousand rial | هزار ریال | 1,000 |
+
+WooCommerce's own `IRT` (toman, 10 rials) and `IRR` (rial) stay as they are. `IRHT` and `IRHR` are the codes Persian WooCommerce uses, and Iran's payment gateways check for them to send the bank the total in rials. A label or symbol another plugin already gave a code is kept. `IranianCurrencies::rialFactor($code)` returns the rials in one unit of `IRR`, `IRT`, `IRHR` or `IRHT`, and `null` for any other code.
+
+A note under the Currency field says that changing the currency doesn't convert prices, shipping costs or coupons: a product saved at 120,000 toman reads 120,000 thousand toman after the switch. Check that the payment gateway supports thousand toman before picking it, and set Number of decimals for prices such as 12.5. Orders keep the currency they were placed in.
+
+**Prices for search engines.** Search engines accept ISO 4217 codes only, and Iran's is `IRR`. Structured data priced in `IRT`, `IRHT` or `IRHR` is converted to whole rials (`"price": "1200000"`, `"priceCurrency": "IRR"`) in WooCommerce's product markup (`woocommerce_structured_data_product`) and order markup (`woocommerce_structured_data_order`, in order emails), at priority 1 so later callbacks get rials. It covers `price`, `lowPrice`, `highPrice`, `minPrice` and `maxPrice` next to `priceCurrency`, `value`, `minValue` and `maxValue` next to `currency` (`MonetaryAmount`), and an order's `discount`. Each node is converted by its own currency, so a USD price from a multi-currency plugin is left alone, and converting twice changes nothing. Prices shoppers see are never changed. `persian_kit_schema_rial_prices` turns it off.
+
+Product feeds and accounting exports from other plugins may not accept `IRHT` or `IRHR`, which aren't ISO codes.
+
+If Persian Kit is deactivated while the store uses `IRHT` or `IRHR`, prices show without a symbol, and saving WooCommerce › Settings › General resets the currency to WooCommerce's default, because WooCommerce only saves a listed currency. Switch the currency back to toman or rial first (and convert the prices).
 
 ## Integrations
 

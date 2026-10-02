@@ -8,7 +8,7 @@ All notable changes to this project will be documented in this file.
 
 Contact Form 7, ACF and WooCommerce are now integrations: each turns on by itself when its plugin is active.
 
-- WooCommerce has its own tab, shown while WooCommerce is active, with a card for each section: Checkout and addresses (the existing four options), Prices and currency (a pointer to Persian digits' Shop prices for now) and Dates. Links such as `?tab=woocommerce#prices` open a section. Turning the module off hides the sections.
+- WooCommerce has its own tab, shown while WooCommerce is active, with a card for each section: Checkout and addresses (the existing four options), Prices and currency and Dates. Links such as `?tab=woocommerce#prices` open a section. Turning the module off hides the sections.
 - New WooCommerce option, Dates > Jalali date picker in the shop admin (on by default): the date pickers on order, product and coupon screens and the month filter on the orders list can now be turned off.
 - The Forms module is split into a Contact Form 7 integration (`cf7`) and an ACF integration (`acf`), each with its own card. Existing sites keep what they had: each is on if Forms and its option were both on.
 - The Integrations tab has a card for each integration, grouped under headings. Plugins that are not active are listed under "Also works with", each with a link to its WordPress.org page; one set up before says its settings are kept. A plugin that is too old or needs an add-on gets a card that says why. A card is marked New until the tab is opened after its plugin was activated. With no supported plugin active, the tab says so.
@@ -31,6 +31,12 @@ Contact Form 7, ACF and WooCommerce are now integrations: each turns on by itsel
 
 - Fixed: with Persian slugs, a post, page or category reached by its ID (`/?p=123`, `/?page_id=`, `/?cat=`) redirected to a broken address such as `/بر_ا__-آز_ا_ش_-سا_-1405/` and a 404 on some servers (seen with PHP on macOS). Links to Persian slugs are now percent-encoded, as WordPress's own Persian slugs are; the slug itself keeps its letters. The `persian_kit_utilities` filter turns this off with the `encode_links` feature.
 - A cut-off post address under a Jalali date, such as `/1405/07/09/my-po/`, redirects (301) to the post on that date whose slug starts with it, as WordPress does for Gregorian dates. Before, it returned "not found", because WordPress looked for the year 1405.
+
+### WooCommerce: thousand toman and thousand rial
+
+- WooCommerce's currency list has Iranian thousand toman (`IRHT`, هزار تومان) and Iranian thousand rial (`IRHR`, هزار ریال), so a store can write 120 instead of 120,000 toman. These are the codes Persian WooCommerce and Iran's payment gateways use. They stay listed while the WooCommerce module is off.
+- A note under WooCommerce › Settings › General › Currency says that changing the currency doesn't convert prices, shipping costs or coupons, to check the payment gateway supports thousand toman, and to set the number of decimals for prices like 12.5.
+- Prices in WooCommerce's structured data are in rials (`IRR`) for a store priced in toman, thousand toman or thousand rial: product pages for search engines and order emails for Gmail. Search engines don't accept `IRT`, which isn't an ISO currency code, so toman stores had invalid product markup before. Prices shoppers see don't change. The `persian_kit_schema_rial_prices` filter keeps the store's own currency.
 
 ### WooCommerce checkout for Iran
 
