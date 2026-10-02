@@ -13,7 +13,7 @@ Current release: `1.0.0-beta.4` (beta)
 - Search that matches both Arabic (ي ك) and Persian (ی ک) spellings
 - Arabic-to-Persian character normalization on save (off until turned on), with a batch tool for existing content
 - Persian (fa_IR) admin interface, bundled until a WordPress.org language pack exists
-- Vazirmatn-powered admin font support
+- A Persian admin font: Vazirmatn, Noto Sans Arabic or IBM Plex Sans Arabic
 - ZWNJ editor shortcuts for Classic Editor and Gutenberg
 - Persian slug generation
 - PHP validation and formatting helpers for common Iranian data

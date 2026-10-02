@@ -12,9 +12,7 @@ defined('ABSPATH') || exit;
 
 $moduleSettings = $args['moduleSettings'] ?? [];
 
-$availableFonts = [
-    'vazirmatn' => 'Vazirmatn',
-];
+$availableFonts = \PersianKit\Modules\AdminFont\AdminFontModule::FONTS;
 
 $currentFont = $moduleSettings['font'] ?? 'vazirmatn';
 ?>

@@ -114,7 +114,7 @@ msgstr "ی و ک فارسی"
 
 #: src/Core/ConflictDetector.php:39 src/Core/ConflictDetector.php:60
 #: src/Core/ConflictDetector.php:80
-#: src/Modules/AdminFont/AdminFontModule.php:19
+#: src/Modules/AdminFont/AdminFontModule.php:26
 msgid "Admin font"
 msgstr "فونت پیشخوان"
 
@@ -264,9 +264,9 @@ msgstr "«%s» را در Persian Kit خاموش نگه دارید."
 msgid "No change needed for %s."
 msgstr "برای «%s» تغییری لازم نیست."
 
-#: src/Modules/AdminFont/AdminFontModule.php:24
-msgid "Vazirmatn when the admin is in Persian."
-msgstr "فونت وزیرمتن، وقتی پیشخوان فارسی است."
+#: src/Modules/AdminFont/AdminFontModule.php:31
+msgid "A Persian font for the admin when it is in Persian."
+msgstr "فونت فارسی برای پیشخوان، وقتی پیشخوان فارسی است."
 
 #: src/Modules/CharNormalization/CharNormalizationModule.php:25
 msgid "Search matches Arabic or Persian letters and either kind of digit."
@@ -466,7 +466,7 @@ msgstr ""
 "فایل‌های ساخته‌شده پیشخوان پیدا نشدند. پیش از بسته‌بندی یا استفاده از کد منبع، "
 "افزونه را بسازید (build)."
 
-#: views/admin/partials/admin-font-settings.php:24
+#: views/admin/partials/admin-font-settings.php:22
 msgid "Font"
 msgstr "فونت"
 
