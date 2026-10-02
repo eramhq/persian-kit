@@ -243,9 +243,10 @@ class SettingsDefaultsTest extends WordPressIntegrationTestCase
             unload_textdomain('persian-kit');
         }
 
-        $this->assertStringContainsString('ذخیرهٔ تنظیمات', $output);
+        $this->assertStringContainsString('ذخیره تغییرات', $output);
         $this->assertStringContainsString('اعداد فارسی', $output);
-        $this->assertStringNotContainsString('Save Settings', $output);
+        $this->assertStringContainsString('نگارش', $output);
+        $this->assertStringNotContainsString('Save changes', $output);
     }
 
     public function test_plugins_screen_links_to_the_settings(): void

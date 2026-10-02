@@ -430,11 +430,6 @@
     color: #646970;
 }
 
-.persian-kit-warning-list {
-    list-style: disc;
-    padding-inline-start: 1.5em;
-}
-
 /* Narrow screens */
 @media screen and (max-width: 600px) {
     .persian-kit-compatibility__recommendation {

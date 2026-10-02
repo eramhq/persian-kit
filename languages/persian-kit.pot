@@ -9,18 +9,18 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-10-02T06:02:21+00:00\n"
+"POT-Creation-Date: 2026-10-02T06:33:17+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: persian-kit\n"
 
 #. Plugin Name of the plugin
 #: persian-kit.php
-#: src/Core/AdminPage.php:61
-#: src/Core/AdminPage.php:62
+#: src/Core/AdminPage.php:79
+#: src/Core/AdminPage.php:80
 #: src/Core/ConflictDetector.php:144
 #: src/Service/Assets/AssetManager.php:45
-#: views/admin/settings.php:21
+#: views/admin/settings.php:41
 msgid "Persian Kit"
 msgstr ""
 
@@ -44,12 +44,28 @@ msgstr ""
 msgid "https://flavor.dev"
 msgstr ""
 
-#: src/Core/AdminPage.php:53
+#: src/Core/AdminPage.php:71
 msgid "Settings"
 msgstr ""
 
-#: src/Core/AdminPage.php:107
+#: src/Core/AdminPage.php:130
 msgid "You do not have permission to access this page."
+msgstr ""
+
+#: src/Core/AdminPage.php:147
+msgid "Display"
+msgstr ""
+
+#: src/Core/AdminPage.php:148
+msgid "Writing"
+msgstr ""
+
+#: src/Core/AdminPage.php:149
+msgid "Integrations"
+msgstr ""
+
+#: src/Core/AdminPage.php:150
+msgid "Tools"
 msgstr ""
 
 #: src/Core/ConflictDetector.php:27
@@ -57,7 +73,12 @@ msgid "WP-Parsidate is already handling some Persian date and text features."
 msgstr ""
 
 #: src/Core/ConflictDetector.php:29
+#: src/Core/ConflictDetector.php:36
 #: src/Core/ConflictDetector.php:50
+#: src/Core/ConflictDetector.php:57
+#: src/Core/ConflictDetector.php:76
+#: src/Modules/DateConversion/DateConversionModule.php:19
+#: views/admin/partials/digit-conversion-settings.php:16
 msgid "Jalali dates"
 msgstr ""
 
@@ -79,52 +100,45 @@ msgstr ""
 msgid "WooCommerce Jalali dates"
 msgstr ""
 
-#: src/Core/ConflictDetector.php:36
-#: src/Core/ConflictDetector.php:57
-#: src/Core/ConflictDetector.php:76
-#: src/Modules/DateConversion/DateConversionModule.php:19
-msgid "Date Conversion"
-msgstr ""
-
 #: src/Core/ConflictDetector.php:37
 #: src/Core/ConflictDetector.php:58
 #: src/Core/ConflictDetector.php:78
 #: src/Modules/DigitConversion/DigitConversionModule.php:21
-msgid "Digit Conversion"
+msgid "Persian digits"
 msgstr ""
 
 #: src/Core/ConflictDetector.php:38
 #: src/Core/ConflictDetector.php:59
 #: src/Core/ConflictDetector.php:79
 #: src/Modules/CharNormalization/CharNormalizationModule.php:20
-msgid "Character Normalization"
+msgid "Persian ی and ک"
 msgstr ""
 
 #: src/Core/ConflictDetector.php:39
 #: src/Core/ConflictDetector.php:60
 #: src/Core/ConflictDetector.php:80
 #: src/Modules/AdminFont/AdminFontModule.php:19
-msgid "Admin Font"
+msgid "Admin font"
 msgstr ""
 
 #: src/Core/ConflictDetector.php:40
 #: src/Core/ConflictDetector.php:82
 #: src/Modules/WooCommerce/WooCommerceModule.php:19
-msgid "WooCommerce Support"
+msgid "WooCommerce"
 msgstr ""
 
 #: src/Core/ConflictDetector.php:41
 #: src/Core/ConflictDetector.php:61
 #: src/Core/ConflictDetector.php:81
 #: src/Modules/ZWNJEditor/ZWNJEditorModule.php:19
-msgid "ZWNJ Editor Support"
+msgid "Half-space key"
 msgstr ""
 
 #: src/Core/ConflictDetector.php:42
 #: src/Core/ConflictDetector.php:62
 #: src/Core/ConflictDetector.php:83
 #: src/Modules/Utilities/UtilitiesModule.php:19
-msgid "Utilities"
+msgid "Persian slugs"
 msgstr ""
 
 #: src/Core/ConflictDetector.php:48
@@ -140,7 +154,7 @@ msgid "Jalali archive and permalink behavior"
 msgstr ""
 
 #: src/Core/ConflictDetector.php:64
-msgid "Persian Kit also serves Jalali archive pages such as /1405/07/, and can put Jalali dates in post permalinks, as WP Jalali does: turn on \"Use Jalali dates in post permalinks\" under Date Conversion."
+msgid "Persian Kit also serves Jalali archive pages such as /1405/07/, and can put Jalali dates in post links, as WP Jalali does: turn on \"Jalali dates in post links\" under Jalali dates."
 msgstr ""
 
 #: src/Core/ConflictDetector.php:69
@@ -160,8 +174,8 @@ msgid "Some WooCommerce date display and email formatting"
 msgstr ""
 
 #: src/Core/ConflictDetector.php:77
-#: views/admin/partials/date-conversion-settings.php:28
-msgid "Convert all dates (advanced)"
+#: views/admin/partials/date-conversion-settings.php:25
+msgid "Convert every date (advanced)"
 msgstr ""
 
 #: src/Core/ConflictDetector.php:85
@@ -169,7 +183,6 @@ msgid "Let Persian WooCommerce handle Woo-specific dates. Persian Kit can still 
 msgstr ""
 
 #: src/Core/ConflictDetector.php:145
-#: views/admin/partials/compatibility-guidance.php:18
 msgid "Another Persian plugin is already handling some of the same features. To avoid mixed results, use only one plugin for each feature area."
 msgstr ""
 
@@ -236,11 +249,11 @@ msgid "No change needed for %s."
 msgstr ""
 
 #: src/Modules/AdminFont/AdminFontModule.php:24
-msgid "Uses the Vazirmatn font in the admin when your admin language is Persian or right-to-left. Your site's theme is not affected."
+msgid "Vazirmatn when the admin is in Persian."
 msgstr ""
 
 #: src/Modules/CharNormalization/CharNormalizationModule.php:25
-msgid "Search finds words typed with either Arabic (ي ك) or Persian (ی ک) letters, and numbers typed with either Persian or English digits. Can also fix the letters when posts, comments and terms are saved."
+msgid "Search matches Arabic or Persian letters and either kind of digit."
 msgstr ""
 
 #: src/Modules/CharNormalization/NormalizationRestController.php:125
@@ -255,7 +268,7 @@ msgid "%1$s – %2$s"
 msgstr ""
 
 #: src/Modules/DateConversion/DateConversionModule.php:24
-msgid "Shows post, comment and admin dates as Jalali (Shamsi). Stored dates are not changed, and feeds and structured data keep Gregorian dates."
+msgid "Post, comment and admin dates in the Shamsi calendar. Saved dates stay Gregorian."
 msgstr ""
 
 #: src/Modules/DateConversion/DateFilters.php:252
@@ -305,7 +318,7 @@ msgid "Filter by date"
 msgstr ""
 
 #: src/Modules/DigitConversion/DigitConversionModule.php:26
-msgid "Shows Persian digits (۱۲۳) instead of English ones (123) in post titles, content, excerpts, comments, widgets and tags on your site. Admin screens, feeds and the REST API keep English digits."
+msgid "Show ۱۲۳ instead of 123 in your site's content."
 msgstr ""
 
 #: src/Modules/Forms/Cf7IranianFields.php:75
@@ -354,11 +367,11 @@ msgid "Forms"
 msgstr ""
 
 #: src/Modules/Forms/FormsModule.php:25
-msgid "A Jalali date picker in Contact Form 7 and ACF date fields, and Iranian field checks in Contact Form 7. Dates are still saved and sent as Gregorian dates. Does nothing unless Contact Form 7 or ACF is active."
+msgid "Jalali date picker for Contact Form 7 and ACF. Dates are still saved as Gregorian."
 msgstr ""
 
 #: src/Modules/Utilities/UtilitiesModule.php:24
-msgid "Controls Persian slugs only. The persian_kit_* helper functions for developers are always available, even when this is off."
+msgid "Keep Persian letters in post and category addresses."
 msgstr ""
 
 #. translators: %s: field label, such as "Billing phone".
@@ -409,7 +422,7 @@ msgid "National ID:"
 msgstr ""
 
 #: src/Modules/WooCommerce/WooCommerceModule.php:24
-msgid "Jalali date fields and month filters on WooCommerce order, product and coupon screens, Jalali dates on order pages and emails customers see, and checkout fields that work for Iranian addresses. Does nothing unless WooCommerce is active."
+msgid "Jalali dates in the shop admin and emails, and checkout fields for Iran."
 msgstr ""
 
 #: src/Modules/WooCommerce/WooOrderMonthFilter.php:199
@@ -417,7 +430,7 @@ msgid "All Jalali dates"
 msgstr ""
 
 #: src/Modules/ZWNJEditor/ZWNJEditorModule.php:24
-msgid "Type a half-space (ZWNJ) with Shift+Space in the Classic and Block editors. The Classic Editor also gets a toolbar button."
+msgid "Type a half-space with Shift+Space in the editor."
 msgstr ""
 
 #: src/Modules/ZWNJEditor/ZWNJEditorModule.php:88
@@ -428,104 +441,36 @@ msgstr ""
 msgid "The generated admin assets are missing. Build the plugin before packaging or using it from source."
 msgstr ""
 
-#: views/admin/partials/admin-font-settings.php:23
-msgid "Admin font"
+#: views/admin/partials/admin-font-settings.php:24
+msgid "Font"
 msgstr ""
 
-#: views/admin/partials/char-normalization-settings.php:28
-msgid "Search always matches both spellings, and Persian and English digits, while this module is on. It does not change any content."
+#: views/admin/partials/char-normalization-settings.php:17
+msgid "Fix letters on save"
 msgstr ""
 
-#: views/admin/partials/char-normalization-settings.php:40
-msgid "Fix letters when content is saved"
+#: views/admin/partials/char-normalization-settings.php:18
+msgid "Arabic ي and ك become ی and ک in posts, comments and terms."
 msgstr ""
 
-#: views/admin/partials/char-normalization-settings.php:43
-msgid "Replaces Arabic ي and ك with Persian ی and ک, and Arabic-Indic digits with Persian digits, each time something is saved: the title, excerpt and content of public posts and menu items, new comments and their author names, and the names and descriptions of categories, tags and other terms, WooCommerce product categories included. Code blocks and HTML tags are left alone."
+#: views/admin/partials/char-normalization-settings.php:21
+msgid "Also replace ة with ه"
 msgstr ""
 
-#: views/admin/partials/char-normalization-settings.php:56
-msgid "When fixing letters, also replace Arabic Teh Marbuta (ة) with Persian Heh (ه)"
+#: views/admin/partials/char-normalization-settings.php:24
+msgid "Add half-spaces on save"
 msgstr ""
 
-#: views/admin/partials/char-normalization-settings.php:59
-msgid "Warning: This may corrupt Arabic or Quranic text. Only enable if your content is exclusively Persian."
-msgstr ""
-
-#: views/admin/partials/char-normalization-settings.php:75
-msgid "Add half-spaces when posts are saved"
-msgstr ""
-
-#: views/admin/partials/char-normalization-settings.php:78
-msgid "Replaces the space with a half-space (ZWNJ) after the prefixes می and نمی and before suffixes such as ها, تر and ترین, in the title, excerpt and content of public posts. The rules are simple and can join words that should stay apart, such as می (wine) in poetry. Code blocks and HTML tags are left alone."
-msgstr ""
-
-#: views/admin/partials/char-normalization-settings.php:88
-msgid "Fix existing posts"
-msgstr ""
-
-#: views/admin/partials/char-normalization-settings.php:90
-msgid "Fixes the letters of posts that are already saved, using the saved Teh Marbuta setting above. Half-spaces are not added. Count first to see how many posts would change."
-msgstr ""
-
-#: views/admin/partials/char-normalization-settings.php:94
-msgid "Post types"
-msgstr ""
-
-#: views/admin/partials/char-normalization-settings.php:110
-msgid "Count posts to fix"
-msgstr ""
-
-#: views/admin/partials/char-normalization-settings.php:119
-msgid "Resume fixing posts…"
-msgstr ""
-
-#: views/admin/partials/char-normalization-settings.php:120
-msgid "Fix posts…"
-msgstr ""
-
-#: views/admin/partials/char-normalization-settings.php:129
-msgid "Start Over"
-msgstr ""
-
-#: views/admin/partials/char-normalization-settings.php:134
-msgid "You have unsaved changes. Save your settings before fixing posts, because the fix uses the saved settings."
-msgstr ""
-
-#: views/admin/partials/char-normalization-settings.php:140
-msgid "This changes your saved posts and cannot be undone."
-msgstr ""
-
-#: views/admin/partials/char-normalization-settings.php:141
-msgid "Posts are updated directly in the database, without revisions. Back up your database before you continue."
-msgstr ""
-
-#: views/admin/partials/char-normalization-settings.php:146
-msgid "I have a recent backup of my database"
-msgstr ""
-
-#: views/admin/partials/char-normalization-settings.php:151
-msgid "Fix posts now"
-msgstr ""
-
-#: views/admin/partials/char-normalization-settings.php:154
-msgid "Cancel"
-msgstr ""
-
-#: views/admin/partials/char-normalization-settings.php:162
-msgid "Posts that would change, by post type"
-msgstr ""
-
-#: views/admin/partials/char-normalization-settings.php:165
-msgid "Post type"
-msgstr ""
-
-#: views/admin/partials/char-normalization-settings.php:166
-msgid "Posts to fix"
+#: views/admin/partials/char-normalization-settings.php:25
+msgid "After می and before ها, تر, ترین. Can join words that should stay apart."
 msgstr ""
 
 #: views/admin/partials/compatibility-guidance.php:16
 msgid "Compatibility"
+msgstr ""
+
+#: views/admin/partials/compatibility-guidance.php:18
+msgid "Another Persian plugin does some of the same things. Use one plugin for each feature."
 msgstr ""
 
 #: views/admin/partials/compatibility-guidance.php:29
@@ -544,68 +489,36 @@ msgstr ""
 msgid "Recommended Persian Kit settings"
 msgstr ""
 
-#: views/admin/partials/date-conversion-settings.php:31
-msgid "By default only post, comment and admin dates are converted. Turn this on only if your theme or a plugin still shows Gregorian dates, because it converts every date WordPress formats with wp_date(). Known side effects:"
+#: views/admin/partials/date-conversion-settings.php:17
+msgid "Jalali archives and calendar"
 msgstr ""
 
-#: views/admin/partials/date-conversion-settings.php:34
-msgid "Search engines may read Jalali dates in structured data (JSON-LD) from SEO plugins."
+#: views/admin/partials/date-conversion-settings.php:18
+msgid "Archive lists, the calendar and pages such as /1405/07/."
 msgstr ""
 
-#: views/admin/partials/date-conversion-settings.php:35
-msgid "Plugins that read back a date they formatted, such as event, booking or form plugins, can save or compare the wrong date."
+#: views/admin/partials/date-conversion-settings.php:21
+msgid "Jalali dates in post links"
 msgstr ""
 
-#: views/admin/partials/date-conversion-settings.php:36
-msgid "Dates in exports and in emails sent by other plugins become Jalali."
+#: views/admin/partials/date-conversion-settings.php:22
+msgid "/1405/07/09/my-post/. Old links redirect."
 msgstr ""
 
-#: views/admin/partials/date-conversion-settings.php:48
-msgid "Show the archive list and calendar in Jalali"
-msgstr ""
-
-#: views/admin/partials/date-conversion-settings.php:51
-msgid "The Archives and Calendar widgets and blocks list Jalali months and days, and link to Jalali archive pages such as /1405/07/."
-msgstr ""
-
-#: views/admin/partials/date-conversion-settings.php:63
-msgid "Use Jalali dates in post permalinks"
-msgstr ""
-
-#: views/admin/partials/date-conversion-settings.php:66
-msgid "For permalink structures with the date, such as Day and name: /1405/07/09/my-post/ instead of /2026/10/01/my-post/. Old links redirect to the new ones. If Persian Kit is deactivated, the Jalali links stop working."
+#: views/admin/partials/date-conversion-settings.php:26
+msgid "Only if your theme still shows Gregorian dates. It can confuse SEO, booking and form plugins."
 msgstr ""
 
 #: views/admin/partials/digit-conversion-settings.php:17
-msgid "Dates"
+msgid "Post and comment counts"
 msgstr ""
 
 #: views/admin/partials/digit-conversion-settings.php:18
-msgid "Jalali dates on your site, such as ۱۴ فروردین ۱۴۰۴."
-msgstr ""
-
-#: views/admin/partials/digit-conversion-settings.php:21
-msgid "Counts"
+msgid "Shop prices"
 msgstr ""
 
 #: views/admin/partials/digit-conversion-settings.php:22
-msgid "Numbers WordPress formats for display, such as comment and post counts."
-msgstr ""
-
-#: views/admin/partials/digit-conversion-settings.php:25
-msgid "WooCommerce prices"
-msgstr ""
-
-#: views/admin/partials/digit-conversion-settings.php:26
-msgid "Product, cart and order prices. In the block cart and checkout, a small script converts the prices the blocks draw in the browser."
-msgstr ""
-
-#: views/admin/partials/digit-conversion-settings.php:31
-msgid "Also use Persian digits in"
-msgstr ""
-
-#: views/admin/partials/digit-conversion-settings.php:48
-msgid "Text inside code, <kbd> and <samp> elements keeps its digits."
+msgid "Also in:"
 msgstr ""
 
 #: views/admin/partials/forms-settings.php:17
@@ -613,71 +526,123 @@ msgid "Contact Form 7"
 msgstr ""
 
 #: views/admin/partials/forms-settings.php:18
-msgid "Date fields get a Jalali date picker and still send a Gregorian date, which emails show as a Jalali date while Date Conversion is on. Adds [mobile_ir], [national_id], [postcode_ir], [card_ir] and [iban_ir] fields that check what is typed, and turns Persian digits into English digits in date, phone and number fields. Write [date name gregorian] to keep a Gregorian date field."
+msgid "Date picker, plus fields such as [mobile_ir] and [national_id]."
 msgstr ""
 
 #: views/admin/partials/forms-settings.php:21
-msgid "ACF date fields"
+msgid "ACF"
 msgstr ""
 
 #: views/admin/partials/forms-settings.php:22
-msgid "Date Picker and Date Time Picker fields get a Jalali date picker, on edit screens and in acf_form(). Values are stored as before. While Date Conversion is on, get_field() and the_field() return Jalali dates in the field's return format, except formats such as Ymd that code reads."
+msgid "Date picker for Date and Date Time fields."
 msgstr ""
 
-#: views/admin/partials/utilities-settings.php:26
-msgid "Persian slugs"
+#: views/admin/partials/tools.php:23
+msgid "Fix letters in existing posts"
 msgstr ""
 
-#: views/admin/partials/utilities-settings.php:29
-msgid "Keeps Persian letters in post and term slugs instead of percent-encoding them, and turns a half-space into \"-\". Other slugs are left to WordPress. Existing slugs are not changed."
+#: views/admin/partials/tools.php:25
+msgid "Count first, then fix. Back up your database before fixing."
 msgstr ""
 
-#: views/admin/partials/welcome.php:18
+#: views/admin/partials/tools.php:29
+msgid "Post types"
+msgstr ""
+
+#: views/admin/partials/tools.php:45
+msgid "Count posts"
+msgstr ""
+
+#: views/admin/partials/tools.php:54
+msgid "Resume fixing posts…"
+msgstr ""
+
+#: views/admin/partials/tools.php:55
+msgid "Fix posts…"
+msgstr ""
+
+#: views/admin/partials/tools.php:64
+msgid "Start over"
+msgstr ""
+
+#: views/admin/partials/tools.php:69
+msgid "Save your settings first. The fix uses the saved settings."
+msgstr ""
+
+#: views/admin/partials/tools.php:75
+msgid "This changes your posts, without revisions, and cannot be undone."
+msgstr ""
+
+#: views/admin/partials/tools.php:80
+msgid "I have a recent database backup"
+msgstr ""
+
+#: views/admin/partials/tools.php:85
+msgid "Fix posts now"
+msgstr ""
+
+#: views/admin/partials/tools.php:88
+msgid "Cancel"
+msgstr ""
+
+#: views/admin/partials/tools.php:96
+msgid "Posts that would change, by post type"
+msgstr ""
+
+#: views/admin/partials/tools.php:99
+msgid "Post type"
+msgstr ""
+
+#: views/admin/partials/tools.php:100
+msgid "Posts to fix"
+msgstr ""
+
+#: views/admin/partials/utilities-settings.php:17
+msgid "Use Persian slugs"
+msgstr ""
+
+#: views/admin/partials/utilities-settings.php:18
+msgid "Existing slugs are not changed."
+msgstr ""
+
+#: views/admin/partials/welcome.php:11
 msgid "Welcome to Persian Kit"
 msgstr ""
 
-#: views/admin/partials/welcome.php:20
-msgid "Each module below can be switched on or off on its own. Here is what each one does on your site right now."
+#: views/admin/partials/welcome.php:12
+msgid "Turn each part on or off below. Your saved posts are not changed."
 msgstr ""
 
-#: views/admin/partials/welcome.php:27
-msgid "on"
+#: views/admin/partials/welcome.php:13
+msgid "Persian digits and fixing letters on save start off."
 msgstr ""
 
-#: views/admin/partials/welcome.php:27
-msgid "off"
-msgstr ""
-
-#: views/admin/partials/welcome.php:34
-msgid "Your saved posts are not changed. Digit conversion and fixing letters on save start off; turn them on below if you want them."
-msgstr ""
-
-#: views/admin/partials/welcome.php:38
-msgid "Got it, hide this"
+#: views/admin/partials/welcome.php:16
+msgid "Got it"
 msgstr ""
 
 #: views/admin/partials/woocommerce-settings.php:17
-msgid "Fix what customers type at checkout"
+msgid "Fix what customers type"
 msgstr ""
 
 #: views/admin/partials/woocommerce-settings.php:18
-msgid "Turns Persian and Arabic digits in phone numbers and postcodes into English digits, removes spaces and dashes from postcodes, and replaces Arabic ي and ك with Persian ی and ک in names and addresses. Applies to the classic and block checkout and to addresses edited in My Account."
+msgid "English digits in phone numbers and postcodes, Persian ی and ک in names."
 msgstr ""
 
 #: views/admin/partials/woocommerce-settings.php:21
-msgid "Check Iranian phone numbers and postcodes"
+msgid "Check phone numbers and postcodes"
 msgstr ""
 
 #: views/admin/partials/woocommerce-settings.php:22
-msgid "For addresses in Iran, the phone must be a valid mobile or landline number and the postcode must have 10 valid digits. Addresses in other countries are not checked."
+msgid "For addresses in Iran only."
 msgstr ""
 
 #: views/admin/partials/woocommerce-settings.php:25
-msgid "City dropdown for Iranian addresses"
+msgid "City list for Iran"
 msgstr ""
 
 #: views/admin/partials/woocommerce-settings.php:26
-msgid "Lists the cities of the chosen province in the classic checkout and in My Account. The block checkout keeps a text field for the city, because WooCommerce does not let plugins change it."
+msgid "Classic checkout and My Account."
 msgstr ""
 
 #: views/admin/partials/woocommerce-settings.php:31
@@ -692,46 +657,54 @@ msgstr ""
 msgid "Required"
 msgstr ""
 
-#: views/admin/partials/woocommerce-settings.php:56
-msgid "National ID field at checkout"
+#: views/admin/partials/woocommerce-settings.php:51
+msgid "National ID at checkout"
 msgstr ""
 
-#: views/admin/partials/woocommerce-settings.php:66
-msgid "Asks for the customer's national ID (کد ملی) and checks it. Required asks every customer, in any country. The ID is shown on the order screen and in order emails."
+#: views/admin/partials/woocommerce-settings.php:65
+msgid "Shown on the order and in emails."
 msgstr ""
 
-#: views/admin/settings.php:23
-msgid "Turn each module on or off, then save. Changes take effect on your site right away."
+#: views/admin/settings.php:43
+msgid "Changes apply when you save."
 msgstr ""
 
-#: views/admin/settings.php:66
-msgid "Save Settings"
+#: views/admin/settings.php:67
+msgid "Persian Kit settings"
 msgstr ""
 
-#. translators: 1: number of posts processed, 2: number of posts changed.
-#: public/js/admin.js:4329
+#: views/admin/settings.php:107
+msgid "Save changes"
+msgstr ""
+
+#: views/admin/settings.php:109
+msgid "Unsaved changes"
+msgstr ""
+
+#. translators: 1: number of posts checked, 2: number of posts fixed.
+#: public/js/admin.js:4327
 #, js-format
-msgid "Processed %1$d posts (%2$d modified)…"
+msgid "%1$d posts checked, %2$d fixed…"
 msgstr ""
 
-#. translators: 1: number of posts processed, 2: number of posts changed.
-#: public/js/admin.js:4339
+#. translators: 1: number of posts checked, 2: number of posts fixed.
+#: public/js/admin.js:4337
 #, js-format
-msgid "Done! %1$d posts processed, %2$d modified."
+msgid "Done. %1$d posts checked, %2$d fixed."
 msgstr ""
 
 #. translators: %d: number of posts checked so far.
-#: public/js/admin.js:4375
+#: public/js/admin.js:4373
 #, js-format
 msgid "Checked %d posts…"
 msgstr ""
 
-#: public/js/admin.js:4391
+#: public/js/admin.js:4389
 msgid "No posts need fixing."
 msgstr ""
 
 #. translators: 1: number of posts that would change, 2: number of posts checked.
-#: public/js/admin.js:4393
+#: public/js/admin.js:4391
 #, js-format
 msgid "%1$d post of %2$d checked would change."
 msgid_plural "%1$d posts of %2$d checked would change."

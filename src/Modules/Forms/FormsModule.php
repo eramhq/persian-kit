@@ -22,7 +22,7 @@ class FormsModule extends AbstractModule
 
     public static function description(): string
     {
-        return __('A Jalali date picker in Contact Form 7 and ACF date fields, and Iranian field checks in Contact Form 7. Dates are still saved and sent as Gregorian dates. Does nothing unless Contact Form 7 or ACF is active.', 'persian-kit');
+        return __('Jalali date picker for Contact Form 7 and ACF. Dates are still saved as Gregorian.', 'persian-kit');
     }
 
     /**

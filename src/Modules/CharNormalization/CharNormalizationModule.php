@@ -17,12 +17,12 @@ class CharNormalizationModule extends AbstractModule
 
     public static function label(): string
     {
-        return __('Character Normalization', 'persian-kit');
+        return __('Persian ی and ک', 'persian-kit');
     }
 
     public static function description(): string
     {
-        return __('Search finds words typed with either Arabic (ي ك) or Persian (ی ک) letters, and numbers typed with either Persian or English digits. Can also fix the letters when posts, comments and terms are saved.', 'persian-kit');
+        return __('Search matches Arabic or Persian letters and either kind of digit.', 'persian-kit');
     }
 
     /**

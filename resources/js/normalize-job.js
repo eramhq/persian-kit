@@ -110,8 +110,8 @@ export default function normalizeJob(config = {}) {
                 }
                 this.done = false;
                 this.progressText = sprintf(
-                    /* translators: 1: number of posts processed, 2: number of posts changed. */
-                    __('Processed %1$d posts (%2$d modified)…', 'persian-kit'),
+                    /* translators: 1: number of posts checked, 2: number of posts fixed. */
+                    __('%1$d posts checked, %2$d fixed…', 'persian-kit'),
                     this.totalProcessed,
                     this.totalModified
                 );
@@ -121,8 +121,8 @@ export default function normalizeJob(config = {}) {
             if (job.status === 'completed') {
                 this.done = true;
                 this.doneText = sprintf(
-                    /* translators: 1: number of posts processed, 2: number of posts changed. */
-                    __('Done! %1$d posts processed, %2$d modified.', 'persian-kit'),
+                    /* translators: 1: number of posts checked, 2: number of posts fixed. */
+                    __('Done. %1$d posts checked, %2$d fixed.', 'persian-kit'),
                     this.totalProcessed,
                     this.totalModified
                 );

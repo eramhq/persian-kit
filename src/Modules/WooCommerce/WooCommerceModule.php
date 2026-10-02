@@ -16,12 +16,12 @@ class WooCommerceModule extends AbstractModule
 
     public static function label(): string
     {
-        return __('WooCommerce Support', 'persian-kit');
+        return __('WooCommerce', 'persian-kit');
     }
 
     public static function description(): string
     {
-        return __('Jalali date fields and month filters on WooCommerce order, product and coupon screens, Jalali dates on order pages and emails customers see, and checkout fields that work for Iranian addresses. Does nothing unless WooCommerce is active.', 'persian-kit');
+        return __('Jalali dates in the shop admin and emails, and checkout fields for Iran.', 'persian-kit');
     }
 
     /**

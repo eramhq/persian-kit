@@ -16,12 +16,12 @@ class ZWNJEditorModule extends AbstractModule
 
     public static function label(): string
     {
-        return __('ZWNJ Editor Support', 'persian-kit');
+        return __('Half-space key', 'persian-kit');
     }
 
     public static function description(): string
     {
-        return __('Type a half-space (ZWNJ) with Shift+Space in the Classic and Block editors. The Classic Editor also gets a toolbar button.', 'persian-kit');
+        return __('Type a half-space with Shift+Space in the editor.', 'persian-kit');
     }
 
     /**

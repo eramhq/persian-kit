@@ -14,8 +14,8 @@ $moduleSettings = $args['moduleSettings'] ?? [];
 
 $options = [
     'persian_slugs' => [
-        'label' => __('Persian slugs', 'persian-kit'),
-        'help' => __('Keeps Persian letters in post and term slugs instead of percent-encoding them, and turns a half-space into "-". Other slugs are left to WordPress. Existing slugs are not changed.', 'persian-kit'),
+        'label' => __('Use Persian slugs', 'persian-kit'),
+        'help'  => __('Existing slugs are not changed.', 'persian-kit'),
     ],
 ];
 ?>

@@ -18,12 +18,12 @@ class DigitConversionModule extends AbstractModule
 
     public static function label(): string
     {
-        return __('Digit Conversion', 'persian-kit');
+        return __('Persian digits', 'persian-kit');
     }
 
     public static function description(): string
     {
-        return __('Shows Persian digits (۱۲۳) instead of English ones (123) in post titles, content, excerpts, comments, widgets and tags on your site. Admin screens, feeds and the REST API keep English digits.', 'persian-kit');
+        return __('Show ۱۲۳ instead of 123 in your site\'s content.', 'persian-kit');
     }
 
     /**

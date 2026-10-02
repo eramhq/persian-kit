@@ -46,8 +46,8 @@ class CompatibilityGuidanceTest extends WordPressIntegrationTestCase
         $this->assertIsString($output);
         $this->assertStringContainsString('Compatibility', $output);
         $this->assertStringContainsString('WP-Parsidate', $output);
-        $this->assertStringContainsString('Turn off Date Conversion in Persian Kit.', $output);
-        $this->assertStringContainsString('Keep Utilities enabled in Persian Kit.', $output);
+        $this->assertStringContainsString('Turn off Jalali dates in Persian Kit.', $output);
+        $this->assertStringContainsString('Keep Persian slugs enabled in Persian Kit.', $output);
         $this->assertSame($settingsBefore, get_option('persian_kit_settings'));
     }
 
@@ -63,10 +63,10 @@ class CompatibilityGuidanceTest extends WordPressIntegrationTestCase
 
         $this->assertIsString($output);
         $this->assertStringContainsString('Persian WooCommerce', $output);
-        $this->assertStringContainsString('Leave Convert all dates (advanced) off in Persian Kit.', $output);
-        $this->assertStringContainsString('No change needed for Digit Conversion.', $output);
+        $this->assertStringContainsString('Leave Convert every date (advanced) off in Persian Kit.', $output);
+        $this->assertStringContainsString('No change needed for Persian digits.', $output);
         $this->assertStringContainsString('Let Persian WooCommerce handle Woo-specific dates.', $output);
-        $this->assertStringContainsString('Turn off WooCommerce Support in Persian Kit.', $output);
+        $this->assertStringContainsString('Turn off WooCommerce in Persian Kit.', $output);
     }
 
     private function adminPage(): AdminPage
