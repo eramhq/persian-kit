@@ -7,11 +7,11 @@ use PersianKit\Dependencies\Eram\Abzar\Text\CharNormalizer;
 defined('ABSPATH') || exit;
 
 /**
- * Makes search match both spellings of a word: Persian ی/ک and Arabic ي/ك.
- * Posts saved before normalization (or with it off) keep the Arabic letters,
- * so each search term is matched in its Persian form, its Arabic form and as
- * typed. Digits are left as typed: the database collation decides whether
- * Persian and Latin digits match.
+ * Makes search match both spellings of a word, Persian ی/ک and Arabic ي/ك,
+ * and both ways of writing a number, Persian ۱۴۰۵ and English 1405. Posts
+ * saved before normalization (or with it off) keep the Arabic letters, and
+ * authors type digits either way, so each search term is matched in each of
+ * those forms as well as as typed.
  */
 class SearchFilter
 {
@@ -74,7 +74,8 @@ class SearchFilter
     }
 
     /**
-     * The term as typed, in Persian letters, and in Arabic letters.
+     * The term as typed, in Persian letters and in Arabic letters, each with
+     * its digits as typed, in English and in Persian.
      *
      * @return list<string>
      */
@@ -83,7 +84,14 @@ class SearchFilter
         $persian = $this->normalizer->normalize($term);
         $arabic = str_replace(["\u{06CC}", "\u{06A9}"], ["\u{064A}", "\u{0643}"], $persian);
 
-        return array_values(array_unique([$term, $persian, $arabic]));
+        $variants = [];
+        foreach ([$term, $persian, $arabic] as $spelling) {
+            $variants[] = $spelling;
+            $variants[] = persian_kit_to_english_digits($spelling);
+            $variants[] = persian_kit_to_persian_digits($spelling);
+        }
+
+        return array_values(array_unique($variants));
     }
 
     /**

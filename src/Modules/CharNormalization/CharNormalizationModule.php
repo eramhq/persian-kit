@@ -2,7 +2,6 @@
 
 namespace PersianKit\Modules\CharNormalization;
 
-use PersianKit\Dependencies\Eram\Abzar\Exception\AbzarException;
 use PersianKit\Dependencies\Eram\Abzar\Text\CharNormalizer;
 use PersianKit\Abstracts\AbstractModule;
 use PersianKit\Container\ServiceContainer;
@@ -23,7 +22,7 @@ class CharNormalizationModule extends AbstractModule
 
     public static function description(): string
     {
-        return __('Search finds words typed with either Arabic (ي ك) or Persian (ی ک) letters. Can also fix the letters when posts are saved.', 'persian-kit');
+        return __('Search finds words typed with either Arabic (ي ك) or Persian (ی ک) letters, and numbers typed with either Persian or English digits. Can also fix the letters when posts, comments and terms are saved.', 'persian-kit');
     }
 
     /**
@@ -31,7 +30,7 @@ class CharNormalizationModule extends AbstractModule
      */
     public static function defaults(): array
     {
-        return ['enabled' => true, 'normalize_on_save' => false, 'teh_marbuta' => false];
+        return ['enabled' => true, 'normalize_on_save' => false, 'teh_marbuta' => false, 'half_space_fix' => false];
     }
 
     public function settingsView(): ?string
@@ -62,6 +61,14 @@ class CharNormalizationModule extends AbstractModule
         $container->register(NormalizationJobManager::class, function (ServiceContainer $c) {
             return new NormalizationJobManager($c->get(BatchMigrator::class));
         });
+
+        $container->register(SaveNormalizer::class, function (ServiceContainer $c) {
+            return new SaveNormalizer(
+                $c->get(CharNormalizer::class),
+                (bool) $this->setting('normalize_on_save'),
+                (bool) $this->setting('half_space_fix'),
+            );
+        });
     }
 
     /**
@@ -74,38 +81,13 @@ class CharNormalizationModule extends AbstractModule
             'enabled'           => !empty($values['enabled']),
             'normalize_on_save' => !empty($values['normalize_on_save']),
             'teh_marbuta'       => !empty($values['teh_marbuta']),
+            'half_space_fix'    => !empty($values['half_space_fix']),
         ];
     }
 
     public function boot(ServiceContainer $container): void
     {
-        if ($this->setting('normalize_on_save') && apply_filters('persian_kit_char_normalization', true, 'wp_insert_post_data')) {
-            add_filter('wp_insert_post_data', function (array $data, array $postarr) use ($container) {
-                if (!$this->shouldNormalize($data, $postarr)) {
-                    return $data;
-                }
-
-                $normalizer = $container->get(CharNormalizer::class);
-
-                if (isset($data['post_title']) && is_string($data['post_title'])) {
-                    $data['post_title'] = $normalizer->normalize($data['post_title']);
-                }
-
-                if (isset($data['post_excerpt']) && is_string($data['post_excerpt'])) {
-                    $data['post_excerpt'] = $normalizer->normalize($data['post_excerpt']);
-                }
-
-                if (isset($data['post_content']) && is_string($data['post_content'])) {
-                    try {
-                        $data['post_content'] = $normalizer->normalizeContent($data['post_content']);
-                    } catch (AbzarException) {
-                        // Markup abzar cannot segment is saved as-is rather than blocking the save.
-                    }
-                }
-
-                return $data;
-            }, 10, 2);
-        }
+        $container->get(SaveNormalizer::class)->register();
 
         if (apply_filters('persian_kit_char_normalization', true, 'posts_search')) {
             $container->get(SearchFilter::class)->register();
@@ -114,39 +96,5 @@ class CharNormalizationModule extends AbstractModule
         add_action('rest_api_init', function () use ($container) {
             $container->get(NormalizationRestController::class)->registerRoutes();
         });
-    }
-
-    /**
-     * @param array<string, mixed> $data
-     * @param array<string, mixed> $postarr
-     */
-    private function shouldNormalize(array $data, array $postarr): bool
-    {
-        $postType = $data['post_type'] ?? $postarr['post_type'] ?? '';
-        if (!is_string($postType) || $postType === '') {
-            return false;
-        }
-
-        $postTypeObject = get_post_type_object($postType);
-        if (!$postTypeObject || empty($postTypeObject->public)) {
-            return false;
-        }
-
-        $postStatus = $data['post_status'] ?? $postarr['post_status'] ?? '';
-        if ($postStatus === 'auto-draft') {
-            return false;
-        }
-
-        $postId = isset($postarr['ID']) ? (int) $postarr['ID'] : 0;
-        if ($postId > 0 && (wp_is_post_revision($postId) || wp_is_post_autosave($postId))) {
-            return false;
-        }
-
-        $postContext = $postId > 0 ? get_post($postId) : null;
-        if (!$postContext) {
-            $postContext = (object) $postarr;
-        }
-
-        return (bool) apply_filters('persian_kit_should_normalize', true, $postContext, $data, $postarr);
     }
 }

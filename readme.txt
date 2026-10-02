@@ -21,8 +21,9 @@ Persian Kit is a modular WordPress plugin for Persian-language sites. It focuses
 * Optional Jalali dates in post permalinks (/1405/07/09/my-post/), with old links redirected
 * REST API Jalali companion fields
 * Persian digits in content, dates, counts and WooCommerce prices (off until you turn it on)
-* Search that finds words typed with either Arabic (ي ك) or Persian (ی ک) letters
-* Arabic-to-Persian character normalization on save (off until you turn it on) and for existing posts, with a dry-run count and a confirmation step
+* Search that finds words typed with either Arabic (ي ك) or Persian (ی ک) letters, and numbers typed with either Persian (۱۴۰۵) or English (1405) digits
+* Arabic-to-Persian character normalization on save for posts, comments, categories, tags and menus (off until you turn it on), and for existing posts, with a dry-run count and a confirmation step
+* Optional half-spaces (ZWNJ) in compound words when posts are saved
 * Persian admin interface
 * Vazirmatn-powered admin font support
 * ZWNJ editor shortcuts for Classic Editor and Gutenberg

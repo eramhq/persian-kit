@@ -456,13 +456,17 @@ Digit conversion never runs on admin screens, in REST responses or in feeds. The
 
 ### `persian_kit_char_normalization`
 
-Return `false` to stop character normalization on one integration point: `wp_insert_post_data` (on save, only registered when "Fix letters when posts are saved" is on) or `posts_search` (search that matches both Arabic and Persian Yeh and Kaf).
+Return `false` to stop character normalization on one integration point:
 
-Search does not rewrite the search terms. For each term it matches the term as typed, its Persian form (ی ک) and its Arabic form (ي ك), in the title, excerpt and content (or the query's `search_columns`). Digits are matched as typed; whether Persian and Latin digits match depends on the database collation. Media library searches that also match file names keep WordPress's own query.
+- `wp_insert_post_data`: posts and menu items on save. Registered when "Fix letters when content is saved" or "Add half-spaces when posts are saved" is on.
+- `preprocess_comment`, `pre_term_name`, `pre_term_description`: new comments (content and author name) and terms (name and description, in every taxonomy) on save. Registered when "Fix letters when content is saved" is on.
+- `posts_search`: search that matches both spellings.
+
+Search does not rewrite the search terms. For each term it matches the term as typed, its Persian form (ی ک) and its Arabic form (ي ك), each with its digits as typed, in English (1405) and in Persian (۱۴۰۵), in the title, excerpt and content (or the query's `search_columns`). Duplicate forms are dropped, and a term with only one form keeps WordPress's own clause. This applies to the main search query, including WooCommerce's product search on the shop page. Media library searches that also match file names keep WordPress's own query.
 
 ### `persian_kit_should_normalize`
 
-Return `false` to skip normalization for one post on save.
+Return `false` to skip normalization (and half-spaces) for one post or menu item on save. Public post types and `nav_menu_item` are normalized; auto-drafts, revisions and autosaves never are.
 
 ```php
 add_filter('persian_kit_should_normalize', function (bool $shouldNormalize, $postContext, array $data, array $postarr) {
@@ -520,7 +524,7 @@ Settings are stored in the `persian_kit_settings` option, per module under these
 | --- | --- |
 | `date_conversion` | `enabled` (on), `global_conversion` (off), `jalali_archives` (on), `jalali_permalinks` (off) |
 | `digit_conversion` | `enabled` (off), `dates`, `numbers`, `prices` (on) |
-| `char_normalization` | `enabled` (on), `normalize_on_save` (off), `teh_marbuta` (off) |
+| `char_normalization` | `enabled` (on), `normalize_on_save` (off), `teh_marbuta` (off), `half_space_fix` (off) |
 | `admin_font` | `enabled` (on), `font` (`vazirmatn`) |
 | `zwnj_editor` | `enabled` (on) |
 | `woocommerce` | `enabled` (on) |

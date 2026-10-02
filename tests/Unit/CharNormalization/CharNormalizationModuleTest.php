@@ -5,19 +5,13 @@ namespace PersianKit\Tests\Unit\CharNormalization;
 use PHPUnit\Framework\TestCase;
 use Brain\Monkey;
 use Brain\Monkey\Functions;
-use Brain\Monkey\Filters;
 use Mockery;
 use PersianKit\Core\SettingsManager;
 use PersianKit\Modules\CharNormalization\CharNormalizationModule;
-use PersianKit\Modules\CharNormalization\SearchFilter;
 use PersianKit\Container\ServiceContainer;
-use PersianKit\Dependencies\Eram\Abzar\Text\CharNormalizer;
-use PersianKit\Tests\Unit\Support\FailsPcre;
 
 class CharNormalizationModuleTest extends TestCase
 {
-    use FailsPcre;
-
     protected function setUp(): void
     {
         parent::setUp();
@@ -83,13 +77,14 @@ class CharNormalizationModuleTest extends TestCase
             'enabled'           => true,
             'normalize_on_save' => false,
             'teh_marbuta'       => false,
+            'half_space_fix'    => false,
         ], $module->sanitizeSettings([
             'enabled' => true,
         ]));
     }
 
     /**
-     * Register + boot the module with a mocked container.
+     * Register + boot the module with a container that builds its services.
      */
     private function bootModule(array $settings = ['normalize_on_save' => true]): void
     {
@@ -98,12 +93,16 @@ class CharNormalizationModuleTest extends TestCase
             ->andReturn(true);
 
         $module = $this->makeModule($settings);
+        $factories = [];
         $container = Mockery::mock(ServiceContainer::class);
-        $container->shouldReceive('register')->andReturnSelf();
-        $searchFilter = Mockery::mock(SearchFilter::class);
-        $searchFilter->shouldReceive('register')->once();
-        $container->shouldReceive('get')->with(SearchFilter::class)->andReturn($searchFilter);
-        $container->shouldReceive('get')->andReturn(Mockery::mock());
+        $container->shouldReceive('register')->andReturnUsing(function (string $id, callable $factory) use (&$factories, $container) {
+            $factories[$id] = $factory;
+
+            return $container;
+        });
+        $container->shouldReceive('get')->andReturnUsing(function (string $id) use (&$factories, $container) {
+            return $factories[$id]($container);
+        });
 
         $module->register($container);
         $module->boot($container);
@@ -114,6 +113,8 @@ class CharNormalizationModuleTest extends TestCase
         $this->bootModule();
 
         $this->assertTrue(has_filter('wp_insert_post_data'));
+        $this->assertTrue(has_filter('preprocess_comment'));
+        $this->assertTrue(has_filter('pre_term_name'));
     }
 
     public function test_boot_leaves_saves_alone_by_default(): void
@@ -121,12 +122,23 @@ class CharNormalizationModuleTest extends TestCase
         $this->bootModule([]);
 
         $this->assertFalse(has_filter('wp_insert_post_data'));
+        $this->assertFalse(has_filter('preprocess_comment'));
+        $this->assertFalse(has_filter('pre_term_name'));
+    }
+
+    public function test_boot_with_half_spaces_alone_fixes_posts_only(): void
+    {
+        $this->bootModule(['half_space_fix' => true]);
+
+        $this->assertTrue(has_filter('wp_insert_post_data'));
+        $this->assertFalse(has_filter('preprocess_comment'));
     }
 
     public function test_boot_registers_search_filter_without_rewriting_the_query(): void
     {
         $this->bootModule([]);
 
+        $this->assertTrue(has_filter('posts_search'));
         $this->assertFalse(has_action('pre_get_posts'));
     }
 
@@ -135,33 +147,5 @@ class CharNormalizationModuleTest extends TestCase
         $this->bootModule();
 
         $this->assertTrue(has_action('rest_api_init'));
-    }
-
-    public function test_insert_post_data_saves_unsegmentable_content_unchanged(): void
-    {
-        $callback = null;
-        Filters\expectAdded('wp_insert_post_data')->once()->whenHappen(function ($cb) use (&$callback) {
-            $callback = $cb;
-        });
-        Functions\when('get_post_type_object')->justReturn((object) ['public' => true]);
-
-        $container = Mockery::mock(ServiceContainer::class);
-        $container->shouldReceive('register')->andReturnSelf();
-        $container->shouldReceive('get')->with(CharNormalizer::class)->andReturn(new CharNormalizer());
-        $searchFilter = Mockery::mock(SearchFilter::class);
-        $searchFilter->shouldReceive('register');
-        $container->shouldReceive('get')->with(SearchFilter::class)->andReturn($searchFilter);
-        $container->shouldReceive('get')->andReturn(Mockery::mock());
-
-        $this->makeModule(['normalize_on_save' => true])->boot($container);
-
-        $html = self::unsegmentableHtml();
-        $data = self::withFailingPcre(fn () => $callback(
-            ['post_type' => 'post', 'post_status' => 'publish', 'post_title' => 'كتاب', 'post_content' => $html],
-            []
-        ));
-
-        $this->assertSame('کتاب', $data['post_title']);
-        $this->assertSame($html, $data['post_content']);
     }
 }

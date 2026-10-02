@@ -14,6 +14,7 @@ $moduleSettings = $args['moduleSettings'] ?? [];
 
 $normalizeOnSave = !empty($moduleSettings['normalize_on_save']);
 $tehMarbuta = !empty($moduleSettings['teh_marbuta']);
+$halfSpaceFix = !empty($moduleSettings['half_space_fix']);
 
 $postTypeLabels = [];
 foreach (get_post_types(['public' => true], 'objects') as $postType => $postTypeObject) {
@@ -24,7 +25,7 @@ foreach (get_post_types(['public' => true], 'objects') as $postType => $postType
 $selectedPostTypes = array_values(array_diff(array_keys($postTypeLabels), ['attachment']));
 ?>
 <p class="description">
-    <?php esc_html_e('Search always matches both spellings while this module is on. It does not change any content.', 'persian-kit'); ?>
+    <?php esc_html_e('Search always matches both spellings, and Persian and English digits, while this module is on. It does not change any content.', 'persian-kit'); ?>
 </p>
 
 <div class="persian-kit-setting-row">
@@ -36,10 +37,10 @@ $selectedPostTypes = array_values(array_diff(array_keys($postTypeLabels), ['atta
             value="1"
             <?php checked($normalizeOnSave); ?>
         >
-        <?php esc_html_e('Fix letters when posts are saved', 'persian-kit'); ?>
+        <?php esc_html_e('Fix letters when content is saved', 'persian-kit'); ?>
     </label>
     <p class="description">
-        <?php esc_html_e('Replaces Arabic ي and ك with Persian ی and ک, and Arabic-Indic digits with Persian digits, in the title, excerpt and content of public posts each time they are saved. Code blocks and HTML tags are left alone.', 'persian-kit'); ?>
+        <?php esc_html_e('Replaces Arabic ي and ك with Persian ی and ک, and Arabic-Indic digits with Persian digits, each time something is saved: the title, excerpt and content of public posts and menu items, new comments and their author names, and the names and descriptions of categories, tags and other terms, WooCommerce product categories included. Code blocks and HTML tags are left alone.', 'persian-kit'); ?>
     </p>
 </div>
 
@@ -62,6 +63,22 @@ $selectedPostTypes = array_values(array_diff(array_keys($postTypeLabels), ['atta
     </p>
 </div>
 
+<div class="persian-kit-setting-row">
+    <label>
+        <input type="hidden" name="persian_kit_settings[char_normalization][half_space_fix]" value="0">
+        <input
+            type="checkbox"
+            name="persian_kit_settings[char_normalization][half_space_fix]"
+            value="1"
+            <?php checked($halfSpaceFix); ?>
+        >
+        <?php esc_html_e('Add half-spaces when posts are saved', 'persian-kit'); ?>
+    </label>
+    <p class="description">
+        <?php esc_html_e('Replaces the space with a half-space (ZWNJ) after the prefixes می and نمی and before suffixes such as ها, تر and ترین, in the title, excerpt and content of public posts. The rules are simple and can join words that should stay apart, such as می (wine) in poetry. Code blocks and HTML tags are left alone.', 'persian-kit'); ?>
+    </p>
+</div>
+
 <hr class="persian-kit-setting-separator">
 
 <div
@@ -70,7 +87,7 @@ $selectedPostTypes = array_values(array_diff(array_keys($postTypeLabels), ['atta
 >
     <h4 class="persian-kit-setting-row__title"><?php esc_html_e('Fix existing posts', 'persian-kit'); ?></h4>
     <p class="description">
-        <?php esc_html_e('Rewrites posts that are already saved, using the saved settings above. Count first to see how many posts would change.', 'persian-kit'); ?>
+        <?php esc_html_e('Fixes the letters of posts that are already saved, using the saved Teh Marbuta setting above. Half-spaces are not added. Count first to see how many posts would change.', 'persian-kit'); ?>
     </p>
 
     <fieldset class="persian-kit-post-types" :disabled="busy || isResuming">

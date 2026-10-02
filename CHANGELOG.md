@@ -7,6 +7,13 @@ All notable changes to this project will be documented in this file.
 - Fixed: with Persian slugs, a post, page or category reached by its ID (`/?p=123`, `/?page_id=`, `/?cat=`) redirected to a broken address such as `/بر_ا__-آز_ا_ش_-سا_-1405/` and a 404 on some servers (seen with PHP on macOS). Links to Persian slugs are now percent-encoded, as WordPress's own Persian slugs are; the slug itself keeps its letters. The `persian_kit_utilities` filter turns this off with the `encode_links` feature.
 - A cut-off post address under a Jalali date, such as `/1405/07/09/my-po/`, redirects (301) to the post on that date whose slug starts with it, as WordPress does for Gregorian dates. Before, it returned "not found", because WordPress looked for the year 1405.
 
+### Character normalization
+
+- "Fix letters when content is saved" (was "…when posts are saved") also fixes new comments and their author names, the names and descriptions of categories, tags and other terms (WooCommerce product categories and tags included) and menu item titles. Each hook can be turned off with the `persian_kit_char_normalization` filter (`preprocess_comment`, `pre_term_name`, `pre_term_description`).
+- Search matches numbers typed either way: a search for `۱۴۰۵` finds posts with `1405`, and the reverse. WooCommerce's product search on the shop page goes through the same filter.
+- New option, off by default: "Add half-spaces when posts are saved" puts a half-space (ZWNJ) after می and نمی and before suffixes such as ها and ترین in the title, excerpt and content of public posts. HTML tags, code and character references are left alone. It works with or without fixing letters.
+- Developers: the save filter moved from a closure in `CharNormalizationModule::boot()` to `PersianKit\Modules\CharNormalization\SaveNormalizer`.
+
 ## [1.0.0-beta.4] - 2026-10-01
 
 First WordPress.org release. Includes everything listed under 1.0.0-beta.3 and 1.0.0-beta.2, plus the changes below.
