@@ -8,15 +8,20 @@ use Brain\Monkey;
 use Brain\Monkey\Functions;
 use PersianKit\Modules\DigitConversion\WooCommerceEmailDigits;
 use PHPUnit\Framework\TestCase;
+use PersianKit\Service\Language\ContentLanguage;
+use PersianKit\Tests\Unit\Support\UsesLanguages;
 
 class WooCommerceEmailDigitsTest extends TestCase
 {
+    use UsesLanguages;
+
     private int $entered = 0;
 
     protected function setUp(): void
     {
         parent::setUp();
         Monkey\setUp();
+        ContentLanguage::reset();
         Functions\when('determine_locale')->justReturn('fa_IR');
     }
 
@@ -230,6 +235,27 @@ class WooCommerceEmailDigitsTest extends TestCase
             'Your Shop order #123 is complete',
             $digits->filterFormatString('Your Shop order #123 is complete', $this->email(['{order_number}' => '123']))
         );
+    }
+
+    public function test_on_multilingual_sites_the_emails_language_decides(): void
+    {
+        $digits = new WooCommerceEmailDigits();
+        $this->enterEmail();
+
+        // An admin with a Persian profile changes an English customer's order:
+        // WooCommerce Multilingual switches WPML's language for the email.
+        $source = $this->inLanguage('fa_IR', true);
+        $source->switched = 'en_US';
+        $this->assertSame('120,000', $digits->filterText('120,000'));
+
+        // Polylang for WooCommerce switches the locale instead.
+        $source->switched = null;
+        Functions\when('is_locale_switched')->justReturn(true);
+        Functions\when('determine_locale')->justReturn('en_US');
+        $this->assertSame('120,000', $digits->filterText('120,000'));
+
+        Functions\when('determine_locale')->justReturn('fa_IR');
+        $this->assertSame('۱۲۰,۰۰۰', $digits->filterText('120,000'));
     }
 
     public function test_subject_converts_the_order_number_and_date_only(): void

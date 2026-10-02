@@ -5,14 +5,19 @@ namespace PersianKit\Tests\Unit\DateConversion;
 use Brain\Monkey;
 use Brain\Monkey\Functions;
 use PersianKit\Modules\DateConversion\MediaAttachmentDateFormatter;
+use PersianKit\Service\Language\ContentLanguage;
+use PersianKit\Tests\Unit\Support\UsesLanguages;
 use PHPUnit\Framework\TestCase;
 
 class MediaAttachmentDateFormatterTest extends TestCase
 {
+    use UsesLanguages;
+
     protected function setUp(): void
     {
         parent::setUp();
         Monkey\setUp();
+        ContentLanguage::reset();
 
         Functions\when('__')->alias(fn (string $text, ?string $domain = null): string => $text);
         Functions\when('wp_timezone')->justReturn(new \DateTimeZone('Asia/Tehran'));
@@ -46,6 +51,17 @@ class MediaAttachmentDateFormatterTest extends TestCase
         ], $attachment);
 
         $this->assertSame('فروردین 1, 1404', $result['dateFormatted']);
+    }
+
+    public function test_admins_whose_language_is_not_persian_keep_gregorian_dates(): void
+    {
+        $this->inLanguage('en_US', true);
+
+        $result = (new MediaAttachmentDateFormatter())->filterAttachmentData([
+            'dateFormatted' => 'March 21, 2025',
+        ], (object) ['post_date' => '2025-03-21 15:30:00']);
+
+        $this->assertSame('March 21, 2025', $result['dateFormatted']);
     }
 
     public function test_filter_attachment_data_leaves_response_unchanged_without_date(): void

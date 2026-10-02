@@ -2,11 +2,14 @@
 
 namespace PersianKit\Modules\DateConversion;
 
+use PersianKit\Service\Language\ContentLanguage;
+
 defined('ABSPATH') || exit;
 
 /**
  * Decides when a date filter must leave WordPress's Gregorian output alone:
- * in feeds, and for formats that machines parse rather than people read.
+ * in feeds, for formats that machines parse rather than people read, and on
+ * multilingual sites in pages and emails that are not in Persian.
  */
 final class DateDisplayGuard
 {
@@ -15,7 +18,7 @@ final class DateDisplayGuard
 
     public static function shouldBypass(string $format): bool
     {
-        return self::isMachineFormat($format) || self::isFeed();
+        return self::isMachineFormat($format) || self::isFeed() || !ContentLanguage::displaysPersian();
     }
 
     public static function isMachineFormat(string $format): bool

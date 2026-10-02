@@ -21,13 +21,18 @@ use PersianKit\Modules\WooCommerce\WooDateDisplayFilter;
 use PersianKit\Modules\WooCommerce\WooOrderMonthFilter;
 use PersianKit\Modules\WooCommerce\WooPostedDateNormalizer;
 use PHPUnit\Framework\TestCase;
+use PersianKit\Service\Language\ContentLanguage;
+use PersianKit\Tests\Unit\Support\UsesLanguages;
 
 class WooCommerceModuleTest extends TestCase
 {
+    use UsesLanguages;
+
     protected function setUp(): void
     {
         parent::setUp();
         Monkey\setUp();
+        ContentLanguage::reset();
         // WooCommerce counts as active when wc_get_orders() exists.
         Functions\when('wc_get_orders')->justReturn([]);
     }
@@ -79,6 +84,21 @@ class WooCommerceModuleTest extends TestCase
             NationalIdField::class,
             CityField::class,
         ], $this->bootAndListFetched(['checkout_normalize' => false, 'checkout_validate' => false, 'city_select' => true]));
+    }
+
+    public function test_admins_whose_language_is_not_persian_get_gregorian_order_screens(): void
+    {
+        $this->inLanguage('en_US', true);
+
+        $this->assertSame([
+            SchemaPrices::class,
+            WooDateDisplayFilter::class,
+            CheckoutInputNormalizer::class,
+            OrderNumberInput::class,
+            CheckoutValidator::class,
+            NationalIdField::class,
+            WooPostedDateNormalizer::class,
+        ], $this->bootAndListFetched());
     }
 
     public function test_admin_date_fields_have_their_own_option(): void

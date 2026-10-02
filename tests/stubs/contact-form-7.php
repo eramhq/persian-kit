@@ -45,6 +45,8 @@ namespace {
         public static function get_instance(): ?self { return null; }
         /** @return mixed */
         public function get_posted_data(string $name = '') {}
+        /** @return mixed */
+        public function get_meta(string $name) {}
     }
 
     class WPCF7_MailTag

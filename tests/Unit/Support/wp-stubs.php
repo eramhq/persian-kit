@@ -192,6 +192,57 @@ if (!class_exists('WP_REST_Request')) {
     }
 }
 
+if (!class_exists('WP_REST_Posts_Controller')) {
+    class WP_REST_Posts_Controller
+    {
+    }
+}
+
+if (!class_exists('WP_REST_Terms_Controller')) {
+    class WP_REST_Terms_Controller
+    {
+    }
+}
+
+if (!class_exists('WP_Term')) {
+    class WP_Term
+    {
+        public int $term_id = 0;
+        public int $term_taxonomy_id = 0;
+        public string $taxonomy = 'category';
+    }
+}
+
+if (!class_exists('WPCF7_Submission')) {
+    /**
+     * Contact Form 7's submission; tests set the one being sent.
+     */
+    class WPCF7_Submission
+    {
+        public static ?self $current = null;
+
+        /** @param array<string, mixed> $meta */
+        public function __construct(private array $meta = [])
+        {
+        }
+
+        public static function get_instance(): ?self
+        {
+            return self::$current;
+        }
+
+        public function get_meta(string $name): mixed
+        {
+            return $this->meta[$name] ?? null;
+        }
+
+        public function get_posted_data(string $name = ''): mixed
+        {
+            return null;
+        }
+    }
+}
+
 if (!class_exists('WC_Data')) {
     /**
      * Meta data and props of WooCommerce objects; get_<prop>() reads $props.

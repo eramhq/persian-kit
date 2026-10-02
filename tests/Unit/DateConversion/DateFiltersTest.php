@@ -7,15 +7,20 @@ use Brain\Monkey;
 use Brain\Monkey\Functions;
 use Brain\Monkey\Filters;
 use PersianKit\Modules\DateConversion\DateFilters;
+use PersianKit\Service\Language\ContentLanguage;
+use PersianKit\Tests\Unit\Support\UsesLanguages;
 
 class DateFiltersTest extends TestCase
 {
+    use UsesLanguages;
+
     protected function setUp(): void
     {
         parent::setUp();
         Monkey\setUp();
+        ContentLanguage::reset();
 
-        // DateFilters constructor reads format options
+        // The site's date and time formats
         Functions\when('get_option')->alias(function (string $key) {
             return match ($key) {
                 'date_format' => 'Y/m/d',
@@ -99,7 +104,7 @@ class DateFiltersTest extends TestCase
         $this->assertSame('1404/01/01', $result);
     }
 
-    public function test_filter_post_date_uses_cached_date_format_when_format_empty(): void
+    public function test_filter_post_date_uses_the_site_date_format_when_format_empty(): void
     {
         Functions\when('wp_timezone')->justReturn(new \DateTimeZone('Asia/Tehran'));
         Functions\when('apply_filters')->returnArg(2);
@@ -110,10 +115,63 @@ class DateFiltersTest extends TestCase
         $post->post_date_gmt = '2025-03-21 12:00:00';
         $post->post_date = '2025-03-21 15:30:00';
 
-        // Empty format should fall back to cached 'Y/m/d' from constructor
         $result = $filters->filterPostDate('March 21, 2025', '', $post);
 
         $this->assertSame('1404/01/01', $result);
+    }
+
+    public function test_the_site_formats_are_read_on_each_call(): void
+    {
+        Functions\when('wp_timezone')->justReturn(new \DateTimeZone('Asia/Tehran'));
+        Functions\when('apply_filters')->returnArg(2);
+
+        $filters = new DateFilters(false);
+
+        $post = new \stdClass();
+        $post->post_date_gmt = '2025-03-21 12:00:00';
+        $post->post_date = '2025-03-21 15:30:00';
+
+        // Polylang and WPML translate the formats once the language is known.
+        Functions\when('get_option')->alias(static fn (string $key): string => $key === 'date_format' ? 'Y-n-j' : 'G:i');
+
+        $this->assertSame('1404-1-1', $filters->filterPostDate('March 21, 2025', '', $post));
+        $this->assertSame('15:30', $filters->filterPostTime('3:30 pm', '', $post));
+    }
+
+    public function test_pages_not_in_persian_keep_gregorian_dates(): void
+    {
+        Functions\when('wp_timezone')->justReturn(new \DateTimeZone('Asia/Tehran'));
+        $this->inLanguage('en_US');
+
+        $filters = new DateFilters(false);
+
+        $post = new \stdClass();
+        $post->post_date_gmt = '2025-03-21 12:00:00';
+        $post->post_date = '2025-03-21 15:30:00';
+
+        $this->assertSame('March 21, 2025', $filters->filterPostDate('March 21, 2025', 'F j, Y', $post));
+        $this->assertSame('March 21, 2025', $filters->filterWpDate('March 21, 2025', 'F j, Y', 1742556000));
+
+        $this->inLanguage('fa_IR');
+        $this->assertSame('1404/01/01', $filters->filterPostDate('March 21, 2025', 'Y/m/d', $post));
+    }
+
+    public function test_the_admin_bar_clock_follows_the_language(): void
+    {
+        $filters = new DateFilters(false);
+
+        $adminBar = \Mockery::mock();
+        $adminBar->shouldReceive('add_node')->once();
+
+        $this->inLanguage('en_US');
+        $filters->addAdminBarClock($adminBar);
+
+        Functions\when('wp_timezone')->justReturn(new \DateTimeZone('Asia/Tehran'));
+        Functions\when('apply_filters')->returnArg(2);
+        $this->inLanguage('fa_IR', true);
+        $filters->addAdminBarClock($adminBar);
+
+        $this->addToAssertionCount(1);
     }
 
     public function test_filter_post_date_returns_original_when_no_post(): void

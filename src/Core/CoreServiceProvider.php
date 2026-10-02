@@ -6,6 +6,7 @@ use PersianKit\Container\ServiceContainer;
 use PersianKit\Container\ServiceProvider;
 use PersianKit\Contracts\ModuleInterface;
 use PersianKit\Service\Assets\AssetManager;
+use PersianKit\Service\Language\ContentLanguage;
 
 defined('ABSPATH') || exit;
 
@@ -72,6 +73,10 @@ class CoreServiceProvider implements ServiceProvider
             $container->get(AssetManager::class);
             $container->get(AdminPage::class)->register();
         }
+
+        // Follows the language on WPML and Polylang sites, before the modules
+        // that ask for it boot.
+        ContentLanguage::register();
 
         // Boot each module whose plugins are active: fully while it is on,
         // and its fallback while it is off.

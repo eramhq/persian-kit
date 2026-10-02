@@ -4,6 +4,7 @@ namespace PersianKit\Modules\WooCommerce;
 
 use PersianKit\Modules\DateConversion\DateDisplayGuard;
 use PersianKit\Modules\DateConversion\JalaliFormatter;
+use PersianKit\Service\Language\ContentLanguage;
 
 defined('ABSPATH') || exit;
 
@@ -85,7 +86,9 @@ class WooDateDisplayFilter
      */
     public function filterEmailOrderDate(mixed $string, mixed $email = null): mixed
     {
-        if (!is_string($string) || !is_object($email) || !isset($email->placeholders) || !is_array($email->placeholders)) {
+        if (!is_string($string) || !is_object($email) || !isset($email->placeholders) || !is_array($email->placeholders)
+            || !ContentLanguage::displaysPersian()
+        ) {
             return $string;
         }
 

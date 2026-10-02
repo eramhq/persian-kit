@@ -5,12 +5,16 @@ namespace PersianKit\Tests\Unit\Forms;
 use Brain\Monkey;
 use Brain\Monkey\Functions;
 use PersianKit\Modules\Forms\AcfDateFields;
+use PersianKit\Service\Language\ContentLanguage;
 use PersianKit\Tests\Unit\Forms\Support\FakeAcfFieldType;
+use PersianKit\Tests\Unit\Support\UsesLanguages;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
 class AcfDateFieldsTest extends TestCase
 {
+    use UsesLanguages;
+
     /** @var list<string> */
     private array $enqueued = [];
 
@@ -18,6 +22,7 @@ class AcfDateFieldsTest extends TestCase
     {
         parent::setUp();
         Monkey\setUp();
+        ContentLanguage::reset();
 
         if (!defined('PERSIAN_KIT_URL')) {
             define('PERSIAN_KIT_URL', 'https://example.com/wp-content/plugins/persian-kit/');
@@ -207,6 +212,27 @@ class AcfDateFieldsTest extends TestCase
 
         Functions\when('wp_is_serving_rest_request')->justReturn(false);
         Monkey\Filters\expectApplied('persian_kit_acf_jalali_value')->once()->andReturn(false);
+        $fields->startJalaliValue('20260321', 1, ['type' => 'date_picker']);
+        $this->assertFalse(has_filter('date_i18n', [$fields, 'jalaliDate']));
+    }
+
+    public function test_pages_and_admins_not_in_persian_get_acfs_own_picker_and_values(): void
+    {
+        $datePicker = new FakeAcfFieldType();
+        Functions\when('acf_get_field_type')->justReturn($datePicker);
+        add_action('acf/render_field/type=date_picker', [$datePicker, 'render_field'], 9);
+        add_action('acf/render_field/type=date_time_picker', [$datePicker, 'render_field'], 9);
+
+        $fields = new AcfDateFields(true);
+        $fields->replaceRenderers();
+        $this->inLanguage('en_US', true);
+
+        ob_start();
+        $fields->render(['type' => 'date_picker', 'name' => 'x', 'value' => '20260321']);
+        $this->assertSame('acf', ob_get_clean());
+        $this->assertSame([], $this->enqueued);
+
+        $this->inLanguage('en_US');
         $fields->startJalaliValue('20260321', 1, ['type' => 'date_picker']);
         $this->assertFalse(has_filter('date_i18n', [$fields, 'jalaliDate']));
     }

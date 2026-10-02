@@ -6,6 +6,7 @@ use PersianKit\Dependencies\Eram\Abzar\Digits\DigitConverter;
 use PersianKit\Dependencies\Eram\Abzar\Exception\AbzarException;
 use PersianKit\Abstracts\AbstractModule;
 use PersianKit\Container\ServiceContainer;
+use PersianKit\Service\Language\ContentLanguage;
 
 defined('ABSPATH') || exit;
 
@@ -69,7 +70,8 @@ class DigitConversionModule extends AbstractModule
             }
         }
 
-        if (!$this->isFrontendRequest()) {
+        // Admin screens keep English digits.
+        if (ContentLanguage::isAdminRequest()) {
             return;
         }
 
@@ -105,7 +107,7 @@ class DigitConversionModule extends AbstractModule
      */
     public function enqueueBlockPriceScript(): void
     {
-        if (!function_exists('is_cart') || !(is_cart() || is_checkout())) {
+        if (!function_exists('is_cart') || !(is_cart() || is_checkout()) || !ContentLanguage::displaysPersian()) {
             return;
         }
 
@@ -187,29 +189,11 @@ class DigitConversionModule extends AbstractModule
     }
 
     /**
-     * Admin screens keep Latin digits; admin-ajax counts as front end only when
-     * the request came from outside wp-admin (infinite scroll, load-more).
-     */
-    private function isFrontendRequest(): bool
-    {
-        if (!is_admin()) {
-            return true;
-        }
-
-        if (!wp_doing_ajax()) {
-            return false;
-        }
-
-        $referer = (string) wp_get_raw_referer();
-
-        return $referer !== '' && !str_starts_with($referer, admin_url());
-    }
-
-    /**
      * REST responses, feeds and outgoing mail are read by machines or mail
      * clients, so their digits stay as stored. WooCommerce emails follow
      * their own option (WooCommerceEmailDigits), in the body and in the
-     * subject and heading.
+     * subject and heading. On multilingual sites, only pages in Persian
+     * are converted.
      */
     private function shouldConvertNow(): bool
     {
@@ -225,7 +209,7 @@ class DigitConversionModule extends AbstractModule
             return false;
         }
 
-        return !doing_filter('wp_mail');
+        return !doing_filter('wp_mail') && ContentLanguage::displaysPersian();
     }
 
     protected function wooCommerceLoaded(): bool
