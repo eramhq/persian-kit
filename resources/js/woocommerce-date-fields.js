@@ -1,315 +1,194 @@
-(function ($, Jalali) {
+/**
+ * Persian Kit — Jalali date pickers for the WooCommerce admin date fields:
+ * sale schedules (products and variations), coupon expiry, the order date
+ * and download access expiry.
+ *
+ * Each field is marked for the date field script (date-field.js), which
+ * hides it and shows a picker that writes the Gregorian date back, so
+ * WooCommerce reads the field as before. jQuery UI's picker stays attached
+ * to the hidden field and never opens.
+ *
+ * Depends on: jQuery (for WooCommerce's events), PersianKitDateField.
+ */
+(function ($, window, document) {
     'use strict';
 
-    if (!$ || !Jalali) {
+    var field = window.PersianKitDateField;
+
+    if (!$ || !field) {
         return;
     }
 
-    var g2j = Jalali.gregorianToJalali;
-    var j2g = Jalali.jalaliToGregorian;
-    var pad = Jalali.pad;
-    var proxyCounter = 0;
-    var ignoredProxyClasses = {
-        'date-picker': true,
-        'date-picker-field': true,
-        'hasDatepicker': true,
-        'sale_price_dates_from': true,
-        'sale_price_dates_to': true,
-        'pk-woo-gregorian-source': true
-    };
-
-    var dateSelectors = [
+    var DATE_FIELDS = [
         '#_sale_price_dates_from',
         '#_sale_price_dates_to',
         '#expiry_date',
         'input[name="order_date"]',
         'input[name^="variable_sale_price_dates_from["]',
         'input[name^="variable_sale_price_dates_to["]',
-        'input[name^="access_expires["]'
+        'input[name^="access_expires["]',
     ].join(', ');
 
-    var timeSelectors = [
-        'input[name="order_date_hour"]',
-        'input[name="order_date_minute"]',
-        'input[name="order_date_second"]'
-    ].join(', ');
+    var SALE_FROM = '#_sale_price_dates_from, input[name^="variable_sale_price_dates_from["]';
+    var SALE_TO = '#_sale_price_dates_to, input[name^="variable_sale_price_dates_to["]';
+
+    var TIME_FIELDS = 'input[name="order_date_hour"], input[name="order_date_minute"], input[name="order_date_second"]';
+
+    /** Time fields whose first value was read. */
+    var timeFields = new WeakSet();
 
     function toAsciiDigits(value) {
-        return String(value || '').replace(/[۰-۹٠-٩]/g, function (digit) {
-            var map = {
-                '۰': '0', '۱': '1', '۲': '2', '۳': '3', '۴': '4',
-                '۵': '5', '۶': '6', '۷': '7', '۸': '8', '۹': '9',
-                '٠': '0', '١': '1', '٢': '2', '٣': '3', '٤': '4',
-                '٥': '5', '٦': '6', '٧': '7', '٨': '8', '٩': '9'
-            };
-
-            return map[digit] || digit;
+        return String(value).replace(/[۰-۹٠-٩]/g, function (digit) {
+            var code = digit.charCodeAt(0);
+            return String(code - (code >= 0x06F0 ? 0x06F0 : 0x0660));
         });
     }
 
-    function parseDate(value) {
-        var normalized = toAsciiDigits($.trim(value));
-        var match = normalized.match(/^(\d{4})-(\d{2})-(\d{2})$/);
+    function each(root, selector, callback) {
+        if (root.matches && root.matches(selector)) {
+            callback(root);
+        }
+        if (root.querySelectorAll) {
+            Array.prototype.forEach.call(root.querySelectorAll(selector), callback);
+        }
+    }
 
-        if (!match) {
-            return null;
+    /** Lets one end of a sale schedule limit the other, as jQuery UI did. */
+    function limitSaleDates(group) {
+        var from = group.querySelector(SALE_FROM);
+        var to = group.querySelector(SALE_TO);
+        var fromPicker = from && field.picker(from);
+        var toPicker = to && field.picker(to);
+
+        if (!fromPicker || !toPicker) {
+            return;
         }
 
-        return {
-            year: parseInt(match[1], 10),
-            month: parseInt(match[2], 10),
-            day: parseInt(match[3], 10)
-        };
+        setLimit(toPicker, 'min', fromPicker.value);
+        setLimit(fromPicker, 'max', toPicker.value);
     }
 
-    function formatDate(parts) {
-        return [
-            parts.year,
-            pad(parts.month),
-            pad(parts.day)
-        ].join('-');
+    function setLimit(picker, name, value) {
+        if (value) {
+            picker.setAttribute(name, value);
+        } else {
+            picker.removeAttribute(name);
+        }
     }
 
-    function isValidGregorian(parts) {
-        if (!parts) {
-            return false;
+    function prepare(input) {
+        if (input.hasAttribute('data-persian-kit-date')) {
+            return;
         }
 
-        var date = new Date(parts.year, parts.month - 1, parts.day);
-
-        return date.getFullYear() === parts.year
-            && date.getMonth() === parts.month - 1
-            && date.getDate() === parts.day;
-    }
-
-    function isValidJalali(parts) {
-        if (!parts) {
-            return false;
+        // "From… YYYY-MM-DD": the format is wrong for a Jalali picker.
+        var placeholder = input.getAttribute('placeholder');
+        if (placeholder !== null) {
+            placeholder = placeholder.replace(/\s*YYYY-MM-DD\s*/, ' ').trim();
+            if (placeholder) {
+                input.setAttribute('placeholder', placeholder);
+            } else {
+                input.removeAttribute('placeholder');
+            }
         }
 
-        if (parts.month < 1 || parts.month > 12 || parts.day < 1) {
-            return false;
-        }
-
-        return parts.day <= Jalali.jalaliMonthLength(parts.month, parts.year);
+        input.setAttribute('data-persian-kit-date', '');
+        input.setAttribute('data-persian-kit-date-hint', 'off');
     }
 
-    function isGregorianDate(parts) {
-        return !!parts && parts.year >= 1700 && isValidGregorian(parts);
-    }
+    function upgrade(root) {
+        each(root, DATE_FIELDS, prepare);
+        field.upgradeAll(root);
 
-    function isJalaliDate(parts) {
-        return !!parts && parts.year >= 1200 && parts.year <= 1600 && isValidJalali(parts);
-    }
-
-    function buildProxyClasses($source) {
-        var classNames = $.trim($source.attr('class') || '').split(/\s+/);
-        var proxyClasses = [];
-
-        $.each(classNames, function (_, className) {
-            if (className && !ignoredProxyClasses[className]) {
-                proxyClasses.push(className);
+        // date_i18n() may have written a Jalali date (Date Conversion's
+        // global option); the picker read it, and WooCommerce saves the
+        // Gregorian date even if nobody changes the field.
+        each(root, DATE_FIELDS, function (input) {
+            var picker = field.picker(input);
+            if (picker && picker.value && input.value !== picker.value) {
+                input.value = picker.value;
             }
         });
 
-        proxyClasses.push('pk-woo-jalali-date-field');
+        each(root, '.sale_price_dates_fields', limitSaleDates);
 
-        return $.trim(proxyClasses.join(' '));
-    }
-
-    function proxyValueFromSource(sourceValue) {
-        var trimmed = $.trim(sourceValue);
-        var parts;
-        var jalali;
-
-        if (trimmed === '') {
-            return '';
-        }
-
-        parts = parseDate(trimmed);
-        if (!isGregorianDate(parts)) {
-            return trimmed;
-        }
-
-        jalali = g2j(parts.year, parts.month, parts.day);
-
-        return formatDate({
-            year: jalali[0],
-            month: jalali[1],
-            day: jalali[2]
-        });
-    }
-
-    function syncSourceFromProxy($source, $proxy, commitInvalidRaw) {
-        var rawValue = $.trim($proxy.val());
-        var normalized = toAsciiDigits(rawValue);
-        var parts;
-        var gregorian;
-
-        if (normalized === '') {
-            $source.val('');
-            return;
-        }
-
-        parts = parseDate(normalized);
-
-        if (isGregorianDate(parts)) {
-            $source.val(formatDate(parts));
-            return;
-        }
-
-        if (isJalaliDate(parts)) {
-            gregorian = j2g(parts.year, parts.month, parts.day);
-            $source.val(formatDate({
-                year: gregorian[0],
-                month: gregorian[1],
-                day: gregorian[2]
-            }));
-            return;
-        }
-
-        if (commitInvalidRaw) {
-            $source.val(normalized);
-        }
-    }
-
-    function normalizeTimeField($input) {
-        var normalized = toAsciiDigits($.trim($input.val()));
-
-        if ($input.val() !== normalized) {
-            $input.val(normalized);
-        }
-    }
-
-    function getProxyForSource($source) {
-        var proxyId = $source.attr('data-pk-woo-proxy-id');
-
-        return proxyId ? $('#' + proxyId) : $();
-    }
-
-    function bindProxyField($source, $proxy) {
-        $proxy.on('input change', function () {
-            syncSourceFromProxy($source, $proxy, false);
-        });
-
-        $source.on('change.pkWooDateProxy', function () {
-            $proxy.val(proxyValueFromSource($source.val()));
-        });
-    }
-
-    function enhanceDateField(source) {
-        var $source = $(source);
-        var proxyId;
-        var $proxy;
-
-        if ($source.attr('data-pk-woo-proxy-bound') === '1') {
-            return;
-        }
-
-        proxyId = $source.attr('id') ? $source.attr('id') + '-pk-jalali' : 'pk-woo-date-' + (++proxyCounter);
-        $proxy = $('<input />', {
-            type: 'text',
-            id: proxyId,
-            'class': buildProxyClasses($source),
-            dir: 'ltr',
-            autocomplete: 'off',
-            inputmode: 'numeric'
-        });
-
-        $.each(['maxlength', 'placeholder', 'pattern', 'size'], function (_, attribute) {
-            var value = $source.attr(attribute);
-
-            if (typeof value === 'string' && value !== '') {
-                $proxy.attr(attribute, value);
-            }
-        });
-
-        $.each(['aria-label', 'aria-describedby'], function (_, attribute) {
-            var value = $source.attr(attribute);
-
-            if (typeof value === 'string' && value !== '') {
-                $proxy.attr(attribute, value);
-            }
-        });
-
-        if ($source.is('[readonly]')) {
-            $proxy.prop('readonly', true);
-        }
-
-        if ($source.is(':disabled')) {
-            $proxy.prop('disabled', true);
-        }
-
-        $proxy.val(proxyValueFromSource($source.val()));
-
-        $source
-            .attr('data-pk-woo-proxy-bound', '1')
-            .attr('data-pk-woo-proxy-id', proxyId)
-            .attr('tabindex', '-1')
-            .attr('aria-hidden', 'true')
-            .addClass('pk-woo-gregorian-source')
-            .hide()
-            .after($proxy);
-
-        bindProxyField($source, $proxy);
-    }
-
-    function enhanceDateFields(context) {
-        $(dateSelectors, context || document).each(function () {
-            enhanceDateField(this);
-        });
-    }
-
-    function enhanceTimeFields(context) {
-        $(timeSelectors, context || document).each(function () {
-            var $input = $(this);
-
-            normalizeTimeField($input);
-
-            if ($input.attr('data-pk-woo-time-bound') === '1') {
+        each(root, TIME_FIELDS, function (input) {
+            if (timeFields.has(input)) {
                 return;
             }
+            timeFields.add(input);
 
-            $input.attr('data-pk-woo-time-bound', '1').on('input change blur', function () {
-                normalizeTimeField($input);
-            });
-        });
-    }
-
-    function commitDateFields(context) {
-        enhanceDateFields(context);
-        enhanceTimeFields(context);
-
-        $(dateSelectors, context || document).each(function () {
-            var $source = $(this);
-            var $proxy = getProxyForSource($source);
-
-            if ($proxy.length) {
-                syncSourceFromProxy($source, $proxy, true);
+            // A number input refuses Persian digits as they are typed, and
+            // drops a value written with them. As text, the digits arrive
+            // and are converted; WooCommerce's pattern still checks them.
+            var value = toAsciiDigits(input.value || input.getAttribute('value') || '');
+            if (input.type === 'number') {
+                input.type = 'text';
+                input.setAttribute('inputmode', 'numeric');
+                input.setAttribute('maxlength', '2');
+            }
+            if (value !== input.value) {
+                input.value = value;
             }
         });
     }
 
+    upgrade(document);
     $(function () {
-        enhanceDateFields(document);
-        enhanceTimeFields(document);
-
-        $(document.body).on('wc-init-datepickers', function () {
-            enhanceDateFields(document);
-            enhanceTimeFields(document);
-        });
-
-        $(document).on('submit', 'form#post, form[name="post"]', function () {
-            commitDateFields(this);
-        });
-
-        $('#woocommerce-product-data')
-            .on('woocommerce_variations_loaded woocommerce_variations_added', function () {
-                enhanceDateFields(this);
-                enhanceTimeFields(this);
-            })
-            .on('woocommerce_variations_save_variations_button woocommerce_variations_save_variations_on_submit', function () {
-                commitDateFields(this);
-            });
+        upgrade(document);
     });
-})(window.jQuery, window.PersianKitJalali);
+
+    // Variations loaded over AJAX and download permissions added to an order.
+    if (typeof MutationObserver !== 'undefined') {
+        new MutationObserver(function (mutations) {
+            mutations.forEach(function (mutation) {
+                Array.prototype.forEach.call(mutation.addedNodes, function (node) {
+                    if (node.nodeType === 1) {
+                        upgrade(node);
+                    }
+                });
+            });
+        }).observe(document.documentElement, { childList: true, subtree: true });
+    }
+
+    $(document.body).on('wc-init-datepickers', function () {
+        upgrade(document);
+    });
+    $(document).on('woocommerce_variations_loaded woocommerce_variations_added', function () {
+        upgrade(document);
+    });
+
+    document.addEventListener('change', function (event) {
+        var group = event.target.closest && event.target.closest('.sale_price_dates_fields');
+        if (group && event.target.matches(SALE_FROM + ', ' + SALE_TO)) {
+            limitSaleDates(group);
+        }
+    });
+
+    // WooCommerce empties the sale dates with .val(''), and stops the click.
+    document.addEventListener('click', function (event) {
+        var cancel = event.target.closest && event.target.closest('.cancel_sale_schedule');
+        var wrap = cancel && cancel.closest('div, table');
+        if (!wrap) {
+            return;
+        }
+
+        window.setTimeout(function () {
+            each(wrap, '.sale_price_dates_fields', function (group) {
+                each(group, DATE_FIELDS, field.refresh);
+                limitSaleDates(group);
+            });
+        }, 0);
+    }, true);
+
+    // The order's hour and minute: their pattern and PHP's (int) need
+    // English digits.
+    ['input', 'change'].forEach(function (type) {
+        document.addEventListener(type, function (event) {
+            var input = event.target;
+            if (input.matches && input.matches(TIME_FIELDS) && toAsciiDigits(input.value) !== input.value) {
+                input.value = toAsciiDigits(input.value);
+            }
+        });
+    });
+})(window.jQuery, window, document);
