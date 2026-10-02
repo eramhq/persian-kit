@@ -9,9 +9,13 @@ use PersianKit\Dependencies\Eram\Abzar\Text\CharNormalizer;
 use PersianKit\Modules\CharNormalization\SaveNormalizer;
 use PersianKit\Tests\Unit\Support\FailsPcre;
 use PHPUnit\Framework\TestCase;
+use PersianKit\Service\Language\ContentLanguage;
+use PersianKit\Tests\Unit\Support\UsesLanguages;
 
 class SaveNormalizerTest extends TestCase
 {
+    use UsesLanguages;
+
     use FailsPcre;
 
     private const ZWNJ = "\u{200C}";
@@ -20,6 +24,7 @@ class SaveNormalizerTest extends TestCase
     {
         parent::setUp();
         Monkey\setUp();
+        ContentLanguage::reset();
 
         Functions\when('get_post_type_object')->alias(fn (string $type) => match ($type) {
             'post', 'page'  => (object) ['public' => true],
@@ -188,5 +193,61 @@ class SaveNormalizerTest extends TestCase
         $comment = $this->normalizer(true, true)->filterComment(['comment_content' => 'می روم']);
 
         $this->assertSame('می روم', $comment['comment_content']);
+    }
+
+    public function test_on_multilingual_sites_only_persian_posts_are_fixed(): void
+    {
+        $source = $this->inLanguage('fa_IR');
+        $source->posts = [5 => 'ar', 6 => 'fa_IR'];
+        $normalizer = $this->normalizer();
+
+        $arabic = $normalizer->filterPostData($this->post(['post_title' => 'كتاب']), ['ID' => 5]);
+        $persian = $normalizer->filterPostData($this->post(['post_title' => 'كتاب']), ['ID' => 6]);
+
+        $this->assertSame('كتاب', $arabic['post_title']);
+        $this->assertSame('کتاب', $persian['post_title']);
+    }
+
+    public function test_the_language_chosen_in_the_editor_wins_over_the_stored_one(): void
+    {
+        $source = $this->inLanguage('fa_IR');
+        $source->posts = [5 => 'fa_IR'];
+        $source->requested = ['post:5' => 'ar'];
+
+        $data = $this->normalizer()->filterPostData($this->post(['post_title' => 'كتاب']), ['ID' => 5]);
+
+        $this->assertSame('كتاب', $data['post_title']);
+    }
+
+    public function test_should_normalize_gets_the_language_and_can_override_it(): void
+    {
+        $this->inLanguage('fa_IR')->posts = [5 => 'ar'];
+        Filters\expectApplied('persian_kit_should_normalize')->once()->with(false, \Mockery::any(), \Mockery::any(), \Mockery::any())->andReturn(true);
+
+        $data = $this->normalizer()->filterPostData($this->post(['post_title' => 'كتاب']), ['ID' => 5]);
+
+        $this->assertSame('کتاب', $data['post_title']);
+    }
+
+    public function test_comments_follow_their_posts_language(): void
+    {
+        $this->inLanguage('fa_IR')->posts = [5 => 'ar'];
+        $normalizer = $this->normalizer();
+
+        $this->assertSame('كتاب', $normalizer->filterComment(['comment_post_ID' => 5, 'comment_content' => 'كتاب'])['comment_content']);
+        $this->assertSame('کتاب', $normalizer->filterComment(['comment_post_ID' => 6, 'comment_content' => 'كتاب'])['comment_content']);
+    }
+
+    public function test_terms_follow_the_language_the_request_gives_them(): void
+    {
+        $source = $this->inLanguage('fa_IR');
+        $source->requested = ['term:0' => 'ar'];
+        $normalizer = $this->normalizer();
+
+        $this->assertSame('كتاب', $normalizer->filterText('كتاب'));
+        $this->assertSame('<p>كتاب</p>', $normalizer->filterContent('<p>كتاب</p>'));
+
+        $source->requested = [];
+        $this->assertSame('کتاب', $normalizer->filterText('كتاب'));
     }
 }

@@ -3,6 +3,7 @@
 namespace PersianKit\Modules\Utilities;
 
 use PersianKit\Dependencies\Eram\Abzar\Text\Slug;
+use PersianKit\Service\Language\ContentLanguage;
 
 defined('ABSPATH') || exit;
 
@@ -15,6 +16,9 @@ defined('ABSPATH') || exit;
  * titles are slugged from the raw title by abzar, which turns ZWNJ into "-".
  * Lookups ('query' context) keep ZWNJ so slugs saved before that change still
  * resolve.
+ *
+ * On multilingual sites, content in other languages (Arabic) gets core's
+ * slugs; lookups stay the same in every language.
  */
 class PersianSlugFilter
 {
@@ -50,7 +54,21 @@ class PersianSlugFilter
             ));
         }
 
+        if (!ContentLanguage::writesPersian(self::savesTerm() ? 'term' : 'post')) {
+            return (string) $title;
+        }
+
         return Slug::generate($decoded);
+    }
+
+    /**
+     * Core passes no object, so the screen tells a term's slug from a post's.
+     * REST saves follow the request's language either way.
+     */
+    private static function savesTerm(): bool
+    {
+        return doing_filter('pre_term_slug') || doing_action('wp_ajax_add-tag') || doing_action('wp_ajax_inline-save-tax')
+            || in_array($GLOBALS['pagenow'] ?? '', ['edit-tags.php', 'term.php'], true);
     }
 
     /**

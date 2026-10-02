@@ -9,13 +9,18 @@ use Mockery;
 use PersianKit\Core\SettingsManager;
 use PersianKit\Modules\ZWNJEditor\ZWNJEditorModule;
 use PersianKit\Container\ServiceContainer;
+use PersianKit\Service\Language\ContentLanguage;
+use PersianKit\Tests\Unit\Support\UsesLanguages;
 
 class ZWNJEditorModuleTest extends TestCase
 {
+    use UsesLanguages;
+
     protected function setUp(): void
     {
         parent::setUp();
         Monkey\setUp();
+        ContentLanguage::reset();
         Functions\when('wp_json_encode')->alias('json_encode');
         Functions\when('__')->returnArg();
     }
@@ -264,5 +269,28 @@ class ZWNJEditorModuleTest extends TestCase
         $module->enqueueBlockEditorScript();
 
         $this->assertTrue(true);
+    }
+
+    public function test_the_key_is_left_out_of_editors_for_other_languages(): void
+    {
+        Functions\expect('wp_enqueue_script')->never();
+        Functions\when('get_current_screen')->justReturn(null);
+        $this->inLanguage('en_US', true)->requested = ['post:0' => 'ar'];
+        $module = $this->makeModule();
+
+        $this->assertSame([], $module->registerTinyMcePlugin([]));
+        $this->assertSame(['bold'], $module->registerTinyMceButton(['bold']));
+        $module->enqueueTextEditorScript('post.php');
+        $module->enqueueBlockEditorScript();
+    }
+
+    public function test_an_admin_with_another_language_still_gets_it_for_persian_posts(): void
+    {
+        if (!defined('PERSIAN_KIT_URL')) {
+            define('PERSIAN_KIT_URL', 'https://example.com/wp-content/plugins/persian-kit/');
+        }
+        $this->inLanguage('en_US', true)->requested = ['post:0' => 'fa_IR'];
+
+        $this->assertArrayHasKey('persian_kit_zwnj', $this->makeModule()->registerTinyMcePlugin([]));
     }
 }
