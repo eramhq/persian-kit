@@ -17,6 +17,9 @@ class WooAdminDateFieldsTest extends TestCase
         Functions\when('wp_add_inline_script')->justReturn(true);
         Functions\when('wp_json_encode')->alias('json_encode');
         Functions\when('__')->returnArg();
+        Functions\when('determine_locale')->justReturn('fa_IR');
+        Functions\when('wp_register_style')->justReturn(true);
+        Functions\when('wp_enqueue_style')->justReturn(true);
 
         if (!defined('PERSIAN_KIT_URL')) {
             define('PERSIAN_KIT_URL', 'https://example.com/wp-content/plugins/persian-kit/');
@@ -62,20 +65,14 @@ class WooAdminDateFieldsTest extends TestCase
 
         (new WooAdminDateFields())->enqueue('post.php');
 
-        $this->assertSame([[
-            'persian-kit-jalali',
-            PERSIAN_KIT_URL . 'public/js/jalali.js',
-            [],
-            PERSIAN_KIT_VERSION,
-            true,
-        ]], $registerCalls);
+        $this->assertSame(['persian-kit-datepicker', 'persian-kit-date-field'], array_column($registerCalls, 0));
 
         $this->assertSame([
-            ['persian-kit-jalali'],
+            ['persian-kit-date-field'],
             [
                 'persian-kit-woocommerce-date-fields',
                 PERSIAN_KIT_URL . 'public/js/woocommerce-date-fields.js',
-                ['jquery', 'persian-kit-jalali'],
+                ['jquery', 'persian-kit-date-field'],
                 PERSIAN_KIT_VERSION,
                 true,
             ],
@@ -88,7 +85,7 @@ class WooAdminDateFieldsTest extends TestCase
         $_GET['action'] = 'edit';
 
         Functions\expect('get_current_screen')->once()->andReturn($screen);
-        Functions\expect('wp_register_script')->once();
+        Functions\expect('wp_register_script')->twice();
         Functions\expect('wp_enqueue_script')->times(2);
 
         (new WooAdminDateFields())->enqueue('woocommerce_page_wc-orders');

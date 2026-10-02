@@ -2,7 +2,7 @@
 
 namespace PersianKit\Modules\WooCommerce;
 
-use PersianKit\Modules\DateConversion\JalaliScript;
+use PersianKit\Modules\DateConversion\DatePicker;
 
 defined('ABSPATH') || exit;
 
@@ -19,14 +19,12 @@ class WooAdminDateFields
             return;
         }
 
-        JalaliScript::register();
-
-        wp_enqueue_script('persian-kit-jalali');
+        DatePicker::enqueue();
 
         wp_enqueue_script(
             'persian-kit-woocommerce-date-fields',
             PERSIAN_KIT_URL . 'public/js/woocommerce-date-fields.js',
-            ['jquery', 'persian-kit-jalali'],
+            ['jquery', DatePicker::FIELD],
             PERSIAN_KIT_VERSION,
             true
         );

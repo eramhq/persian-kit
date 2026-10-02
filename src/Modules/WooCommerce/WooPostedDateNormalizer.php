@@ -12,8 +12,9 @@ defined('ABSPATH') || exit;
  * WooCommerce reads them from $_POST.
  *
  * The woocommerce_process_*_meta actions fire only after WooCommerce verified
- * woocommerce_meta_nonce. The variations AJAX handler checks its nonce itself,
- * after our early callback, so that callback verifies the same nonce first.
+ * woocommerce_meta_nonce. The variations AJAX handlers check their nonces
+ * themselves, after our early callbacks, so those callbacks verify the same
+ * nonces first.
  *
  * Values are written back slashed, as WordPress keeps $_POST, because
  * WooCommerce unslashes them again when it reads them.
@@ -31,6 +32,7 @@ class WooPostedDateNormalizer
         add_action('woocommerce_process_shop_coupon_meta', [$this, 'normalizeCouponDates'], 5);
         add_action('woocommerce_process_shop_order_meta', [$this, 'normalizeOrderDates'], 5);
         add_action('wp_ajax_woocommerce_save_variations', [$this, 'normalizeVariationDates'], 1);
+        add_action('wp_ajax_woocommerce_bulk_edit_variations', [$this, 'normalizeBulkSaleSchedule'], 1);
         add_filter('woocommerce_date_input_html_pattern', [$this, 'filterDateInputHtmlPattern']);
     }
 
@@ -62,6 +64,40 @@ class WooPostedDateNormalizer
 
         $this->normalizeArrayPostField('variable_sale_price_dates_from');
         $this->normalizeArrayPostField('variable_sale_price_dates_to');
+    }
+
+    /**
+     * Variations > Bulk actions > Set scheduled sale dates sends the dates
+     * typed into two prompts, which WooCommerce reads with strtotime().
+     */
+    public function normalizeBulkSaleSchedule(): void
+    {
+        if (!check_ajax_referer('bulk-edit-variations', 'security', false) || !current_user_can('edit_products')) {
+            return;
+        }
+
+        if (!isset($_POST['bulk_action']) || $this->sanitizeScalar($_POST['bulk_action']) !== 'variable_sale_schedule') {
+            return;
+        }
+
+        if (!isset($_POST['data']) || !is_array($_POST['data'])) {
+            return;
+        }
+
+        foreach (['date_from', 'date_to'] as $key) {
+            if (!isset($_POST['data'][$key])) {
+                continue;
+            }
+
+            $value = $this->sanitizeScalar($_POST['data'][$key]);
+
+            // WooCommerce's "no date": the prompt was cancelled.
+            if ($value === 'false') {
+                continue;
+            }
+
+            $_POST['data'][$key] = wp_slash(DateInputParser::normalize($value));
+        }
     }
 
     public function filterDateInputHtmlPattern(string $pattern): string
