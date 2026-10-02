@@ -15,6 +15,24 @@ const copies = [
         src: 'node_modules/@fontsource-variable/vazirmatn/LICENSE',
         dest: 'public/fonts/vazirmatn/OFL.txt',
     },
+    // Noto Sans Arabic variable font subsets (arabic, latin, latin-ext) and licence
+    ...['arabic', 'latin', 'latin-ext'].map(subset => ({
+        src: `node_modules/@fontsource-variable/noto-sans-arabic/files/noto-sans-arabic-${subset}-wght-normal.woff2`,
+        dest: `public/fonts/noto-sans-arabic/noto-sans-arabic-${subset}-wght-normal.woff2`,
+    })),
+    {
+        src: 'node_modules/@fontsource-variable/noto-sans-arabic/LICENSE',
+        dest: 'public/fonts/noto-sans-arabic/OFL.txt',
+    },
+    // IBM Plex Sans Arabic has no variable version: the static weights the admin uses, and licence
+    ...['arabic', 'latin', 'latin-ext'].flatMap(subset => [400, 500, 600, 700].map(weight => ({
+        src: `node_modules/@fontsource/ibm-plex-sans-arabic/files/ibm-plex-sans-arabic-${subset}-${weight}-normal.woff2`,
+        dest: `public/fonts/ibm-plex-sans-arabic/ibm-plex-sans-arabic-${subset}-${weight}-normal.woff2`,
+    }))),
+    {
+        src: 'node_modules/@fontsource/ibm-plex-sans-arabic/LICENSE',
+        dest: 'public/fonts/ibm-plex-sans-arabic/OFL.txt',
+    },
     // Admin CSS (settings page styles)
     {
         src: 'resources/css/admin.css',

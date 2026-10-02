@@ -9,6 +9,13 @@ defined('ABSPATH') || exit;
 
 class AdminFontModule extends AbstractModule
 {
+    /** Bundled fonts: setting value => CSS font-family. */
+    public const FONTS = [
+        'vazirmatn'            => 'Vazirmatn',
+        'noto-sans-arabic'     => 'Noto Sans Arabic',
+        'ibm-plex-sans-arabic' => 'IBM Plex Sans Arabic',
+    ];
+
     public static function key(): string
     {
         return 'admin_font';
@@ -21,7 +28,7 @@ class AdminFontModule extends AbstractModule
 
     public static function description(): string
     {
-        return __('Vazirmatn when the admin is in Persian.', 'persian-kit');
+        return __('A Persian font for the admin when it is in Persian.', 'persian-kit');
     }
 
     /**
@@ -53,11 +60,10 @@ class AdminFontModule extends AbstractModule
     public function sanitizeSettings(array $values): array
     {
         $font = is_string($values['font'] ?? null) ? strtolower(trim($values['font'])) : '';
-        $allowedFonts = ['vazirmatn'];
 
         return [
             'enabled' => !empty($values['enabled']),
-            'font'    => in_array($font, $allowedFonts, true) ? $font : 'vazirmatn',
+            'font'    => isset(self::FONTS[$font]) ? $font : 'vazirmatn',
         ];
     }
 
@@ -74,9 +80,12 @@ class AdminFontModule extends AbstractModule
             PERSIAN_KIT_VERSION
         );
 
+        $font = $this->setting('font');
+        $family = is_string($font) && isset(self::FONTS[$font]) ? self::FONTS[$font] : self::FONTS['vazirmatn'];
+
         wp_add_inline_style(
             'persian-kit-admin-font',
-            ":root { --persian-kit-admin-font: 'Vazirmatn'; }"
+            ":root { --persian-kit-admin-font: '{$family}'; }"
         );
     }
 

@@ -2,6 +2,7 @@
 
 namespace PersianKit\Tests\Unit\AdminFont;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Brain\Monkey;
 use Brain\Monkey\Functions;
@@ -162,5 +163,61 @@ class AdminFontModuleTest extends TestCase
             'enabled' => true,
             'font'    => 'unknown-font',
         ]));
+    }
+
+    #[DataProvider('bundledFontProvider')]
+    public function test_sanitize_settings_keeps_bundled_font(string $font): void
+    {
+        $this->assertSame(
+            ['enabled' => true, 'font' => $font],
+            $this->makeModule()->sanitizeSettings(['enabled' => true, 'font' => $font])
+        );
+    }
+
+    #[DataProvider('bundledFontProvider')]
+    public function test_enqueue_font_inline_style_uses_chosen_font(string $font, string $family): void
+    {
+        $capturedCss = null;
+
+        Functions\expect('wp_enqueue_style')->once();
+        Functions\expect('wp_add_inline_style')
+            ->once()
+            ->with('persian-kit-admin-font', Mockery::on(function (string $css) use (&$capturedCss) {
+                $capturedCss = $css;
+                return true;
+            }));
+
+        $this->makeModule(['font' => $font])->enqueueFont();
+
+        $this->assertSame(":root { --persian-kit-admin-font: '{$family}'; }", $capturedCss);
+    }
+
+    /**
+     * @return array<string, array{string, string}>
+     */
+    public static function bundledFontProvider(): array
+    {
+        return [
+            'Vazirmatn'            => ['vazirmatn', 'Vazirmatn'],
+            'Noto Sans Arabic'     => ['noto-sans-arabic', 'Noto Sans Arabic'],
+            'IBM Plex Sans Arabic' => ['ibm-plex-sans-arabic', 'IBM Plex Sans Arabic'],
+        ];
+    }
+
+    public function test_enqueue_font_falls_back_to_vazirmatn_for_unknown_stored_font(): void
+    {
+        $capturedCss = null;
+
+        Functions\expect('wp_enqueue_style')->once();
+        Functions\expect('wp_add_inline_style')
+            ->once()
+            ->with('persian-kit-admin-font', Mockery::on(function (string $css) use (&$capturedCss) {
+                $capturedCss = $css;
+                return true;
+            }));
+
+        $this->makeModule(['font' => 'comic-sans'])->enqueueFont();
+
+        $this->assertSame(":root { --persian-kit-admin-font: 'Vazirmatn'; }", $capturedCss);
     }
 }

@@ -641,7 +641,7 @@ The settings page (the Persian Kit menu) has four tabs: Display, Writing and Int
 | --- | --- | --- |
 | `digit_conversion` | Display > Persian digits | `enabled` (off), `dates`, `numbers`, `prices` (on) |
 | `date_conversion` | Display > Jalali dates | `enabled` (on), `global_conversion` (off), `jalali_archives` (on), `jalali_permalinks` (off) |
-| `admin_font` | Display > Admin font | `enabled` (on), `font` (`vazirmatn`) |
+| `admin_font` | Display > Admin font | `enabled` (on), `font` (`vazirmatn`, `noto-sans-arabic`, `ibm-plex-sans-arabic`; default `vazirmatn`) |
 | `char_normalization` | Writing > Persian ی and ک | `enabled` (on), `normalize_on_save` (off), `teh_marbuta` (off), `half_space_fix` (off) |
 | `zwnj_editor` | Writing > Half-space key | `enabled` (on) |
 | `utilities` | Writing > Persian slugs | `enabled` (on), `persian_slugs` (on) |

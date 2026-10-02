@@ -59,6 +59,10 @@ The admin date fields use the Forms module's Jalali date picker, with a calendar
 - New option, off by default: "Add half-spaces on save" puts a half-space (ZWNJ) after می and نمی and before suffixes such as ها and ترین in the title, excerpt and content of public posts. HTML tags, code and character references are left alone. It works with or without fixing letters.
 - Developers: the save filter moved from a closure in `CharNormalizationModule::boot()` to `PersianKit\Modules\CharNormalization\SaveNormalizer`.
 
+### Admin font
+
+- The admin font can now be Noto Sans Arabic or IBM Plex Sans Arabic as well as Vazirmatn (Display > Admin font). All three ship with the plugin; only the chosen font is downloaded.
+
 ## [1.0.0-beta.4] - 2026-10-01
 
 First WordPress.org release. Includes everything listed under 1.0.0-beta.3 and 1.0.0-beta.2, plus the changes below.
