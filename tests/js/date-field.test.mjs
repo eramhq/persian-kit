@@ -100,12 +100,17 @@ test('only marked inputs are upgraded', async () => {
 });
 
 test('ACF dates are kept as Ymd', async () => {
-    const window = await page('<form><input name="acf[field_1]" data-persian-kit-date data-persian-kit-date-format="Ymd" value="20260321"></form>');
+    const window = await page(`
+        <form>
+            <label for="acf-field_1">Event</label>
+            <input type="hidden" id="acf-field_1" name="acf[field_1]" data-persian-kit-date data-persian-kit-date-format="Ymd" value="20260321">
+        </form>`);
     const { document } = window;
     const input = document.querySelector('input');
     const picker = document.querySelector('intl-datepicker');
 
     assert.equal(picker.value, '2026-03-21');
+    assert.equal(document.querySelector('label').htmlFor, 'acf-field_1-picker');
 
     picker.setValue('2026-10-02');
     assert.equal(input.value, '20261002');

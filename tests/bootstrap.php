@@ -21,13 +21,14 @@ if (file_exists($wpTestsDir . '/includes/functions.php')) {
 
     require_once $wpTestsDir . '/includes/functions.php';
 
-    // Plugins the integration tests cover: WooCommerce, Contact Form 7. Each
+    // Plugins the integration tests cover: WooCommerce, Contact Form 7, ACF. Each
     // loads from PERSIAN_KIT_TESTS_<NAME>_DIR (as in CI), or when installed
     // next to the plugin. Their tests are skipped without them; set
     // PERSIAN_KIT_TESTS_WITHOUT_<NAME>=1 to run the suite without one.
     $plugins = [
         'WOOCOMMERCE' => 'woocommerce/woocommerce.php',
         'CF7'         => 'contact-form-7/wp-contact-form-7.php',
+        'ACF'         => 'advanced-custom-fields/acf.php',
     ];
     $pluginFiles = [];
     foreach ($plugins as $name => $file) {

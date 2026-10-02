@@ -14,5 +14,6 @@ parameters:
         - vendor/php-stubs/woocommerce-stubs/woocommerce-stubs.php
         - tests/stubs/wp-cli.php
         - tests/stubs/contact-form-7.php
+        - tests/stubs/acf.php
     bootstrapFiles:
         - tests/phpstan-bootstrap.php
