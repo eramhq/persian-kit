@@ -10,8 +10,10 @@ use PersianKit\Core\SettingsManager;
 use PersianKit\Modules\WooCommerce\CheckoutInputNormalizer;
 use PersianKit\Modules\WooCommerce\CheckoutValidator;
 use PersianKit\Modules\WooCommerce\CityField;
+use PersianKit\Modules\WooCommerce\IranianCurrencies;
 use PersianKit\Modules\WooCommerce\NationalIdField;
 use PersianKit\Modules\WooCommerce\ProvinceLimit;
+use PersianKit\Modules\WooCommerce\SchemaPrices;
 use PersianKit\Modules\WooCommerce\WooAdminDateFields;
 use PersianKit\Modules\WooCommerce\WooCommerceModule;
 use PersianKit\Modules\WooCommerce\WooDateDisplayFilter;
@@ -40,6 +42,7 @@ class WooCommerceModuleTest extends TestCase
         Functions\when('is_admin')->justReturn(false);
 
         $this->assertSame([
+            SchemaPrices::class,
             WooDateDisplayFilter::class,
             CheckoutInputNormalizer::class,
             CheckoutValidator::class,
@@ -52,6 +55,7 @@ class WooCommerceModuleTest extends TestCase
         Functions\when('is_admin')->justReturn(true);
 
         $this->assertSame([
+            SchemaPrices::class,
             WooDateDisplayFilter::class,
             CheckoutInputNormalizer::class,
             CheckoutValidator::class,
@@ -67,6 +71,7 @@ class WooCommerceModuleTest extends TestCase
         Functions\when('is_admin')->justReturn(false);
 
         $this->assertSame([
+            SchemaPrices::class,
             WooDateDisplayFilter::class,
             NationalIdField::class,
             CityField::class,
@@ -78,11 +83,31 @@ class WooCommerceModuleTest extends TestCase
         Functions\when('is_admin')->justReturn(true);
 
         $this->assertSame([
+            SchemaPrices::class,
             WooDateDisplayFilter::class,
             CheckoutInputNormalizer::class,
             CheckoutValidator::class,
             NationalIdField::class,
         ], $this->bootAndListFetched(['dates_admin' => false]));
+    }
+
+    public function test_schema_prices_stay_while_the_module_is_off(): void
+    {
+        Functions\when('is_admin')->justReturn(true);
+
+        $this->assertSame([SchemaPrices::class], $this->bootAndListFetched([], 'bootDisabled'));
+    }
+
+    public function test_the_currencies_are_added_when_services_register_whether_the_module_is_on_or_off(): void
+    {
+        $currencies = Mockery::mock(IranianCurrencies::class);
+        $currencies->shouldReceive('register')->once();
+        $container = Mockery::mock(ServiceContainer::class);
+        $container->shouldReceive('register');
+        $container->shouldReceive('get')->once()->with(IranianCurrencies::class)->andReturn($currencies);
+
+        $this->makeModule(['enabled' => false])->register($container);
+        $this->addToAssertionCount(1);
     }
 
     public function test_inactive_plugins_names_woocommerce_when_it_is_missing(): void
@@ -169,7 +194,7 @@ class WooCommerceModuleTest extends TestCase
      * @param array<string, mixed> $settings
      * @return list<string> Service ids fetched from the container, in order.
      */
-    private function bootAndListFetched(array $settings = []): array
+    private function bootAndListFetched(array $settings = [], string $method = 'boot'): array
     {
         $fetched = [];
         $container = Mockery::mock(ServiceContainer::class);
@@ -181,7 +206,7 @@ class WooCommerceModuleTest extends TestCase
             return $service;
         });
 
-        $this->makeModule($settings)->boot($container);
+        $this->makeModule($settings)->{$method}($container);
 
         return $fetched;
     }

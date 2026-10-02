@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-10-02T15:14:22+00:00\n"
+"POT-Creation-Date: 2026-10-02T15:42:29+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: persian-kit\n"
@@ -85,7 +85,7 @@ msgid "You do not have permission to access this page."
 msgstr ""
 
 #: src/Core/AdminPage.php:368
-#: views/admin/partials/woocommerce-settings.php:165
+#: views/admin/partials/woocommerce-settings.php:180
 msgid "Display"
 msgstr ""
 
@@ -98,6 +98,7 @@ msgstr ""
 #: src/Core/ConflictDetector.php:82
 #: src/Modules/WooCommerce/WooCommerceModule.php:19
 #: src/Modules/WooCommerce/WooCommerceModule.php:54
+#: views/admin/partials/woocommerce-settings.php:170
 msgid "WooCommerce"
 msgstr ""
 
@@ -145,7 +146,7 @@ msgstr ""
 #: src/Core/ConflictDetector.php:58
 #: src/Core/ConflictDetector.php:78
 #: src/Modules/DigitConversion/DigitConversionModule.php:21
-#: views/admin/partials/woocommerce-settings.php:166
+#: views/admin/partials/woocommerce-settings.php:181
 msgid "Persian digits"
 msgstr ""
 
@@ -489,6 +490,26 @@ msgstr ""
 msgid "Billing postcode"
 msgstr ""
 
+#: src/Modules/WooCommerce/IranianCurrencies.php:56
+msgid "Iranian thousand toman"
+msgstr ""
+
+#: src/Modules/WooCommerce/IranianCurrencies.php:57
+msgid "Iranian thousand rial"
+msgstr ""
+
+#: src/Modules/WooCommerce/IranianCurrencies.php:89
+msgid "Changing the currency doesn't convert prices, shipping costs or coupons."
+msgstr ""
+
+#: src/Modules/WooCommerce/IranianCurrencies.php:90
+msgid "Before you pick thousand toman or thousand rial, check that your payment gateway supports it."
+msgstr ""
+
+#: src/Modules/WooCommerce/IranianCurrencies.php:91
+msgid "For prices like 12.5, set the number of decimals below."
+msgstr ""
+
 #: src/Modules/WooCommerce/NationalIdField.php:91
 msgid "National ID (optional)"
 msgstr ""
@@ -497,18 +518,18 @@ msgstr ""
 msgid "National ID:"
 msgstr ""
 
-#: src/Modules/WooCommerce/ProvinceLimit.php:171
+#: src/Modules/WooCommerce/ProvinceLimit.php:179
 msgid "Province"
 msgstr ""
 
 #. translators: 1: the province field's label, 2: the provinces the store delivers to.
-#: src/Modules/WooCommerce/ProvinceLimit.php:176
+#: src/Modules/WooCommerce/ProvinceLimit.php:184
 #, php-format
 msgid "%1$s is not valid. Please enter one of the following: %2$s"
 msgstr ""
 
 #: src/Modules/WooCommerce/WooCommerceModule.php:24
-msgid "Jalali dates in the shop admin and emails, and checkout fields for Iran."
+msgid "Jalali dates in the shop admin and emails, checkout fields for Iran, and thousand toman and thousand rial currencies."
 msgstr ""
 
 #: src/Modules/WooCommerce/WooCommerceModule.php:71
@@ -612,7 +633,7 @@ msgid "Post and comment counts"
 msgstr ""
 
 #: views/admin/partials/digit-conversion-settings.php:18
-#: views/admin/partials/woocommerce-settings.php:167
+#: views/admin/partials/woocommerce-settings.php:182
 msgid "Shop prices"
 msgstr ""
 
@@ -865,33 +886,54 @@ msgstr ""
 msgid "Only these provinces"
 msgstr ""
 
-#: views/admin/partials/woocommerce-settings.php:123
+#: views/admin/partials/woocommerce-settings.php:124
 msgid "Pick at least one province. Until then, all provinces are listed."
 msgstr ""
 
-#: views/admin/partials/woocommerce-settings.php:127
+#: views/admin/partials/woocommerce-settings.php:128
 msgid "Applies to addresses in Iran. Checkout, the cart and My Account list only these; the shop admin still lists all."
 msgstr ""
 
-#: views/admin/partials/woocommerce-settings.php:134
+#: views/admin/partials/woocommerce-settings.php:135
 msgid "National ID at checkout"
 msgstr ""
 
-#: views/admin/partials/woocommerce-settings.php:148
+#: views/admin/partials/woocommerce-settings.php:149
 msgid "Shown on the order and in emails."
 msgstr ""
 
+#. translators: %s: link to the setting, such as "WooCommerce › Settings › General › Currency".
+#: views/admin/partials/woocommerce-settings.php:167
+#, php-format
+msgid "Thousand toman and thousand rial can be picked under %s. Switching doesn't convert saved prices. Search engines get prices in rials."
+msgstr ""
+
+#: views/admin/partials/woocommerce-settings.php:171
+msgctxt "WooCommerce menu"
+msgid "Settings"
+msgstr ""
+
+#: views/admin/partials/woocommerce-settings.php:172
+msgctxt "WooCommerce settings tab"
+msgid "General"
+msgstr ""
+
+#: views/admin/partials/woocommerce-settings.php:173
+msgctxt "WooCommerce setting"
+msgid "Currency"
+msgstr ""
+
 #. translators: %s: link to the setting, such as "Display › Persian digits › Shop prices".
-#: views/admin/partials/woocommerce-settings.php:160
+#: views/admin/partials/woocommerce-settings.php:178
 #, php-format
 msgid "Persian digits in prices are set under %s."
 msgstr ""
 
-#: views/admin/partials/woocommerce-settings.php:183
+#: views/admin/partials/woocommerce-settings.php:198
 msgid "Jalali date picker in the shop admin"
 msgstr ""
 
-#: views/admin/partials/woocommerce-settings.php:184
+#: views/admin/partials/woocommerce-settings.php:199
 msgid "Order, product and coupon dates, and the month filter on the orders list."
 msgstr ""
 

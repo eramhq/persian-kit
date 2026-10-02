@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Persian Kit 1.0.0-beta.4\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/persian-kit\n"
-"POT-Creation-Date: 2026-10-02T15:10:53+00:00\n"
+"POT-Creation-Date: 2026-10-02T15:42:29+00:00\n"
 "PO-Revision-Date: 2026-10-01 00:00+0000\n"
 "Last-Translator: Persian Kit contributors\n"
 "Language-Team: Persian (Iran)\n"
@@ -85,7 +85,7 @@ msgstr "سازگاری"
 msgid "You do not have permission to access this page."
 msgstr "شما اجازه دسترسی به این صفحه را ندارید."
 
-#: src/Core/AdminPage.php:368 views/admin/partials/woocommerce-settings.php:165
+#: src/Core/AdminPage.php:368 views/admin/partials/woocommerce-settings.php:180
 msgid "Display"
 msgstr "نمایش"
 
@@ -97,6 +97,7 @@ msgstr "نگارش"
 #: src/Core/ConflictDetector.php:82
 #: src/Modules/WooCommerce/WooCommerceModule.php:19
 #: src/Modules/WooCommerce/WooCommerceModule.php:54
+#: views/admin/partials/woocommerce-settings.php:170
 msgid "WooCommerce"
 msgstr "ووکامرس"
 
@@ -141,7 +142,7 @@ msgstr "تاریخ شمسی در ووکامرس"
 #: src/Core/ConflictDetector.php:37 src/Core/ConflictDetector.php:58
 #: src/Core/ConflictDetector.php:78
 #: src/Modules/DigitConversion/DigitConversionModule.php:21
-#: views/admin/partials/woocommerce-settings.php:166
+#: views/admin/partials/woocommerce-settings.php:181
 msgid "Persian digits"
 msgstr "اعداد فارسی"
 
@@ -514,6 +515,29 @@ msgstr "کد پستی آدرس ارسال"
 msgid "Billing postcode"
 msgstr "کد پستی صورت‌حساب"
 
+#: src/Modules/WooCommerce/IranianCurrencies.php:56
+msgid "Iranian thousand toman"
+msgstr "هزار تومان ایران"
+
+#: src/Modules/WooCommerce/IranianCurrencies.php:57
+msgid "Iranian thousand rial"
+msgstr "هزار ریال ایران"
+
+#: src/Modules/WooCommerce/IranianCurrencies.php:89
+msgid ""
+"Changing the currency doesn't convert prices, shipping costs or coupons."
+msgstr "تغییر واحد پولی، قیمت‌ها، هزینه‌های ارسال و کوپن‌ها را تبدیل نمی‌کند."
+
+#: src/Modules/WooCommerce/IranianCurrencies.php:90
+msgid ""
+"Before you pick thousand toman or thousand rial, check that your payment "
+"gateway supports it."
+msgstr "پیش از انتخاب هزار تومان یا هزار ریال، مطمئن شوید درگاه پرداخت شما از آن پشتیبانی می‌کند."
+
+#: src/Modules/WooCommerce/IranianCurrencies.php:91
+msgid "For prices like 12.5, set the number of decimals below."
+msgstr "برای قیمت‌هایی مثل ۱۲٫۵، تعداد اعشارها را در پایین تنظیم کنید."
+
 #: src/Modules/WooCommerce/NationalIdField.php:91
 msgid "National ID (optional)"
 msgstr "کد ملی (اختیاری)"
@@ -522,21 +546,21 @@ msgstr "کد ملی (اختیاری)"
 msgid "National ID:"
 msgstr "کد ملی:"
 
-#: src/Modules/WooCommerce/ProvinceLimit.php:176
+#: src/Modules/WooCommerce/ProvinceLimit.php:179
 msgid "Province"
 msgstr "استان"
 
 #. translators: 1: the province field's label, 2: the provinces the store delivers to.
-#: src/Modules/WooCommerce/ProvinceLimit.php:181
+#: src/Modules/WooCommerce/ProvinceLimit.php:184
 #, php-format
 msgid "%1$s is not valid. Please enter one of the following: %2$s"
 msgstr "%1$s معتبر نیست. لطفا یکی از موارد زیر را وارد کنید: %2$s"
 
 #: src/Modules/WooCommerce/WooCommerceModule.php:24
 msgid ""
-"Jalali dates in the shop admin and emails, and checkout fields for Iran."
-msgstr ""
-"تاریخ شمسی در مدیریت فروشگاه و ایمیل‌ها، و فیلدهای صفحه پرداخت برای ایران."
+"Jalali dates in the shop admin and emails, checkout fields for Iran, and "
+"thousand toman and thousand rial currencies."
+msgstr "تاریخ شمسی در مدیریت فروشگاه و ایمیل‌ها، فیلدهای صفحه پرداخت برای ایران، و واحدهای پولی هزار تومان و هزار ریال."
 
 #: src/Modules/WooCommerce/WooCommerceModule.php:71
 msgid "Checkout and addresses"
@@ -652,7 +676,7 @@ msgid "Post and comment counts"
 msgstr "تعداد نوشته‌ها و دیدگاه‌ها"
 
 #: views/admin/partials/digit-conversion-settings.php:18
-#: views/admin/partials/woocommerce-settings.php:167
+#: views/admin/partials/woocommerce-settings.php:182
 msgid "Shop prices"
 msgstr "قیمت‌های فروشگاه"
 
@@ -911,11 +935,11 @@ msgstr "همه استان‌ها"
 msgid "Only these provinces"
 msgstr "فقط این استان‌ها"
 
-#: views/admin/partials/woocommerce-settings.php:123
+#: views/admin/partials/woocommerce-settings.php:124
 msgid "Pick at least one province. Until then, all provinces are listed."
 msgstr "دست کم یک استان انتخاب کنید. تا آن موقع همه استان‌ها نمایش داده می‌شوند."
 
-#: views/admin/partials/woocommerce-settings.php:127
+#: views/admin/partials/woocommerce-settings.php:128
 msgid ""
 "Applies to addresses in Iran. Checkout, the cart and My Account list only "
 "these; the shop admin still lists all."
@@ -923,25 +947,48 @@ msgstr ""
 "برای آدرس‌های ایران. صفحه پرداخت، سبد خرید و حساب کاربری فقط همین‌ها را نشان "
 "می‌دهند؛ مدیریت فروشگاه همه را نشان می‌دهد."
 
-#: views/admin/partials/woocommerce-settings.php:134
+#: views/admin/partials/woocommerce-settings.php:135
 msgid "National ID at checkout"
 msgstr "کد ملی در صفحه پرداخت"
 
-#: views/admin/partials/woocommerce-settings.php:148
+#: views/admin/partials/woocommerce-settings.php:149
 msgid "Shown on the order and in emails."
 msgstr "در سفارش و ایمیل‌ها نشان داده می‌شود."
 
+#. translators: %s: link to the setting, such as "WooCommerce › Settings › General › Currency".
+#: views/admin/partials/woocommerce-settings.php:167
+#, php-format
+msgid ""
+"Thousand toman and thousand rial can be picked under %s. Switching doesn't "
+"convert saved prices. Search engines get prices in rials."
+msgstr "هزار تومان و هزار ریال را می‌توانید در %s انتخاب کنید. تغییر واحد پولی، قیمت‌های ذخیره‌شده را تبدیل نمی‌کند. موتورهای جستجو قیمت‌ها را به ریال می‌گیرند."
+
+#: views/admin/partials/woocommerce-settings.php:171
+msgctxt "WooCommerce menu"
+msgid "Settings"
+msgstr "پیکربندی"
+
+#: views/admin/partials/woocommerce-settings.php:172
+msgctxt "WooCommerce settings tab"
+msgid "General"
+msgstr "همگانی"
+
+#: views/admin/partials/woocommerce-settings.php:173
+msgctxt "WooCommerce setting"
+msgid "Currency"
+msgstr "واحد پولی"
+
 #. translators: %s: link to the setting, such as "Display › Persian digits › Shop prices".
-#: views/admin/partials/woocommerce-settings.php:160
+#: views/admin/partials/woocommerce-settings.php:178
 #, php-format
 msgid "Persian digits in prices are set under %s."
 msgstr "اعداد فارسی در قیمت‌ها در %s تنظیم می‌شود."
 
-#: views/admin/partials/woocommerce-settings.php:183
+#: views/admin/partials/woocommerce-settings.php:198
 msgid "Jalali date picker in the shop admin"
 msgstr "تقویم شمسی در مدیریت فروشگاه"
 
-#: views/admin/partials/woocommerce-settings.php:184
+#: views/admin/partials/woocommerce-settings.php:199
 msgid ""
 "Order, product and coupon dates, and the month filter on the orders list."
 msgstr "تاریخ‌های سفارش، محصول و کد تخفیف، و فیلتر ماه در فهرست سفارش‌ها."

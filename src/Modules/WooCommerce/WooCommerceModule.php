@@ -21,7 +21,7 @@ class WooCommerceModule extends AbstractModule
 
     public static function description(): string
     {
-        return __('Jalali dates in the shop admin and emails, and checkout fields for Iran.', 'persian-kit');
+        return __('Jalali dates in the shop admin and emails, checkout fields for Iran, and thousand toman and thousand rial currencies.', 'persian-kit');
     }
 
     public static function category(): ?string
@@ -138,10 +138,23 @@ class WooCommerceModule extends AbstractModule
         $container->register(ProvinceLimit::class, function () {
             return new ProvinceLimit($this->allowedStates());
         });
+        $container->register(IranianCurrencies::class, function () {
+            return new IranianCurrencies();
+        });
+        $container->register(SchemaPrices::class, function () {
+            return new SchemaPrices();
+        });
+
+        // Now, not at boot: WooCommerce keeps its currency list for the rest
+        // of the request the first time it is read, which can be before
+        // after_setup_theme. Also while the module is off, so a store priced
+        // in thousand toman keeps its currency.
+        $container->get(IranianCurrencies::class)->register();
     }
 
     public function boot(ServiceContainer $container): void
     {
+        $container->get(SchemaPrices::class)->register();
         $container->get(WooDateDisplayFilter::class)->register();
 
         // Checkout runs on the front end, in the Store API and through admin-ajax.
@@ -171,6 +184,14 @@ class WooCommerceModule extends AbstractModule
             $container->get(WooAdminDateFields::class)->register();
             $container->get(WooPostedDateNormalizer::class)->register();
         }
+    }
+
+    /**
+     * A store priced in thousand toman keeps valid prices for search engines.
+     */
+    public function bootDisabled(ServiceContainer $container): void
+    {
+        $container->get(SchemaPrices::class)->register();
     }
 
     /**

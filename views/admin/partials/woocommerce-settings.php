@@ -154,21 +154,35 @@ $sectionStart = static function (string $id, string $descriptionHtml = '') use (
 </section>
 
 <?php
-// Prices: a pointer to the setting on the Display tab, until this section has options of its own.
+// Prices: the currencies live in WooCommerce's settings and the digits on the Display tab.
+$sectionLink = static fn (string $url, array $path): string => sprintf(
+    '<a href="%s">%s</a>',
+    esc_url($url),
+    esc_html(implode(' › ', $path))
+);
 $sectionStart('prices', wp_kses(
-    sprintf(
-        /* translators: %s: link to the setting, such as "Display › Persian digits › Shop prices". */
-        esc_html__('Persian digits in prices are set under %s.', 'persian-kit'),
+    implode(' ', [
         sprintf(
-            '<a href="%s">%s</a>',
-            esc_url(admin_url('admin.php?page=' . AdminPage::MENU_SLUG . '&tab=display')),
-            esc_html(implode(' › ', [
+            /* translators: %s: link to the setting, such as "WooCommerce › Settings › General › Currency". */
+            esc_html__('Thousand toman and thousand rial can be picked under %s. Switching doesn\'t convert saved prices. Search engines get prices in rials.', 'persian-kit'),
+            // Named as WooCommerce names them.
+            $sectionLink(admin_url('admin.php?page=wc-settings&tab=general'), [
+                __('WooCommerce', 'persian-kit'),
+                _x('Settings', 'WooCommerce menu', 'persian-kit'),
+                _x('General', 'WooCommerce settings tab', 'persian-kit'),
+                _x('Currency', 'WooCommerce setting', 'persian-kit'),
+            ])
+        ),
+        sprintf(
+            /* translators: %s: link to the setting, such as "Display › Persian digits › Shop prices". */
+            esc_html__('Persian digits in prices are set under %s.', 'persian-kit'),
+            $sectionLink(admin_url('admin.php?page=' . AdminPage::MENU_SLUG . '&tab=display'), [
                 __('Display', 'persian-kit'),
                 __('Persian digits', 'persian-kit'),
                 __('Shop prices', 'persian-kit'),
-            ]))
-        )
-    ),
+            ])
+        ),
+    ]),
     ['a' => ['href' => true]]
 ));
 ?>
