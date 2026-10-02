@@ -12,6 +12,24 @@ class AdminPage
 {
     public const MENU_SLUG = 'persian-kit';
 
+    /** The settings page's tabs, in order. The first is the default. */
+    public const TABS = ['display', 'writing', 'integrations', 'tools'];
+
+    /**
+     * The tab each module's card sits on. A module missing here goes on the
+     * first tab. The Tools tab holds no modules.
+     */
+    public const GROUPS = [
+        'digit_conversion'   => 'display',
+        'date_conversion'    => 'display',
+        'admin_font'         => 'display',
+        'char_normalization' => 'writing',
+        'zwnj_editor'        => 'writing',
+        'utilities'          => 'writing',
+        'woocommerce'        => 'integrations',
+        'forms'              => 'integrations',
+    ];
+
     private SettingsManager $settings;
     private ConflictDetector $conflicts;
 
@@ -75,12 +93,14 @@ class AdminPage
     {
         $moduleData = [];
         $settingsByKey = [];
+        $groups = array_fill_keys(self::TABS, []);
 
         foreach ($this->modules as $module) {
             $key = $module::key();
             $moduleSettings = $this->settings->module($key);
 
-            $moduleData[] = [
+            $groups[self::GROUPS[$key] ?? self::TABS[0]][] = $key;
+            $moduleData[$key] = [
                 'key'         => $key,
                 'label'       => $module::label(),
                 'description' => $module::description(),
@@ -92,6 +112,9 @@ class AdminPage
 
         View::load('admin/settings', [
             'modules'              => $moduleData,
+            'groups'               => $groups,
+            'tabs'                 => $this->tabLabels(),
+            'activeTab'            => $this->activeTab(),
             'compatibilityReports' => $this->conflicts->reports($settingsByKey),
             'showWelcome'          => (bool) get_option(InstallManager::WELCOME_OPTION, false),
             'dismissWelcomeUrl'    => wp_nonce_url(
@@ -113,6 +136,28 @@ class AdminPage
 
         wp_safe_redirect($this->pageUrl());
         exit;
+    }
+
+    /**
+     * @return array<string, string>
+     */
+    private function tabLabels(): array
+    {
+        return [
+            'display'      => __('Display', 'persian-kit'),
+            'writing'      => __('Writing', 'persian-kit'),
+            'integrations' => __('Integrations', 'persian-kit'),
+            'tools'        => __('Tools', 'persian-kit'),
+        ];
+    }
+
+    private function activeTab(): string
+    {
+        // Only picks which tab is shown; nothing is saved from it.
+        // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+        $tab = isset($_GET['tab']) ? sanitize_key(wp_unslash($_GET['tab'])) : '';
+
+        return in_array($tab, self::TABS, true) ? $tab : self::TABS[0];
     }
 
     private function pageUrl(): string
