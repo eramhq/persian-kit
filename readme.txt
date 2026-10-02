@@ -72,7 +72,7 @@ Nothing in your saved content. On a new install, dates are shown as Jalali, sear
 
 = How does Persian Kit change slugs? =
 
-With the Utilities module's "Persian slugs" option on (the default), new posts and terms with Persian titles get slugs that keep the Persian letters, with a half-space turned into "-". Titles without Persian letters are slugged by WordPress as usual. Existing slugs are never rewritten, and older URLs keep working. Turn the option off to use WordPress's percent-encoded slugs instead.
+With the Utilities module's "Persian slugs" option on (the default), new posts and terms with Persian titles get slugs that keep the Persian letters, with a half-space turned into "-". Titles without Persian letters are slugged by WordPress as usual. Existing slugs are never rewritten, and older URLs keep working. Turn the option off to use WordPress's percent-encoded slugs instead. Either way, links in your pages are percent-encoded, as WordPress's own Persian links are; browsers show them with Persian letters.
 
 = What does Persian Kit change in the admin? =
 

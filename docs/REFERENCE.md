@@ -369,6 +369,8 @@ When the Utilities module and its **Persian slugs** option are on (both default)
 
 Existing slugs are never rewritten. Turn the behavior off with the Persian slugs option, or in code with the `persian_kit_utilities` filter.
 
+The slug keeps its letters in the database and the editor, but links to it are percent-encoded, the form WordPress gives Persian slugs on its own: `get_permalink()` and `get_term_link()` return `/%D8%A8%D8%B1.../` for `/برنامه/`, and browsers show it decoded. A raw UTF-8 link breaks wherever WordPress runs it through `parse_url()`, as `redirect_canonical()` does for `/?p=123`: in some locales (`C.UTF-8` on macOS) PHP takes some bytes of Persian letters for control characters and turns them into `_`. Links of posts, pages, custom post types, attachments and terms are encoded while the Utilities module is on, also with the Persian slugs option off, since slugs saved while it was on keep their letters. Links that are already encoded and the host name are left alone.
+
 ## Jalali Date Archives
 
 While the Date Conversion module is on, date archive URLs whose year is below 1700 are read as Jalali:
@@ -470,7 +472,7 @@ add_filter('persian_kit_should_normalize', function (bool $shouldNormalize, $pos
 
 ### `persian_kit_utilities`
 
-Return `false` to turn off a Utilities module feature. The second argument names the feature; currently only `sanitize_title` (the Persian slug filter). The module's Persian slugs option turns the same feature off from the settings screen.
+Return `false` to turn off a Utilities module feature. The second argument names the feature: `sanitize_title` (the Persian slug filter; the module's Persian slugs option turns it off from the settings screen) or `encode_links` (percent-encoding Persian letters in post and term links, see [Persian Slugs](#persian-slugs)).
 
 ```php
 add_filter('persian_kit_utilities', function (bool $enabled, string $feature) {

@@ -37,6 +37,9 @@ class UtilitiesModule extends AbstractModule
         $container->register(PersianSlugFilter::class, function () {
             return new PersianSlugFilter();
         });
+        $container->register(PermalinkEncoder::class, function () {
+            return new PermalinkEncoder();
+        });
     }
 
     public function settingsView(): ?string
@@ -58,6 +61,11 @@ class UtilitiesModule extends AbstractModule
 
     public function boot(ServiceContainer $container): void
     {
+        // Also with Persian slugs off: slugs saved while it was on keep their letters.
+        if (apply_filters('persian_kit_utilities', true, 'encode_links')) {
+            $container->get(PermalinkEncoder::class)->register();
+        }
+
         if ($this->setting('persian_slugs', true) && apply_filters('persian_kit_utilities', true, 'sanitize_title')) {
             $container->get(PersianSlugFilter::class)->register();
         }
