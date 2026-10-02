@@ -9,15 +9,15 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-10-02T16:52:03+00:00\n"
+"POT-Creation-Date: 2026-10-02T18:26:14+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: persian-kit\n"
 
 #. Plugin Name of the plugin
 #: persian-kit.php
-#: src/Core/AdminPage.php:111
-#: src/Core/AdminPage.php:112
+#: src/Core/AdminPage.php:113
+#: src/Core/AdminPage.php:114
 #: src/Core/ConflictDetector.php:144
 #: src/Service/Assets/AssetManager.php:45
 #: views/admin/partials/footer.php:30
@@ -63,50 +63,50 @@ msgstr ""
 msgid "Needs %1$s %2$s or newer (this site has %3$s)."
 msgstr ""
 
-#: src/Core/AdminPage.php:103
+#: src/Core/AdminPage.php:105
 msgid "Settings"
 msgstr ""
 
-#: src/Core/AdminPage.php:264
+#: src/Core/AdminPage.php:268
 msgid "Forms"
 msgstr ""
 
-#: src/Core/AdminPage.php:265
+#: src/Core/AdminPage.php:269
 msgid "Store"
 msgstr ""
 
-#: src/Core/AdminPage.php:266
+#: src/Core/AdminPage.php:270
 #: views/admin/partials/compatibility-guidance.php:16
 msgid "Compatibility"
 msgstr ""
 
-#: src/Core/AdminPage.php:351
+#: src/Core/AdminPage.php:355
 msgid "You do not have permission to access this page."
 msgstr ""
 
-#: src/Core/AdminPage.php:370
+#: src/Core/AdminPage.php:374
 #: views/admin/partials/woocommerce-settings.php:180
 msgid "Display"
 msgstr ""
 
-#: src/Core/AdminPage.php:371
+#: src/Core/AdminPage.php:375
 msgid "Writing"
 msgstr ""
 
-#: src/Core/AdminPage.php:372
+#: src/Core/AdminPage.php:376
 #: src/Core/ConflictDetector.php:40
 #: src/Core/ConflictDetector.php:82
-#: src/Modules/WooCommerce/WooCommerceModule.php:19
-#: src/Modules/WooCommerce/WooCommerceModule.php:54
+#: src/Modules/WooCommerce/WooCommerceModule.php:20
+#: src/Modules/WooCommerce/WooCommerceModule.php:55
 #: views/admin/partials/woocommerce-settings.php:170
 msgid "WooCommerce"
 msgstr ""
 
-#: src/Core/AdminPage.php:373
+#: src/Core/AdminPage.php:377
 msgid "Integrations"
 msgstr ""
 
-#: src/Core/AdminPage.php:374
+#: src/Core/AdminPage.php:378
 msgid "Tools"
 msgstr ""
 
@@ -119,7 +119,7 @@ msgstr ""
 #: src/Core/ConflictDetector.php:50
 #: src/Core/ConflictDetector.php:57
 #: src/Core/ConflictDetector.php:76
-#: src/Modules/DateConversion/DateConversionModule.php:19
+#: src/Modules/DateConversion/DateConversionModule.php:20
 #: views/admin/partials/digit-conversion-settings.php:16
 msgid "Jalali dates"
 msgstr ""
@@ -145,7 +145,7 @@ msgstr ""
 #: src/Core/ConflictDetector.php:37
 #: src/Core/ConflictDetector.php:58
 #: src/Core/ConflictDetector.php:78
-#: src/Modules/DigitConversion/DigitConversionModule.php:21
+#: src/Modules/DigitConversion/DigitConversionModule.php:22
 #: views/admin/partials/woocommerce-settings.php:181
 msgid "Persian digits"
 msgstr ""
@@ -167,7 +167,7 @@ msgstr ""
 #: src/Core/ConflictDetector.php:41
 #: src/Core/ConflictDetector.php:61
 #: src/Core/ConflictDetector.php:81
-#: src/Modules/ZWNJEditor/ZWNJEditorModule.php:19
+#: src/Modules/ZWNJEditor/ZWNJEditorModule.php:20
 msgid "Half-space key"
 msgstr ""
 
@@ -226,7 +226,7 @@ msgstr ""
 
 #: src/Core/ConflictDetector.php:154
 #: views/admin/partials/compatibility-guidance.php:36
-#: views/admin/partials/integration-card.php:71
+#: views/admin/partials/integration-card.php:72
 #: views/admin/partials/woocommerce-tab.php:37
 msgid "Review recommended settings"
 msgstr ""
@@ -302,17 +302,17 @@ msgid "Choose at least one public post type."
 msgstr ""
 
 #. translators: 1: start of a date range, 2: end of a date range.
-#: src/Modules/DateConversion/DateArchiveFilter.php:192
+#: src/Modules/DateConversion/DateArchiveFilter.php:194
 #, php-format
 msgctxt "date range"
 msgid "%1$s – %2$s"
 msgstr ""
 
-#: src/Modules/DateConversion/DateConversionModule.php:24
+#: src/Modules/DateConversion/DateConversionModule.php:25
 msgid "Post, comment and admin dates in the Shamsi calendar. Saved dates stay Gregorian."
 msgstr ""
 
-#: src/Modules/DateConversion/DateFilters.php:252
+#: src/Modules/DateConversion/DateFilters.php:255
 msgid "Activity"
 msgstr ""
 
@@ -321,12 +321,12 @@ msgid "Time"
 msgstr ""
 
 #. translators: Post calendar label. %s: Date.
-#: src/Modules/DateConversion/JalaliCalendar.php:144
+#: src/Modules/DateConversion/JalaliCalendar.php:147
 #, php-format
 msgid "Posts published on %s"
 msgstr ""
 
-#: src/Modules/DateConversion/JalaliCalendar.php:165
+#: src/Modules/DateConversion/JalaliCalendar.php:168
 msgid "Previous and next months"
 msgstr ""
 
@@ -358,7 +358,7 @@ msgstr ""
 msgid "Filter by date"
 msgstr ""
 
-#: src/Modules/DigitConversion/DigitConversionModule.php:26
+#: src/Modules/DigitConversion/DigitConversionModule.php:27
 msgid "Show ۱۲۳ instead of 123 in your site's content."
 msgstr ""
 
@@ -458,6 +458,19 @@ msgstr ""
 msgid "The IBAN (Sheba) is not valid. It has IR and 24 digits."
 msgstr ""
 
+#: src/Modules/Multilingual/PolylangModule.php:23
+msgid "Polylang"
+msgstr ""
+
+#: src/Modules/Multilingual/PolylangModule.php:28
+#: src/Modules/Multilingual/WpmlModule.php:28
+msgid "Dates, digits and Persian writing tools follow each page's language."
+msgstr ""
+
+#: src/Modules/Multilingual/WpmlModule.php:23
+msgid "WPML"
+msgstr ""
+
 #: src/Modules/Seo/RankMathModule.php:24
 msgid "Rank Math SEO"
 msgstr ""
@@ -544,27 +557,27 @@ msgstr ""
 msgid "%1$s is not valid. Please enter one of the following: %2$s"
 msgstr ""
 
-#: src/Modules/WooCommerce/WooCommerceModule.php:24
+#: src/Modules/WooCommerce/WooCommerceModule.php:25
 msgid "Jalali dates in the shop admin and emails, checkout fields for Iran, and thousand toman and thousand rial currencies."
 msgstr ""
 
-#: src/Modules/WooCommerce/WooCommerceModule.php:71
+#: src/Modules/WooCommerce/WooCommerceModule.php:72
 msgid "Checkout and addresses"
 msgstr ""
 
-#: src/Modules/WooCommerce/WooCommerceModule.php:72
+#: src/Modules/WooCommerce/WooCommerceModule.php:73
 msgid "What customers type at checkout, and fields for Iran."
 msgstr ""
 
-#: src/Modules/WooCommerce/WooCommerceModule.php:75
+#: src/Modules/WooCommerce/WooCommerceModule.php:76
 msgid "Prices and currency"
 msgstr ""
 
-#: src/Modules/WooCommerce/WooCommerceModule.php:79
+#: src/Modules/WooCommerce/WooCommerceModule.php:80
 msgid "Dates"
 msgstr ""
 
-#: src/Modules/WooCommerce/WooCommerceModule.php:80
+#: src/Modules/WooCommerce/WooCommerceModule.php:81
 msgid "Dates on orders and in emails follow Jalali dates on the Display tab."
 msgstr ""
 
@@ -572,11 +585,11 @@ msgstr ""
 msgid "All Jalali dates"
 msgstr ""
 
-#: src/Modules/ZWNJEditor/ZWNJEditorModule.php:24
+#: src/Modules/ZWNJEditor/ZWNJEditorModule.php:25
 msgid "Type a half-space with Shift+Space in the editor."
 msgstr ""
 
-#: src/Modules/ZWNJEditor/ZWNJEditorModule.php:88
+#: src/Modules/ZWNJEditor/ZWNJEditorModule.php:97
 msgid "Insert Zero-Width Non-Joiner (Shift+Space)"
 msgstr ""
 
@@ -678,7 +691,7 @@ msgstr ""
 
 #: views/admin/partials/footer.php:21
 #: views/admin/partials/header.php:48
-#: views/admin/partials/integration-card.php:52
+#: views/admin/partials/integration-card.php:53
 #: views/admin/partials/integrations-tab.php:55
 msgid "(opens in a new tab)"
 msgstr ""
@@ -721,28 +734,28 @@ msgstr ""
 msgid "Persian Kit settings"
 msgstr ""
 
-#: views/admin/partials/integration-card.php:84
+#: views/admin/partials/integration-card.php:85
 msgid "New"
 msgstr ""
 
-#: views/admin/partials/integration-card.php:90
+#: views/admin/partials/integration-card.php:91
 msgid "Your settings are kept"
 msgstr ""
 
-#: views/admin/partials/integration-card.php:91
+#: views/admin/partials/integration-card.php:92
 msgid "Not active on this site"
 msgstr ""
 
-#: views/admin/partials/integration-card.php:100
+#: views/admin/partials/integration-card.php:101
 msgid "Active automatically"
 msgstr ""
 
-#: views/admin/partials/integration-card.php:151
+#: views/admin/partials/integration-card.php:152
 msgid "(no title)"
 msgstr ""
 
 #. translators: %s: number of other forms.
-#: views/admin/partials/integration-card.php:155
+#: views/admin/partials/integration-card.php:156
 #, php-format
 msgid "%s other"
 msgid_plural "%s others"
@@ -750,15 +763,19 @@ msgstr[0] ""
 msgstr[1] ""
 
 #. translators: 1: number of forms, 2: their names, such as "Contact, Order and Signup".
-#: views/admin/partials/integration-card.php:165
+#: views/admin/partials/integration-card.php:166
 #, php-format
 msgid "%1$s form uses Persian Kit fields: %2$s. While this is off, those fields accept any text."
 msgid_plural "%1$s forms use Persian Kit fields: %2$s. While this is off, those fields accept any text."
 msgstr[0] ""
 msgstr[1] ""
 
-#: views/admin/partials/integration-card.php:187
+#: views/admin/partials/integration-card.php:190
 msgid "Plugin page on WordPress.org"
+msgstr ""
+
+#: views/admin/partials/integration-card.php:192
+msgid "Plugin website"
 msgstr ""
 
 #: views/admin/partials/integrations-tab.php:28

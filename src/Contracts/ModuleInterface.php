@@ -41,8 +41,10 @@ interface ModuleInterface
      * version:    the installed version, or null when it is unknown.
      * minVersion: the oldest version the module works with.
      * slug:       its WordPress.org slug, for the link on its card.
+     * url:        its own website, for the link on its card, when it is
+     *             not on WordPress.org.
      *
-     * @return list<array{name: string, check: callable(): bool, version?: callable(): ?string, minVersion?: string, slug?: string}>
+     * @return list<array{name: string, check: callable(): bool, version?: callable(): ?string, minVersion?: string, slug?: string, url?: string}>
      */
     public function requiredPlugins(): array;
 

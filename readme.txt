@@ -35,6 +35,7 @@ Persian Kit is a modular WordPress plugin for Persian-language sites. It focuses
 * Persian digits in WooCommerce emails: order numbers, prices, quantities and dates, while phone numbers, postcodes and links keep English digits (off until you turn it on)
 * Thousand toman and thousand rial currencies for WooCommerce, with prices in rials in the product data search engines read
 * Works with Yoast SEO and Rank Math: prices in rials and Gregorian dates in what they give search engines, and Jalali titles on date archives
+* Works with WPML and Polylang: dates, digits and the Persian writing tools follow each page's language, and admin screens each admin's own
 * A Jalali date picker for Contact Form 7 and ACF date fields, WooCommerce's admin date fields and the post date in the classic editor and Quick Edit, which keep saving Gregorian dates
 * Contact Form 7 fields that check Iranian mobile numbers, national IDs, postcodes, card numbers and IBANs
 
@@ -125,6 +126,12 @@ Yes. Pick "Iranian thousand toman" (هزار تومان) or "Iranian thousand ri
 = Does Persian Kit work with Yoast SEO and Rank Math? =
 
 Yes. While either is active, the product prices they give search engines are in rials, because search engines don't accept toman, and their dates in schema, Open Graph tags and sitemaps stay Gregorian, which search engines need. Date archive titles name the Jalali month. Nothing needs setting up.
+
+= Does Persian Kit work with WPML and Polylang? =
+
+Yes. Once a language is set up, Persian pages and emails get Jalali dates and Persian digits, and pages in other languages keep Gregorian dates and English digits. Admin screens follow each admin's own language (Users > Profile > Language). Fixing letters, Persian slugs and the half-space key apply to Persian content only, so an Arabic translation keeps its ي and ك. With Jalali dates in post links, only Persian posts get Jalali links.
+
+Weglot isn't supported: it translates finished pages and keeps the site's language, so Persian Kit can't tell its languages apart. TranslatePress and other plugins that change WordPress's language per page can turn this on with `add_filter('persian_kit_multilingual', '__return_true');`.
 
 = Does Persian Kit work with Contact Form 7 and ACF? =
 

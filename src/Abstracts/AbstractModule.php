@@ -60,7 +60,7 @@ abstract class AbstractModule implements ModuleInterface
     }
 
     /**
-     * @return list<array{name: string, check: callable(): bool, version?: callable(): ?string, minVersion?: string, slug?: string}>
+     * @return list<array{name: string, check: callable(): bool, version?: callable(): ?string, minVersion?: string, slug?: string, url?: string}>
      */
     public function requiredPlugins(): array
     {

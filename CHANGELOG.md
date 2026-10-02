@@ -46,6 +46,21 @@ New compatibility integrations for Yoast SEO (`yoast`) and Rank Math (`rank_math
 - Checked: the dates both plugins give search engines (schema, Open Graph and sitemaps) stay Gregorian with Latin digits, with Jalali dates' global conversion and Persian digits on. Nothing needed changing.
 - Fixed: with Yoast SEO (or Rank Math with date archives on), a date archive's title named the Gregorian month, such as "January 1405" on /1405/01/. It names the Jalali month now, as without them.
 
+### Multilingual sites (WPML and Polylang)
+
+On a site with WPML or Polylang, Persian Kit converted everything to Jalali dates and Persian digits whatever the language: an English page read "۱۰ مهر ۱۴۰۵", and saving an Arabic translation changed its ي and ك to ی and ک (#4). Now, on sites with WPML or Polylang and at least one language set up:
+
+- Pages and emails get Jalali dates and Persian digits only in Persian (`fa`, `fa_IR`, `fa_AF`): dates, digits, archive titles, the archive list and calendar, the admin bar clock, WooCommerce dates and email digits, and the Contact Form 7 and ACF date pickers. An email follows the language it is sent in, also when WooCommerce Multilingual switches WPML's language for it; a Contact Form 7 email follows the page the form was on.
+- Admin screens follow each admin's own language (Users › Profile › Language).
+- The writing tools apply to Persian content only, whoever edits it: the ی/ک and half-space fixes on save (posts, comments by their post, terms), Fix letters in existing posts, Persian slugs and the half-space key.
+- Jalali post permalinks follow each post's language. An English post's Jalali address redirects (301) to its Gregorian one.
+- WPML and Polylang cards under Integrations › Compatibility, with no switch. WPML's links to its website, as it isn't on WordPress.org.
+- New filters: `persian_kit_multilingual` (TranslatePress and other plugins that set the locale per language can opt in), `persian_kit_is_persian_locale`, `persian_kit_current_locale` and `persian_kit_content_locale`. `persian_kit_should_normalize` gets whether the post is Persian.
+- Single-language sites are unchanged.
+- Polylang is covered by integration tests of its own (`composer test:integration:polylang`, also in CI); WPML, which is commercial, by unit tests.
+
+Known limitations, in the docs: the Jalali calendar, the admin month filters and old-slug lookups count posts in every language; Weglot can't be detected.
+
 ### WooCommerce emails in Persian digits
 
 - New option, Display › Persian digits › WooCommerce emails (off by default): order numbers, prices, quantities and dates in WooCommerce emails, and the order number and date in the subject and heading, use Persian digits. Phone numbers, postcodes, links, coupon codes and the order's structured data for Gmail keep English digits. It covers every order email, also those sent when an admin changes an order's status and those from the block checkout, and only emails in Persian, so an English email on a bilingual store keeps English digits. The `persian_kit_digit_conversion` filter turns it off with `woocommerce_emails`, or for order numbers only with `woocommerce_email_order_number`.

@@ -13,6 +13,8 @@ use PersianKit\Contracts\ModuleInterface;
 use PersianKit\Core\SettingsManager;
 use PersianKit\Modules\Forms\AcfModule;
 use PersianKit\Modules\Forms\Cf7Module;
+use PersianKit\Modules\Multilingual\PolylangModule;
+use PersianKit\Modules\Multilingual\WpmlModule;
 use PersianKit\Modules\Seo\RankMathModule;
 use PersianKit\Modules\Seo\YoastModule;
 use PersianKit\Modules\WooCommerce\WooCommerceModule;
@@ -309,6 +311,22 @@ class SettingsPageTest extends WordPressIntegrationTestCase
         $this->assertSame(0, $xpath->query('//*[@name="persian_kit_settings[acf][enabled]"]')->length);
     }
 
+    public function test_wpml_is_not_on_wordpress_org_so_its_card_links_to_its_website(): void
+    {
+        $xpath = $this->render([
+            'wpml'     => $this->withPlugin(WpmlModule::class, false),
+            'polylang' => $this->withPlugin(PolylangModule::class, false),
+        ]);
+
+        $wpml = '//*[@id="persian-kit-group-also"]/following-sibling::ul/li[.//*[@id="persian-kit-module-wpml-name"]]';
+        $this->assertSame('https://wpml.org/', $xpath->evaluate("string($wpml//a/@href)"));
+        $this->assertStringContainsString('Plugin website', $xpath->evaluate("string($wpml//a)"));
+
+        $polylang = '//*[@id="persian-kit-group-also"]/following-sibling::ul/li[.//*[@id="persian-kit-module-polylang-name"]]';
+        $this->assertSame('https://wordpress.org/plugins/polylang/', $xpath->evaluate("string($polylang//a/@href)"));
+        $this->assertStringContainsString('Plugin page on WordPress.org', $xpath->evaluate("string($polylang//a)"));
+    }
+
     public function test_an_integration_seen_before_says_its_settings_are_kept(): void
     {
         update_option(AdminPage::SEEN_OPTION, ['acf']);
@@ -396,13 +414,15 @@ class SettingsPageTest extends WordPressIntegrationTestCase
             'acf'         => $this->withPlugin(AcfModule::class, false),
             'yoast'       => $this->withPlugin(YoastModule::class, false),
             'rank_math'   => $this->withPlugin(RankMathModule::class, false),
+            'wpml'        => $this->withPlugin(WpmlModule::class, false),
+            'polylang'    => $this->withPlugin(PolylangModule::class, false),
         ]);
 
         $this->assertSame(
             'None of the supported plugins are active on this site.',
             trim($xpath->evaluate('string(//*[@id="persian-kit-panel-integrations"]//*[contains(@class, "persian-kit-empty__title")])'))
         );
-        $this->assertSame(5, $xpath->query('//*[@id="persian-kit-group-also"]/following-sibling::ul/li')->length);
+        $this->assertSame(7, $xpath->query('//*[@id="persian-kit-group-also"]/following-sibling::ul/li')->length);
     }
 
     public function test_turning_off_an_integration_warns_about_the_forms_that_use_it(): void
@@ -558,6 +578,12 @@ class SettingsPageTest extends WordPressIntegrationTestCase
                 use FakesPluginState;
             },
             RankMathModule::class => new class ($settings) extends RankMathModule {
+                use FakesPluginState;
+            },
+            WpmlModule::class => new class ($settings) extends WpmlModule {
+                use FakesPluginState;
+            },
+            PolylangModule::class => new class ($settings) extends PolylangModule {
                 use FakesPluginState;
             },
         };

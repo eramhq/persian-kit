@@ -13,6 +13,13 @@
         </testsuite>
     </testsuites>
 
+    <!-- Polylang's tests run on their own: composer test:integration:polylang. -->
+    <groups>
+        <exclude>
+            <group>polylang</group>
+        </exclude>
+    </groups>
+
     <coverage>
         <include>
             <directory suffix=".php">src</directory>

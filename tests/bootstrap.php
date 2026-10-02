@@ -22,9 +22,9 @@ if (file_exists($wpTestsDir . '/includes/functions.php')) {
     require_once $wpTestsDir . '/includes/functions.php';
 
     // Plugins the integration tests cover: WooCommerce, Contact Form 7, ACF,
-    // Yoast SEO and Rank Math. Each
-    // loads from PERSIAN_KIT_TESTS_<NAME>_DIR (as in CI), or when installed
-    // next to the plugin. Their tests are skipped without them; set
+    // Yoast SEO, Rank Math and Polylang. Each loads from
+    // PERSIAN_KIT_TESTS_<NAME>_DIR (as in CI), or when installed next to the
+    // plugin. Their tests are skipped without them; set
     // PERSIAN_KIT_TESTS_WITHOUT_<NAME>=1 to run the suite without one.
     $plugins = [
         'WOOCOMMERCE' => 'woocommerce/woocommerce.php',
@@ -33,6 +33,11 @@ if (file_exists($wpTestsDir . '/includes/functions.php')) {
         'YOAST'       => 'wordpress-seo/wp-seo.php',
         'RANK_MATH'   => 'seo-by-rank-math/rank-math.php',
     ];
+    // Polylang filters every query by language once it has languages, so
+    // it loads only for the multilingual run (composer test:integration:polylang).
+    if (getenv('PERSIAN_KIT_TESTS_MULTILINGUAL')) {
+        $plugins['POLYLANG'] = 'polylang/polylang.php';
+    }
     $pluginFiles = [];
     foreach ($plugins as $name => $file) {
         $dir = getenv("PERSIAN_KIT_TESTS_{$name}_DIR") ?: dirname(__DIR__, 2) . '/' . dirname($file);
@@ -77,6 +82,12 @@ if (file_exists($wpTestsDir . '/includes/functions.php')) {
 
         require dirname(__DIR__) . '/persian-kit.php';
     });
+
+    if (isset($pluginFiles['POLYLANG'])) {
+        // Without languages Polylang loads no context and no API. The tests
+        // create them (UsesPolylang) and read pages as the front end does.
+        tests_add_filter('pll_context', static fn (): string => 'PLL_Frontend');
+    }
 
     if ($loadWooCommerce) {
         // The test install drops every table, so WooCommerce creates its own again.

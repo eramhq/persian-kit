@@ -54,6 +54,7 @@
         "test": "phpunit --testdox",
         "test:integration:setup": "bash tests/bin/setup-integration-tests.sh",
         "test:integration": "WP_TESTS_DIR=.wordpress-tests/wordpress-develop/tests/phpunit php .wordpress-tests/bin/phpunit-9.6.23.phar -c phpunit-integration.xml.dist --testsuite integration --testdox",
+        "test:integration:polylang": "PERSIAN_KIT_TESTS_MULTILINGUAL=1 WP_TESTS_DIR=.wordpress-tests/wordpress-develop/tests/phpunit php .wordpress-tests/bin/phpunit-9.6.23.phar -c phpunit-integration.xml.dist --testsuite integration --group polylang --testdox",
         "post-install-cmd": [
             "@composer wp-scope",
             "@php scripts/prepare-bundled-libraries.php"
