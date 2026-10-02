@@ -40,15 +40,15 @@ const copies = [
         src: 'resources/js/gutenberg-zwnj.js',
         dest: 'public/js/gutenberg-zwnj.js',
     },
-    // Jalali conversion library
+    // Jalali conversion library (block editor date editor)
     {
         src: 'resources/js/jalali.js',
         dest: 'public/js/jalali.js',
     },
-    // Admin date override (Quick Edit + Classic Editor)
+    // Post date picker (Classic Editor publish box + Quick Edit)
     {
-        src: 'resources/js/admin-date-override.js',
-        dest: 'public/js/admin-date-override.js',
+        src: 'resources/js/classic-date-fields.js',
+        dest: 'public/js/classic-date-fields.js',
     },
     // Gutenberg Jalali date editor
     {

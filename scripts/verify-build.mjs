@@ -11,7 +11,7 @@ const requiredOutputs = [
     'public/css/gutenberg-jalali.css',
     'public/css/woo-order-filter.css',
     'public/js/admin.js',
-    'public/js/admin-date-override.js',
+    'public/js/classic-date-fields.js',
     'public/js/date-field.js',
     'public/js/datepicker.js',
     'public/js/gutenberg-jalali-date.js',

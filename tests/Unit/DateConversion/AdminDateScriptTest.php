@@ -18,6 +18,9 @@ class AdminDateScriptTest extends TestCase
         Functions\when('wp_add_inline_script')->justReturn(true);
         Functions\when('wp_json_encode')->alias('json_encode');
         Functions\when('__')->returnArg();
+        Functions\when('determine_locale')->justReturn('fa_IR');
+        Functions\when('wp_register_style')->justReturn(true);
+        Functions\when('wp_enqueue_style')->justReturn(true);
 
         if (!defined('PERSIAN_KIT_URL')) {
             define('PERSIAN_KIT_URL', 'https://example.com/wp-content/plugins/persian-kit/');
@@ -59,20 +62,14 @@ class AdminDateScriptTest extends TestCase
         $script = new AdminDateScript();
         $script->enqueue('edit.php');
 
-        $this->assertSame([[
-            'persian-kit-jalali',
-            PERSIAN_KIT_URL . 'public/js/jalali.js',
-            [],
-            PERSIAN_KIT_VERSION,
-            true,
-        ]], $registerCalls);
+        $this->assertSame(['persian-kit-datepicker', 'persian-kit-date-field'], array_column($registerCalls, 0));
 
         $this->assertSame([
-            ['persian-kit-jalali'],
+            ['persian-kit-date-field'],
             [
-                'persian-kit-admin-date',
-                PERSIAN_KIT_URL . 'public/js/admin-date-override.js',
-                ['jquery', 'persian-kit-jalali'],
+                'persian-kit-classic-date',
+                PERSIAN_KIT_URL . 'public/js/classic-date-fields.js',
+                ['jquery', 'persian-kit-date-field'],
                 PERSIAN_KIT_VERSION,
                 true,
             ],
