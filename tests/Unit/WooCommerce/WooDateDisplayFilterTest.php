@@ -2,6 +2,8 @@
 
 namespace PersianKit\Tests\Unit\WooCommerce;
 
+use Automattic\WooCommerce\EmailEditor\Engine\PersonalizationTags\Personalization_Tag;
+use Automattic\WooCommerce\EmailEditor\Engine\PersonalizationTags\Personalization_Tags_Registry;
 use Brain\Monkey;
 use Brain\Monkey\Functions;
 use PersianKit\Modules\WooCommerce\WooDateDisplayFilter;
@@ -39,6 +41,23 @@ class WooDateDisplayFilterTest extends TestCase
         $this->assertNotFalse(has_filter('render_block_data', [$filter, 'enterBlock']));
         $this->assertNotFalse(has_filter('render_block', [$filter, 'leaveBlock']));
         $this->assertSame(10, has_filter('woocommerce_email_format_string', [$filter, 'filterEmailOrderDate']));
+        $this->assertSame(20, has_filter('woocommerce_email_editor_register_personalization_tags', [$filter, 'filterPersonalizationTags']));
+    }
+
+    public function test_the_email_editor_order_date_tag_renders_in_the_woocommerce_context(): void
+    {
+        require_once dirname(__DIR__) . '/Support/email-editor-stubs.php';
+        $filter = new WooDateDisplayFilter();
+        $inContext = static fn (): string => $filter->isWooDateContext() ? 'woo' : 'outside';
+        $registry = new Personalization_Tags_Registry();
+        $registry->register(new Personalization_Tag('Order Date', 'woocommerce/order-date', 'Order', static fn (array $context, array $args = []): string => $inContext() . '|' . ($args['format'] ?? '')));
+        $registry->register(new Personalization_Tag('Order Number', 'woocommerce/order-number', 'Order', $inContext));
+
+        $this->assertSame($registry, $filter->filterPersonalizationTags($registry));
+
+        $this->assertSame('woo|j F Y', $registry->get_by_token('[woocommerce/order-date]')->execute_callback([], ['format' => 'j F Y']));
+        $this->assertSame('outside', $registry->get_by_token('[woocommerce/order-number]')->execute_callback([]), 'only the date tag');
+        $this->assertFalse($filter->isWooDateContext(), 'closed after');
     }
 
     public function test_order_date_in_email_subjects_becomes_jalali(): void
