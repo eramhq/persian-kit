@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Persian Kit 1.0.0-beta.4\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/persian-kit\n"
-"POT-Creation-Date: 2026-10-02T07:26:05+00:00\n"
+"POT-Creation-Date: 2026-10-02T09:15:51+00:00\n"
 "PO-Revision-Date: 2026-10-01 00:00+0000\n"
 "Last-Translator: Persian Kit contributors\n"
 "Language-Team: Persian (Iran)\n"
@@ -425,11 +425,6 @@ msgstr "کد پستی آدرس ارسال"
 msgid "Billing postcode"
 msgstr "کد پستی صورت‌حساب"
 
-#: src/Modules/WooCommerce/CityField.php:100
-#: src/Modules/WooCommerce/CityField.php:117
-msgid "Select a city…"
-msgstr "یک شهر انتخاب کنید…"
-
 #: src/Modules/WooCommerce/NationalIdField.php:90
 #: src/Modules/WooCommerce/NationalIdField.php:118
 #: src/Modules/WooCommerce/NationalIdField.php:216
@@ -684,8 +679,8 @@ msgid "City list for Iran"
 msgstr "فهرست شهرهای ایران"
 
 #: views/admin/partials/woocommerce-settings.php:26
-msgid "Classic checkout and My Account."
-msgstr "در صفحه پرداخت کلاسیک و «حساب کاربری من»."
+msgid "Suggests the province's cities. Customers can still type a village."
+msgstr "شهرهای استان را پیشنهاد می‌دهد. مشتری همچنان می‌تواند نام روستا را بنویسد."
 
 #: views/admin/partials/woocommerce-settings.php:31
 msgid "Off"

@@ -81,23 +81,42 @@ class WooCommerceMyAccountTest extends WordPressIntegrationTestCase
         ]), implode(' | ', $this->errorNotices()));
     }
 
-    public function test_the_city_is_a_dropdown_of_the_province_cities(): void
+    public function test_the_city_stays_a_text_field_that_takes_an_unlisted_place(): void
     {
-        (new CityField(dirname(__DIR__, 2) . '/resources/data/ir-cities.json'))->register();
-        WC()->customer->set_billing_state('QHM');
-        WC()->customer->set_billing_city('');
+        $this->cityField()->register();
 
-        $fields = WC()->countries->get_address_fields('IR', 'billing_');
+        $this->assertSame('text', WC()->countries->get_address_fields('IR', 'billing_')['billing_city']['type'] ?? 'text');
 
-        $this->assertSame('select', $fields['billing_city']['type']);
-        $this->assertSame(['', 'قم', 'جعفریه', 'دستجرد', 'سلفچگان', 'قاهان', 'قنوات', 'کهک'], array_keys($fields['billing_city']['options']));
+        $this->assertTrue($this->saveBillingAddress([
+            'billing_state' => 'QHM',
+            'billing_city'  => 'روستای من',
+        ]), implode(' | ', $this->errorNotices()));
+        $this->assertSame('روستای من', (new \WC_Customer($this->userId))->get_billing_city());
+    }
 
-        // A city saved before, which the province's list lacks, stays selectable.
-        WC()->customer->set_billing_city('تهران');
-        $this->assertSame('تهران', array_key_last(WC()->countries->get_address_fields('IR', 'billing_')['billing_city']['options']));
+    public function test_the_checkout_block_loads_the_city_list_once_on_any_page(): void
+    {
+        $this->cityField()->register();
+        $handle = 'persian-kit-woocommerce-city-select';
+        $this->assertFalse(wp_script_is($handle, 'enqueued'));
 
-        $german = WC()->countries->get_address_fields('DE', 'billing_');
-        $this->assertSame('text', $german['billing_city']['type'] ?? 'text');
+        try {
+            $this->assertSame('<div>checkout</div>', apply_filters('render_block_woocommerce/checkout', '<div>checkout</div>', [], null));
+            apply_filters('render_block_woocommerce/checkout', '', [], null);
+
+            $this->assertTrue(wp_script_is($handle, 'enqueued'));
+            $data = (string) wp_scripts()->get_data($handle, 'data');
+            $this->assertSame(1, substr_count($data, 'var persianKitCities'));
+            $this->assertStringContainsString('"THR":["\u062a\u0647\u0631\u0627\u0646"', $data);
+        } finally {
+            wp_dequeue_script($handle);
+            wp_deregister_script($handle);
+        }
+    }
+
+    private function cityField(): CityField
+    {
+        return new CityField(dirname(__DIR__, 2) . '/resources/data/ir-cities.json');
     }
 
     /**

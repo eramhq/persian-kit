@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-10-02T07:26:05+00:00\n"
+"POT-Creation-Date: 2026-10-02T09:28:25+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: persian-kit\n"
@@ -404,11 +404,6 @@ msgstr ""
 msgid "Billing postcode"
 msgstr ""
 
-#: src/Modules/WooCommerce/CityField.php:100
-#: src/Modules/WooCommerce/CityField.php:117
-msgid "Select a city…"
-msgstr ""
-
 #: src/Modules/WooCommerce/NationalIdField.php:90
 #: src/Modules/WooCommerce/NationalIdField.php:118
 #: src/Modules/WooCommerce/NationalIdField.php:216
@@ -646,7 +641,7 @@ msgid "City list for Iran"
 msgstr ""
 
 #: views/admin/partials/woocommerce-settings.php:26
-msgid "Classic checkout and My Account."
+msgid "Suggests the province's cities. Customers can still type a village."
 msgstr ""
 
 #: views/admin/partials/woocommerce-settings.php:31
