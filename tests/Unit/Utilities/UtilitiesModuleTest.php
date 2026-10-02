@@ -11,21 +11,26 @@ use PersianKit\Core\SettingsManager;
 use PersianKit\Modules\Utilities\PersianSlugFilter;
 use PersianKit\Modules\Utilities\UtilitiesModule;
 use PHPUnit\Framework\TestCase;
+use PersianKit\Service\Language\ContentLanguage;
+use PersianKit\Tests\Unit\Support\UsesLanguages;
 
 class UtilitiesModuleTest extends TestCase
 {
+    use UsesLanguages;
+
     private const ZWNJ = "\u{200C}";
 
     protected function setUp(): void
     {
         parent::setUp();
         Monkey\setUp();
+        ContentLanguage::reset();
         Functions\when('wp_basename')->alias(static fn (string $path): string => basename($path));
     }
 
     protected function tearDown(): void
     {
-        unset($GLOBALS['wpdb']);
+        unset($GLOBALS['wpdb'], $GLOBALS['pagenow']);
         Monkey\tearDown();
         parent::tearDown();
     }
@@ -236,5 +241,27 @@ class UtilitiesModuleTest extends TestCase
         $wpdb->shouldReceive('get_row')->once()->with('SELECT ...')->andReturn($row);
 
         $GLOBALS['wpdb'] = $wpdb;
+    }
+
+    public function test_content_in_other_languages_gets_cores_slug_but_lookups_stay(): void
+    {
+        $source = $this->inLanguage('fa_IR');
+        $source->requested = ['post:0' => 'ar'];
+        $filter = new PersianSlugFilter();
+
+        $this->assertSame('%d9%83%d8%aa%d8%a7%d8%a8', $filter->sanitizeTitle('%d9%83%d8%aa%d8%a7%d8%a8', 'كتاب', 'save'));
+        $this->assertSame('کتاب', $filter->sanitizeTitle('%d9%83%d8%aa%d8%a7%d8%a8', 'كتاب', 'query'), 'lookups are the same in every language');
+
+        $source->requested = ['post:0' => 'fa_IR'];
+        $this->assertSame('کتاب', $filter->sanitizeTitle('%d9%83%d8%aa%d8%a7%d8%a8', 'كتاب', 'save'));
+    }
+
+    public function test_term_slugs_follow_the_terms_language(): void
+    {
+        $source = $this->inLanguage('fa_IR');
+        $source->requested = ['term:0' => 'ar', 'post:0' => 'fa_IR'];
+        $GLOBALS['pagenow'] = 'edit-tags.php';
+
+        $this->assertSame('core', (new PersianSlugFilter())->sanitizeTitle('core', 'كتاب', 'save'));
     }
 }

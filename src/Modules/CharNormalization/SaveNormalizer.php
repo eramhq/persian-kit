@@ -6,6 +6,7 @@ use PersianKit\Dependencies\Eram\Abzar\Exception\AbzarException;
 use PersianKit\Dependencies\Eram\Abzar\Text\CharNormalizer;
 use PersianKit\Dependencies\Eram\Abzar\Text\HalfSpaceFixer;
 use PersianKit\Dependencies\Eram\Abzar\Text\HtmlSegmenter;
+use PersianKit\Service\Language\ContentLanguage;
 
 defined('ABSPATH') || exit;
 
@@ -14,6 +15,9 @@ defined('ABSPATH') || exit;
  * digits Persian ones) in posts, menu items, comments and terms, and, as a
  * separate option, half-spaces are added inside compound words in posts.
  * HTML tags, code and character references in content are left alone.
+ *
+ * On multilingual sites only Persian content is fixed: Arabic keeps its
+ * own ي and ك.
  */
 class SaveNormalizer
 {
@@ -75,6 +79,11 @@ class SaveNormalizer
      */
     public function filterComment(array $commentdata): array
     {
+        // A comment is in its post's language.
+        if (!ContentLanguage::writesPersian('post', (int) ($commentdata['comment_post_ID'] ?? 0))) {
+            return $commentdata;
+        }
+
         if (isset($commentdata['comment_author']) && is_string($commentdata['comment_author'])) {
             $commentdata['comment_author'] = $this->fixText($commentdata['comment_author'], false);
         }
@@ -86,14 +95,20 @@ class SaveNormalizer
         return $commentdata;
     }
 
+    /**
+     * A term's name. Core passes no term, so the request tells its language.
+     */
     public function filterText(mixed $text): mixed
     {
-        return is_string($text) ? $this->fixText($text, false) : $text;
+        return is_string($text) && ContentLanguage::writesPersian('term') ? $this->fixText($text, false) : $text;
     }
 
+    /**
+     * A term's description.
+     */
     public function filterContent(mixed $html): mixed
     {
-        return is_string($html) ? $this->fixContent($html, false) : $html;
+        return is_string($html) && ContentLanguage::writesPersian('term') ? $this->fixContent($html, false) : $html;
     }
 
     private function fixText(string $text, bool $halfSpaces): string
@@ -120,7 +135,8 @@ class SaveNormalizer
     }
 
     /**
-     * Public post types and menu items; not auto-drafts, revisions or autosaves.
+     * Public post types and menu items in Persian; not auto-drafts,
+     * revisions or autosaves.
      *
      * @param array<string, mixed> $data
      * @param array<string, mixed> $postarr
@@ -152,7 +168,16 @@ class SaveNormalizer
             $postContext = (object) $postarr;
         }
 
-        return (bool) apply_filters('persian_kit_should_normalize', true, $postContext, $data, $postarr);
+        /**
+         * Whether a post's text is fixed as it is saved.
+         *
+         * @param bool                 $normalize   Whether the post is in Persian; true except on
+         *                                          multilingual sites.
+         * @param object               $postContext The post, or the data it is created from.
+         * @param array<string, mixed> $data        The post data about to be saved.
+         * @param array<string, mixed> $postarr     The post data as passed to wp_insert_post().
+         */
+        return (bool) apply_filters('persian_kit_should_normalize', ContentLanguage::writesPersian('post', $postId), $postContext, $data, $postarr);
     }
 
     private function addFilter(string $hook, callable $callback, int $acceptedArgs = 1): void

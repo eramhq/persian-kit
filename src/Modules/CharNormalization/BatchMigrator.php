@@ -4,6 +4,7 @@ namespace PersianKit\Modules\CharNormalization;
 
 use PersianKit\Dependencies\Eram\Abzar\Exception\AbzarException;
 use PersianKit\Dependencies\Eram\Abzar\Text\CharNormalizer;
+use PersianKit\Service\Language\ContentLanguage;
 
 defined('ABSPATH') || exit;
 
@@ -110,6 +111,11 @@ class BatchMigrator
 
         foreach ($posts as $post) {
             $lastId = (int) $post->ID;
+
+            // On multilingual sites, posts in other languages keep their letters.
+            if (!ContentLanguage::postIsPersian($lastId)) {
+                continue;
+            }
 
             $newTitle   = $this->normalizer->normalize($post->post_title);
             $newExcerpt = $this->normalizer->normalize($post->post_excerpt);

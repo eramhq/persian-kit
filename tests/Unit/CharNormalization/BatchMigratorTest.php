@@ -10,9 +10,13 @@ use PersianKit\Dependencies\Eram\Abzar\Text\CharNormalizer;
 use PersianKit\Modules\CharNormalization\BatchMigrator;
 use PersianKit\Modules\CharNormalization\BatchResult;
 use PersianKit\Tests\Unit\Support\FailsPcre;
+use PersianKit\Service\Language\ContentLanguage;
+use PersianKit\Tests\Unit\Support\UsesLanguages;
 
 class BatchMigratorTest extends TestCase
 {
+    use UsesLanguages;
+
     use FailsPcre;
 
     private CharNormalizer $normalizer;
@@ -21,6 +25,7 @@ class BatchMigratorTest extends TestCase
     {
         parent::setUp();
         Monkey\setUp();
+        ContentLanguage::reset();
         $this->normalizer = new CharNormalizer();
     }
 
@@ -256,6 +261,33 @@ class BatchMigratorTest extends TestCase
 
         $this->assertStringNotContainsString('0629', $patterns[0]);
         $this->assertStringContainsString('0629', $patterns[1]);
+
+        unset($GLOBALS['wpdb']);
+    }
+
+    public function test_process_batch_skips_posts_in_other_languages_but_moves_past_them(): void
+    {
+        $this->inLanguage('fa_IR')->posts = [1 => 'ar', 2 => 'fa_IR'];
+
+        Functions\expect('get_option')->with('persian_kit_normalize_cursor', 0)->andReturn(0);
+        Functions\expect('update_option')->once()->with('persian_kit_normalize_cursor', 2, false);
+        Functions\expect('clean_post_cache')->once()->with(2);
+
+        $wpdb = Mockery::mock('wpdb');
+        $wpdb->posts = 'wp_posts';
+        $wpdb->shouldReceive('prepare')->once()->andReturn('SELECT ...');
+        $wpdb->shouldReceive('get_results')->once()->andReturn([
+            (object) ['ID' => 1, 'post_type' => 'post', 'post_title' => 'كتاب', 'post_content' => 'كتاب', 'post_excerpt' => ''],
+            (object) ['ID' => 2, 'post_type' => 'post', 'post_title' => 'كتاب', 'post_content' => 'كتاب', 'post_excerpt' => ''],
+        ]);
+        $wpdb->shouldReceive('update')->once()->with('wp_posts', Mockery::type('array'), ['ID' => 2], ['%s', '%s', '%s'], ['%d']);
+        $GLOBALS['wpdb'] = $wpdb;
+
+        $result = $this->makeMigrator()->processBatch(['post'], 100);
+
+        $this->assertSame(2, $result->processed);
+        $this->assertSame(1, $result->modified);
+        $this->assertSame(2, $result->lastId);
 
         unset($GLOBALS['wpdb']);
     }

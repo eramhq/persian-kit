@@ -4,6 +4,7 @@ namespace PersianKit\Modules\ZWNJEditor;
 
 use PersianKit\Abstracts\AbstractModule;
 use PersianKit\Container\ServiceContainer;
+use PersianKit\Service\Language\ContentLanguage;
 
 defined('ABSPATH') || exit;
 
@@ -50,6 +51,10 @@ class ZWNJEditorModule extends AbstractModule
      */
     public function registerTinyMcePlugin(array $plugins): array
     {
+        if (!$this->writesPersianHere()) {
+            return $plugins;
+        }
+
         $plugins['persian_kit_zwnj'] = PERSIAN_KIT_URL . 'public/js/tinymce-zwnj.js';
 
         return $plugins;
@@ -61,6 +66,10 @@ class ZWNJEditorModule extends AbstractModule
      */
     public function registerTinyMceButton(array $buttons): array
     {
+        if (!$this->writesPersianHere()) {
+            return $buttons;
+        }
+
         $buttons[] = 'persian_kit_zwnj';
 
         return $buttons;
@@ -68,7 +77,7 @@ class ZWNJEditorModule extends AbstractModule
 
     public function enqueueTextEditorScript(string $hook): void
     {
-        if (!$this->shouldEnqueueClassicEditorScript($hook)) {
+        if (!$this->shouldEnqueueClassicEditorScript($hook) || !$this->writesPersianHere()) {
             return;
         }
 
@@ -93,7 +102,7 @@ class ZWNJEditorModule extends AbstractModule
 
     public function enqueueBlockEditorScript(): void
     {
-        if (!$this->isBlockEditorPostScreen()) {
+        if (!$this->isBlockEditorPostScreen() || !$this->writesPersianHere()) {
             return;
         }
 
@@ -104,6 +113,15 @@ class ZWNJEditorModule extends AbstractModule
             PERSIAN_KIT_VERSION,
             true
         );
+    }
+
+    /**
+     * Whether the post being edited is in Persian. A language changed in the
+     * editor counts after the page is reloaded.
+     */
+    private function writesPersianHere(): bool
+    {
+        return ContentLanguage::writesPersian('post');
     }
 
     private function shouldEnqueueClassicEditorScript(string $hook): bool
