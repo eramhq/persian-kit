@@ -1,27 +1,47 @@
 /* Persian Kit — Admin Settings */
 
 :root {
-    --pk-color-primary: #2271b1;
-    --pk-color-danger: #d63638;
-    --pk-color-border: #c3c4c7;
-    --pk-color-bg: #fff;
-    --pk-color-toggle-off: #c3c4c7;
-    --pk-color-toggle-on: #2271b1;
-    --pk-radius: 4px;
+    /* Brand: turquoise tile glaze, saffron */
+    --pk-brand: #0e7c7b;
+    --pk-brand-strong: #0a5f5e;
+    --pk-brand-tint: #e1f1ef;
+    --pk-saffron: #c98a12;
+
+    --pk-text: #1d2327;
+    --pk-muted: #50575e;
+    --pk-faint: #646970;
+    --pk-surface: #fff;
+    --pk-surface-2: #f6f7f7;
+    --pk-border: #dcdcde;
+    --pk-border-strong: #c3c4c7;
+    --pk-danger: #b32d2e;
+    --pk-warn: #855a00;
+    --pk-warn-bg: #fcf6e3;
+
+    --pk-radius: 10px;
+    --pk-radius-small: 6px;
+    --pk-shadow: 0 1px 2px rgba(16, 24, 28, 0.06), 0 1px 1px rgba(16, 24, 28, 0.04);
+    --pk-shadow-raised: 0 10px 28px -12px rgba(16, 24, 28, 0.3);
+    --pk-content-width: 860px;
+    --pk-icon-size: 36px;
+
     --pk-toggle-width: 40px;
     --pk-toggle-height: 22px;
     --pk-toggle-knob: 16px;
     --pk-toggle-offset: 3px;
+
+    /* The eight-point khatam star, as a mask tile for the header pattern. */
+    --pk-khatam: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 2.1L14.9 5H19V9.1L21.9 12L19 14.9V19H14.9L12 21.9L9.1 19H5V14.9L2.1 12L5 9.1V5H9.1Z' fill='none' stroke='black' stroke-width='1'/%3E%3C/svg%3E");
 }
 
-/* Page wrapper */
-.persian-kit-wrap {
-    max-width: 800px;
-}
-
-.persian-kit-wrap .persian-kit-page-description {
-    margin-bottom: 1em;
-    color: #646970;
+/* Persian letters used as icons (۱۲۳, یک, اب), whatever the admin language. */
+@font-face {
+    font-family: 'Persian Kit Glyphs';
+    font-style: normal;
+    font-display: swap;
+    font-weight: 100 900;
+    src: url('../fonts/vazirmatn/vazirmatn-arabic-wght-normal.woff2') format('woff2');
+    unicode-range: U+0600-06FF, U+200C-200E, U+FB50-FDFF, U+FE70-FEFC;
 }
 
 /* Elements that set their own display still honour hidden and x-cloak. */
@@ -30,61 +50,433 @@
     display: none !important;
 }
 
-/* Tabs */
+.persian-kit-content,
+.persian-kit-wrap > .notice,
+.persian-kit-wrap > .updated,
+.persian-kit-wrap > .error {
+    max-width: var(--pk-content-width);
+}
+
+/* WordPress puts admin notices right after .wp-header-end. */
+.persian-kit-wrap > .notice,
+.persian-kit-wrap > .updated,
+.persian-kit-wrap > .error {
+    box-sizing: border-box;
+    margin-inline: 0;
+}
+
+.persian-kit-content {
+    display: grid;
+    gap: 14px;
+    margin-block-start: 20px;
+}
+
+.persian-kit-wrap .persian-kit-icon {
+    width: 20px;
+    height: 20px;
+    flex: none;
+}
+
+.persian-kit-glyph {
+    font-family: 'Persian Kit Glyphs', Vazirmatn, Tahoma, sans-serif;
+    font-weight: 700;
+    font-size: 14px;
+    line-height: 1;
+}
+
+.persian-kit-version {
+    display: inline-block;
+    padding: 1px 8px;
+    border: 1px solid var(--pk-border-strong);
+    border-radius: 999px;
+    color: var(--pk-muted);
+    font-family: Menlo, Consolas, monospace;
+    font-size: 11px;
+    line-height: 1.6;
+    white-space: nowrap;
+    direction: ltr;
+    unicode-bidi: isolate;
+}
+
+a.persian-kit-version {
+    text-decoration: none;
+}
+
+a.persian-kit-version:hover,
+a.persian-kit-version:focus {
+    border-color: var(--pk-brand);
+    color: var(--pk-brand);
+}
+
+/* WordPress 7 draws buttons, checkboxes and focus rings in the admin theme colour. */
+.persian-kit-wrap {
+    --wp-admin-theme-color: #0e7c7b;
+    --wp-admin-theme-color--rgb: 14, 124, 123;
+    --wp-admin-theme-color-darker-10: #0b6b6a;
+    --wp-admin-theme-color-darker-20: #0a5f5e;
+}
+
+.persian-kit-wrap .button {
+    border-radius: var(--pk-radius-small);
+}
+
+/* Secondary buttons stay neutral next to the turquoise primary one. */
+.persian-kit-wrap .button:not(.button-primary) {
+    background: var(--pk-surface);
+    border-color: var(--pk-border-strong);
+    color: var(--pk-text);
+}
+
+.persian-kit-wrap .button:not(.button-primary):hover {
+    background: var(--pk-surface-2);
+    border-color: var(--pk-faint);
+    color: var(--pk-text);
+}
+
+.persian-kit-wrap .button:not(.button-primary):focus {
+    border-color: var(--pk-brand);
+    box-shadow: 0 0 0 1px var(--pk-brand);
+    color: var(--pk-text);
+}
+
+/* Brand primary buttons, also on WordPress versions without the theme colour */
+.persian-kit-wrap .button-primary {
+    background: var(--pk-brand);
+    border-color: var(--pk-brand);
+}
+
+.persian-kit-wrap .button-primary:hover,
+.persian-kit-wrap .button-primary:active {
+    background: var(--pk-brand-strong);
+    border-color: var(--pk-brand-strong);
+}
+
+.persian-kit-wrap .button-primary:focus {
+    background: var(--pk-brand-strong);
+    border-color: var(--pk-brand-strong);
+    box-shadow: 0 0 0 1px #fff, 0 0 0 3px var(--pk-brand);
+}
+
+/* ---------- Header: full width under the admin bar ---------- */
+.persian-kit-header {
+    position: relative;
+    overflow: hidden;
+    /* Undo .wrap's and #wpcontent's spacing so the bar meets the menu. */
+    margin-block-start: -10px;
+    margin-inline: -22px -20px;
+    background: var(--pk-surface);
+    border-block-end: 1px solid var(--pk-border);
+}
+
+/* A khatam pattern fading in at the far side of the header. */
+.persian-kit-header::after {
+    content: "";
+    position: absolute;
+    inset-block: 0;
+    inset-inline-end: 0;
+    width: min(46%, 380px);
+    background: var(--pk-brand);
+    opacity: 0.13;
+    pointer-events: none;
+    -webkit-mask-image: var(--pk-khatam), linear-gradient(to right, transparent, #000 80%);
+    mask-image: var(--pk-khatam), linear-gradient(to right, transparent, #000 80%);
+    -webkit-mask-size: 28px 28px, 100% 100%;
+    mask-size: 28px 28px, 100% 100%;
+    -webkit-mask-composite: source-in;
+    mask-composite: intersect;
+}
+
+.rtl .persian-kit-header::after {
+    -webkit-mask-image: var(--pk-khatam), linear-gradient(to left, transparent, #000 80%);
+    mask-image: var(--pk-khatam), linear-gradient(to left, transparent, #000 80%);
+}
+
+.persian-kit-header__inner {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    gap: 4px;
+    max-width: var(--pk-content-width);
+    padding: 16px 22px 0;
+}
+
+.persian-kit-header__top {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px 20px;
+}
+
+.persian-kit-brand {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 4px 10px;
+    min-width: 0;
+}
+
+.persian-kit-brand__logo {
+    display: block;
+    width: 34px;
+    height: 34px;
+    margin-inline-end: 2px;
+}
+
+.persian-kit-wrap .persian-kit-brand__name {
+    margin: 0;
+    padding: 0;
+    font-size: 20px;
+    font-weight: 700;
+    line-height: 1.3;
+    letter-spacing: -0.01em;
+}
+
+.persian-kit-brand__fa {
+    color: var(--pk-faint);
+    font-family: 'Persian Kit Glyphs', Vazirmatn, Tahoma, sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.persian-kit-links {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 4px 18px;
+}
+
+.persian-kit-links a {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    color: var(--pk-brand);
+    font-weight: 500;
+    text-decoration: none;
+}
+
+.persian-kit-links a:hover {
+    color: var(--pk-brand-strong);
+    text-decoration: underline;
+}
+
+.persian-kit-links .persian-kit-icon {
+    width: 16px;
+    height: 16px;
+}
+
+.persian-kit-wrap .persian-kit-page-description {
+    margin: 0;
+    /* Lines up with the name, past the logo. */
+    margin-inline-start: 46px;
+    color: var(--pk-muted);
+}
+
+/* Tabs: underlined, with icons. Keeps WordPress's nav-tab classes. */
 .persian-kit-wrap .persian-kit-tabs {
-    margin-bottom: 1em;
+    display: flex;
+    gap: 24px;
+    margin-block-start: 10px;
+    padding: 0;
+    border: 0;
+    overflow-x: auto;
+}
+
+.persian-kit-wrap .persian-kit-tabs::after {
+    display: none;
+}
+
+.persian-kit-wrap .persian-kit-tabs .nav-tab {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    float: none;
+    margin: 0;
+    padding: 10px 2px 11px;
+    border: 0;
+    border-block-end: 3px solid transparent;
+    background: none;
+    color: var(--pk-muted);
+    font-size: 14px;
+    white-space: nowrap;
+}
+
+.persian-kit-wrap .persian-kit-tabs .nav-tab .persian-kit-icon {
+    width: 18px;
+    height: 18px;
+}
+
+.persian-kit-wrap .persian-kit-tabs .nav-tab:hover {
+    color: var(--pk-text);
+}
+
+.persian-kit-wrap .persian-kit-tabs .nav-tab:focus {
+    box-shadow: none;
+    outline: none;
+}
+
+.persian-kit-wrap .persian-kit-tabs .nav-tab:focus-visible {
+    outline: 2px solid var(--pk-brand);
+    outline-offset: -2px;
+}
+
+.persian-kit-wrap .persian-kit-tabs .nav-tab-active,
+.persian-kit-wrap .persian-kit-tabs .nav-tab-active:hover {
+    border-block-end-color: var(--pk-brand);
+    color: var(--pk-text);
+}
+
+.persian-kit-wrap .persian-kit-tabs .nav-tab-active .persian-kit-icon {
+    color: var(--pk-brand);
 }
 
 .persian-kit-panel:focus-visible {
-    outline: 2px solid var(--pk-color-primary);
+    outline: 2px solid var(--pk-brand);
     outline-offset: 2px;
 }
 
+.persian-kit-panel:not(#persian-kit-panel-tools) {
+    display: grid;
+    gap: 10px;
+}
+
+/* ---------- Welcome ---------- */
+.persian-kit-welcome {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    padding: 16px;
+    background: var(--pk-brand-tint);
+    border: 1px solid rgba(14, 124, 123, 0.3);
+    border-radius: var(--pk-radius);
+}
+
+.persian-kit-welcome__logo {
+    display: block;
+    flex: none;
+    width: 40px;
+    height: 40px;
+}
+
+.persian-kit-welcome h2 {
+    margin: 0 0 4px;
+    font-size: 15px;
+}
+
+.persian-kit-welcome p {
+    margin: 0;
+    color: var(--pk-muted);
+}
+
+.persian-kit-welcome p:last-child {
+    margin-block-start: 10px;
+}
+
+/* ---------- Compatibility ---------- */
 .persian-kit-compatibility {
-    margin: 0 0 1.5em;
+    display: grid;
+    gap: 10px;
+}
+
+.persian-kit-compatibility__icon {
+    display: grid;
+    place-items: center;
+    grid-row: 1 / span 2;
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    background: var(--pk-warn-bg);
+    color: var(--pk-warn);
+}
+
+.persian-kit-compatibility__icon .persian-kit-icon {
+    width: 18px;
+    height: 18px;
 }
 
 .persian-kit-compatibility__intro {
-    margin: 0 0 1em;
-    color: #646970;
+    margin: 0;
+    color: var(--pk-muted);
 }
 
 .persian-kit-compatibility__cards {
     display: grid;
-    gap: 1em;
+    gap: 10px;
 }
 
 .persian-kit-compatibility__card {
-    background: var(--pk-color-bg);
-    border: 1px solid var(--pk-color-border);
+    overflow: hidden;
+    background: var(--pk-surface);
+    border: 1px solid var(--pk-border);
     border-radius: var(--pk-radius);
-    padding: 16px;
+    box-shadow: var(--pk-shadow);
 }
 
 .persian-kit-compatibility__card-header {
-    display: flex;
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    gap: 2px 12px;
     align-items: center;
-    justify-content: space-between;
-    gap: 0.75em;
-    margin-bottom: 0.5em;
+    padding: 12px 16px;
+    cursor: pointer;
+    list-style: none;
 }
 
-.persian-kit-compatibility__title {
+.persian-kit-compatibility__card-header::-webkit-details-marker {
+    display: none;
+}
+
+.persian-kit-compatibility__card-header:focus-visible {
+    outline: 2px solid var(--pk-brand);
+    outline-offset: -2px;
+}
+
+.persian-kit-wrap .persian-kit-compatibility__title {
+    grid-column: 2;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 4px 8px;
     margin: 0;
-    font-size: 15px;
+    font-size: 14px;
 }
 
 .persian-kit-compatibility__type {
-    font-size: 12px;
-    color: #646970;
+    padding: 1px 8px;
+    border-radius: 999px;
+    background: var(--pk-warn-bg);
+    color: var(--pk-warn);
+    font-size: 11px;
+    font-weight: 600;
 }
 
 .persian-kit-compatibility__summary {
-    margin: 0 0 1em;
+    grid-column: 2;
+    color: var(--pk-muted);
 }
 
-.persian-kit-compatibility__block + .persian-kit-compatibility__block {
-    margin-top: 1em;
+.persian-kit-compatibility__more {
+    grid-row: 1 / span 2;
+    grid-column: 3;
+    color: var(--pk-brand);
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.persian-kit-compatibility__more::after {
+    content: " ▾";
+}
+
+.persian-kit-compatibility__card[open] .persian-kit-compatibility__more::after {
+    content: " ▴";
+}
+
+.persian-kit-compatibility__body {
+    display: grid;
+    gap: 14px;
+    padding: 12px 16px 14px;
+    background: var(--pk-surface-2);
+    border-block-start: 1px solid var(--pk-border);
 }
 
 .persian-kit-compatibility__handles,
@@ -94,19 +486,21 @@
 
 .persian-kit-compatibility__handles {
     padding-inline-start: 1.25rem;
+    list-style: disc;
 }
 
 .persian-kit-compatibility__recommendations {
-    padding: 0;
-    list-style: none;
     display: grid;
     gap: 0.625em;
+    padding: 0;
+    list-style: none;
 }
 
 .persian-kit-compatibility__recommendation {
     display: flex;
     align-items: flex-start;
     gap: 0.75em;
+    margin: 0;
 }
 
 .persian-kit-compatibility__badge {
@@ -115,7 +509,7 @@
     justify-content: center;
     min-width: 7.25em;
     padding: 0.25em 0.6em;
-    border-radius: 999px;
+    border-radius: 4px;
     font-size: 12px;
     font-weight: 600;
     line-height: 1.4;
@@ -137,8 +531,9 @@
 }
 
 .persian-kit-compatibility__badge--no_change {
-    background: #f6f7f7;
-    color: #50575e;
+    background: var(--pk-surface);
+    border: 1px solid var(--pk-border);
+    color: var(--pk-muted);
 }
 
 .persian-kit-compatibility__recommendation-copy {
@@ -152,29 +547,45 @@
 
 .persian-kit-compatibility__current,
 .persian-kit-compatibility__note {
-    color: #646970;
+    color: var(--pk-faint);
     font-size: 12px;
 }
 
 .persian-kit-compatibility__note {
-    margin: 1em 0 0;
+    margin: 0;
 }
 
-/* Module card */
+/* ---------- Module card ---------- */
 .persian-kit-module {
-    background: var(--pk-color-bg);
-    border: 1px solid var(--pk-color-border);
+    background: var(--pk-surface);
+    border: 1px solid var(--pk-border);
     border-radius: var(--pk-radius);
-    margin-bottom: 12px;
+    box-shadow: var(--pk-shadow);
 }
 
-/* Module header — flex row */
 .persian-kit-module__header {
     display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 16px;
-    padding: 12px 16px;
+    align-items: flex-start;
+    gap: 14px;
+    padding: 14px 16px;
+}
+
+/* Grey while off, turquoise while on. */
+.persian-kit-module__icon {
+    display: grid;
+    place-items: center;
+    flex: none;
+    width: var(--pk-icon-size);
+    height: var(--pk-icon-size);
+    border-radius: 9px;
+    background: var(--pk-surface-2);
+    color: var(--pk-faint);
+    transition: background-color 0.15s, color 0.15s;
+}
+
+.persian-kit-module.is-on .persian-kit-module__icon {
+    background: var(--pk-brand-tint);
+    color: var(--pk-brand);
 }
 
 .persian-kit-module__info {
@@ -184,24 +595,35 @@
 
 .persian-kit-module__name {
     display: block;
+    color: var(--pk-text);
     font-size: 14px;
     font-weight: 600;
     line-height: 1.4;
-    color: #1d2327;
 }
 
 .persian-kit-module__description {
     display: block;
-    font-size: 13px;
-    color: #646970;
-    margin-top: 2px;
+    margin-block-start: 2px;
+    color: var(--pk-muted);
 }
 
 .persian-kit-module__inactive {
-    display: block;
-    margin-top: 4px;
-    font-size: 13px;
-    color: #996800;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    margin-block-start: 4px;
+    color: var(--pk-warn);
+    font-size: 12px;
+    font-weight: 500;
+}
+
+.persian-kit-module__inactive::before {
+    content: "";
+    flex: none;
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: currentColor;
 }
 
 /* Toggle switch */
@@ -209,8 +631,9 @@
     position: relative;
     display: inline-flex;
     align-items: center;
-    cursor: pointer;
     flex-shrink: 0;
+    margin-block-start: 2px;
+    cursor: pointer;
 }
 
 .persian-kit-module__toggle input[type="checkbox"] {
@@ -226,12 +649,13 @@
 }
 
 .persian-kit-module__toggle-track {
+    position: relative;
     display: inline-block;
     width: var(--pk-toggle-width);
     height: var(--pk-toggle-height);
-    background: var(--pk-color-toggle-off);
     border-radius: calc(var(--pk-toggle-height) / 2);
-    position: relative;
+    background: var(--pk-border-strong);
+    transition: background-color 0.15s;
 }
 
 .persian-kit-module__toggle-track::after {
@@ -241,29 +665,30 @@
     inset-inline-start: var(--pk-toggle-offset);
     width: var(--pk-toggle-knob);
     height: var(--pk-toggle-knob);
-    background: var(--pk-color-bg);
     border-radius: 50%;
+    background: var(--pk-surface);
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.25);
+    transition: inset-inline-start 0.15s;
 }
 
-/* Toggle ON state */
 .persian-kit-module__toggle input[type="checkbox"]:checked + .persian-kit-module__toggle-track {
-    background: var(--pk-color-toggle-on);
+    background: var(--pk-brand);
 }
 
 .persian-kit-module__toggle input[type="checkbox"]:checked + .persian-kit-module__toggle-track::after {
     inset-inline-start: calc(var(--pk-toggle-width) - var(--pk-toggle-knob) - var(--pk-toggle-offset));
 }
 
-/* Focus visible */
 .persian-kit-module__toggle input[type="checkbox"]:focus-visible + .persian-kit-module__toggle-track {
-    outline: 2px solid var(--pk-color-primary);
+    outline: 2px solid var(--pk-brand);
     outline-offset: 2px;
 }
 
-/* Settings area */
+/* Settings area, lined up with the module name */
 .persian-kit-module__settings {
-    border-top: 1px solid var(--pk-color-border);
-    padding: 12px 16px;
+    padding: 12px 16px 14px;
+    padding-inline-start: calc(16px + var(--pk-icon-size) + 14px);
+    border-block-start: 1px solid var(--pk-border);
 }
 
 .persian-kit-module__settings > * {
@@ -271,19 +696,20 @@
 }
 
 .persian-kit-module__settings > * + * {
-    margin-top: 12px;
+    margin-block-start: 12px;
 }
 
 .persian-kit-module__settings fieldset {
+    min-width: 0;
     margin: 0;
     padding: 0;
     border: 0;
-    min-width: 0;
 }
 
 .persian-kit-options__legend {
+    margin-block-end: 8px;
     padding: 0;
-    margin-bottom: 8px;
+    color: var(--pk-muted);
     font-weight: 600;
 }
 
@@ -303,30 +729,36 @@
 }
 
 .persian-kit-option__help {
-    color: #646970;
-    font-size: 13px;
+    color: var(--pk-faint);
+    font-size: 12px;
     /* Lines up with the label text, past the checkbox. */
     padding-inline-start: 24px;
 }
 
+/* A select sits under its label, with its help line below. */
 .persian-kit-option--select {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: 4px 8px;
+    display: grid;
+    justify-items: start;
+    gap: 4px;
+}
+
+.persian-kit-option--select select {
+    min-width: 12em;
+}
+
+.persian-kit-option--select .persian-kit-option__label {
+    font-weight: 600;
 }
 
 .persian-kit-option--select .persian-kit-option__help {
-    flex-basis: 100%;
     padding-inline-start: 0;
 }
 
-/* Warning text */
 .persian-kit-wrap .persian-kit-warning {
-    color: var(--pk-color-danger);
+    color: var(--pk-danger);
 }
 
-/* Save bar: stays at the bottom of the screen while the form scrolls */
+/* ---------- Save bar: stays at the bottom of the screen while the form scrolls ---------- */
 .persian-kit-savebar {
     position: sticky;
     bottom: 0;
@@ -335,118 +767,324 @@
     flex-wrap: wrap;
     align-items: center;
     gap: 8px 16px;
-    margin-top: 16px;
+    margin-block-start: 14px;
     padding: 12px 16px;
-    background: var(--pk-color-bg);
-    border: 1px solid var(--pk-color-border);
+    background: rgba(255, 255, 255, 0.94);
+    -webkit-backdrop-filter: blur(6px);
+    backdrop-filter: blur(6px);
+    border: 1px solid var(--pk-border);
     border-radius: var(--pk-radius);
-    box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.06);
+    box-shadow: var(--pk-shadow-raised);
 }
 
 .persian-kit-savebar__status {
-    color: #646970;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--pk-warn);
+    font-weight: 600;
 }
 
 .persian-kit-savebar__status::before {
     content: "";
-    display: inline-block;
     width: 8px;
     height: 8px;
-    margin-inline-end: 6px;
     border-radius: 50%;
-    background: #dba617;
-    vertical-align: middle;
+    background: var(--pk-saffron);
+    box-shadow: 0 0 0 3px rgba(201, 138, 18, 0.25);
 }
 
-/* Tools */
+/* ---------- Tools ---------- */
 .persian-kit-tool {
-    background: var(--pk-color-bg);
-    border: 1px solid var(--pk-color-border);
+    padding: 18px;
+    background: var(--pk-surface);
+    border: 1px solid var(--pk-border);
     border-radius: var(--pk-radius);
-    padding: 16px;
+    box-shadow: var(--pk-shadow);
 }
 
-.persian-kit-tool__title {
-    margin: 0 0 4px;
-    font-size: 14px;
+.persian-kit-tool__header {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    margin-block-end: 14px;
 }
 
-.persian-kit-tool > .description {
-    margin: 0 0 12px;
+.persian-kit-tool__icon {
+    display: grid;
+    place-items: center;
+    flex: none;
+    width: var(--pk-icon-size);
+    height: var(--pk-icon-size);
+    border-radius: 9px;
+    background: var(--pk-brand-tint);
+    color: var(--pk-brand);
 }
 
-/* Batch actions */
+.persian-kit-wrap .persian-kit-tool__title {
+    margin: 0 0 2px;
+    font-size: 16px;
+}
+
+.persian-kit-tool__header .description {
+    margin: 0;
+}
+
 .persian-kit-batch-actions {
     display: flex;
-    gap: 0.5em;
+    flex-wrap: wrap;
     align-items: center;
-    margin-bottom: 0.5em;
+    gap: 0.5em;
+    margin-block-end: 0.5em;
 }
 
 .persian-kit-batch-restart {
     margin-inline-start: 0.5em;
 }
 
-/* Status table */
 .persian-kit-status-table {
-    max-width: 400px;
-    margin-bottom: 1em;
+    width: 100%;
+    max-width: 420px;
+    margin-block-end: 1em;
+    border-collapse: collapse;
+    font-variant-numeric: tabular-nums;
 }
 
-/* Progress */
+.persian-kit-status-table th,
+.persian-kit-status-table td {
+    padding: 7px 10px;
+    border-block-end: 1px solid var(--pk-border);
+    text-align: start;
+}
+
+.persian-kit-status-table th {
+    color: var(--pk-muted);
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.persian-kit-status-table th:last-child,
+.persian-kit-status-table td:last-child {
+    text-align: end;
+}
+
 .persian-kit-progress {
-    color: var(--pk-color-primary);
+    display: grid;
+    gap: 6px;
+    margin-block-end: 1em;
 }
 
-.persian-kit-progress .spinner {
-    float: none;
+/* A segment sliding along the track while posts are checked. */
+.persian-kit-progress__bar {
+    position: relative;
+    overflow: hidden;
+    max-width: 420px;
+    height: 6px;
+    border: 1px solid var(--pk-border);
+    border-radius: 3px;
+    background: var(--pk-surface-2);
+}
+
+.persian-kit-progress__bar::after {
+    content: "";
+    position: absolute;
+    inset-block: 0;
+    inset-inline-start: 0;
+    width: 35%;
+    border-radius: 3px;
+    background: var(--pk-brand);
+    animation: persian-kit-progress 1.3s ease-in-out infinite;
+}
+
+@keyframes persian-kit-progress {
+    from { transform: translateX(-100%); }
+    to { transform: translateX(290%); }
+}
+
+.rtl .persian-kit-progress__bar::after {
+    animation-name: persian-kit-progress-rtl;
+}
+
+@keyframes persian-kit-progress-rtl {
+    from { transform: translateX(100%); }
+    to { transform: translateX(-290%); }
+}
+
+.persian-kit-batch-confirm {
+    display: grid;
+    gap: 10px;
+    margin-block-end: 1em;
+    padding: 12px 14px;
+    background: var(--pk-warn-bg);
+    border: 1px solid rgba(201, 138, 18, 0.55);
+    border-radius: 8px;
+}
+
+.persian-kit-batch-confirm p {
     margin: 0;
-    margin-inline-end: 4px;
 }
 
-/* Inline notices inside the tool */
 .persian-kit-tool .notice.inline {
     margin: 0 0 1em;
     padding: 0.5em 1em;
 }
 
-/* Batch post type picker */
 .persian-kit-post-types {
     display: flex;
     flex-wrap: wrap;
     gap: 0.25em 1.25em;
     margin: 0 0 1em;
+    padding: 10px 14px;
+    border: 1px solid var(--pk-border);
+    border-radius: 8px;
 }
 
 .persian-kit-post-types legend {
+    padding-inline: 4px;
     font-weight: 600;
-    margin-bottom: 0.25em;
 }
 
-/* Welcome notice */
-.persian-kit-welcome h2 {
-    margin: 0.75em 0 0.25em;
+/* ---------- Footer: a khatam rule, then a centred colophon ---------- */
+.persian-kit-footer {
+    display: grid;
+    justify-items: center;
+    gap: 6px;
+    margin-block: 22px 8px;
+    color: var(--pk-faint);
+    text-align: center;
 }
 
-.persian-kit-welcome__modules {
-    list-style: disc;
-    padding-inline-start: 1.5em;
+.persian-kit-footer__rule {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    justify-self: stretch;
+    margin-block-end: 8px;
+    color: var(--pk-brand);
 }
 
-.persian-kit-welcome__state {
-    color: #646970;
+.persian-kit-footer__rule::before,
+.persian-kit-footer__rule::after {
+    content: "";
+    flex: 1;
+    height: 1px;
 }
 
-/* Narrow screens */
+/* The rule fades out towards both edges. */
+.persian-kit-footer__rule::before {
+    background: linear-gradient(to right, transparent, var(--pk-border-strong));
+}
+
+.persian-kit-footer__rule::after,
+.rtl .persian-kit-footer__rule::before {
+    background: linear-gradient(to left, transparent, var(--pk-border-strong));
+}
+
+.rtl .persian-kit-footer__rule::after {
+    background: linear-gradient(to right, transparent, var(--pk-border-strong));
+}
+
+.persian-kit-footer__rule .persian-kit-icon {
+    width: 14px;
+    height: 14px;
+}
+
+.persian-kit-footer__brand {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    color: var(--pk-text);
+    font-size: 14px;
+}
+
+.persian-kit-footer__brand img {
+    display: block;
+    width: 22px;
+    height: 22px;
+}
+
+.persian-kit-wrap .persian-kit-footer__tagline {
+    margin: 0;
+    font-size: 12px;
+}
+
+.persian-kit-footer__links {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    font-size: 12px;
+}
+
+.persian-kit-footer__links a {
+    color: var(--pk-muted);
+    text-decoration: none;
+}
+
+/* Middle dots between the links */
+.persian-kit-footer__links a + a::before {
+    content: "·";
+    display: inline-block;
+    padding-inline: 8px;
+    color: var(--pk-border-strong);
+}
+
+.persian-kit-footer__links a:hover,
+.persian-kit-footer__links a:focus {
+    color: var(--pk-brand);
+    text-decoration: underline;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .persian-kit-wrap * {
+        transition: none !important;
+    }
+
+    .persian-kit-progress__bar::after {
+        width: 100%;
+        animation: none;
+        opacity: 0.5;
+    }
+}
+
+/* ---------- Narrow screens ---------- */
+@media screen and (max-width: 782px) {
+    /* WordPress narrows #wpcontent's and .wrap's spacing here. */
+    .persian-kit-header {
+        margin-inline: -10px -12px;
+    }
+
+    .persian-kit-header__inner {
+        padding-inline: 10px;
+    }
+
+    .persian-kit-wrap .persian-kit-page-description {
+        margin-inline-start: 0;
+    }
+}
+
 @media screen and (max-width: 600px) {
+    .persian-kit-header::after {
+        display: none;
+    }
+
+    .persian-kit-compatibility__more {
+        grid-row: 3;
+        grid-column: 2;
+    }
+
     .persian-kit-compatibility__recommendation {
         flex-direction: column;
         gap: 0.25em;
     }
 
     .persian-kit-module__header,
-    .persian-kit-module__settings,
     .persian-kit-tool {
+        padding-inline: 12px;
+    }
+
+    .persian-kit-module__settings {
         padding-inline: 12px;
     }
 }

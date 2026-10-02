@@ -7,6 +7,8 @@
  */
 export default function normalizeJob(config = {}) {
     const { __, _n, sprintf } = window.wp.i18n;
+    // In the admin's language: 1,284 in English, ۱٬۲۸۴ in Persian.
+    const formatNumber = (number) => Number(number).toLocaleString(document.documentElement.lang || undefined);
 
     return {
         labels: config.labels || {},
@@ -37,6 +39,7 @@ export default function normalizeJob(config = {}) {
                 type,
                 label: this.labels[type] || type,
                 count,
+                countText: formatNumber(count),
             }));
         },
 
@@ -111,9 +114,9 @@ export default function normalizeJob(config = {}) {
                 this.done = false;
                 this.progressText = sprintf(
                     /* translators: 1: number of posts checked, 2: number of posts fixed. */
-                    __('%1$d posts checked, %2$d fixed…', 'persian-kit'),
-                    this.totalProcessed,
-                    this.totalModified
+                    __('%1$s posts checked, %2$s fixed…', 'persian-kit'),
+                    formatNumber(this.totalProcessed),
+                    formatNumber(this.totalModified)
                 );
                 return;
             }
@@ -122,9 +125,9 @@ export default function normalizeJob(config = {}) {
                 this.done = true;
                 this.doneText = sprintf(
                     /* translators: 1: number of posts checked, 2: number of posts fixed. */
-                    __('Done. %1$d posts checked, %2$d fixed.', 'persian-kit'),
-                    this.totalProcessed,
-                    this.totalModified
+                    __('Done. %1$s posts checked, %2$s fixed.', 'persian-kit'),
+                    formatNumber(this.totalProcessed),
+                    formatNumber(this.totalModified)
                 );
                 this.isResuming = false;
             }
@@ -162,9 +165,9 @@ export default function normalizeJob(config = {}) {
             try {
                 while (hasMore) {
                     this.progressText = sprintf(
-                        /* translators: %d: number of posts checked so far. */
-                        __('Checked %d posts…', 'persian-kit'),
-                        checked
+                        /* translators: %s: number of posts checked so far. */
+                        __('Checked %s posts…', 'persian-kit'),
+                        formatNumber(checked)
                     );
 
                     const data = await this.fetchApi('normalize/preview', 'GET', {
@@ -187,13 +190,13 @@ export default function normalizeJob(config = {}) {
                     : sprintf(
                         /* translators: 1: number of posts that would change, 2: number of posts checked. */
                         _n(
-                            '%1$d post of %2$d checked would change.',
-                            '%1$d posts of %2$d checked would change.',
+                            '%1$s post of %2$s checked would change.',
+                            '%1$s posts of %2$s checked would change.',
                             total,
                             'persian-kit'
                         ),
-                        total,
-                        checked
+                        formatNumber(total),
+                        formatNumber(checked)
                     );
             } catch (e) {
                 this.error = e.message;

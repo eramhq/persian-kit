@@ -13,6 +13,10 @@ All notable changes to this project will be documented in this file.
 - The WooCommerce and Forms cards say when WooCommerce, Contact Form 7 or ACF is not active, since their options then do nothing.
 - The compatibility notice on other admin screens uses the same short text as the settings page.
 - The Persian translation no longer uses diacritics, such as the ezafe mark.
+- New look: a header with the Persian Kit logo, the version and links to what's new, the docs and support, with the tabs below it. Each card has an icon that turns turquoise while the module is on. A footer under a khatam rule shows the version and links to feedback, bug reports and the source, in place of WordPress's "Thank you for creating with WordPress" line and version number on this page. Other admin notices now show below the header.
+- The admin menu icon is the new Persian Kit logo, the letter پ in a tile, in place of the translation icon.
+- The compatibility guidance on the settings page is one card per plugin, with its details folded under "Review recommended settings". The admin notice about it now shows on the Plugins screen only, since the settings page has the card; its link opens the card.
+- Fix letters in existing posts: counts and progress use the admin language's digits (۱٬۲۸۴ in Persian), a bar moves while posts are checked, and the confirmation and the table of counts match the rest of the page.
 
 - Fixed: with Persian slugs, a post, page or category reached by its ID (`/?p=123`, `/?page_id=`, `/?cat=`) redirected to a broken address such as `/بر_ا__-آز_ا_ش_-سا_-1405/` and a 404 on some servers (seen with PHP on macOS). Links to Persian slugs are now percent-encoded, as WordPress's own Persian slugs are; the slug itself keeps its letters. The `persian_kit_utilities` filter turns this off with the `encode_links` feature.
 - A cut-off post address under a Jalali date, such as `/1405/07/09/my-po/`, redirects (301) to the post on that date whose slug starts with it, as WordPress does for Gregorian dates. Before, it returned "not found", because WordPress looked for the year 1405.

@@ -5,7 +5,7 @@
     "type": "module",
     "scripts": {
         "dev": "ENTRY=admin vite build -c vite.config.entries.mjs --watch",
-        "clean:public": "rm -rf public/css public/js public/fonts public/licenses",
+        "clean:public": "rm -rf public/css public/js public/fonts public/licenses public/images",
         "build": "npm run clean:public && npm run build:copy && npm run build:scripts && npm run build:verify",
         "build:copy": "node scripts/copy-assets.mjs",
         "build:scripts": "ENTRY=admin vite build -c vite.config.entries.mjs && ENTRY=datepicker vite build -c vite.config.entries.mjs",

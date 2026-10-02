@@ -167,6 +167,18 @@ class ConflictDetectorTest extends TestCase
         $this->assertSame('', $output);
     }
 
+    public function test_render_notice_skips_the_settings_page_which_has_its_own_card(): void
+    {
+        Functions\when('current_user_can')->justReturn(true);
+        Functions\when('get_current_screen')->justReturn($this->screen('toplevel_page_persian-kit'));
+        Functions\when('is_plugin_active')->alias(static fn (string $slug): bool => $slug === 'wp-parsidate/wp-parsidate.php');
+        Functions\when('is_multisite')->justReturn(false);
+
+        ob_start();
+        (new ConflictDetector())->renderNotice();
+        $this->assertSame('', ob_get_clean());
+    }
+
     private function screen(string $id): \WP_Screen
     {
         $screen = new \WP_Screen();

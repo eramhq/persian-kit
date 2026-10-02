@@ -9,18 +9,19 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-10-02T09:28:25+00:00\n"
+"POT-Creation-Date: 2026-10-02T13:01:21+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: persian-kit\n"
 
 #. Plugin Name of the plugin
 #: persian-kit.php
-#: src/Core/AdminPage.php:79
-#: src/Core/AdminPage.php:80
+#: src/Core/AdminPage.php:95
+#: src/Core/AdminPage.php:96
 #: src/Core/ConflictDetector.php:144
 #: src/Service/Assets/AssetManager.php:45
-#: views/admin/settings.php:41
+#: views/admin/partials/footer.php:30
+#: views/admin/partials/header.php:35
 msgid "Persian Kit"
 msgstr ""
 
@@ -44,27 +45,27 @@ msgstr ""
 msgid "https://flavor.dev"
 msgstr ""
 
-#: src/Core/AdminPage.php:71
+#: src/Core/AdminPage.php:87
 msgid "Settings"
 msgstr ""
 
-#: src/Core/AdminPage.php:131
+#: src/Core/AdminPage.php:161
 msgid "You do not have permission to access this page."
 msgstr ""
 
-#: src/Core/AdminPage.php:148
+#: src/Core/AdminPage.php:178
 msgid "Display"
 msgstr ""
 
-#: src/Core/AdminPage.php:149
+#: src/Core/AdminPage.php:179
 msgid "Writing"
 msgstr ""
 
-#: src/Core/AdminPage.php:150
+#: src/Core/AdminPage.php:180
 msgid "Integrations"
 msgstr ""
 
-#: src/Core/AdminPage.php:151
+#: src/Core/AdminPage.php:181
 msgid "Tools"
 msgstr ""
 
@@ -184,11 +185,12 @@ msgid "Let Persian WooCommerce handle Woo-specific dates. Persian Kit can still 
 msgstr ""
 
 #: src/Core/ConflictDetector.php:145
-#: views/admin/partials/compatibility-guidance.php:18
+#: views/admin/partials/compatibility-guidance.php:41
 msgid "Another Persian plugin does some of the same things. Use one plugin for each feature."
 msgstr ""
 
 #: src/Core/ConflictDetector.php:154
+#: views/admin/partials/compatibility-guidance.php:36
 msgid "Review recommended settings"
 msgstr ""
 
@@ -466,19 +468,19 @@ msgstr ""
 msgid "Compatibility"
 msgstr ""
 
-#: views/admin/partials/compatibility-guidance.php:29
+#: views/admin/partials/compatibility-guidance.php:30
 msgid "Supplementary"
 msgstr ""
 
-#: views/admin/partials/compatibility-guidance.php:30
+#: views/admin/partials/compatibility-guidance.php:31
 msgid "Overlap"
 msgstr ""
 
-#: views/admin/partials/compatibility-guidance.php:39
+#: views/admin/partials/compatibility-guidance.php:46
 msgid "This plugin is handling:"
 msgstr ""
 
-#: views/admin/partials/compatibility-guidance.php:50
+#: views/admin/partials/compatibility-guidance.php:57
 msgid "Recommended Persian Kit settings"
 msgstr ""
 
@@ -514,6 +516,36 @@ msgstr ""
 msgid "Also in:"
 msgstr ""
 
+#: views/admin/partials/footer.php:17
+msgid "Send feedback"
+msgstr ""
+
+#: views/admin/partials/footer.php:18
+msgid "Report a bug"
+msgstr ""
+
+#: views/admin/partials/footer.php:19
+msgid "Source on GitHub"
+msgstr ""
+
+#: views/admin/partials/footer.php:21
+#: views/admin/partials/header.php:48
+msgid "(opens in a new tab)"
+msgstr ""
+
+#: views/admin/partials/footer.php:32
+#: views/admin/partials/header.php:38
+msgid "Version"
+msgstr ""
+
+#: views/admin/partials/footer.php:38
+msgid "Made for Persian WordPress. Free and open source."
+msgstr ""
+
+#: views/admin/partials/footer.php:40
+msgid "About Persian Kit"
+msgstr ""
+
 #: views/admin/partials/forms-settings.php:17
 msgid "Contact Form 7"
 msgstr ""
@@ -530,69 +562,93 @@ msgstr ""
 msgid "Date picker for Date and Date Time fields."
 msgstr ""
 
+#: views/admin/partials/header.php:25
+msgid "What's new"
+msgstr ""
+
+#: views/admin/partials/header.php:26
+msgid "Docs"
+msgstr ""
+
+#: views/admin/partials/header.php:27
+msgid "Support"
+msgstr ""
+
+#: views/admin/partials/header.php:43
+msgid "Persian Kit help"
+msgstr ""
+
+#: views/admin/partials/header.php:55
+msgid "Changes apply when you save."
+msgstr ""
+
+#: views/admin/partials/header.php:58
+msgid "Persian Kit settings"
+msgstr ""
+
 #. translators: %s: plugin names, such as "Contact Form 7 and ACF".
-#: views/admin/partials/module-toggle.php:48
+#: views/admin/partials/module-toggle.php:55
 #, php-format
 msgid "Not active on this site: %s."
 msgstr ""
 
-#: views/admin/partials/tools.php:23
+#: views/admin/partials/tools.php:28
 msgid "Fix letters in existing posts"
 msgstr ""
 
-#: views/admin/partials/tools.php:25
+#: views/admin/partials/tools.php:30
 msgid "Count first, then fix. Back up your database before fixing."
 msgstr ""
 
-#: views/admin/partials/tools.php:29
+#: views/admin/partials/tools.php:36
 msgid "Post types"
 msgstr ""
 
-#: views/admin/partials/tools.php:45
+#: views/admin/partials/tools.php:52
 msgid "Count posts"
 msgstr ""
 
-#: views/admin/partials/tools.php:54
+#: views/admin/partials/tools.php:61
 msgid "Resume fixing posts…"
 msgstr ""
 
-#: views/admin/partials/tools.php:55
+#: views/admin/partials/tools.php:62
 msgid "Fix posts…"
 msgstr ""
 
-#: views/admin/partials/tools.php:64
+#: views/admin/partials/tools.php:71
 msgid "Start over"
 msgstr ""
 
-#: views/admin/partials/tools.php:69
+#: views/admin/partials/tools.php:76
 msgid "Save your settings first. The fix uses the saved settings."
 msgstr ""
 
-#: views/admin/partials/tools.php:75
+#: views/admin/partials/tools.php:82
 msgid "This changes your posts, without revisions, and cannot be undone."
 msgstr ""
 
-#: views/admin/partials/tools.php:80
+#: views/admin/partials/tools.php:87
 msgid "I have a recent database backup"
 msgstr ""
 
-#: views/admin/partials/tools.php:85
+#: views/admin/partials/tools.php:92
 msgid "Fix posts now"
 msgstr ""
 
-#: views/admin/partials/tools.php:88
+#: views/admin/partials/tools.php:95
 msgid "Cancel"
 msgstr ""
 
-#: views/admin/partials/tools.php:96
+#: views/admin/partials/tools.php:103
 msgid "Posts that would change, by post type"
 msgstr ""
 
-#: views/admin/partials/tools.php:99
+#: views/admin/partials/tools.php:106
 msgid "Post type"
 msgstr ""
 
-#: views/admin/partials/tools.php:100
+#: views/admin/partials/tools.php:107
 msgid "Posts to fix"
 msgstr ""
 
@@ -604,19 +660,19 @@ msgstr ""
 msgid "Existing slugs are not changed."
 msgstr ""
 
-#: views/admin/partials/welcome.php:11
+#: views/admin/partials/welcome.php:14
 msgid "Welcome to Persian Kit"
 msgstr ""
 
-#: views/admin/partials/welcome.php:12
+#: views/admin/partials/welcome.php:15
 msgid "Turn each part on or off below. Your saved posts are not changed."
 msgstr ""
 
-#: views/admin/partials/welcome.php:13
+#: views/admin/partials/welcome.php:16
 msgid "Persian digits and fixing letters on save start off."
 msgstr ""
 
-#: views/admin/partials/welcome.php:16
+#: views/admin/partials/welcome.php:19
 msgid "Got it"
 msgstr ""
 
@@ -664,48 +720,40 @@ msgstr ""
 msgid "Shown on the order and in emails."
 msgstr ""
 
-#: views/admin/settings.php:43
-msgid "Changes apply when you save."
-msgstr ""
-
-#: views/admin/settings.php:67
-msgid "Persian Kit settings"
-msgstr ""
-
-#: views/admin/settings.php:108
+#: views/admin/settings.php:96
 msgid "Save changes"
 msgstr ""
 
-#: views/admin/settings.php:110
+#: views/admin/settings.php:98
 msgid "Unsaved changes"
 msgstr ""
 
 #. translators: 1: number of posts checked, 2: number of posts fixed.
-#: public/js/admin.js:4327
+#: public/js/admin.js:4329
 #, js-format
-msgid "%1$d posts checked, %2$d fixed…"
+msgid "%1$s posts checked, %2$s fixed…"
 msgstr ""
 
 #. translators: 1: number of posts checked, 2: number of posts fixed.
-#: public/js/admin.js:4337
+#: public/js/admin.js:4339
 #, js-format
-msgid "Done. %1$d posts checked, %2$d fixed."
+msgid "Done. %1$s posts checked, %2$s fixed."
 msgstr ""
 
-#. translators: %d: number of posts checked so far.
-#: public/js/admin.js:4373
+#. translators: %s: number of posts checked so far.
+#: public/js/admin.js:4375
 #, js-format
-msgid "Checked %d posts…"
+msgid "Checked %s posts…"
 msgstr ""
 
-#: public/js/admin.js:4389
+#: public/js/admin.js:4391
 msgid "No posts need fixing."
 msgstr ""
 
 #. translators: 1: number of posts that would change, 2: number of posts checked.
-#: public/js/admin.js:4391
+#: public/js/admin.js:4393
 #, js-format
-msgid "%1$d post of %2$d checked would change."
-msgid_plural "%1$d posts of %2$d checked would change."
+msgid "%1$s post of %2$s checked would change."
+msgid_plural "%1$s posts of %2$s checked would change."
 msgstr[0] ""
 msgstr[1] ""

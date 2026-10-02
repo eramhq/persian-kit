@@ -234,6 +234,61 @@ class SettingsPageTest extends WordPressIntegrationTestCase
         );
     }
 
+    public function test_header_shows_the_version_and_help_links_above_the_notices(): void
+    {
+        $xpath = $this->render();
+
+        $this->assertSame('Persian Kit', trim($xpath->evaluate('string(//h1)')));
+        $this->assertStringContainsString(
+            PERSIAN_KIT_VERSION,
+            $xpath->evaluate('string(//*[contains(@class, "persian-kit-header")]//*[contains(@class, "persian-kit-version")])')
+        );
+        $this->assertSame(3, $xpath->query('//*[contains(@class, "persian-kit-links")]//a[@target="_blank"]')->length);
+        // WordPress moves admin notices after .wp-header-end, so they land below the header and tabs.
+        $this->assertSame(1, $xpath->query('//*[@role="tablist"]/ancestor::*[contains(@class, "persian-kit-header")]/following-sibling::hr[contains(@class, "wp-header-end")]')->length);
+    }
+
+    public function test_every_card_and_tab_has_an_icon(): void
+    {
+        $xpath = $this->render();
+
+        $this->assertSame(
+            $xpath->query('//*[contains(concat(" ", normalize-space(@class), " "), " persian-kit-module ")]')->length,
+            $xpath->query('//*[contains(@class, "persian-kit-module__icon")][svg or span]')->length
+        );
+        $this->assertSame(count(AdminPage::TABS), $xpath->query('//*[@role="tab"]/svg')->length);
+    }
+
+    public function test_footer_sits_outside_the_form_and_replaces_the_wordpress_footer(): void
+    {
+        $xpath = $this->render();
+
+        $this->assertSame(1, $xpath->query('//footer[contains(@class, "persian-kit-footer")]//a[@href="' . AdminPage::REPO_URL . '"]')->length);
+        $this->assertSame(0, $xpath->query('//form//footer')->length);
+
+        $this->assertNotSame('', apply_filters('admin_footer_text', 'Thank you'));
+        $this->adminPage()->hideWordPressFooter();
+        $this->assertSame('', apply_filters('admin_footer_text', 'Thank you'));
+        $this->assertSame('', apply_filters('update_footer', 'Version 7.1'));
+    }
+
+    public function test_menu_icon_is_a_single_colour_svg(): void
+    {
+        $icon = \PersianKit\Components\Icon::menuIcon();
+        $this->assertStringStartsWith('data:image/svg+xml;base64,', $icon);
+
+        $svg = base64_decode(substr($icon, strlen('data:image/svg+xml;base64,')), true);
+        // WordPress repaints fill="…" to match the admin colour scheme.
+        $this->assertSame(1, preg_match_all('/fill="[^"]*"/', (string) $svg));
+    }
+
+    private function adminPage(): AdminPage
+    {
+        $settings = new SettingsManager();
+
+        return new AdminPage($settings, [], new ConflictDetector($settings));
+    }
+
     /**
      * @param array<string, ModuleInterface> $replacements Modules to use in place of the real ones, by key.
      */

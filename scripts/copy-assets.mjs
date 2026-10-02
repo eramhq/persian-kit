@@ -20,6 +20,11 @@ const copies = [
         src: 'resources/css/admin.css',
         dest: 'public/css/admin.css',
     },
+    // Persian Kit logo (settings page header and footer)
+    {
+        src: 'resources/images/logo.svg',
+        dest: 'public/images/logo.svg',
+    },
     // Admin font CSS
     {
         src: 'resources/css/admin-font.css',

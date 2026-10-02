@@ -364,12 +364,9 @@ class ConflictDetector
         }
 
         $screen = get_current_screen();
-        $screenId = $screen instanceof \WP_Screen ? $screen->id : '';
 
-        return in_array($screenId, [
-            'plugins',
-            'toplevel_page_' . AdminPage::MENU_SLUG,
-        ], true);
+        // The settings page shows the same guidance in its own card.
+        return $screen instanceof \WP_Screen && $screen->id === 'plugins';
     }
 
     private function isPluginCurrentlyActive(string $slug): bool

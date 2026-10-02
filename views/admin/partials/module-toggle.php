@@ -5,6 +5,7 @@
  * @var string                                $moduleKey         Module key identifier.
  * @var string                                $moduleLabel       Human-readable module name.
  * @var string                                $moduleDescription Module description text.
+ * @var string                                $moduleIcon        Icon name in \PersianKit\Components\Icon, or ''.
  * @var \PersianKit\Contracts\ModuleInterface $module            Module instance.
  * @var array                                 $moduleSettings    Current settings for this module.
  * @var list<string>                          $inactivePlugins   Plugins the module works with that are not active.
@@ -18,6 +19,7 @@ defined('ABSPATH') || exit;
 $moduleKey = $args['moduleKey'];
 $moduleLabel = $args['moduleLabel'];
 $moduleDescription = $args['moduleDescription'];
+$moduleIcon = $args['moduleIcon'] ?? '';
 $module = $args['module'];
 $moduleSettings = $args['moduleSettings'] ?? [];
 $inactivePlugins = $args['inactivePlugins'] ?? [];
@@ -29,8 +31,13 @@ $descId       = 'persian-kit-module-' . $moduleKey . '-description';
 $inactiveId   = 'persian-kit-module-' . $moduleKey . '-inactive';
 $describedBy  = trim(($moduleDescription !== '' ? $descId : '') . ($inactivePlugins !== [] ? ' ' . $inactiveId : ''));
 ?>
-<div class="persian-kit-module" x-data="{ enabled: <?php echo $isEnabled ? 'true' : 'false'; ?> }">
+<div class="persian-kit-module" :class="{ 'is-on': enabled }" x-data="{ enabled: <?php echo $isEnabled ? 'true' : 'false'; ?> }">
     <div class="persian-kit-module__header">
+        <?php if ($moduleIcon !== '') : ?>
+            <span class="persian-kit-module__icon">
+                <?php echo \PersianKit\Components\Icon::render($moduleIcon); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- fixed SVG markup. ?>
+            </span>
+        <?php endif; ?>
         <div class="persian-kit-module__info">
             <span class="persian-kit-module__name" id="<?php echo esc_attr($nameId); ?>">
                 <?php echo esc_html($moduleLabel); ?>

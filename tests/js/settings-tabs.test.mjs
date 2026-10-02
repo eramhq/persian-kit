@@ -20,6 +20,7 @@ function pageHtml(active) {
 
     return `
         <div class="wrap persian-kit-wrap" x-data="persianKitTabs">
+            <section id="persian-kit-compatibility"><details id="compat-card"><summary>WP Jalali</summary></details></section>
             <nav class="nav-tab-wrapper" role="tablist">${TABS.map(tab).join('')}</nav>
             <form id="persian-kit-settings-form" method="post" action="options.php">
                 <input type="hidden" name="_wp_http_referer" value="/wp-admin/admin.php?page=persian-kit&amp;tab=${active}">
@@ -39,9 +40,9 @@ function pageHtml(active) {
         </div>`;
 }
 
-async function page({ active = 'display', dir = 'ltr', search = `?page=persian-kit&tab=${active}&settings-updated=true` } = {}) {
+async function page({ active = 'display', dir = 'ltr', search = `?page=persian-kit&tab=${active}&settings-updated=true`, hash = '' } = {}) {
     const dom = new JSDOM(`<!doctype html><html dir="${dir}"><body>${pageHtml(active)}</body></html>`, {
-        url: `https://example.test/wp-admin/admin.php${search}`,
+        url: `https://example.test/wp-admin/admin.php${search}${hash}`,
         runScripts: 'outside-only',
         // Gives the window requestAnimationFrame, which x-show waits on.
         pretendToBeVisual: true,
@@ -52,7 +53,7 @@ async function page({ active = 'display', dir = 'ltr', search = `?page=persian-k
         i18n: {
             __: (text) => text,
             _n: (single, plural, count) => (count === 1 ? single : plural),
-            sprintf: (format, ...values) => format.replace(/%(\d\$)?d/g, () => values.shift()),
+            sprintf: (format, ...values) => format.replace(/%(\d\$)?[ds]/g, () => values.shift()),
         },
     };
     window.persianKitSettings = { restUrl: 'https://example.test/wp-json/persian-kit/v1/', nonce: 'n' };
@@ -205,4 +206,12 @@ test('the fix tool sees unsaved changes made on another tab', async () => {
     window.document.getElementById('letters').click();
     await tick(window);
     assert.notEqual(warning.style.display, 'none');
+});
+
+test('the compatibility cards open when the Plugins screen notice links to them', async () => {
+    const closed = await page();
+    assert.equal(closed.document.getElementById('compat-card').open, false);
+
+    const linked = await page({ hash: '#persian-kit-compatibility' });
+    assert.equal(linked.document.getElementById('compat-card').open, true);
 });

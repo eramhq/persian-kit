@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Persian Kit 1.0.0-beta.4\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/persian-kit\n"
-"POT-Creation-Date: 2026-10-02T09:15:51+00:00\n"
+"POT-Creation-Date: 2026-10-02T13:01:21+00:00\n"
 "PO-Revision-Date: 2026-10-01 00:00+0000\n"
 "Last-Translator: Persian Kit contributors\n"
 "Language-Team: Persian (Iran)\n"
@@ -18,9 +18,9 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. Plugin Name of the plugin
-#: persian-kit.php src/Core/AdminPage.php:79 src/Core/AdminPage.php:80
+#: persian-kit.php src/Core/AdminPage.php:95 src/Core/AdminPage.php:96
 #: src/Core/ConflictDetector.php:144 src/Service/Assets/AssetManager.php:45
-#: views/admin/settings.php:41
+#: views/admin/partials/footer.php:30 views/admin/partials/header.php:35
 msgid "Persian Kit"
 msgstr "Persian Kit"
 
@@ -46,27 +46,27 @@ msgstr ""
 msgid "https://flavor.dev"
 msgstr ""
 
-#: src/Core/AdminPage.php:71
+#: src/Core/AdminPage.php:87
 msgid "Settings"
 msgstr "تنظیمات"
 
-#: src/Core/AdminPage.php:131
+#: src/Core/AdminPage.php:161
 msgid "You do not have permission to access this page."
 msgstr "شما اجازه دسترسی به این صفحه را ندارید."
 
-#: src/Core/AdminPage.php:148
+#: src/Core/AdminPage.php:178
 msgid "Display"
 msgstr "نمایش"
 
-#: src/Core/AdminPage.php:149
+#: src/Core/AdminPage.php:179
 msgid "Writing"
 msgstr "نگارش"
 
-#: src/Core/AdminPage.php:150
+#: src/Core/AdminPage.php:180
 msgid "Integrations"
 msgstr "یکپارچه‌سازی"
 
-#: src/Core/AdminPage.php:151
+#: src/Core/AdminPage.php:181
 msgid "Tools"
 msgstr "ابزارها"
 
@@ -193,7 +193,7 @@ msgstr ""
 "می‌تواند تاریخ‌های معمول وردپرس را شمسی کند."
 
 #: src/Core/ConflictDetector.php:145
-#: views/admin/partials/compatibility-guidance.php:18
+#: views/admin/partials/compatibility-guidance.php:41
 msgid ""
 "Another Persian plugin does some of the same things. Use one plugin for each "
 "feature."
@@ -202,6 +202,7 @@ msgstr ""
 "از یک افزونه استفاده کنید."
 
 #: src/Core/ConflictDetector.php:154
+#: views/admin/partials/compatibility-guidance.php:36
 msgid "Review recommended settings"
 msgstr "دیدن تنظیمات پیشنهادی"
 
@@ -497,19 +498,19 @@ msgstr ""
 msgid "Compatibility"
 msgstr "سازگاری"
 
-#: views/admin/partials/compatibility-guidance.php:29
+#: views/admin/partials/compatibility-guidance.php:30
 msgid "Supplementary"
 msgstr "مکمل"
 
-#: views/admin/partials/compatibility-guidance.php:30
+#: views/admin/partials/compatibility-guidance.php:31
 msgid "Overlap"
 msgstr "هم‌پوشانی"
 
-#: views/admin/partials/compatibility-guidance.php:39
+#: views/admin/partials/compatibility-guidance.php:46
 msgid "This plugin is handling:"
 msgstr "این افزونه این کارها را انجام می‌دهد:"
 
-#: views/admin/partials/compatibility-guidance.php:50
+#: views/admin/partials/compatibility-guidance.php:57
 msgid "Recommended Persian Kit settings"
 msgstr "تنظیمات پیشنهادی Persian Kit"
 
@@ -549,6 +550,34 @@ msgstr "قیمت‌های فروشگاه"
 msgid "Also in:"
 msgstr "همچنین در:"
 
+#: views/admin/partials/footer.php:17
+msgid "Send feedback"
+msgstr "ارسال بازخورد"
+
+#: views/admin/partials/footer.php:18
+msgid "Report a bug"
+msgstr "گزارش اشکال"
+
+#: views/admin/partials/footer.php:19
+msgid "Source on GitHub"
+msgstr "کد منبع در GitHub"
+
+#: views/admin/partials/footer.php:21 views/admin/partials/header.php:48
+msgid "(opens in a new tab)"
+msgstr "(در زبانه تازه باز می‌شود)"
+
+#: views/admin/partials/footer.php:32 views/admin/partials/header.php:38
+msgid "Version"
+msgstr "نسخه"
+
+#: views/admin/partials/footer.php:38
+msgid "Made for Persian WordPress. Free and open source."
+msgstr "ساخته‌شده برای وردپرس فارسی. رایگان و متن‌باز."
+
+#: views/admin/partials/footer.php:40
+msgid "About Persian Kit"
+msgstr "درباره Persian Kit"
+
 #: views/admin/partials/forms-settings.php:17
 msgid "Contact Form 7"
 msgstr "Contact Form 7"
@@ -565,70 +594,94 @@ msgstr "ACF"
 msgid "Date picker for Date and Date Time fields."
 msgstr "انتخابگر تاریخ برای فیلدهای ⁦Date Picker⁩ و ⁦Date Time Picker⁩."
 
+#: views/admin/partials/header.php:25
+msgid "What's new"
+msgstr "تازه‌ها"
+
+#: views/admin/partials/header.php:26
+msgid "Docs"
+msgstr "راهنما"
+
+#: views/admin/partials/header.php:27
+msgid "Support"
+msgstr "پشتیبانی"
+
+#: views/admin/partials/header.php:43
+msgid "Persian Kit help"
+msgstr "راهنمای Persian Kit"
+
+#: views/admin/partials/header.php:55
+msgid "Changes apply when you save."
+msgstr "تغییرها با ذخیره اعمال می‌شوند."
+
+#: views/admin/partials/header.php:58
+msgid "Persian Kit settings"
+msgstr "تنظیمات Persian Kit"
+
 #. translators: %s: plugin names, such as "Contact Form 7 and ACF".
-#: views/admin/partials/module-toggle.php:48
+#: views/admin/partials/module-toggle.php:55
 #, php-format
 msgid "Not active on this site: %s."
 msgstr "غیرفعال در این سایت: %s."
 
-#: views/admin/partials/tools.php:23
+#: views/admin/partials/tools.php:28
 msgid "Fix letters in existing posts"
 msgstr "اصلاح حروف نوشته‌های موجود"
 
-#: views/admin/partials/tools.php:25
+#: views/admin/partials/tools.php:30
 msgid "Count first, then fix. Back up your database before fixing."
 msgstr ""
 "اول بشمارید، بعد اصلاح کنید. پیش از اصلاح از پایگاه داده پشتیبان بگیرید."
 
-#: views/admin/partials/tools.php:29
+#: views/admin/partials/tools.php:36
 msgid "Post types"
 msgstr "نوع‌های نوشته"
 
-#: views/admin/partials/tools.php:45
+#: views/admin/partials/tools.php:52
 msgid "Count posts"
 msgstr "شمردن نوشته‌ها"
 
-#: views/admin/partials/tools.php:54
+#: views/admin/partials/tools.php:61
 msgid "Resume fixing posts…"
 msgstr "ادامه اصلاح نوشته‌ها…"
 
-#: views/admin/partials/tools.php:55
+#: views/admin/partials/tools.php:62
 msgid "Fix posts…"
 msgstr "اصلاح نوشته‌ها…"
 
-#: views/admin/partials/tools.php:64
+#: views/admin/partials/tools.php:71
 msgid "Start over"
 msgstr "شروع دوباره"
 
-#: views/admin/partials/tools.php:69
+#: views/admin/partials/tools.php:76
 msgid "Save your settings first. The fix uses the saved settings."
 msgstr "اول تنظیمات را ذخیره کنید. اصلاح با تنظیمات ذخیره‌شده انجام می‌شود."
 
-#: views/admin/partials/tools.php:75
+#: views/admin/partials/tools.php:82
 msgid "This changes your posts, without revisions, and cannot be undone."
 msgstr "این کار نوشته‌ها را بدون ساختن رونوشت تغییر می‌دهد و برگشت‌پذیر نیست."
 
-#: views/admin/partials/tools.php:80
+#: views/admin/partials/tools.php:87
 msgid "I have a recent database backup"
 msgstr "از پایگاه داده پشتیبان تازه دارم"
 
-#: views/admin/partials/tools.php:85
+#: views/admin/partials/tools.php:92
 msgid "Fix posts now"
 msgstr "همین حالا اصلاح کن"
 
-#: views/admin/partials/tools.php:88
+#: views/admin/partials/tools.php:95
 msgid "Cancel"
 msgstr "انصراف"
 
-#: views/admin/partials/tools.php:96
+#: views/admin/partials/tools.php:103
 msgid "Posts that would change, by post type"
 msgstr "نوشته‌هایی که تغییر می‌کنند، به تفکیک نوع نوشته"
 
-#: views/admin/partials/tools.php:99
+#: views/admin/partials/tools.php:106
 msgid "Post type"
 msgstr "نوع نوشته"
 
-#: views/admin/partials/tools.php:100
+#: views/admin/partials/tools.php:107
 msgid "Posts to fix"
 msgstr "نوشته‌های نیازمند اصلاح"
 
@@ -640,20 +693,20 @@ msgstr "استفاده از نامک فارسی"
 msgid "Existing slugs are not changed."
 msgstr "نامک‌های فعلی تغییر نمی‌کنند."
 
-#: views/admin/partials/welcome.php:11
+#: views/admin/partials/welcome.php:14
 msgid "Welcome to Persian Kit"
 msgstr "به Persian Kit خوش آمدید"
 
-#: views/admin/partials/welcome.php:12
+#: views/admin/partials/welcome.php:15
 msgid "Turn each part on or off below. Your saved posts are not changed."
 msgstr ""
 "هر بخش را جداگانه روشن یا خاموش کنید. نوشته‌های ذخیره‌شده شما تغییر نمی‌کنند."
 
-#: views/admin/partials/welcome.php:13
+#: views/admin/partials/welcome.php:16
 msgid "Persian digits and fixing letters on save start off."
 msgstr "«اعداد فارسی» و «اصلاح حروف هنگام ذخیره» در ابتدا خاموش‌اند."
 
-#: views/admin/partials/welcome.php:16
+#: views/admin/partials/welcome.php:19
 msgid "Got it"
 msgstr "متوجه شدم"
 
@@ -680,7 +733,8 @@ msgstr "فهرست شهرهای ایران"
 
 #: views/admin/partials/woocommerce-settings.php:26
 msgid "Suggests the province's cities. Customers can still type a village."
-msgstr "شهرهای استان را پیشنهاد می‌دهد. مشتری همچنان می‌تواند نام روستا را بنویسد."
+msgstr ""
+"شهرهای استان را پیشنهاد می‌دهد. مشتری همچنان می‌تواند نام روستا را بنویسد."
 
 #: views/admin/partials/woocommerce-settings.php:31
 msgid "Off"
@@ -702,43 +756,35 @@ msgstr "کد ملی در صفحه پرداخت"
 msgid "Shown on the order and in emails."
 msgstr "در سفارش و ایمیل‌ها نشان داده می‌شود."
 
-#: views/admin/settings.php:43
-msgid "Changes apply when you save."
-msgstr "تغییرها با ذخیره اعمال می‌شوند."
-
-#: views/admin/settings.php:67
-msgid "Persian Kit settings"
-msgstr "تنظیمات Persian Kit"
-
-#: views/admin/settings.php:108
+#: views/admin/settings.php:96
 msgid "Save changes"
 msgstr "ذخیره تغییرات"
 
-#: views/admin/settings.php:110
+#: views/admin/settings.php:98
 msgid "Unsaved changes"
 msgstr "تغییرهای ذخیره‌نشده"
 
 #. translators: 1: number of posts checked, 2: number of posts fixed.
-#: public/js/admin.js:4327
-msgid "%1$d posts checked, %2$d fixed…"
-msgstr "%1$d نوشته بررسی شد، %2$d مورد اصلاح شد…"
+#: public/js/admin.js:4329
+msgid "%1$s posts checked, %2$s fixed…"
+msgstr "%1$s نوشته بررسی شد، %2$s مورد اصلاح شد…"
 
 #. translators: 1: number of posts checked, 2: number of posts fixed.
-#: public/js/admin.js:4337
-msgid "Done. %1$d posts checked, %2$d fixed."
-msgstr "تمام شد. %1$d نوشته بررسی شد و %2$d مورد اصلاح شد."
+#: public/js/admin.js:4339
+msgid "Done. %1$s posts checked, %2$s fixed."
+msgstr "تمام شد. %1$s نوشته بررسی شد و %2$s مورد اصلاح شد."
 
-#. translators: %d: number of posts checked so far.
-#: public/js/admin.js:4373
-msgid "Checked %d posts…"
-msgstr "%d نوشته بررسی شد…"
+#. translators: %s: number of posts checked so far.
+#: public/js/admin.js:4375
+msgid "Checked %s posts…"
+msgstr "%s نوشته بررسی شد…"
 
-#: public/js/admin.js:4389
+#: public/js/admin.js:4391
 msgid "No posts need fixing."
 msgstr "هیچ نوشته‌ای نیاز به اصلاح ندارد."
 
 #. translators: 1: number of posts that would change, 2: number of posts checked.
-#: public/js/admin.js:4391
-msgid "%1$d post of %2$d checked would change."
-msgid_plural "%1$d posts of %2$d checked would change."
-msgstr[0] "%1$d نوشته از %2$d نوشته بررسی‌شده تغییر می‌کند."
+#: public/js/admin.js:4393
+msgid "%1$s post of %2$s checked would change."
+msgid_plural "%1$s posts of %2$s checked would change."
+msgstr[0] "%1$s نوشته از %2$s نوشته بررسی‌شده تغییر می‌کند."

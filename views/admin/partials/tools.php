@@ -20,10 +20,17 @@ $selectedPostTypes = array_values(array_diff(array_keys($postTypeLabels), ['atta
     class="persian-kit-tool"
     x-data="persianKitNormalize(<?php echo esc_attr(wp_json_encode(['labels' => $postTypeLabels, 'selected' => $selectedPostTypes])); ?>)"
 >
-    <h2 class="persian-kit-tool__title"><?php esc_html_e('Fix letters in existing posts', 'persian-kit'); ?></h2>
-    <p class="description">
-        <?php esc_html_e('Count first, then fix. Back up your database before fixing.', 'persian-kit'); ?>
-    </p>
+    <div class="persian-kit-tool__header">
+        <span class="persian-kit-tool__icon">
+            <?php echo \PersianKit\Components\Icon::render('tools'); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- fixed SVG markup. ?>
+        </span>
+        <div>
+            <h2 class="persian-kit-tool__title"><?php esc_html_e('Fix letters in existing posts', 'persian-kit'); ?></h2>
+            <p class="description">
+                <?php esc_html_e('Count first, then fix. Back up your database before fixing.', 'persian-kit'); ?>
+            </p>
+        </div>
+    </div>
 
     <fieldset class="persian-kit-post-types" :disabled="busy || isResuming">
         <legend><?php esc_html_e('Post types', 'persian-kit'); ?></legend>
@@ -70,7 +77,7 @@ $selectedPostTypes = array_values(array_diff(array_keys($postTypeLabels), ['atta
     </p>
 
     <!-- Confirmation -->
-    <div x-show="confirming" class="notice notice-warning inline persian-kit-batch-confirm">
+    <div x-show="confirming" class="persian-kit-batch-confirm">
         <p>
             <strong><?php esc_html_e('This changes your posts, without revisions, and cannot be undone.', 'persian-kit'); ?></strong>
         </p>
@@ -92,7 +99,7 @@ $selectedPostTypes = array_values(array_diff(array_keys($postTypeLabels), ['atta
 
     <!-- Preview counts -->
     <template x-if="counts !== null">
-        <table class="widefat fixed persian-kit-status-table">
+        <table class="persian-kit-status-table">
             <caption class="screen-reader-text"><?php esc_html_e('Posts that would change, by post type', 'persian-kit'); ?></caption>
             <thead>
                 <tr>
@@ -104,7 +111,7 @@ $selectedPostTypes = array_values(array_diff(array_keys($postTypeLabels), ['atta
                 <template x-for="row in countRows" :key="row.type">
                     <tr>
                         <td x-text="row.label"></td>
-                        <td x-text="row.count"></td>
+                        <td x-text="row.countText"></td>
                     </tr>
                 </template>
             </tbody>
@@ -113,10 +120,11 @@ $selectedPostTypes = array_values(array_diff(array_keys($postTypeLabels), ['atta
 
     <div class="persian-kit-batch-status" aria-live="polite">
         <!-- Progress -->
-        <p x-show="busy" class="persian-kit-progress">
-            <span class="spinner is-active"></span>
+        <div x-show="busy" class="persian-kit-progress">
             <span x-text="progressText"></span>
-        </p>
+            <?php // No total is known ahead, so the bar moves without a percentage. ?>
+            <span class="persian-kit-progress__bar" aria-hidden="true"></span>
+        </div>
 
         <!-- Preview result -->
         <p x-show="!busy && previewText !== ''" x-text="previewText"></p>

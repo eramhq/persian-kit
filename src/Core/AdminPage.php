@@ -2,6 +2,7 @@
 
 namespace PersianKit\Core;
 
+use PersianKit\Components\Icon;
 use PersianKit\Components\View;
 use PersianKit\Contracts\ModuleInterface;
 use PersianKit\Service\Installation\InstallManager;
@@ -29,6 +30,21 @@ class AdminPage
         'woocommerce'        => 'integrations',
         'forms'              => 'integrations',
     ];
+
+    /** The icon on each module's card, by name in Icon. */
+    public const ICONS = [
+        'digit_conversion'   => 'digits',
+        'date_conversion'    => 'calendar',
+        'admin_font'         => 'font',
+        'char_normalization' => 'letters',
+        'zwnj_editor'        => 'keyboard',
+        'utilities'          => 'link',
+        'woocommerce'        => 'cart',
+        'forms'              => 'form',
+    ];
+
+    public const REPO_URL = 'https://github.com/eramhq/persian-kit';
+    public const SUPPORT_URL = 'https://wordpress.org/support/plugin/persian-kit/';
 
     private SettingsManager $settings;
     private ConflictDetector $conflicts;
@@ -81,12 +97,25 @@ class AdminPage
             'manage_options',
             self::MENU_SLUG,
             [$this, 'render'],
-            'dashicons-translation',
+            Icon::menuIcon(),
             80
         );
 
+        add_action('load-' . $hook, [$this, 'hideWordPressFooter']);
+
         // Remove the auto-created duplicate submenu
         remove_submenu_page(self::MENU_SLUG, self::MENU_SLUG);
+    }
+
+    /**
+     * The page has its own footer, so WordPress's "Thank you for creating
+     * with WordPress" line and version number are left out on it.
+     */
+    public function hideWordPressFooter(): void
+    {
+        add_filter('admin_footer_text', '__return_empty_string');
+        // After core_update_footer(), which runs at the default priority.
+        add_filter('update_footer', '__return_empty_string', 11);
     }
 
     public function render(): void
@@ -103,6 +132,7 @@ class AdminPage
             $moduleData[$key] = [
                 'key'         => $key,
                 'label'       => $module::label(),
+                'icon'        => self::ICONS[$key] ?? '',
                 'description' => $module::description(),
                 'inactive'    => $module->inactivePlugins(),
                 'instance'    => $module,

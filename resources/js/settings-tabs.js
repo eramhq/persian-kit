@@ -19,6 +19,13 @@ export default function settingsTabs() {
                 tab.addEventListener('keydown', (event) => this.onKeydown(event, tab));
             });
 
+            // The Plugins screen's compatibility notice links to these cards.
+            if (window.location.hash === '#persian-kit-compatibility') {
+                this.$el.querySelectorAll('#persian-kit-compatibility details').forEach((details) => {
+                    details.open = true;
+                });
+            }
+
             const form = this.form();
             if (form) {
                 const markDirty = () => {
