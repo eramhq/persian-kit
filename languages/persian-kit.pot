@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-10-02T06:33:17+00:00\n"
+"POT-Creation-Date: 2026-10-02T07:26:05+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: persian-kit\n"
@@ -48,23 +48,23 @@ msgstr ""
 msgid "Settings"
 msgstr ""
 
-#: src/Core/AdminPage.php:130
+#: src/Core/AdminPage.php:131
 msgid "You do not have permission to access this page."
 msgstr ""
 
-#: src/Core/AdminPage.php:147
+#: src/Core/AdminPage.php:148
 msgid "Display"
 msgstr ""
 
-#: src/Core/AdminPage.php:148
+#: src/Core/AdminPage.php:149
 msgid "Writing"
 msgstr ""
 
-#: src/Core/AdminPage.php:149
+#: src/Core/AdminPage.php:150
 msgid "Integrations"
 msgstr ""
 
-#: src/Core/AdminPage.php:150
+#: src/Core/AdminPage.php:151
 msgid "Tools"
 msgstr ""
 
@@ -124,6 +124,7 @@ msgstr ""
 #: src/Core/ConflictDetector.php:40
 #: src/Core/ConflictDetector.php:82
 #: src/Modules/WooCommerce/WooCommerceModule.php:19
+#: src/Modules/WooCommerce/WooCommerceModule.php:129
 msgid "WooCommerce"
 msgstr ""
 
@@ -183,7 +184,8 @@ msgid "Let Persian WooCommerce handle Woo-specific dates. Persian Kit can still 
 msgstr ""
 
 #: src/Core/ConflictDetector.php:145
-msgid "Another Persian plugin is already handling some of the same features. To avoid mixed results, use only one plugin for each feature area."
+#: views/admin/partials/compatibility-guidance.php:18
+msgid "Another Persian plugin does some of the same things. Use one plugin for each feature."
 msgstr ""
 
 #: src/Core/ConflictDetector.php:154
@@ -469,10 +471,6 @@ msgstr ""
 msgid "Compatibility"
 msgstr ""
 
-#: views/admin/partials/compatibility-guidance.php:18
-msgid "Another Persian plugin does some of the same things. Use one plugin for each feature."
-msgstr ""
-
 #: views/admin/partials/compatibility-guidance.php:29
 msgid "Supplementary"
 msgstr ""
@@ -535,6 +533,12 @@ msgstr ""
 
 #: views/admin/partials/forms-settings.php:22
 msgid "Date picker for Date and Date Time fields."
+msgstr ""
+
+#. translators: %s: plugin names, such as "Contact Form 7 and ACF".
+#: views/admin/partials/module-toggle.php:48
+#, php-format
+msgid "Not active on this site: %s."
 msgstr ""
 
 #: views/admin/partials/tools.php:23
@@ -673,11 +677,11 @@ msgstr ""
 msgid "Persian Kit settings"
 msgstr ""
 
-#: views/admin/settings.php:107
+#: views/admin/settings.php:108
 msgid "Save changes"
 msgstr ""
 
-#: views/admin/settings.php:109
+#: views/admin/settings.php:110
 msgid "Unsaved changes"
 msgstr ""
 

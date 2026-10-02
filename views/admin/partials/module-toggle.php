@@ -7,6 +7,7 @@
  * @var string                                $moduleDescription Module description text.
  * @var \PersianKit\Contracts\ModuleInterface $module            Module instance.
  * @var array                                 $moduleSettings    Current settings for this module.
+ * @var list<string>                          $inactivePlugins   Plugins the module works with that are not active.
  */
 
 defined('ABSPATH') || exit;
@@ -19,11 +20,14 @@ $moduleLabel = $args['moduleLabel'];
 $moduleDescription = $args['moduleDescription'];
 $module = $args['module'];
 $moduleSettings = $args['moduleSettings'] ?? [];
+$inactivePlugins = $args['inactivePlugins'] ?? [];
 
 $isEnabled    = !empty($moduleSettings['enabled']);
 $settingsView = $module->settingsView();
 $nameId       = 'persian-kit-module-' . $moduleKey . '-name';
 $descId       = 'persian-kit-module-' . $moduleKey . '-description';
+$inactiveId   = 'persian-kit-module-' . $moduleKey . '-inactive';
+$describedBy  = trim(($moduleDescription !== '' ? $descId : '') . ($inactivePlugins !== [] ? ' ' . $inactiveId : ''));
 ?>
 <div class="persian-kit-module" x-data="{ enabled: <?php echo $isEnabled ? 'true' : 'false'; ?> }">
     <div class="persian-kit-module__header">
@@ -36,6 +40,17 @@ $descId       = 'persian-kit-module-' . $moduleKey . '-description';
                     <?php echo esc_html($moduleDescription); ?>
                 </span>
             <?php endif; ?>
+            <?php if ($inactivePlugins !== []) : ?>
+                <span class="persian-kit-module__inactive" id="<?php echo esc_attr($inactiveId); ?>">
+                    <?php
+                    echo esc_html(sprintf(
+                        /* translators: %s: plugin names, such as "Contact Form 7 and ACF". */
+                        __('Not active on this site: %s.', 'persian-kit'),
+                        wp_sprintf('%l', $inactivePlugins)
+                    ));
+                    ?>
+                </span>
+            <?php endif; ?>
         </div>
 
         <label class="persian-kit-module__toggle">
@@ -46,8 +61,8 @@ $descId       = 'persian-kit-module-' . $moduleKey . '-description';
                 name="persian_kit_settings[<?php echo esc_attr($moduleKey); ?>][enabled]"
                 value="1"
                 aria-labelledby="<?php echo esc_attr($nameId); ?>"
-                <?php if ($moduleDescription !== '') : ?>
-                    aria-describedby="<?php echo esc_attr($descId); ?>"
+                <?php if ($describedBy !== '') : ?>
+                    aria-describedby="<?php echo esc_attr($describedBy); ?>"
                 <?php endif; ?>
                 x-model="enabled"
                 <?php checked($isEnabled); ?>

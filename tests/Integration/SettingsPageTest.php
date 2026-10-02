@@ -9,7 +9,9 @@ use PersianKit\Bootstrap;
 use PersianKit\Core\AdminPage;
 use PersianKit\Core\ConflictDetector;
 use PersianKit\Core\ModuleRegistry;
+use PersianKit\Contracts\ModuleInterface;
 use PersianKit\Core\SettingsManager;
+use PersianKit\Modules\Forms\FormsModule;
 use PersianKit\Tests\Integration\Support\WordPressIntegrationTestCase;
 
 class SettingsPageTest extends WordPressIntegrationTestCase
@@ -185,6 +187,41 @@ class SettingsPageTest extends WordPressIntegrationTestCase
         $this->assertSame(1, $xpath->query('//*[contains(@class, "persian-kit-savebar")][@hidden]')->length);
     }
 
+    public function test_a_card_says_which_plugins_are_not_active(): void
+    {
+        $settings = new SettingsManager();
+        $settings->registerDefaults(FormsModule::key(), FormsModule::defaults());
+        $forms = new class ($settings) extends FormsModule {
+            public function inactivePlugins(): array
+            {
+                return ['Contact Form 7', 'ACF'];
+            }
+        };
+
+        $xpath = $this->render(['forms' => $forms]);
+
+        $note = $xpath->query('//*[@id="persian-kit-module-forms-inactive"]');
+        $this->assertSame(1, $note->length);
+        $this->assertSame('Not active on this site: Contact Form 7 and ACF.', trim($note->item(0)->textContent));
+        $this->assertStringContainsString(
+            'persian-kit-module-forms-inactive',
+            $xpath->evaluate('string(//input[@type="checkbox"][@name="persian_kit_settings[forms][enabled]"]/@aria-describedby)')
+        );
+    }
+
+    public function test_cards_of_active_plugins_have_no_note(): void
+    {
+        $xpath = $this->render();
+
+        foreach (['woocommerce', 'forms'] as $moduleKey) {
+            $module = $this->module($moduleKey);
+            $this->assertSame(
+                $module->inactivePlugins() === [] ? 0 : 1,
+                $xpath->query(sprintf('//*[@id="persian-kit-module-%s-inactive"]', $moduleKey))->length
+            );
+        }
+    }
+
     public function test_save_returns_to_the_tab_it_was_sent_from(): void
     {
         $_GET['tab'] = 'writing';
@@ -197,13 +234,16 @@ class SettingsPageTest extends WordPressIntegrationTestCase
         );
     }
 
-    private function render(): DOMXPath
+    /**
+     * @param array<string, ModuleInterface> $replacements Modules to use in place of the real ones, by key.
+     */
+    private function render(array $replacements = []): DOMXPath
     {
         $settings = new SettingsManager();
         $modules = [];
         foreach (ModuleRegistry::MODULES as $moduleClass) {
             $settings->registerDefaults($moduleClass::key(), $moduleClass::defaults());
-            $modules[] = new $moduleClass($settings);
+            $modules[] = $replacements[$moduleClass::key()] ?? new $moduleClass($settings);
         }
 
         ob_start();
@@ -216,6 +256,17 @@ class SettingsPageTest extends WordPressIntegrationTestCase
         libxml_clear_errors();
 
         return new DOMXPath($document);
+    }
+
+    private function module(string $key): ModuleInterface
+    {
+        foreach (ModuleRegistry::MODULES as $moduleClass) {
+            if ($moduleClass::key() === $key) {
+                return new $moduleClass(new SettingsManager());
+            }
+        }
+
+        $this->fail("No module $key");
     }
 
     /**

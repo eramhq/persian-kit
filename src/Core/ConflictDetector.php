@@ -142,7 +142,7 @@ class ConflictDetector
         <div class="notice notice-warning">
             <p>
                 <strong><?php echo esc_html__('Persian Kit', 'persian-kit'); ?>:</strong>
-                <?php echo esc_html__('Another Persian plugin is already handling some of the same features. To avoid mixed results, use only one plugin for each feature area.', 'persian-kit'); ?>
+                <?php echo esc_html__('Another Persian plugin does some of the same things. Use one plugin for each feature.', 'persian-kit'); ?>
             </p>
             <ul>
                 <?php foreach ($reports as $report) : ?>
