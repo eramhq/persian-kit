@@ -275,6 +275,29 @@ class ContentLanguageTest extends TestCase
         $this->assertFalse(ContentLanguage::writesPersian('post'));
     }
 
+    public function test_writing_without_an_id_follows_the_object_the_rest_request_saves(): void
+    {
+        $this->source->posts = [9 => 'ar'];
+        $this->source->terms = [4 => 'ar'];
+        $this->source->current = 'fa_IR';
+        ContentLanguage::useSource($this->source);
+
+        $posts = ['callback' => [new \WP_REST_Posts_Controller(), 'update_item']];
+        $terms = ['callback' => [new \WP_REST_Terms_Controller(), 'update_item']];
+
+        $this->assertSame('response', ContentLanguage::captureRestObject('response', $posts, new \WP_REST_Request('POST', '/wp/v2/posts/9', ['id' => 9])));
+        $this->assertFalse(ContentLanguage::writesPersian('post'));
+        $this->assertTrue(ContentLanguage::writesPersian('term'), 'not a term request');
+
+        ContentLanguage::captureRestObject(null, $terms, new \WP_REST_Request('POST', '/wp/v2/categories/4', ['id' => 4]));
+        $this->assertFalse(ContentLanguage::writesPersian('term'));
+        $this->assertTrue(ContentLanguage::writesPersian('post'));
+
+        // Creating: no ID in the route.
+        ContentLanguage::captureRestObject(null, $posts, new \WP_REST_Request('POST', '/wp/v2/posts', []));
+        $this->assertTrue(ContentLanguage::writesPersian('post'));
+    }
+
     public function test_writing_falls_back_to_the_current_then_the_default_language(): void
     {
         $this->source->current = 'ar';

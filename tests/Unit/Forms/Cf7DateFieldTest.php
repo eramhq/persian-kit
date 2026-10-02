@@ -105,13 +105,29 @@ class Cf7DateFieldTest extends TestCase
         $this->assertSame($html, (new Cf7DateField(true))->upgradeInputs($html));
     }
 
-    public function test_mail_follows_the_language_of_the_page_the_form_was_on(): void
+    public function test_mail_follows_the_forms_own_language(): void
     {
+        Functions\when('get_available_languages')->justReturn(['fa_IR']);
         $source = $this->inLanguage('fa_IR');
         $source->posts = [11 => 'en_US', 12 => 'fa_IR'];
         $field = new Cf7DateField(true);
 
-        \WPCF7_Submission::$current = new \WPCF7_Submission(['container_post_id' => 11]);
+        // Contact Form 7 sends a form's mail in the form's language.
+        \WPCF7_Submission::$current = new \WPCF7_Submission(['container_post_id' => 12], 'en_US');
+        $this->assertSame('2026-10-02', $field->formatMailTag('2026-10-02', '2026-10-02', false, new FakeMailTag()));
+
+        \WPCF7_Submission::$current = new \WPCF7_Submission(['container_post_id' => 11], 'fa_IR');
+        $this->assertSame('1405/07/10', $field->formatMailTag('2026-10-02', '2026-10-02', false, new FakeMailTag()));
+    }
+
+    public function test_mail_from_a_form_in_a_language_not_installed_follows_its_page(): void
+    {
+        Functions\when('get_available_languages')->justReturn(['fa_IR']);
+        $source = $this->inLanguage('fa_IR');
+        $source->posts = [11 => 'ar', 12 => 'fa_IR'];
+        $field = new Cf7DateField(true);
+
+        \WPCF7_Submission::$current = new \WPCF7_Submission(['container_post_id' => 11], 'ar');
         $this->assertSame('2026-10-02', $field->formatMailTag('2026-10-02', '2026-10-02', false, new FakeMailTag()));
 
         \WPCF7_Submission::$current = new \WPCF7_Submission(['container_post_id' => 12]);
@@ -120,6 +136,7 @@ class Cf7DateFieldTest extends TestCase
 
     public function test_mail_from_a_form_on_no_page_follows_the_current_language(): void
     {
+        Functions\when('get_available_languages')->justReturn([]);
         $this->inLanguage('en_US');
         \WPCF7_Submission::$current = new \WPCF7_Submission(['container_post_id' => 0]);
 

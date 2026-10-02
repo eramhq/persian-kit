@@ -14,7 +14,7 @@ function pll_default_language(string $field = 'slug') {}
 
 /**
  * @param array<string, mixed> $args
- * @return list<string>
+ * @return list<string|int>
  */
 function pll_languages_list(array $args = []): array {}
 

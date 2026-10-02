@@ -74,9 +74,10 @@ class PolylangWritingTest extends WordPressIntegrationTestCase
     {
         $this->fixLetters();
 
-        $_POST = ['term_lang_choice' => 'ar'];
+        // The language box sends the language's term ID.
+        $_POST = ['term_lang_choice' => (string) PLL()->model->get_language('ar')->term_id];
         $arabic = wp_insert_term('كتاب', 'category');
-        $_POST = ['term_lang_choice' => 'fa'];
+        $_POST = ['term_lang_choice' => (string) PLL()->model->get_language('fa')->term_id];
         $persian = wp_insert_term('كتابي', 'category');
 
         $this->assertIsArray($arabic);
@@ -95,6 +96,22 @@ class PolylangWritingTest extends WordPressIntegrationTestCase
 
         $this->assertSame(sanitize_title_with_dashes('كتاب', '', 'save'), get_post($arabic)->post_name);
         $this->assertSame('کتاب-نو', rawurldecode(get_post($persian)->post_name));
+    }
+
+    public function test_a_block_editor_save_keeps_an_arabic_posts_letters_and_slug(): void
+    {
+        $arabic = $this->postIn('ar', ['post_status' => 'draft']);
+        $this->fixLetters();
+        wp_set_current_user(self::factory()->user->create(['role' => 'administrator']));
+
+        // As the block editor publishes it: no language in the request.
+        $request = new \WP_REST_Request('POST', "/wp/v2/posts/$arabic");
+        $request->set_body_params(['title' => 'كتاب جديد', 'status' => 'publish']);
+        $response = rest_do_request($request);
+
+        $this->assertSame(200, $response->get_status());
+        $this->assertSame('كتاب جديد', get_post($arabic)->post_title);
+        $this->assertSame(sanitize_title_with_dashes('كتاب جديد', '', 'save'), get_post($arabic)->post_name);
     }
 
     public function test_fix_letters_in_existing_posts_skips_other_languages(): void

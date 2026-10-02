@@ -47,6 +47,7 @@ namespace {
         public function get_posted_data(string $name = '') {}
         /** @return mixed */
         public function get_meta(string $name) {}
+        public function get_contact_form(): WPCF7_ContactForm { return new WPCF7_ContactForm(); }
     }
 
     class WPCF7_MailTag
@@ -62,6 +63,7 @@ namespace {
          * @return list<WPCF7_FormTag>
          */
         public function scan_form_tags($cond = null): array { return []; }
+        public function locale(): string { return ''; }
     }
 
     class WPCF7_TagGenerator
