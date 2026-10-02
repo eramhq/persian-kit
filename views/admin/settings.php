@@ -4,11 +4,13 @@
  *
  * @var array<string, array>        $modules              Module data by module key.
  * @var array<string, list<string>> $groups               Module keys by tab.
+ * @var array                       $integrations         The Integrations tab's cards (AdminPage::integrationCards()).
  * @var array<string, string>       $tabs                 Tab labels by tab name.
  * @var string                      $activeTab            The tab shown first.
  * @var array                       $compatibilityReports Compatibility guidance cards.
  * @var bool                        $showWelcome          Whether to show the first-run notice.
  * @var string                      $dismissWelcomeUrl    URL that hides the first-run notice.
+ * @var string                      $seenNonce            Nonce for recording that the integrations were seen, or ''.
  */
 
 defined('ABSPATH') || exit;
@@ -22,6 +24,7 @@ $tabs = $args['tabs'] ?? [];
 $activeTab = $args['activeTab'] ?? 'display';
 $compatibilityReports = $args['compatibilityReports'] ?? [];
 $showWelcome = !empty($args['showWelcome']);
+$seenNonce = $args['seenNonce'] ?? '';
 
 // Every panel but the active one starts hidden. Hidden inputs still submit,
 // so Save sends the settings of every tab.
@@ -33,7 +36,13 @@ $panelAttributes = static function (string $tab) use ($activeTab): string {
     );
 };
 ?>
-<div class="wrap persian-kit-wrap" x-data="persianKitTabs">
+<div
+    class="wrap persian-kit-wrap"
+    x-data="persianKitTabs"
+    <?php if ($seenNonce !== '') : ?>
+        data-seen-nonce="<?php echo esc_attr($seenNonce); ?>"
+    <?php endif; ?>
+>
     <?php
     \PersianKit\Components\View::load('admin/partials/header', [
         'tabs'      => $tabs,
@@ -68,27 +77,36 @@ $panelAttributes = static function (string $tab) use ($activeTab): string {
         <form id="persian-kit-settings-form" method="post" action="<?php echo esc_url(admin_url('options.php')); ?>">
             <?php settings_fields(\PersianKit\Core\SettingsRegistrar::GROUP); ?>
 
-            <?php foreach ($groups as $tab => $moduleKeys) : ?>
+            <?php foreach (array_keys($tabs) as $tab) : ?>
                 <?php
                 if ($tab === 'tools') {
                     continue;
                 }
                 ?>
                 <div <?php echo $panelAttributes($tab); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped in $panelAttributes. ?>>
-                    <?php foreach ($moduleKeys as $moduleKey) : ?>
+                    <?php if ($tab === 'woocommerce') : ?>
                         <?php
-                        $moduleData = $modules[$moduleKey];
-                        \PersianKit\Components\View::load('admin/partials/module-toggle', [
-                            'moduleKey'         => $moduleData['key'],
-                            'moduleLabel'       => $moduleData['label'],
-                            'moduleIcon'        => $moduleData['icon'],
-                            'moduleDescription' => $moduleData['description'],
-                            'inactivePlugins'   => $moduleData['inactive'],
-                            'module'            => $moduleData['instance'],
-                            'moduleSettings'    => $moduleData['settings'],
-                        ]);
+                        foreach ($groups['woocommerce'] ?? [] as $moduleKey) {
+                            \PersianKit\Components\View::load('admin/partials/woocommerce-tab', ['module' => $modules[$moduleKey]]);
+                        }
                         ?>
-                    <?php endforeach; ?>
+                    <?php elseif ($tab === 'integrations') : ?>
+                        <?php \PersianKit\Components\View::load('admin/partials/integrations-tab', $args['integrations'] ?? []); ?>
+                    <?php else : ?>
+                        <?php foreach ($groups[$tab] ?? [] as $moduleKey) : ?>
+                            <?php
+                            $moduleData = $modules[$moduleKey];
+                            \PersianKit\Components\View::load('admin/partials/module-toggle', [
+                                'moduleKey'         => $moduleData['key'],
+                                'moduleLabel'       => $moduleData['label'],
+                                'moduleIcon'        => $moduleData['icon'],
+                                'moduleDescription' => $moduleData['description'],
+                                'module'            => $moduleData['instance'],
+                                'moduleSettings'    => $moduleData['settings'],
+                            ]);
+                            ?>
+                        <?php endforeach; ?>
+                    <?php endif; ?>
                 </div>
             <?php endforeach; ?>
 

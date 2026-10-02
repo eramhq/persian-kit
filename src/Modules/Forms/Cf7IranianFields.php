@@ -2,13 +2,6 @@
 
 namespace PersianKit\Modules\Forms;
 
-use PersianKit\Dependencies\Eram\Abzar\Validation\Details\CardNumberDetails;
-use PersianKit\Dependencies\Eram\Abzar\Validation\Details\IbanDetails;
-use PersianKit\Dependencies\Eram\Abzar\Validation\Details\NationalIdDetails;
-use PersianKit\Dependencies\Eram\Abzar\Validation\Details\PhoneNumberDetails;
-use PersianKit\Dependencies\Eram\Abzar\Validation\Details\PostalCodeDetails;
-use PersianKit\Dependencies\Eram\Abzar\Validation\ValidationResult;
-
 defined('ABSPATH') || exit;
 
 /**
@@ -26,30 +19,39 @@ defined('ABSPATH') || exit;
  * autocomplete, readonly and a default value. The value is sent and mailed
  * in its standard form, whatever digits and separators were typed. The
  * error messages can be changed in each form's Messages tab.
+ *
+ * The types themselves are defined in IranianFieldTypes.
  */
 class Cf7IranianFields
 {
-    /** Form tag => attributes of its input. */
-    private const FIELDS = [
-        'mobile_ir'   => ['type' => 'tel', 'autocomplete' => 'tel-national', 'inputmode' => null],
-        'national_id' => ['type' => 'text', 'autocomplete' => 'off', 'inputmode' => 'numeric'],
-        'postcode_ir' => ['type' => 'text', 'autocomplete' => 'postal-code', 'inputmode' => 'numeric'],
-        'card_ir'     => ['type' => 'text', 'autocomplete' => 'cc-number', 'inputmode' => 'numeric'],
-        'iban_ir'     => ['type' => 'text', 'autocomplete' => 'off', 'inputmode' => null],
-    ];
-
     public function register(): void
     {
-        add_action('wpcf7_init', [$this, 'addFormTags']);
+        $this->registerFormTags();
         add_filter('wpcf7_messages', [$this, 'addMessages']);
         add_action('wpcf7_swv_create_schema', [$this, 'addRequiredRules'], 10, 2);
 
-        foreach (array_keys(self::FIELDS) as $type) {
+        foreach (IranianFieldTypes::types() as $type) {
             add_filter("wpcf7_validate_{$type}", [$this, 'validate'], 10, 2);
             add_filter("wpcf7_validate_{$type}*", [$this, 'validate'], 10, 2);
             add_filter("wpcf7_posted_data_{$type}", [$this, 'normalizePostedValue'], 10, 3);
             add_filter("wpcf7_posted_data_{$type}*", [$this, 'normalizePostedValue'], 10, 3);
         }
+
+    }
+
+    /**
+     * While the integration is off, forms that use these tags still show a
+     * text input instead of the raw [national_id …] text. Nothing is
+     * checked or changed, so the fields accept any text.
+     */
+    public function registerFallback(): void
+    {
+        $this->registerFormTags();
+    }
+
+    private function registerFormTags(): void
+    {
+        add_action('wpcf7_init', [$this, 'addFormTags']);
 
         // Booted after CF7 ran wpcf7_init on a request that already started.
         if (did_action('wpcf7_init')) {
@@ -59,7 +61,7 @@ class Cf7IranianFields
 
     public function addFormTags(): void
     {
-        foreach (array_keys(self::FIELDS) as $type) {
+        foreach (IranianFieldTypes::types() as $type) {
             wpcf7_add_form_tag([$type, "{$type}*"], [$this, 'render'], ['name-attr' => true]);
         }
     }
@@ -70,28 +72,22 @@ class Cf7IranianFields
      */
     public function addMessages(array $messages): array
     {
-        return array_merge($messages, [
-            'invalid_mobile_ir' => [
-                'description' => __('Mobile number that the sender entered is invalid', 'persian-kit'),
-                'default'     => __('Enter a valid Iranian mobile number, such as 09121234567.', 'persian-kit'),
-            ],
-            'invalid_national_id' => [
-                'description' => __('National ID that the sender entered is invalid', 'persian-kit'),
-                'default'     => __('The national ID is not valid. Check the 10 digits on the national card.', 'persian-kit'),
-            ],
-            'invalid_postcode_ir' => [
-                'description' => __('Postcode that the sender entered is invalid', 'persian-kit'),
-                'default'     => __('Enter a valid Iranian postcode. Postcodes have 10 digits.', 'persian-kit'),
-            ],
-            'invalid_card_ir' => [
-                'description' => __('Bank card number that the sender entered is invalid', 'persian-kit'),
-                'default'     => __('The card number is not valid. Check the 16 digits on the card.', 'persian-kit'),
-            ],
-            'invalid_iban_ir' => [
-                'description' => __('IBAN that the sender entered is invalid', 'persian-kit'),
-                'default'     => __('The IBAN (Sheba) is not valid. It has IR and 24 digits.', 'persian-kit'),
-            ],
-        ]);
+        $descriptions = [
+            'mobile_ir'   => __('Mobile number that the sender entered is invalid', 'persian-kit'),
+            'national_id' => __('National ID that the sender entered is invalid', 'persian-kit'),
+            'postcode_ir' => __('Postcode that the sender entered is invalid', 'persian-kit'),
+            'card_ir'     => __('Bank card number that the sender entered is invalid', 'persian-kit'),
+            'iban_ir'     => __('IBAN that the sender entered is invalid', 'persian-kit'),
+        ];
+
+        foreach ($descriptions as $type => $description) {
+            $messages['invalid_' . $type] = [
+                'description' => $description,
+                'default'     => IranianFieldTypes::message($type),
+            ];
+        }
+
+        return $messages;
     }
 
     /**
@@ -106,7 +102,7 @@ class Cf7IranianFields
             return;
         }
 
-        foreach ($contactForm->scan_form_tags(['basetype' => array_keys(self::FIELDS)]) as $tag) {
+        foreach ($contactForm->scan_form_tags(['basetype' => IranianFieldTypes::types()]) as $tag) {
             if ($tag->is_required()) {
                 $schema->add_rule(wpcf7_swv_create_rule('required', [
                     'field' => $tag->name,
@@ -121,11 +117,11 @@ class Cf7IranianFields
      */
     public function render($tag): string
     {
-        if (empty($tag->name) || !isset(self::FIELDS[$tag->basetype])) {
+        if (empty($tag->name) || !IranianFieldTypes::exists((string) $tag->basetype)) {
             return '';
         }
 
-        $field = self::FIELDS[$tag->basetype];
+        $field = IranianFieldTypes::inputAttributes((string) $tag->basetype);
         $error = wpcf7_get_validation_error($tag->name);
 
         $class = wpcf7_form_controls_class($tag->type, 'wpcf7-text');
@@ -142,8 +138,7 @@ class Cf7IranianFields
             'readonly'     => $tag->has_option('readonly'),
             'autocomplete' => $tag->get_autocomplete_option() ?: $field['autocomplete'],
             'inputmode'    => $field['inputmode'],
-            // Digits and Latin letters read left to right in a Persian form.
-            'dir'          => 'ltr',
+            'dir'          => $field['dir'],
         ];
 
         if ($tag->is_required()) {
@@ -214,7 +209,7 @@ class Cf7IranianFields
             return $value;
         }
 
-        return self::standardValue((string) ($tag->basetype ?? ''), $value) ?? persian_kit_to_english_digits(trim($value));
+        return IranianFieldTypes::normalize((string) ($tag->basetype ?? ''), $value);
     }
 
     /**
@@ -222,29 +217,7 @@ class Cf7IranianFields
      */
     public static function standardValue(string $type, string $value): ?string
     {
-        $result = match ($type) {
-            'mobile_ir'   => persian_kit_validate_phone($value),
-            'national_id' => persian_kit_validate_national_id($value),
-            'postcode_ir' => persian_kit_validate_postal_code($value),
-            'card_ir'     => persian_kit_validate_card_number($value),
-            'iban_ir'     => persian_kit_validate_iban($value),
-            default       => null,
-        };
-
-        if (!$result instanceof ValidationResult || !$result->isValid()) {
-            return null;
-        }
-
-        $detail = $result->detail();
-
-        return match (true) {
-            $detail instanceof PhoneNumberDetails => $detail->isMobile() ? $detail->normalizedLocal : null,
-            $detail instanceof NationalIdDetails  => $detail->value,
-            $detail instanceof PostalCodeDetails  => $detail->postalCode,
-            $detail instanceof CardNumberDetails  => $detail->value,
-            $detail instanceof IbanDetails        => $detail->value,
-            default                               => null,
-        };
+        return IranianFieldTypes::standardValue($type, $value);
     }
 
     /**

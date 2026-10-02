@@ -24,6 +24,11 @@ class WooCommerceModule extends AbstractModule
         return __('Jalali dates in the shop admin and emails, and checkout fields for Iran.', 'persian-kit');
     }
 
+    public static function category(): ?string
+    {
+        return 'commerce';
+    }
+
     /**
      * @return array<string, mixed>
      */
@@ -35,9 +40,51 @@ class WooCommerceModule extends AbstractModule
             'checkout_validate'  => true,
             'national_id'        => NationalIdField::OFF,
             'city_select'        => false,
+            'dates_admin'        => true,
         ];
     }
 
+    /**
+     * @return list<array{name: string, check: callable(): bool, version?: callable(): ?string, minVersion?: string, slug?: string, icon?: string}>
+     */
+    public function requiredPlugins(): array
+    {
+        return [[
+            'name'    => __('WooCommerce', 'persian-kit'),
+            'slug'    => 'woocommerce',
+            'icon'    => 'icon.svg',
+            'check'   => fn (): bool => $this->supportsWooCommerce(),
+            'version' => static fn (): ?string => defined('WC_VERSION') ? (string) WC_VERSION : null,
+        ]];
+    }
+
+    /**
+     * The section cards on the WooCommerce tab, by anchor. A section shows
+     * once it has an option; Emails joins them with its first one.
+     *
+     * @return array<string, array{title: string, description: string}>
+     */
+    public static function sections(): array
+    {
+        return [
+            'checkout' => [
+                'title'       => __('Checkout and addresses', 'persian-kit'),
+                'description' => __('What customers type at checkout, and fields for Iran.', 'persian-kit'),
+            ],
+            'prices'   => [
+                'title'       => __('Prices and currency', 'persian-kit'),
+                'description' => '',
+            ],
+            'dates'    => [
+                'title'       => __('Dates', 'persian-kit'),
+                'description' => __('Dates on orders and in emails follow Jalali dates on the Display tab.', 'persian-kit'),
+            ],
+        ];
+    }
+
+    /**
+     * The section cards; the tab puts the module's own card above them.
+     */
     public function settingsView(): ?string
     {
         return 'admin/partials/woocommerce-settings';
@@ -57,6 +104,7 @@ class WooCommerceModule extends AbstractModule
             'checkout_validate'  => !empty($values['checkout_validate']),
             'national_id'        => in_array($nationalId, NationalIdField::MODES, true) ? $nationalId : NationalIdField::OFF,
             'city_select'        => !empty($values['city_select']),
+            'dates_admin'        => !empty($values['dates_admin']),
         ];
     }
 
@@ -90,10 +138,6 @@ class WooCommerceModule extends AbstractModule
 
     public function boot(ServiceContainer $container): void
     {
-        if (!$this->supportsWooCommerce()) {
-            return;
-        }
-
         $container->get(WooDateDisplayFilter::class)->register();
 
         // Checkout runs on the front end, in the Store API and through admin-ajax.
@@ -114,19 +158,11 @@ class WooCommerceModule extends AbstractModule
 
         // Order screens, product and coupon edit screens, and the variations
         // save through admin-ajax.
-        if (is_admin()) {
+        if ($this->setting('dates_admin') && is_admin()) {
             $container->get(WooOrderMonthFilter::class)->register();
             $container->get(WooAdminDateFields::class)->register();
             $container->get(WooPostedDateNormalizer::class)->register();
         }
-    }
-
-    /**
-     * @return list<string>
-     */
-    public function inactivePlugins(): array
-    {
-        return $this->supportsWooCommerce() ? [] : [__('WooCommerce', 'persian-kit')];
     }
 
     protected function supportsWooCommerce(): bool

@@ -6,9 +6,12 @@
  * @var string                                $moduleLabel       Human-readable module name.
  * @var string                                $moduleDescription Module description text.
  * @var string                                $moduleIcon        Icon name in \PersianKit\Components\Icon, or ''.
+ * @var string                                $moduleLogo        URL of the integrated plugin's logo, shown over the icon, or ''.
  * @var \PersianKit\Contracts\ModuleInterface $module            Module instance.
  * @var array                                 $moduleSettings    Current settings for this module.
- * @var list<string>                          $inactivePlugins   Plugins the module works with that are not active.
+ * @var bool                                  $ownScope          Whether the card holds its own Alpine "enabled"
+ *                                                               state (default), or uses the one around it.
+ * @var string|null                           $settingsView      The view under the header, in place of the module's own.
  */
 
 defined('ABSPATH') || exit;
@@ -20,22 +23,30 @@ $moduleKey = $args['moduleKey'];
 $moduleLabel = $args['moduleLabel'];
 $moduleDescription = $args['moduleDescription'];
 $moduleIcon = $args['moduleIcon'] ?? '';
+$moduleLogo = $args['moduleLogo'] ?? '';
 $module = $args['module'];
 $moduleSettings = $args['moduleSettings'] ?? [];
-$inactivePlugins = $args['inactivePlugins'] ?? [];
+$ownScope = $args['ownScope'] ?? true;
 
 $isEnabled    = !empty($moduleSettings['enabled']);
-$settingsView = $module->settingsView();
+$settingsView = array_key_exists('settingsView', $args) ? $args['settingsView'] : $module->settingsView();
 $nameId       = 'persian-kit-module-' . $moduleKey . '-name';
 $descId       = 'persian-kit-module-' . $moduleKey . '-description';
-$inactiveId   = 'persian-kit-module-' . $moduleKey . '-inactive';
-$describedBy  = trim(($moduleDescription !== '' ? $descId : '') . ($inactivePlugins !== [] ? ' ' . $inactiveId : ''));
 ?>
-<div class="persian-kit-module" :class="{ 'is-on': enabled }" x-data="{ enabled: <?php echo $isEnabled ? 'true' : 'false'; ?> }">
+<div
+    class="persian-kit-module<?php echo $isEnabled ? ' is-on' : ''; ?>"
+    :class="{ 'is-on': enabled }"
+    <?php if ($ownScope) : ?>
+        x-data="{ enabled: <?php echo $isEnabled ? 'true' : 'false'; ?> }"
+    <?php endif; ?>
+>
     <div class="persian-kit-module__header">
         <?php if ($moduleIcon !== '') : ?>
-            <span class="persian-kit-module__icon">
+            <span class="persian-kit-module__icon<?php echo $moduleLogo !== '' ? ' persian-kit-plugin-icon' : ''; ?>">
                 <?php echo \PersianKit\Components\Icon::render($moduleIcon); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- fixed SVG markup. ?>
+                <?php if ($moduleLogo !== '') : ?>
+                    <img src="<?php echo esc_url($moduleLogo); ?>" alt="" width="36" height="36" loading="lazy" referrerpolicy="no-referrer" onerror="this.remove()">
+                <?php endif; ?>
             </span>
         <?php endif; ?>
         <div class="persian-kit-module__info">
@@ -45,17 +56,6 @@ $describedBy  = trim(($moduleDescription !== '' ? $descId : '') . ($inactivePlug
             <?php if ($moduleDescription !== '') : ?>
                 <span class="persian-kit-module__description" id="<?php echo esc_attr($descId); ?>">
                     <?php echo esc_html($moduleDescription); ?>
-                </span>
-            <?php endif; ?>
-            <?php if ($inactivePlugins !== []) : ?>
-                <span class="persian-kit-module__inactive" id="<?php echo esc_attr($inactiveId); ?>">
-                    <?php
-                    echo esc_html(sprintf(
-                        /* translators: %s: plugin names, such as "Contact Form 7 and ACF". */
-                        __('Not active on this site: %s.', 'persian-kit'),
-                        wp_sprintf('%l', $inactivePlugins)
-                    ));
-                    ?>
                 </span>
             <?php endif; ?>
         </div>
@@ -68,8 +68,8 @@ $describedBy  = trim(($moduleDescription !== '' ? $descId : '') . ($inactivePlug
                 name="persian_kit_settings[<?php echo esc_attr($moduleKey); ?>][enabled]"
                 value="1"
                 aria-labelledby="<?php echo esc_attr($nameId); ?>"
-                <?php if ($describedBy !== '') : ?>
-                    aria-describedby="<?php echo esc_attr($describedBy); ?>"
+                <?php if ($moduleDescription !== '') : ?>
+                    aria-describedby="<?php echo esc_attr($descId); ?>"
                 <?php endif; ?>
                 x-model="enabled"
                 <?php checked($isEnabled); ?>

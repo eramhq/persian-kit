@@ -6,7 +6,8 @@ use PersianKit\Modules\AdminFont\AdminFontModule;
 use PersianKit\Modules\CharNormalization\CharNormalizationModule;
 use PersianKit\Modules\DateConversion\DateConversionModule;
 use PersianKit\Modules\DigitConversion\DigitConversionModule;
-use PersianKit\Modules\Forms\FormsModule;
+use PersianKit\Modules\Forms\AcfModule;
+use PersianKit\Modules\Forms\Cf7Module;
 use PersianKit\Modules\Utilities\UtilitiesModule;
 use PersianKit\Modules\WooCommerce\WooCommerceModule;
 use PersianKit\Modules\ZWNJEditor\ZWNJEditorModule;
@@ -27,7 +28,8 @@ final class ModuleRegistry
         AdminFontModule::class,
         ZWNJEditorModule::class,
         WooCommerceModule::class,
-        FormsModule::class,
+        Cf7Module::class,
+        AcfModule::class,
         UtilitiesModule::class,
     ];
 }

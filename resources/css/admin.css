@@ -607,25 +607,6 @@ a.persian-kit-version:focus {
     color: var(--pk-muted);
 }
 
-.persian-kit-module__inactive {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    margin-block-start: 4px;
-    color: var(--pk-warn);
-    font-size: 12px;
-    font-weight: 500;
-}
-
-.persian-kit-module__inactive::before {
-    content: "";
-    flex: none;
-    width: 7px;
-    height: 7px;
-    border-radius: 50%;
-    background: currentColor;
-}
-
 /* Toggle switch */
 .persian-kit-module__toggle {
     position: relative;
@@ -756,6 +737,379 @@ a.persian-kit-version:focus {
 
 .persian-kit-wrap .persian-kit-warning {
     color: var(--pk-danger);
+}
+
+/* ---------- Integrations ---------- */
+
+/* A heading over a group of cards, such as Forms. */
+.persian-kit-group {
+    display: grid;
+    gap: 10px;
+}
+
+.persian-kit-group + .persian-kit-group {
+    margin-block-start: 8px;
+}
+
+.persian-kit-wrap .persian-kit-group__title {
+    margin: 0;
+    padding-inline: 2px;
+    color: var(--pk-muted);
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.persian-kit-badge {
+    padding: 1px 8px;
+    border-radius: 999px;
+    background: var(--pk-brand-tint);
+    color: var(--pk-brand-strong);
+    font-size: 11px;
+    font-weight: 600;
+    line-height: 1.6;
+}
+
+/* Shown when an integration is switched off while forms use its fields. */
+.persian-kit-module__warning {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    margin: 0 16px 14px;
+    margin-inline-start: calc(16px + var(--pk-icon-size) + 14px);
+    padding: 10px 12px;
+    background: var(--pk-warn-bg);
+    border: 1px solid rgba(201, 138, 18, 0.55);
+    border-radius: 8px;
+}
+
+.persian-kit-module__warning .persian-kit-icon {
+    width: 18px;
+    height: 18px;
+    margin-block-start: 1px;
+    color: var(--pk-warn);
+}
+
+.persian-kit-module__warning p {
+    margin: 0;
+}
+
+/* A plugin that is there but cannot be used: too old, or an add-on missing. */
+.persian-kit-module__toggle input[type="checkbox"]:disabled + .persian-kit-module__toggle-track {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* A compatibility fix: no toggle, a read-only state. */
+.persian-kit-module__status {
+    display: inline-flex;
+    align-items: center;
+    flex-shrink: 0;
+    gap: 5px;
+    margin-block-start: 2px;
+    padding: 2px 10px 2px 8px;
+    border-radius: 999px;
+    background: var(--pk-brand-tint);
+    color: var(--pk-brand-strong);
+    font-size: 12px;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.persian-kit-module__status .persian-kit-icon {
+    width: 14px;
+    height: 14px;
+}
+
+/* No supported plugin is active. */
+.persian-kit-empty {
+    display: grid;
+    justify-items: center;
+    gap: 4px;
+    padding: 28px 20px;
+    background: var(--pk-surface);
+    border: 1px dashed var(--pk-border-strong);
+    border-radius: var(--pk-radius);
+    text-align: center;
+}
+
+.persian-kit-empty__icon {
+    display: grid;
+    place-items: center;
+    width: var(--pk-icon-size);
+    height: var(--pk-icon-size);
+    margin-block-end: 6px;
+    border-radius: 9px;
+    background: var(--pk-surface-2);
+    color: var(--pk-faint);
+}
+
+.persian-kit-wrap .persian-kit-empty p {
+    margin: 0;
+}
+
+.persian-kit-empty__title {
+    color: var(--pk-text);
+    font-size: 14px;
+    font-weight: 600;
+}
+
+/* A plugin's own icon from WordPress.org, over our line icon in case it
+   does not load. */
+.persian-kit-plugin-icon {
+    position: relative;
+    overflow: hidden;
+}
+
+.persian-kit-plugin-icon img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.persian-kit-plugin-icon {
+    background: var(--pk-surface-2);
+}
+
+/* Integrations: a card for each plugin, active or not, two a row. */
+.persian-kit-integrations {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.persian-kit-integration {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin: 0;
+    padding: 16px;
+    background: var(--pk-surface);
+    border: 1px solid var(--pk-border);
+    border-radius: var(--pk-radius);
+    box-shadow: var(--pk-shadow);
+}
+
+.persian-kit-integration__head {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.persian-kit-integration .persian-kit-plugin-icon {
+    width: 44px;
+    height: 44px;
+    border-radius: 10px;
+}
+
+.persian-kit-integration__title {
+    display: flex;
+    flex: 1;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 3px 8px;
+    min-width: 0;
+}
+
+.persian-kit-integration__title .persian-kit-module__name {
+    flex-basis: 100%;
+}
+
+.persian-kit-integration__head .persian-kit-module__toggle,
+.persian-kit-integration__head .persian-kit-module__status {
+    align-self: center;
+    margin-block-start: 0;
+}
+
+.persian-kit-wrap .persian-kit-integration__description {
+    flex: 1;
+    margin: 0;
+    color: var(--pk-muted);
+}
+
+.persian-kit-integration .persian-kit-module__warning {
+    margin: 0;
+}
+
+/* Conflict advice at the top of a card */
+.persian-kit-wrap .persian-kit-integration__advice {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    margin: 0;
+    color: var(--pk-warn);
+    font-size: 12px;
+    font-weight: 500;
+}
+
+.persian-kit-integration__advice .persian-kit-icon {
+    width: 16px;
+    height: 16px;
+}
+
+.persian-kit-wrap .persian-kit-integration__reason {
+    margin: 0;
+    color: var(--pk-warn);
+    font-size: 12px;
+    font-weight: 500;
+}
+
+.persian-kit-pill {
+    padding: 1px 8px;
+    border-radius: 999px;
+    background: var(--pk-surface-2);
+    color: var(--pk-muted);
+    font-size: 11px;
+    font-weight: 600;
+    line-height: 1.6;
+}
+
+.persian-kit-pill.is-kept {
+    background: var(--pk-warn-bg);
+    color: var(--pk-warn);
+}
+
+.persian-kit-integration__link {
+    padding-block-start: 10px;
+    border-block-start: 1px solid var(--pk-border);
+    color: var(--pk-brand);
+    font-weight: 500;
+    text-decoration: none;
+}
+
+.persian-kit-integration__link::after {
+    content: " ↗";
+}
+
+.persian-kit-integration__link:hover,
+.persian-kit-integration__link:focus {
+    color: var(--pk-brand-strong);
+    text-decoration: underline;
+}
+
+/* Not active, or cannot be used: greyed logo. */
+.persian-kit-integration.is-inactive .persian-kit-plugin-icon img,
+.persian-kit-integration.is-unavailable .persian-kit-plugin-icon img,
+.persian-kit-integration:not(.is-on) .persian-kit-plugin-icon img {
+    filter: grayscale(1);
+    opacity: 0.75;
+}
+
+.persian-kit-integration.is-inactive {
+    background: var(--pk-surface-2);
+    box-shadow: none;
+}
+
+.persian-kit-wrap .persian-kit-also__note {
+    margin: 0;
+    padding-inline: 2px;
+    color: var(--pk-muted);
+    font-size: 12px;
+}
+
+/* Conflict advice at the top of a tab */
+.persian-kit-advice {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 10px 14px;
+    background: var(--pk-warn-bg);
+    border: 1px solid rgba(201, 138, 18, 0.55);
+    border-radius: var(--pk-radius);
+}
+
+.persian-kit-advice__icon {
+    display: grid;
+    place-items: center;
+    flex: none;
+    color: var(--pk-warn);
+}
+
+.persian-kit-advice__icon .persian-kit-icon {
+    width: 18px;
+    height: 18px;
+    margin-block-start: 1px;
+}
+
+.persian-kit-wrap .persian-kit-advice p {
+    margin: 0;
+}
+
+/* ---------- WooCommerce tab ---------- */
+
+.persian-kit-panel__cards {
+    display: grid;
+    gap: 10px;
+}
+
+/* Jump links to the WooCommerce sections */
+.persian-kit-jump {
+    display: flex;
+    flex-wrap: wrap;
+    font-size: 13px;
+}
+
+.persian-kit-jump a {
+    color: var(--pk-brand);
+    font-weight: 500;
+    text-decoration: none;
+}
+
+.persian-kit-jump a:hover,
+.persian-kit-jump a:focus {
+    color: var(--pk-brand-strong);
+    text-decoration: underline;
+}
+
+.persian-kit-jump a + a::before {
+    content: "·";
+    display: inline-block;
+    padding-inline: 8px;
+    color: var(--pk-border-strong);
+}
+
+.persian-kit-module__settings:has(> .persian-kit-jump:only-child) {
+    padding-block: 10px;
+}
+
+/* A section card on the WooCommerce tab */
+.persian-kit-section {
+    background: var(--pk-surface);
+    border: 1px solid var(--pk-border);
+    border-radius: var(--pk-radius);
+    box-shadow: var(--pk-shadow);
+    scroll-margin-block-start: 48px;
+}
+
+.persian-kit-section__header {
+    padding: 12px 16px;
+}
+
+.persian-kit-wrap .persian-kit-section__title {
+    margin: 0;
+    color: var(--pk-text);
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 1.4;
+}
+
+.persian-kit-wrap .persian-kit-section__description {
+    margin: 2px 0 0;
+    color: var(--pk-muted);
+}
+
+.persian-kit-section__body {
+    padding: 12px 16px 14px;
+    border-block-start: 1px solid var(--pk-border);
+}
+
+.persian-kit-section:target {
+    border-color: var(--pk-brand);
+    box-shadow: 0 0 0 1px var(--pk-brand);
 }
 
 /* ---------- Save bar: stays at the bottom of the screen while the form scrolls ---------- */
@@ -1086,5 +1440,13 @@ a.persian-kit-version:focus {
 
     .persian-kit-module__settings {
         padding-inline: 12px;
+    }
+
+    .persian-kit-module__warning {
+        margin-inline: 12px;
+    }
+
+    .persian-kit-integrations {
+        grid-template-columns: minmax(0, 1fr);
     }
 }

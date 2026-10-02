@@ -73,10 +73,17 @@ class CoreServiceProvider implements ServiceProvider
             $container->get(AdminPage::class)->register();
         }
 
-        // Boot each enabled feature module
+        // Boot each module whose plugins are active: fully while it is on,
+        // and its fallback while it is off.
         foreach ($this->modules as $module) {
+            if (!$module->isAvailable()) {
+                continue;
+            }
+
             if ($module->isEnabled()) {
                 $module->boot($container);
+            } else {
+                $module->bootDisabled($container);
             }
         }
     }

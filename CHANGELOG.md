@@ -4,13 +4,24 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Integrations
+
+Contact Form 7, ACF and WooCommerce are now integrations: each turns on by itself when its plugin is active.
+
+- WooCommerce has its own tab, shown while WooCommerce is active, with a card for each section: Checkout and addresses (the existing four options), Prices and currency (a pointer to Persian digits' Shop prices for now) and Dates. Links such as `?tab=woocommerce#prices` open a section. Turning the module off hides the sections.
+- New WooCommerce option, Dates > Jalali date picker in the shop admin (on by default): the date pickers on order, product and coupon screens and the month filter on the orders list can now be turned off.
+- The Forms module is split into a Contact Form 7 integration (`cf7`) and an ACF integration (`acf`), each with its own card. Existing sites keep what they had: each is on if Forms and its option were both on.
+- The Integrations tab has a card for each integration, with the plugin's logo, grouped under headings. Plugins that are not active are listed under "Also works with", each with a link to its WordPress.org page; one set up before says its settings are kept. A plugin that is too old or needs an add-on gets a card that says why. A card is marked New until the tab is opened after its plugin was activated. With no supported plugin active, the tab says so.
+- Turning Contact Form 7 off now leaves its Iranian fields (`[national_id]` and the rest) as plain text inputs that accept any text, instead of printing the raw tag on the page. While the switch is off, its card names the forms that use these fields, with links to edit them.
+- Contact Form 7's form editor has a button for each Iranian field, which opens CF7's tag generator.
+- Advice about another Persian plugin that does the same work also shows on the tab or card it concerns, such as on the WooCommerce tab while Persian WooCommerce is active.
+
 ### Settings page
 
-- The page has tabs: Display (Persian digits, Jalali dates, admin font), Writing (Persian ی and ک, half-space key, Persian slugs), Integrations (WooCommerce, Forms) and Tools. Save from any tab saves every setting and returns to that tab. The tabs work without JavaScript too.
+- The page has tabs: Display (Persian digits, Jalali dates, admin font), Writing (Persian ی and ک, half-space key, Persian slugs), WooCommerce, Integrations (Contact Form 7, ACF) and Tools. Save from any tab saves every setting and returns to that tab. The tabs work without JavaScript too.
 - Every module and option has one short line instead of a paragraph, in English and Persian. Modules are named for what they do: Digit Conversion is now Persian digits, Date Conversion Jalali dates, Character Normalization Persian ی and ک, ZWNJ Editor Support Half-space key, Utilities Persian slugs and WooCommerce Support WooCommerce. No setting, option key or default changed.
 - "Fix existing posts" moved out of the letters module to the Tools tab, as "Fix letters in existing posts".
 - The save button stays at the bottom of the screen and says "Unsaved changes" after an edit.
-- The WooCommerce and Forms cards say when WooCommerce, Contact Form 7 or ACF is not active, since their options then do nothing.
 - The compatibility notice on other admin screens uses the same short text as the settings page.
 - The Persian translation no longer uses diacritics, such as the ezafe mark.
 - New look: a header with the Persian Kit logo, the version and links to what's new, the docs and support, with the tabs below it. Each card has an icon that turns turquoise while the module is on. A footer under a khatam rule shows the version and links to feedback, bug reports and the source, in place of WordPress's "Thank you for creating with WordPress" line and version number on this page. Other admin notices now show below the header.
@@ -23,7 +34,7 @@ All notable changes to this project will be documented in this file.
 
 ### WooCommerce checkout for Iran
 
-New options under WooCommerce (Integrations tab). They apply to the classic checkout, the block checkout and My Account > Addresses, and add to what WooCommerce already has for Iran (provinces, the IRR and IRT currencies).
+New options under WooCommerce (WooCommerce tab, Checkout and addresses). They apply to the classic checkout, the block checkout and My Account > Addresses, and add to what WooCommerce already has for Iran (provinces, the IRR and IRT currencies).
 
 - Fix what customers type (on by default): Persian and Arabic digits in phone numbers and postcodes become English digits, postcodes lose spaces and dashes (`۱۲۳۴۵-۶۷۸۹۰` is saved as `1234567890`), and Arabic ي/ك in names and addresses become Persian ی/ک. Before, the block checkout rejected a phone number typed in Persian digits as "not valid".
 - Check phone numbers and postcodes (on by default): for an address in Iran, the phone must be a valid mobile or landline number and the postcode must have 10 valid digits. Errors name the field. The `persian_kit_woocommerce_validate` filter skips one rule.
@@ -33,7 +44,7 @@ New options under WooCommerce (Integrations tab). They apply to the classic chec
 
 ### Forms: a Jalali date picker for Contact Form 7 and ACF
 
-New module, Forms, with a switch for each plugin (both on by default). It does nothing unless Contact Form 7 or ACF is active. The date picker is [intl-datepicker](https://github.com/eramhq/intl-datepicker) with the Persian calendar: Persian month names and digits, right to left, keyboard support and typed dates in Persian digits.
+New integrations for Contact Form 7 and ACF (both on by default). Each does nothing unless its plugin is active. The date picker is [intl-datepicker](https://github.com/eramhq/intl-datepicker) with the Persian calendar: Persian month names and digits, right to left, keyboard support and typed dates in Persian digits.
 
 - Contact Form 7 `[date]` fields get the picker and still submit `Y-m-d`, so CF7's checks, emails and stored entries work as before. Without JavaScript a typed Jalali date is converted. While Jalali dates is on, the date in emails is Jalali; `[_raw_name]` keeps the Gregorian date. `[date name gregorian]` keeps CF7's own input.
 - New Contact Form 7 fields: `[mobile_ir]`, `[national_id]`, `[postcode_ir]`, `[card_ir]` and `[iban_ir]` check the value and send it in its standard form, whatever digits and separators were typed.

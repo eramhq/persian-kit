@@ -131,7 +131,7 @@ class SettingsDefaultsTest extends WordPressIntegrationTestCase
         ]));
 
         $this->assertSame(
-            ['enabled' => true, 'checkout_normalize' => true, 'checkout_validate' => false, 'national_id' => 'required', 'city_select' => false],
+            ['enabled' => true, 'checkout_normalize' => true, 'checkout_validate' => false, 'national_id' => 'required', 'city_select' => false, 'dates_admin' => true],
             get_option('persian_kit_settings')['woocommerce']
         );
     }

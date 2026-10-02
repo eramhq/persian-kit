@@ -9,7 +9,7 @@ const source = readFileSync(new URL('../../public/js/admin.js', import.meta.url)
 const TABS = ['display', 'writing', 'integrations', 'tools'];
 
 /** The settings page as AdminPage::render() prints it, cut down. */
-function pageHtml(active) {
+function pageHtml(active, seenNonce = '') {
     const tab = (name) => `
         <a href="/wp-admin/admin.php?page=persian-kit&amp;tab=${name}" id="persian-kit-tab-${name}"
             class="nav-tab${name === active ? ' nav-tab-active' : ''}" role="tab"
@@ -19,7 +19,7 @@ function pageHtml(active) {
             aria-labelledby="persian-kit-tab-${name}"${name === active ? '' : ' hidden'}>${body}</div>`;
 
     return `
-        <div class="wrap persian-kit-wrap" x-data="persianKitTabs">
+        <div class="wrap persian-kit-wrap" x-data="persianKitTabs"${seenNonce ? ` data-seen-nonce="${seenNonce}"` : ''}>
             <section id="persian-kit-compatibility"><details id="compat-card"><summary>WP Jalali</summary></details></section>
             <nav class="nav-tab-wrapper" role="tablist">${TABS.map(tab).join('')}</nav>
             <form id="persian-kit-settings-form" method="post" action="options.php">
@@ -40,8 +40,8 @@ function pageHtml(active) {
         </div>`;
 }
 
-async function page({ active = 'display', dir = 'ltr', search = `?page=persian-kit&tab=${active}&settings-updated=true`, hash = '' } = {}) {
-    const dom = new JSDOM(`<!doctype html><html dir="${dir}"><body>${pageHtml(active)}</body></html>`, {
+async function page({ active = 'display', dir = 'ltr', search = `?page=persian-kit&tab=${active}&settings-updated=true`, hash = '', seenNonce = '' } = {}) {
+    const dom = new JSDOM(`<!doctype html><html dir="${dir}"><body>${pageHtml(active, seenNonce)}</body></html>`, {
         url: `https://example.test/wp-admin/admin.php${search}${hash}`,
         runScripts: 'outside-only',
         // Gives the window requestAnimationFrame, which x-show waits on.
@@ -214,4 +214,50 @@ test('the compatibility cards open when the Plugins screen notice links to them'
 
     const linked = await page({ hash: '#persian-kit-compatibility' });
     assert.equal(linked.document.getElementById('compat-card').open, true);
+});
+
+test('opening the Integrations tab tells the server once that its New cards were seen', async () => {
+    const window = await page({ seenNonce: 'seen-nonce' });
+    const requests = [];
+    window.ajaxurl = '/wp-admin/admin-ajax.php';
+    window.fetch = async (url, options) => {
+        requests.push([url, Object.fromEntries(options.body)]);
+        return { ok: true };
+    };
+
+    click(window, 'writing');
+    assert.equal(requests.length, 0);
+
+    click(window, 'integrations');
+    click(window, 'display');
+    click(window, 'integrations');
+
+    assert.deepEqual(requests, [
+        ['/wp-admin/admin-ajax.php', { action: 'persian_kit_seen_integrations', _ajax_nonce: 'seen-nonce', tab: 'integrations' }],
+    ]);
+});
+
+test('without unseen integrations nothing is sent', async () => {
+    const window = await page();
+    let sent = 0;
+    window.ajaxurl = '/wp-admin/admin-ajax.php';
+    window.fetch = async () => {
+        sent++;
+        return { ok: true };
+    };
+
+    click(window, 'integrations');
+
+    assert.equal(sent, 0);
+});
+
+test('a link to the compatibility cards opens them', async () => {
+    const window = await page();
+    const card = window.document.getElementById('compat-card');
+    assert.equal(card.open, false);
+
+    window.location.hash = '#persian-kit-compatibility';
+    await new Promise((resolve) => window.addEventListener('hashchange', () => resolve(), { once: true }));
+
+    assert.equal(card.open, true);
 });

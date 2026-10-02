@@ -50,6 +50,10 @@ Persian Kit ships and credits the following third-party components:
 
 All bundled components are GPL-compatible. Their license texts ship with the plugin: `packages/eram/*/LICENSE`, `public/fonts/vazirmatn/OFL.txt`, `public/fonts/noto-sans-arabic/OFL.txt`, `public/fonts/ibm-plex-sans-arabic/OFL.txt`, `public/licenses/` and the header of `public/js/admin.js`.
 
+= External services =
+
+Persian Kit sends no data anywhere. The WooCommerce and Integrations tabs of its settings page show the logos of the plugins it works with, such as WooCommerce and Contact Form 7, which the browser loads from WordPress.org's plugin directory (ps.w.org), as WordPress's own Plugins screens do. They are requested without a referrer, so they do not tell WordPress.org which site asked. See the [WordPress.org privacy policy](https://wordpress.org/about/privacy/).
+
 = Source code =
 
 Full source, build instructions, and issue tracker:
@@ -101,15 +105,19 @@ The Jalali links only work while Persian Kit is active. If you deactivate it, th
 
 = Do I need WooCommerce? =
 
-No. WooCommerce features only activate when WooCommerce is installed and active.
+No. WooCommerce features, and the WooCommerce tab on the settings page, only appear when WooCommerce is installed and active.
 
 = What does Persian Kit change at the WooCommerce checkout? =
 
-With the WooCommerce module on (Integrations tab), what customers type is fixed before it is saved: Persian and Arabic digits in phone numbers and postcodes become English digits, and Arabic ي and ك in names and addresses become Persian ی and ک. For addresses in Iran, the phone must be a valid mobile or landline number and the postcode must have 10 valid digits. Both work in the classic checkout, the block checkout and My Account. You can also ask for the customer's national ID (optional or required); it is checked, and shown on the order screen and in order emails.
+With the WooCommerce module on (WooCommerce tab), what customers type is fixed before it is saved: Persian and Arabic digits in phone numbers and postcodes become English digits, and Arabic ي and ك in names and addresses become Persian ی and ک. For addresses in Iran, the phone must be a valid mobile or landline number and the postcode must have 10 valid digits. Both work in the classic checkout, the block checkout and My Account. You can also ask for the customer's national ID (optional or required); it is checked, and shown on the order screen and in order emails.
 
 = Does Persian Kit work with Contact Form 7 and ACF? =
 
-Yes. With the Forms module on, Contact Form 7's date fields and ACF's Date Picker and Date Time Picker fields get a Jalali date picker. The dates are still saved and sent as Gregorian dates, so existing entries, emails and theme code keep working; while Jalali dates is on, Contact Form 7 emails and ACF values in templates show the Jalali date. Contact Form 7 also gets [mobile_ir], [national_id], [postcode_ir], [card_ir] and [iban_ir] fields that check what is typed.
+Yes. Each turns on by itself when the plugin is active (Integrations tab). Contact Form 7's date fields and ACF's Date Picker and Date Time Picker fields get a Jalali date picker. The dates are still saved and sent as Gregorian dates, so existing entries, emails and theme code keep working; while Jalali dates is on, Contact Form 7 emails and ACF values in templates show the Jalali date. Contact Form 7 also gets [mobile_ir], [national_id], [postcode_ir], [card_ir] and [iban_ir] fields that check what is typed, with buttons for them in the form editor.
+
+= What happens to my forms if I turn an integration off? =
+
+They keep working. While the Contact Form 7 integration is off, its Iranian fields are plain text inputs that accept any text; the settings page names the forms that use them before you save. If you deactivate Persian Kit itself, Contact Form 7 shows tags such as [national_id your-id] as text, so replace them first.
 
 = Can customers enter a village? =
 

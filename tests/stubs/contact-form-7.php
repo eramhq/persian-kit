@@ -62,6 +62,20 @@ namespace {
         public function scan_form_tags($cond = null): array { return []; }
     }
 
+    class WPCF7_TagGenerator
+    {
+        public static function get_instance(): self { return new self(); }
+        /** @param array<string, mixed>|string $options */
+        public function add(string $id, string $title, callable $callback, $options = ''): bool { return true; }
+    }
+
+    class WPCF7_TagGeneratorGenerator
+    {
+        public function __construct(string $key) {}
+        /** @param array<string, mixed>|string $options */
+        public function print(string $part, $options = ''): void {}
+    }
+
     class WPCF7_SWV_Schema
     {
         public function add_rule(object $rule): self { return $this; }

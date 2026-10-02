@@ -50,6 +50,23 @@ class Cf7IranianFieldsTest extends TestCase
         }
     }
 
+    public function test_the_fallback_adds_the_tags_without_checks_or_messages(): void
+    {
+        Functions\when('did_action')->justReturn(0);
+
+        $fields = new Cf7IranianFields();
+        $fields->registerFallback();
+
+        $this->assertNotFalse(has_action('wpcf7_init', [$fields, 'addFormTags']));
+        $this->assertFalse(has_filter('wpcf7_messages', [$fields, 'addMessages']));
+        $this->assertFalse(has_action('wpcf7_swv_create_schema', [$fields, 'addRequiredRules']));
+
+        foreach (['mobile_ir', 'national_id', 'postcode_ir', 'card_ir', 'iban_ir'] as $type) {
+            $this->assertFalse(has_filter("wpcf7_validate_{$type}*", [$fields, 'validate']), $type);
+            $this->assertFalse(has_filter("wpcf7_posted_data_{$type}", [$fields, 'normalizePostedValue']), $type);
+        }
+    }
+
     public function test_form_tags_are_added_when_cf7_already_ran_its_init(): void
     {
         Functions\when('did_action')->justReturn(1);
