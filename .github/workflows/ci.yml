@@ -61,9 +61,11 @@ jobs:
     env:
       WP_CORE_DIR: /tmp/wordpress
       WP_VERSION: ${{ matrix.wp }}
-      # The checkout integration tests run against this WooCommerce release.
+      # The checkout and form integration tests run against these releases.
       WOOCOMMERCE_VERSION: '10.6.2'
       PERSIAN_KIT_TESTS_WOOCOMMERCE_DIR: /tmp/wordpress/wp-content/plugins/woocommerce
+      CF7_VERSION: '6.1.7'
+      PERSIAN_KIT_TESTS_CF7_DIR: /tmp/wordpress/wp-content/plugins/contact-form-7
       WP_TEST_DB_HOST: 127.0.0.1
       WP_TEST_DB_USER: root
       WP_TEST_DB_PASSWORD: root
@@ -89,6 +91,12 @@ jobs:
           curl -sSfL -o /tmp/woocommerce.zip "https://downloads.wordpress.org/plugin/woocommerce.${WOOCOMMERCE_VERSION}.zip"
           unzip -q /tmp/woocommerce.zip -d "$WP_CORE_DIR/wp-content/plugins"
           test -f "$PERSIAN_KIT_TESTS_WOOCOMMERCE_DIR/woocommerce.php"
+
+      - name: Download Contact Form 7
+        run: |
+          curl -sSfL -o /tmp/contact-form-7.zip "https://downloads.wordpress.org/plugin/contact-form-7.${CF7_VERSION}.zip"
+          unzip -q /tmp/contact-form-7.zip -d "$WP_CORE_DIR/wp-content/plugins"
+          test -f "$PERSIAN_KIT_TESTS_CF7_DIR/wp-contact-form-7.php"
 
       - name: Set up WordPress test library
         run: composer test:integration:setup

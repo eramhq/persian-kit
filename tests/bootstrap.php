@@ -21,16 +21,27 @@ if (file_exists($wpTestsDir . '/includes/functions.php')) {
 
     require_once $wpTestsDir . '/includes/functions.php';
 
-    // WooCommerce for the checkout tests: from PERSIAN_KIT_TESTS_WOOCOMMERCE_DIR
-    // (as in CI), or installed next to the plugin. Those tests are skipped
-    // without it; set PERSIAN_KIT_TESTS_WITHOUT_WOOCOMMERCE=1 to run the suite without it.
-    $woocommerceDir = getenv('PERSIAN_KIT_TESTS_WOOCOMMERCE_DIR') ?: dirname(__DIR__, 2) . '/woocommerce';
-    $woocommerceFile = rtrim($woocommerceDir, '/') . '/woocommerce.php';
-    $loadWooCommerce = file_exists($woocommerceFile) && !getenv('PERSIAN_KIT_TESTS_WITHOUT_WOOCOMMERCE');
+    // Plugins the integration tests cover: WooCommerce, Contact Form 7. Each
+    // loads from PERSIAN_KIT_TESTS_<NAME>_DIR (as in CI), or when installed
+    // next to the plugin. Their tests are skipped without them; set
+    // PERSIAN_KIT_TESTS_WITHOUT_<NAME>=1 to run the suite without one.
+    $plugins = [
+        'WOOCOMMERCE' => 'woocommerce/woocommerce.php',
+        'CF7'         => 'contact-form-7/wp-contact-form-7.php',
+    ];
+    $pluginFiles = [];
+    foreach ($plugins as $name => $file) {
+        $dir = getenv("PERSIAN_KIT_TESTS_{$name}_DIR") ?: dirname(__DIR__, 2) . '/' . dirname($file);
+        $path = rtrim($dir, '/') . '/' . basename($file);
+        if (file_exists($path) && !getenv("PERSIAN_KIT_TESTS_WITHOUT_{$name}")) {
+            $pluginFiles[$name] = $path;
+        }
+    }
+    $loadWooCommerce = isset($pluginFiles['WOOCOMMERCE']);
 
-    tests_add_filter('muplugins_loaded', function () use ($loadWooCommerce, $woocommerceFile) {
-        if ($loadWooCommerce) {
-            require $woocommerceFile;
+    tests_add_filter('muplugins_loaded', function () use ($pluginFiles) {
+        foreach ($pluginFiles as $path) {
+            require $path;
         }
 
         require dirname(__DIR__) . '/persian-kit.php';
