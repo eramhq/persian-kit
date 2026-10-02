@@ -148,7 +148,7 @@ persian_kit_slug('نمونه نوشته ۱۴۰۵');     // نمونه-نوشته
 persian_kit_slug('می‌خواهم بنویسم'); // می-خواهم-بنویسم
 ```
 
-See [Persian slugs](#persian-slugs) for how the Utilities module applies this to post slugs.
+See [Persian slugs](#persian-slugs) for how the Persian slugs module applies this to post slugs.
 
 #### `persian_kit_half_space_fix(string $text): string`
 
@@ -391,7 +391,7 @@ Return `null` for text that isn't a number:
 
 ## Persian Slugs
 
-When the Utilities module and its **Persian slugs** option are on (both default), a `sanitize_title` filter runs right after WordPress's own `sanitize_title_with_dashes()`:
+When the Persian slugs module (`utilities`) and its **Use Persian slugs** option are on (both default), a `sanitize_title` filter runs right after WordPress's own `sanitize_title_with_dashes()`:
 
 - For titles without Persian/Arabic letters it returns WordPress's result unchanged. Latin slugs, WooCommerce attribute taxonomies (`pa_color`) and percent-encoded slugs behave exactly as in core.
 - Persian titles are saved with `persian_kit_slug()` rules, so a ZWNJ becomes `-`: `می‌خواهم` is saved as `می-خواهم`.
@@ -401,11 +401,11 @@ When the Utilities module and its **Persian slugs** option are on (both default)
 
 Existing slugs are never rewritten. Turn the behavior off with the Persian slugs option, or in code with the `persian_kit_utilities` filter.
 
-The slug keeps its letters in the database and the editor, but links to it are percent-encoded, the form WordPress gives Persian slugs on its own: `get_permalink()` and `get_term_link()` return `/%D8%A8%D8%B1.../` for `/برنامه/`, and browsers show it decoded. A raw UTF-8 link breaks wherever WordPress runs it through `parse_url()`, as `redirect_canonical()` does for `/?p=123`: in some locales (`C.UTF-8` on macOS) PHP takes some bytes of Persian letters for control characters and turns them into `_`. Links of posts, pages, custom post types, attachments and terms are encoded while the Utilities module is on, also with the Persian slugs option off, since slugs saved while it was on keep their letters. Links that are already encoded and the host name are left alone.
+The slug keeps its letters in the database and the editor, but links to it are percent-encoded, the form WordPress gives Persian slugs on its own: `get_permalink()` and `get_term_link()` return `/%D8%A8%D8%B1.../` for `/برنامه/`, and browsers show it decoded. A raw UTF-8 link breaks wherever WordPress runs it through `parse_url()`, as `redirect_canonical()` does for `/?p=123`: in some locales (`C.UTF-8` on macOS) PHP takes some bytes of Persian letters for control characters and turns them into `_`. Links of posts, pages, custom post types, attachments and terms are encoded while the Persian slugs module is on, also with its Use Persian slugs option off, since slugs saved while it was on keep their letters. Links that are already encoded and the host name are left alone.
 
 ## Jalali Date Archives
 
-While the Date Conversion module is on, date archive URLs whose year is below 1700 are read as Jalali:
+While the Jalali dates module (`date_conversion`) is on, date archive URLs whose year is below 1700 are read as Jalali:
 
 - `/1405/` lists the posts of the Jalali year 1405, `/1405/07/` those of Mehr 1405 (23 September to 22 October 2026), and `/1405/07/09/` those of one day. With plain permalinks, `?m=140507` does the same.
 - Days that do not exist in the Gregorian calendar, such as 31 Shahrivar (`/1404/06/31/`), load; days that do not exist in the Jalali calendar, such as 31 Mehr, redirect to the month, as an invalid Gregorian day does.
@@ -416,9 +416,9 @@ Themes that build archive links from the displayed date, such as `get_month_link
 
 ### Archive list
 
-With the module's **Show the archive list and calendar in Jalali** option on (`jalali_archives`, the default), `wp_get_archives()` lists Jalali periods and links to the Jalali archive pages. This covers the Archives widget and block, in list and dropdown form, and themes that call the function. The `monthly`, `yearly` and `daily` types are Jalali; `weekly`, `postbypost` and `alpha` are unchanged.
+With the module's **Jalali archives and calendar** option on (`jalali_archives`, the default), `wp_get_archives()` lists Jalali periods and links to the Jalali archive pages. This covers the Archives widget and block, in list and dropdown form, and themes that call the function. The `monthly`, `yearly` and `daily` types are Jalali; `weekly`, `postbypost` and `alpha` are unchanged.
 
-- Entries read "مهر 1405" (monthly), "1405" (yearly) or the site's date format (daily), and go through `persian_kit_date_display`, so the Digit Conversion **Jalali dates** option applies.
+- Entries read "مهر 1405" (monthly), "1405" (yearly) or the site's date format (daily), and go through `persian_kit_date_display`, so the Persian digits module's **Jalali dates** option applies.
 - `limit`, `order`, `format`, `before`, `after`, `show_post_count` and `post_type` work as in core. The entry for the archive being viewed is selected.
 - The list is built from core's own query clauses after `getarchives_where` and `getarchives_join`, so conditions other plugins add there, such as a language plugin's, still apply. Each entry goes through `get_archives_link()` and its filter.
 
@@ -436,7 +436,7 @@ With the option off, the list and calendar are WordPress's own. On a Jalali arch
 
 ### Post permalinks
 
-With the module's **Use Jalali dates in post permalinks** option on (`jalali_permalinks`, off by default) and a permalink structure with the date, such as "Day and name", posts link to their Jalali date: `/1405/07/09/my-post/` instead of `/2026/10/01/my-post/`. "Month and name" gives `/1405/07/my-post/`.
+With the module's **Jalali dates in post links** option on (`jalali_permalinks`, off by default) and a permalink structure with the date, such as "Day and name", posts link to their Jalali date: `/1405/07/09/my-post/` instead of `/2026/10/01/my-post/`. "Month and name" gives `/1405/07/my-post/`.
 
 - Only `%year%`, `%monthnum%` and `%day%` change; they are read from the post's date in site time and zero-padded as in core. Structures without them are unchanged. Like core's `pre_post_link`, which this uses, it applies to posts, not pages or custom post types. The editor's permalink preview shows the Jalali date too.
 - Addresses built from the permalink follow it: the post's pages (`/2/`), comment pages, feed, embed and attachment pages. `url_to_postid()` resolves Jalali addresses, also in the admin.
@@ -508,7 +508,7 @@ add_filter('persian_kit_should_normalize', function (bool $shouldNormalize, $pos
 
 ### `persian_kit_utilities`
 
-Return `false` to turn off a Utilities module feature. The second argument names the feature: `sanitize_title` (the Persian slug filter; the module's Persian slugs option turns it off from the settings screen) or `encode_links` (percent-encoding Persian letters in post and term links, see [Persian Slugs](#persian-slugs)).
+Return `false` to turn off a feature of the Persian slugs module (`utilities`). The second argument names the feature: `sanitize_title` (the Persian slug filter; the module's Use Persian slugs option turns it off from the settings page) or `encode_links` (percent-encoding Persian letters in post and term links, see [Persian Slugs](#persian-slugs)).
 
 ```php
 add_filter('persian_kit_utilities', function (bool $enabled, string $feature) {
@@ -558,7 +558,7 @@ Filters the built-in compatibility guidance for other Persian plugins.
 
 ## WooCommerce Checkout
 
-The WooCommerce Support module's checkout options apply to the classic (shortcode) checkout, the block checkout and My Account > Addresses:
+The WooCommerce module's checkout options (settings page, Integrations tab) apply to the classic (shortcode) checkout, the block checkout and My Account > Addresses:
 
 - `checkout_normalize`: Persian and Arabic digits in phone numbers and postcodes become English digits, postcodes lose spaces and dashes, and Arabic ي/ك in names, company, address and city become Persian ی/ک, for every country. The block checkout is fixed in the Store API request (`rest_pre_dispatch`, including batch requests), because WooCommerce's own phone and postcode checks reject Persian digits before any checkout hook runs.
 - `checkout_validate`: for addresses in Iran, the phone must pass `persian_kit_validate_phone()` (mobile or landline) and the postcode `persian_kit_validate_postal_code()`. The block checkout reports these errors when the order is placed, as WooCommerce does for its own address checks.
@@ -588,7 +588,7 @@ The Forms module works with Contact Form 7 and ACF; each has its own switch (`cf
 ### Contact Form 7
 
 - `[date]` fields get the Jalali date picker and still submit `Y-m-d`, so CF7's own `min:`/`max:` checks, mail tags and storage work as before. Without JavaScript they are text fields, and a typed Jalali date (`۱۴۰۵/۷/۱۰`) is converted before CF7 checks it. Write `[date name gregorian]` to keep CF7's own date input.
-- While Date Conversion is on, `[name]` in an email shows the Jalali date in the site's date format. `[_raw_name]` and `[_format_name "Y-m-d"]` keep the Gregorian date.
+- While the Jalali dates module is on, `[name]` in an email shows the Jalali date in the site's date format. `[_raw_name]` and `[_format_name "Y-m-d"]` keep the Gregorian date.
 - Persian and Arabic digits in `[tel]`, `[number]`, `[range]` and `[date]` fields become English digits before CF7 checks them.
 - Iranian fields, each with a `*` variant for a required field and CF7's usual text field options (`id:`, `class:`, `placeholder`, `size:`, `maxlength:`, `autocomplete:`, `readonly`, a default value):
 
@@ -605,11 +605,11 @@ Their error messages are on each form's Messages tab.
 ### ACF
 
 - Date Picker and Date Time Picker fields get the Jalali date picker on edit screens, in ACF blocks and in `acf_form()`. Values are stored as ACF stores them (`Ymd`, `Y-m-d H:i:s`). Fields from ACF 4 with a `save_format` keep ACF's own picker.
-- While Date Conversion is on, the formatted value (`get_field()`, `the_field()`) is a Jalali date in the field's return format: `Y/m/d` returns `1405/07/10`. Return formats that code parses (`Ymd`, `Y-m-d`, `Y-m-d H:i:s`, `U`, `c` and the like) stay Gregorian, as do REST API responses and the unformatted value (`get_field('name', $post_id, false)`). If your theme parses a formatted value such as `d/m/Y`, read the unformatted value or use the `persian_kit_acf_jalali_value` filter.
+- While the Jalali dates module is on, the formatted value (`get_field()`, `the_field()`) is a Jalali date in the field's return format: `Y/m/d` returns `1405/07/10`. Return formats that code parses (`Ymd`, `Y-m-d`, `Y-m-d H:i:s`, `U`, `c` and the like) stay Gregorian, as do REST API responses and the unformatted value (`get_field('name', $post_id, false)`). If your theme parses a formatted value such as `d/m/Y`, read the unformatted value or use the `persian_kit_acf_jalali_value` filter.
 
 ## WP-CLI
 
-Character normalization has a CLI command. It is available even when the Character Normalization module is off, and uses that module's saved settings:
+Character normalization has a CLI command. It is available even when the Persian ی and ک module (`char_normalization`) is off, and uses that module's saved settings:
 
 ```bash
 wp persian-kit normalize [--dry-run] [--post-type=post,page] [--batch-size=100] [--restart]
@@ -617,23 +617,25 @@ wp persian-kit normalize [--dry-run] [--post-type=post,page] [--batch-size=100] 
 
 - `--dry-run` counts the posts the current settings would change, by post type, without saving anything.
 - `--batch-size` is clamped to 1–500.
-- Progress is stored in the same job as the settings screen's batch tool, so either one can resume a run the other left unfinished.
+- Progress is stored in the same job as the batch tool on the settings page's Tools tab, so either one can resume a run the other left unfinished.
 
 ## Module Keys
 
 Settings are stored in the `persian_kit_settings` option, per module under these keys. Stored values are read on top of each module's defaults, so a key added in an update takes its default until the settings are saved.
 
-| Module key | Settings (new-install default) |
-| --- | --- |
-| `date_conversion` | `enabled` (on), `global_conversion` (off), `jalali_archives` (on), `jalali_permalinks` (off) |
-| `digit_conversion` | `enabled` (off), `dates`, `numbers`, `prices` (on) |
-| `char_normalization` | `enabled` (on), `normalize_on_save` (off), `teh_marbuta` (off), `half_space_fix` (off) |
-| `admin_font` | `enabled` (on), `font` (`vazirmatn`) |
-| `zwnj_editor` | `enabled` (on) |
-| `woocommerce` | `enabled` (on), `checkout_normalize` (on), `checkout_validate` (on), `national_id` (`off`), `city_select` (off) |
-| `forms` | `enabled` (on), `cf7` (on), `acf` (on) |
-| `utilities` | `enabled` (on), `persian_slugs` (on) |
+The settings page (the Persian Kit menu) has four tabs: Display, Writing and Integrations hold the modules, and Tools holds the batch tool that fixes letters in existing posts. One form spans the three module tabs, so Save sends every module's settings; `AdminPage::GROUPS` maps each module key to its tab, and `?tab=` opens one.
 
-The option is registered with the Settings API (group `persian_kit`), so every write is sanitized, whether it comes from the settings screen or from `update_option()`. Each module's values are merged over what is stored and sanitized by the module; a module left out keeps its stored values, and keys that are not module keys are dropped. Booleans are stored as `true`/`false`.
+| Module key | On the settings page | Settings (new-install default) |
+| --- | --- | --- |
+| `digit_conversion` | Display > Persian digits | `enabled` (off), `dates`, `numbers`, `prices` (on) |
+| `date_conversion` | Display > Jalali dates | `enabled` (on), `global_conversion` (off), `jalali_archives` (on), `jalali_permalinks` (off) |
+| `admin_font` | Display > Admin font | `enabled` (on), `font` (`vazirmatn`) |
+| `char_normalization` | Writing > Persian ی and ک | `enabled` (on), `normalize_on_save` (off), `teh_marbuta` (off), `half_space_fix` (off) |
+| `zwnj_editor` | Writing > Half-space key | `enabled` (on) |
+| `utilities` | Writing > Persian slugs | `enabled` (on), `persian_slugs` (on) |
+| `woocommerce` | Integrations > WooCommerce | `enabled` (on), `checkout_normalize` (on), `checkout_validate` (on), `national_id` (`off`), `city_select` (off) |
+| `forms` | Integrations > Forms | `enabled` (on), `cf7` (on), `acf` (on) |
+
+The option is registered with the Settings API (group `persian_kit`), so every write is sanitized, whether it comes from the settings page or from `update_option()`. Each module's values are merged over what is stored and sanitized by the module; a module left out keeps its stored values, and keys that are not module keys are dropped. Booleans are stored as `true`/`false`.
 
 `persian_kit_db_version` records the settings schema version. Sites upgraded from a version before 2 keep their earlier behaviour: digit conversion stays as it was (with the new `dates`, `numbers` and `prices` options off) and `normalize_on_save` is on.
