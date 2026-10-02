@@ -44,7 +44,6 @@ $isEnabled = !empty($module['settings']['enabled']);
         'moduleKey'         => $module['key'],
         'moduleLabel'       => $module['label'],
         'moduleIcon'        => $module['icon'],
-        'moduleLogo'        => $module['logo'],
         'moduleDescription' => $module['description'],
         'module'            => $module['instance'],
         'moduleSettings'    => $module['settings'],

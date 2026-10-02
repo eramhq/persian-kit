@@ -74,12 +74,8 @@ $newTab = __('(opens in a new tab)', 'persian-kit');
     <?php endforeach; ?>
 
     <div class="persian-kit-integration__head">
-        <span class="persian-kit-module__icon persian-kit-plugin-icon">
+        <span class="persian-kit-module__icon">
             <?php echo $card['icon'] !== '' ? Icon::render($card['icon']) : ''; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- fixed SVG markup. ?>
-            <?php if ($card['logo'] !== '') : ?>
-                <?php // The plugin's own logo, over the line icon; removed if it does not load. ?>
-                <img src="<?php echo esc_url($card['logo']); ?>" alt="" width="44" height="44" loading="lazy" referrerpolicy="no-referrer" onerror="this.remove()">
-            <?php endif; ?>
         </span>
 
         <div class="persian-kit-integration__title">

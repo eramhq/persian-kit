@@ -853,25 +853,6 @@ a.persian-kit-version:focus {
     font-weight: 600;
 }
 
-/* A plugin's own icon from WordPress.org, over our line icon in case it
-   does not load. */
-.persian-kit-plugin-icon {
-    position: relative;
-    overflow: hidden;
-}
-
-.persian-kit-plugin-icon img {
-    position: absolute;
-    inset: 0;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-}
-
-.persian-kit-plugin-icon {
-    background: var(--pk-surface-2);
-}
-
 /* Integrations: a card for each plugin, active or not, two a row. */
 .persian-kit-integrations {
     display: grid;
@@ -900,10 +881,10 @@ a.persian-kit-version:focus {
     gap: 12px;
 }
 
-.persian-kit-integration .persian-kit-plugin-icon {
-    width: 44px;
-    height: 44px;
-    border-radius: 10px;
+/* Grey while off, turquoise while on, as on the other cards. */
+.persian-kit-integration.is-on .persian-kit-module__icon {
+    background: var(--pk-brand-tint);
+    color: var(--pk-brand);
 }
 
 .persian-kit-integration__title {
@@ -989,14 +970,6 @@ a.persian-kit-version:focus {
 .persian-kit-integration__link:focus {
     color: var(--pk-brand-strong);
     text-decoration: underline;
-}
-
-/* Not active, or cannot be used: greyed logo. */
-.persian-kit-integration.is-inactive .persian-kit-plugin-icon img,
-.persian-kit-integration.is-unavailable .persian-kit-plugin-icon img,
-.persian-kit-integration:not(.is-on) .persian-kit-plugin-icon img {
-    filter: grayscale(1);
-    opacity: 0.75;
 }
 
 .persian-kit-integration.is-inactive {

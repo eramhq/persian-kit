@@ -148,8 +148,7 @@ class AdminPage
                 'key'         => $key,
                 'label'       => $module::label(),
                 'icon'        => self::ICONS[$key] ?? '',
-                // The integrated plugin's logo and page on WordPress.org.
-                'logo'        => $slug !== '' && isset($plugin['icon']) ? 'https://ps.w.org/' . rawurlencode($slug) . '/assets/' . rawurlencode($plugin['icon']) : '',
+                // The integrated plugin's page on WordPress.org.
                 'pluginUrl'   => $slug !== '' ? 'https://wordpress.org/plugins/' . rawurlencode($slug) . '/' : '',
                 'description' => $module::description(),
                 'instance'    => $module,

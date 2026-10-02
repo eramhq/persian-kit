@@ -6,7 +6,6 @@
  * @var string                                $moduleLabel       Human-readable module name.
  * @var string                                $moduleDescription Module description text.
  * @var string                                $moduleIcon        Icon name in \PersianKit\Components\Icon, or ''.
- * @var string                                $moduleLogo        URL of the integrated plugin's logo, shown over the icon, or ''.
  * @var \PersianKit\Contracts\ModuleInterface $module            Module instance.
  * @var array                                 $moduleSettings    Current settings for this module.
  * @var bool                                  $ownScope          Whether the card holds its own Alpine "enabled"
@@ -23,7 +22,6 @@ $moduleKey = $args['moduleKey'];
 $moduleLabel = $args['moduleLabel'];
 $moduleDescription = $args['moduleDescription'];
 $moduleIcon = $args['moduleIcon'] ?? '';
-$moduleLogo = $args['moduleLogo'] ?? '';
 $module = $args['module'];
 $moduleSettings = $args['moduleSettings'] ?? [];
 $ownScope = $args['ownScope'] ?? true;
@@ -42,11 +40,8 @@ $descId       = 'persian-kit-module-' . $moduleKey . '-description';
 >
     <div class="persian-kit-module__header">
         <?php if ($moduleIcon !== '') : ?>
-            <span class="persian-kit-module__icon<?php echo $moduleLogo !== '' ? ' persian-kit-plugin-icon' : ''; ?>">
+            <span class="persian-kit-module__icon">
                 <?php echo \PersianKit\Components\Icon::render($moduleIcon); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- fixed SVG markup. ?>
-                <?php if ($moduleLogo !== '') : ?>
-                    <img src="<?php echo esc_url($moduleLogo); ?>" alt="" width="36" height="36" loading="lazy" referrerpolicy="no-referrer" onerror="this.remove()">
-                <?php endif; ?>
             </span>
         <?php endif; ?>
         <div class="persian-kit-module__info">
