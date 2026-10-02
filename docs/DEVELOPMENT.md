@@ -36,9 +36,9 @@ npm ci
 npm run test:js
 ```
 
-The tests in `tests/js/` run on Node's test runner. The WooCommerce scripts are tested in a [jsdom](https://github.com/jsdom/jsdom) page, the city dropdown with the jQuery release WordPress ships; both are dev dependencies only. The date field tests load the built `public/js/datepicker.js`, so run `npm run build` first.
+The tests in `tests/js/` run on Node's test runner. The WooCommerce scripts and the classic editor's date fields are tested in a [jsdom](https://github.com/jsdom/jsdom) page, those that use jQuery with the release WordPress ships; both are dev dependencies only. The date field tests load the built `public/js/datepicker.js`, so run `npm run build` first.
 
-`tests/fixtures/persian-years.json` lists 1 Farvardin and the length of Esfand for 1300–1500 AP as the date picker computes them. `tests/js/calendar-agreement.test.mjs` checks it against the picker and `resources/js/jalali.js`, and `tests/Unit/DateConversion/CalendarAgreementTest.php` against daynum, so a picked date can't be saved a day off.
+`tests/fixtures/persian-years.json` lists 1 Farvardin and the length of Esfand for 1300–1500 AP as the date picker computes them. `tests/js/calendar-agreement.test.mjs` checks it against the picker, the picker bundle's `PersianKitCalendar` and `resources/js/jalali.js`, and `tests/Unit/DateConversion/CalendarAgreementTest.php` against daynum, so a picked date can't be saved a day off.
 
 ### Static analysis and coding standards
 
@@ -84,7 +84,7 @@ npm run dist
 - Built assets live in `public/`.
 - `eram/abzar` and `eram/daynum` are copied into `packages/` under the `PersianKit\Dependencies\` namespace by wp-scoper after every `composer install`/`update`. The plugin loads them from there; `vendor/` is development-only.
 - `scripts/prepare-bundled-libraries.php` then copies each library's LICENSE next to it and adds a `phpcs:ignoreFile` line to each copied library file, so Plugin Check reviews only Persian Kit's own code. Their exception messages are never printed, and as plain PHP libraries they can't use WordPress escaping.
-- `public/js/datepicker.js` bundles [intl-datepicker](https://github.com/eramhq/intl-datepicker) with only the Persian calendar and Persian labels (`resources/entries/datepicker-entry.js`): 137 kB, 34 kB gzipped. The package is pre-1.0, so `package.json` pins its exact version; read its changelog before updating. `resources/js/date-field.js` connects it to form fields.
+- `public/js/datepicker.js` bundles [intl-datepicker](https://github.com/eramhq/intl-datepicker) with only the Persian calendar and Persian labels (`resources/entries/datepicker-entry.js`): 138 kB, 34 kB gzipped. The package is pre-1.0, so `package.json` pins its exact version; read its changelog before updating. `@internationalized/date`, its calendar library, is pinned too, because the entry imports it for `PersianKitCalendar`. `resources/js/date-field.js` connects the picker to form fields; `woocommerce-date-fields.js` (WooCommerce's admin date fields) and `classic-date-fields.js` (the post date in the classic editor and Quick Edit) mark their fields for it. `resources/js/jalali.js` is used only by the block editor's date row (`gutenberg-jalali-date.js`).
 - Every JavaScript file in `public/js/` is built from `resources/`. `npm run build` empties `public/` first, so a new script, or a data file such as `resources/data/ir-cities.json`, must be added to `scripts/copy-assets.mjs` and `scripts/verify-build.mjs`. `resources/` is not shipped.
 - `npm run build:pot` includes JavaScript strings. Scripts with translatable strings call `wp_set_script_translations()`.
 - The dist script respects `.distignore`.

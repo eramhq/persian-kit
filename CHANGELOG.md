@@ -28,6 +28,16 @@ New module, Forms, with a switch for each plugin (both on by default). It does n
 - Developers: `persian_kit_date_field_attributes()` turns any input into a Jalali date field that submits a Gregorian date.
 - WooCommerce's admin date fields also accept dates written with slashes or one-digit months, such as `1405/7/10`.
 
+### Admin dates on the date picker
+
+The admin date fields use the Forms module's Jalali date picker, with a calendar, keyboard support and typed dates in Persian digits. They keep saving Gregorian dates.
+
+- WooCommerce: the sale schedule of products and variations, the coupon expiry, the order date and download access expiry. Before, they were text boxes for typing a Jalali date. The two ends of a sale schedule limit each other, Cancel on a schedule clears both, and a picked date marks a variation as changed.
+- The post date in the classic editor's publish box and in Quick Edit: one picker, then the hour and minute. The "Published on:" text shows the Jalali date on load and after OK, Cancel or a visibility change. In Quick Edit, Enter and Escape with the calendar open pick a day or close the calendar instead of saving or closing Quick Edit.
+- Fixed: Variations > Bulk actions > Set scheduled sale dates saved a Jalali date typed into its prompts, such as `1405/08/01`, in the Gregorian year 1405. It is converted now.
+- Fixed: Persian digits typed into the hour and minute of the publish box and Quick Edit made WordPress reject the date or save the hour as 0. They become English digits as you type, as in the WooCommerce order date, whose hour and minute are now text fields because a number field refuses Persian digits.
+- Developers: `PersianKitDateField.refresh(input)` re-reads a field's value after a script changed it, `PersianKitDateField.picker(input)` returns its picker, and `data-persian-kit-date-hint="off"` makes the picker compact. A field's value can be a Jalali date. The date picker script also provides `PersianKitCalendar.jalaliToIso()` and `isoToJalali()`.
+
 ### Character normalization
 
 - "Fix letters when content is saved" (was "…when posts are saved") also fixes new comments and their author names, the names and descriptions of categories, tags and other terms (WooCommerce product categories and tags included) and menu item titles. Each hook can be turned off with the `persian_kit_char_normalization` filter (`preprocess_comment`, `pre_term_name`, `pre_term_description`).

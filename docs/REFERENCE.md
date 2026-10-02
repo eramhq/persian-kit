@@ -89,6 +89,18 @@ Unknown options and values are ignored.
 
 The picker is [intl-datepicker](https://github.com/eramhq/intl-datepicker) with the Persian calendar. Style it with its `--idp-*` CSS properties on `intl-datepicker.persian-kit-date-picker`.
 
+The input's own `required`, `disabled`, `readonly`, `placeholder`, `aria-label`, `min` and `max` carry over to the picker. A value already in the input can be Gregorian, or Jalali in the field's format (a year from 1200 to 1600, Persian, Arabic or English digits, `-` or `/`): the picker shows it, and the input keeps it until a date is picked. Add `data-persian-kit-date-hint="off"` to a field in a cramped row: the picker is as wide as a date and its typing hint is read by screen readers only.
+
+Scripts reach a field through `window.PersianKitDateField`:
+
+- `upgrade(input)`, `upgradeAll(root)`: upgrade fields now. Fields added to the page later are upgraded on their own.
+- `refresh(input)`: after a script changed the input's value (jQuery's `.val()` fires no events), shows it in the picker. Fires no events.
+- `picker(input)`: the field's `<intl-datepicker>`, for example to set `min` and `max`; `null` before the field is upgraded.
+
+A picked date fires `input` and `change` on the input. `window.PersianKitCalendar.jalaliToIso(year, month, day)` and `isoToJalali('2026-10-02')` convert dates with the picker's calendar; they return `null` for a day that does not exist.
+
+The plugin's own admin date fields use the picker too: WooCommerce's sale schedules, coupon expiry, order date and download access expiry, and the post date in the classic editor and Quick Edit. The block editor's date row is separate.
+
 ### Digit Conversion
 
 #### `persian_kit_to_persian_digits(string $text): string`

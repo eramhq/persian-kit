@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Persian Kit 1.0.0-beta.4\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/persian-kit\n"
-"POT-Creation-Date: 2026-10-02T04:56:02+00:00\n"
+"POT-Creation-Date: 2026-10-02T06:02:21+00:00\n"
 "PO-Revision-Date: 2026-10-01 00:00+0000\n"
 "Last-Translator: Persian Kit contributors\n"
 "Language-Team: Persian (Iran)\n"
@@ -304,23 +304,23 @@ msgstr "نوشته‌های منتشرشده در %s"
 msgid "Previous and next months"
 msgstr "ماه‌های قبل و بعد"
 
-#: src/Modules/DateConversion/JalaliScript.php:32
+#: src/Modules/DateConversion/JalaliScript.php:33
 msgid "Year"
 msgstr "سال"
 
-#: src/Modules/DateConversion/JalaliScript.php:33
+#: src/Modules/DateConversion/JalaliScript.php:34
 msgid "Month"
 msgstr "ماه"
 
-#: src/Modules/DateConversion/JalaliScript.php:34
+#: src/Modules/DateConversion/JalaliScript.php:35
 msgid "Day"
 msgstr "روز"
 
-#: src/Modules/DateConversion/JalaliScript.php:35
+#: src/Modules/DateConversion/JalaliScript.php:36
 msgid "Hour"
 msgstr "ساعت"
 
-#: src/Modules/DateConversion/JalaliScript.php:36
+#: src/Modules/DateConversion/JalaliScript.php:37
 msgid "Minute"
 msgstr "دقیقه"
 
