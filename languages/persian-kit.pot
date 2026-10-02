@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-10-02T03:08:32+00:00\n"
+"POT-Creation-Date: 2026-10-02T04:56:02+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: persian-kit\n"
@@ -262,6 +262,10 @@ msgstr ""
 msgid "Activity"
 msgstr ""
 
+#: src/Modules/DateConversion/DatePicker.php:54
+msgid "Time"
+msgstr ""
+
 #. translators: Post calendar label. %s: Date.
 #: src/Modules/DateConversion/JalaliCalendar.php:144
 #, php-format
@@ -304,6 +308,55 @@ msgstr ""
 msgid "Shows Persian digits (۱۲۳) instead of English ones (123) in post titles, content, excerpts, comments, widgets and tags on your site. Admin screens, feeds and the REST API keep English digits."
 msgstr ""
 
+#: src/Modules/Forms/Cf7IranianFields.php:75
+msgid "Mobile number that the sender entered is invalid"
+msgstr ""
+
+#: src/Modules/Forms/Cf7IranianFields.php:76
+msgid "Enter a valid Iranian mobile number, such as 09121234567."
+msgstr ""
+
+#: src/Modules/Forms/Cf7IranianFields.php:79
+msgid "National ID that the sender entered is invalid"
+msgstr ""
+
+#: src/Modules/Forms/Cf7IranianFields.php:80
+#: src/Modules/WooCommerce/CheckoutValidator.php:128
+msgid "The national ID is not valid. Check the 10 digits on the national card."
+msgstr ""
+
+#: src/Modules/Forms/Cf7IranianFields.php:83
+msgid "Postcode that the sender entered is invalid"
+msgstr ""
+
+#: src/Modules/Forms/Cf7IranianFields.php:84
+msgid "Enter a valid Iranian postcode. Postcodes have 10 digits."
+msgstr ""
+
+#: src/Modules/Forms/Cf7IranianFields.php:87
+msgid "Bank card number that the sender entered is invalid"
+msgstr ""
+
+#: src/Modules/Forms/Cf7IranianFields.php:88
+msgid "The card number is not valid. Check the 16 digits on the card."
+msgstr ""
+
+#: src/Modules/Forms/Cf7IranianFields.php:91
+msgid "IBAN that the sender entered is invalid"
+msgstr ""
+
+#: src/Modules/Forms/Cf7IranianFields.php:92
+msgid "The IBAN (Sheba) is not valid. It has IR and 24 digits."
+msgstr ""
+
+#: src/Modules/Forms/FormsModule.php:20
+msgid "Forms"
+msgstr ""
+
+#: src/Modules/Forms/FormsModule.php:25
+msgid "A Jalali date picker in Contact Form 7 and ACF date fields, and Iranian field checks in Contact Form 7. Dates are still saved and sent as Gregorian dates. Does nothing unless Contact Form 7 or ACF is active."
+msgstr ""
+
 #: src/Modules/Utilities/UtilitiesModule.php:24
 msgid "Controls Persian slugs only. The persian_kit_* helper functions for developers are always available, even when this is off."
 msgstr ""
@@ -334,10 +387,6 @@ msgstr ""
 
 #: src/Modules/WooCommerce/CheckoutValidator.php:110
 msgid "Billing postcode"
-msgstr ""
-
-#: src/Modules/WooCommerce/CheckoutValidator.php:128
-msgid "The national ID is not valid. Check the 10 digits on the national card."
 msgstr ""
 
 #: src/Modules/WooCommerce/CityField.php:100
@@ -557,6 +606,22 @@ msgstr ""
 
 #: views/admin/partials/digit-conversion-settings.php:48
 msgid "Text inside code, <kbd> and <samp> elements keeps its digits."
+msgstr ""
+
+#: views/admin/partials/forms-settings.php:17
+msgid "Contact Form 7"
+msgstr ""
+
+#: views/admin/partials/forms-settings.php:18
+msgid "Date fields get a Jalali date picker and still send a Gregorian date, which emails show as a Jalali date while Date Conversion is on. Adds [mobile_ir], [national_id], [postcode_ir], [card_ir] and [iban_ir] fields that check what is typed, and turns Persian digits into English digits in date, phone and number fields. Write [date name gregorian] to keep a Gregorian date field."
+msgstr ""
+
+#: views/admin/partials/forms-settings.php:21
+msgid "ACF date fields"
+msgstr ""
+
+#: views/admin/partials/forms-settings.php:22
+msgid "Date Picker and Date Time Picker fields get a Jalali date picker, on edit screens and in acf_form(). Values are stored as before. While Date Conversion is on, get_field() and the_field() return Jalali dates in the field's return format, except formats such as Ymd that code reads."
 msgstr ""
 
 #: views/admin/partials/utilities-settings.php:26

@@ -69,6 +69,26 @@ Formats a timestamp as a Gregorian date, bypassing Jalali conversion even when g
 
 Use it for machine-oriented or interoperable output.
 
+#### `persian_kit_date_field_attributes(array $options = []): string`
+
+Turns an `<input>` into a Jalali date field: returns its attributes, escaped, and loads the date picker on the page. The field still submits a Gregorian date, so whatever reads the form needs no change. Without JavaScript the input stays as it is.
+
+Options:
+
+- `format`: what the field submits, `Y-m-d` (default), `Ymd`, or `Y-m-d H:i:s`, which adds a time input.
+- `type`: `date` (default), `range`, `multiple`, `month` or `year`. Types other than `date` submit the picker's own value: `2026-10-02/2026-10-05` for a range, comma-separated dates for `multiple`.
+- `min`, `max`: Gregorian or Jalali dates (`2026-01-01`, `۱۴۰۵/۰۱/۰۱`).
+- `disable_past`, `disable_future`: booleans.
+- `locale`: a BCP 47 tag; the page's language by default.
+
+Unknown options and values are ignored.
+
+```php
+<input type="text" name="birthday" <?php echo persian_kit_date_field_attributes(['max' => '2010-12-31']); ?>>
+```
+
+The picker is [intl-datepicker](https://github.com/eramhq/intl-datepicker) with the Persian calendar. Style it with its `--idp-*` CSS properties on `intl-datepicker.persian-kit-date-picker`.
+
 ### Digit Conversion
 
 #### `persian_kit_to_persian_digits(string $text): string`
@@ -510,6 +530,16 @@ add_filter('persian_kit_woocommerce_validate', function (bool $validate, string 
 }, 10, 4);
 ```
 
+### `persian_kit_acf_jalali_value`
+
+Return `false` to keep an ACF date field's template value Gregorian. `$field` is the ACF field array. See [ACF](#acf).
+
+```php
+add_filter('persian_kit_acf_jalali_value', function (bool $jalali, array $field) {
+    return $field['name'] === 'event_date' ? false : $jalali;
+}, 10, 2);
+```
+
 ### `persian_kit_conflict_policies`
 
 Filters the built-in compatibility guidance for other Persian plugins.
@@ -539,6 +569,32 @@ $nationalId = \PersianKit\Modules\WooCommerce\NationalIdField::get($order); // '
 
 WooCommerce shows the block field on the order screen, in emails and in My Account for orders placed through the block checkout. Persian Kit shows it on the order screen and in order emails for the other orders, and for every order while the field is off.
 
+## Forms
+
+The Forms module works with Contact Form 7 and ACF; each has its own switch (`cf7`, `acf`) and does nothing while that plugin is inactive.
+
+### Contact Form 7
+
+- `[date]` fields get the Jalali date picker and still submit `Y-m-d`, so CF7's own `min:`/`max:` checks, mail tags and storage work as before. Without JavaScript they are text fields, and a typed Jalali date (`۱۴۰۵/۷/۱۰`) is converted before CF7 checks it. Write `[date name gregorian]` to keep CF7's own date input.
+- While Date Conversion is on, `[name]` in an email shows the Jalali date in the site's date format. `[_raw_name]` and `[_format_name "Y-m-d"]` keep the Gregorian date.
+- Persian and Arabic digits in `[tel]`, `[number]`, `[range]` and `[date]` fields become English digits before CF7 checks them.
+- Iranian fields, each with a `*` variant for a required field and CF7's usual text field options (`id:`, `class:`, `placeholder`, `size:`, `maxlength:`, `autocomplete:`, `readonly`, a default value):
+
+| Form tag | Checked with | Sent as |
+| --- | --- | --- |
+| `[mobile_ir name]` | `persian_kit_validate_phone()`, mobile numbers only | `09121234567` |
+| `[national_id name]` | `persian_kit_validate_national_id()` | 10 digits |
+| `[postcode_ir name]` | `persian_kit_validate_postal_code()` | 10 digits |
+| `[card_ir name]` | `persian_kit_validate_card_number()` | 16 digits |
+| `[iban_ir name]` | `persian_kit_validate_iban()` | `IR` and 24 digits |
+
+Their error messages are on each form's Messages tab.
+
+### ACF
+
+- Date Picker and Date Time Picker fields get the Jalali date picker on edit screens, in ACF blocks and in `acf_form()`. Values are stored as ACF stores them (`Ymd`, `Y-m-d H:i:s`). Fields from ACF 4 with a `save_format` keep ACF's own picker.
+- While Date Conversion is on, the formatted value (`get_field()`, `the_field()`) is a Jalali date in the field's return format: `Y/m/d` returns `1405/07/10`. Return formats that code parses (`Ymd`, `Y-m-d`, `Y-m-d H:i:s`, `U`, `c` and the like) stay Gregorian, as do REST API responses and the unformatted value (`get_field('name', $post_id, false)`). If your theme parses a formatted value such as `d/m/Y`, read the unformatted value or use the `persian_kit_acf_jalali_value` filter.
+
 ## WP-CLI
 
 Character normalization has a CLI command. It is available even when the Character Normalization module is off, and uses that module's saved settings:
@@ -563,6 +619,7 @@ Settings are stored in the `persian_kit_settings` option, per module under these
 | `admin_font` | `enabled` (on), `font` (`vazirmatn`) |
 | `zwnj_editor` | `enabled` (on) |
 | `woocommerce` | `enabled` (on), `checkout_normalize` (on), `checkout_validate` (on), `national_id` (`off`), `city_select` (off) |
+| `forms` | `enabled` (on), `cf7` (on), `acf` (on) |
 | `utilities` | `enabled` (on), `persian_slugs` (on) |
 
 The option is registered with the Settings API (group `persian_kit`), so every write is sanitized, whether it comes from the settings screen or from `update_option()`. Each module's values are merged over what is stored and sanitized by the module; a module left out keeps its stored values, and keys that are not module keys are dropped. Booleans are stored as `true`/`false`.

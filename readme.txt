@@ -32,6 +32,8 @@ Persian Kit is a modular WordPress plugin for Persian-language sites. It focuses
 * WooCommerce Jalali date support for supported screens (HPOS-compatible)
 * WooCommerce checkout for Iran: Persian digits in phone numbers and postcodes are saved as English digits, Iranian phone numbers and postcodes are checked, an optional national ID (کد ملی) field, and an optional city dropdown for each province (classic checkout)
 * Persian digits in the WooCommerce cart and checkout blocks' prices
+* A Jalali date picker for Contact Form 7 and ACF date fields, which keep saving Gregorian dates
+* Contact Form 7 fields that check Iranian mobile numbers, national IDs, postcodes, card numbers and IBANs
 
 = Bundled software =
 
@@ -102,6 +104,10 @@ No. WooCommerce features only activate when WooCommerce is installed and active.
 = What does Persian Kit change at the WooCommerce checkout? =
 
 With WooCommerce Support on, what customers type is fixed before it is saved: Persian and Arabic digits in phone numbers and postcodes become English digits, and Arabic ي and ك in names and addresses become Persian ی and ک. For addresses in Iran, the phone must be a valid mobile or landline number and the postcode must have 10 valid digits. Both work in the classic checkout, the block checkout and My Account. You can also ask for the customer's national ID (optional or required); it is checked, and shown on the order screen and in order emails.
+
+= Does Persian Kit work with Contact Form 7 and ACF? =
+
+Yes. With the Forms module on, Contact Form 7's date fields and ACF's Date Picker and Date Time Picker fields get a Jalali date picker. The dates are still saved and sent as Gregorian dates, so existing entries, emails and theme code keep working; while Date Conversion is on, Contact Form 7 emails and ACF values in templates show the Jalali date. Contact Form 7 also gets [mobile_ir], [national_id], [postcode_ir], [card_ir] and [iban_ir] fields that check what is typed.
 
 = Why is the city not a dropdown in the block checkout? =
 

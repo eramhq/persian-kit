@@ -18,6 +18,7 @@ Current release: `1.0.0-beta.4` (beta)
 - Persian slug generation
 - PHP validation and formatting helpers for common Iranian data
 - WooCommerce Jalali date support for supported screens
+- A Jalali date picker for Contact Form 7 and ACF date fields, and Contact Form 7 fields for Iranian numbers
 
 ## Requirements
 

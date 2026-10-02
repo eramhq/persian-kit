@@ -17,6 +17,17 @@ New options under WooCommerce Support. They apply to the classic checkout, the b
 - City dropdown (off by default): for Iranian addresses in the classic checkout and My Account, the city is a dropdown of the province's cities, refilled when the province changes and turned back into a text field for other countries. The list holds the 1,454 cities of the Statistical Centre of Iran's 1403 country-divisions list. The block checkout keeps a text field, because WooCommerce does not let plugins change it.
 - With Digit Conversion's WooCommerce prices option on, prices in the cart and checkout blocks show Persian digits too. A small script, loaded on those pages only, converts the prices the blocks draw in the browser.
 
+### Forms: a Jalali date picker for Contact Form 7 and ACF
+
+New module, Forms, with a switch for each plugin (both on by default). It does nothing unless Contact Form 7 or ACF is active. The date picker is [intl-datepicker](https://github.com/eramhq/intl-datepicker) with the Persian calendar: Persian month names and digits, right to left, keyboard support and typed dates in Persian digits.
+
+- Contact Form 7 `[date]` fields get the picker and still submit `Y-m-d`, so CF7's checks, emails and stored entries work as before. Without JavaScript a typed Jalali date is converted. While Date Conversion is on, the date in emails is Jalali; `[_raw_name]` keeps the Gregorian date. `[date name gregorian]` keeps CF7's own input.
+- New Contact Form 7 fields: `[mobile_ir]`, `[national_id]`, `[postcode_ir]`, `[card_ir]` and `[iban_ir]` check the value and send it in its standard form, whatever digits and separators were typed.
+- Persian and Arabic digits in Contact Form 7's phone, number and date fields become English digits before CF7 checks them. Before, a phone number typed in Persian digits was "invalid".
+- ACF Date Picker and Date Time Picker fields get the picker on edit screens and in `acf_form()`, in place of ACF's jQuery UI one. Values are stored as before. While Date Conversion is on, `get_field()` returns a Jalali date in the field's return format, except formats code parses such as `Ymd`; the `persian_kit_acf_jalali_value` filter turns it off for a field.
+- Developers: `persian_kit_date_field_attributes()` turns any input into a Jalali date field that submits a Gregorian date.
+- WooCommerce's admin date fields also accept dates written with slashes or one-digit months, such as `1405/7/10`.
+
 ### Character normalization
 
 - "Fix letters when content is saved" (was "…when posts are saved") also fixes new comments and their author names, the names and descriptions of categories, tags and other terms (WooCommerce product categories and tags included) and menu item titles. Each hook can be turned off with the `persian_kit_char_normalization` filter (`preprocess_comment`, `pre_term_name`, `pre_term_description`).
