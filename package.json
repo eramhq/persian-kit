@@ -5,10 +5,10 @@
     "type": "module",
     "scripts": {
         "dev": "ENTRY=admin vite build -c vite.config.entries.mjs --watch",
-        "clean:public": "rm -rf public/css public/js public/fonts",
+        "clean:public": "rm -rf public/css public/js public/fonts public/licenses",
         "build": "npm run clean:public && npm run build:copy && npm run build:scripts && npm run build:verify",
         "build:copy": "node scripts/copy-assets.mjs",
-        "build:scripts": "ENTRY=admin vite build -c vite.config.entries.mjs",
+        "build:scripts": "ENTRY=admin vite build -c vite.config.entries.mjs && ENTRY=datepicker vite build -c vite.config.entries.mjs",
         "build:verify": "node scripts/verify-build.mjs",
         "build:pot": "wp i18n make-pot . languages/persian-kit.pot --slug=persian-kit --domain=persian-kit --exclude=packages,tests,resources,node_modules,dist,vendor,.wordpress-tests",
         "build:i18n": "bash scripts/make-translations.sh",
@@ -16,7 +16,8 @@
         "test:js": "node --test 'tests/js/*.test.mjs'"
     },
     "dependencies": {
-        "alpinejs": "^3.17.4"
+        "alpinejs": "^3.17.4",
+        "intl-datepicker": "0.4.1"
     },
     "devDependencies": {
         "@fontsource-variable/vazirmatn": "^5.3.0",

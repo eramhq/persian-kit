@@ -75,6 +75,24 @@ const copies = [
         src: 'resources/data/ir-cities.json',
         dest: 'public/data/ir-cities.json',
     },
+    // Jalali date picker adapter for form fields
+    {
+        src: 'resources/js/date-field.js',
+        dest: 'public/js/date-field.js',
+    },
+    {
+        src: 'resources/css/date-field.css',
+        dest: 'public/css/date-field.css',
+    },
+    // Licences of the libraries bundled into public/js/datepicker.js
+    {
+        src: 'node_modules/intl-datepicker/LICENSE',
+        dest: 'public/licenses/intl-datepicker.txt',
+    },
+    {
+        src: 'node_modules/@internationalized/date/LICENSE',
+        dest: 'public/licenses/internationalized-date.txt',
+    },
     // Media library grid Jalali month filter
     {
         src: 'resources/js/media-grid-date-filter.js',

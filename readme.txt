@@ -41,8 +41,10 @@ Persian Kit ships and credits the following third-party components:
 * [eram/daynum](https://github.com/eramhq/daynum) — MIT-licensed PHP Jalali date library.
 * [Alpine.js](https://alpinejs.dev) — MIT-licensed JavaScript framework, bundled into the admin script together with its MIT-licensed dependencies `@vue/reactivity` and `@vue/shared`.
 * [Vazirmatn](https://github.com/rastikerdar/vazirmatn) — Persian font by Saber Rastikerdar, licensed under the SIL Open Font License 1.1.
+* [intl-datepicker](https://github.com/eramhq/intl-datepicker) — MIT-licensed date picker Web Component, bundled into `public/js/datepicker.js`.
+* [@internationalized/date](https://github.com/adobe/react-spectrum/tree/main/packages/@internationalized/date) — Adobe's calendar library, licensed under the Apache License 2.0, bundled into `public/js/datepicker.js`.
 
-All bundled components are GPL-compatible. Their license texts ship with the plugin: `packages/eram/*/LICENSE`, `public/fonts/vazirmatn/OFL.txt` and the header of `public/js/admin.js`.
+All bundled components are GPL-compatible. Their license texts ship with the plugin: `packages/eram/*/LICENSE`, `public/fonts/vazirmatn/OFL.txt`, `public/licenses/` and the header of `public/js/admin.js`.
 
 = Source code =
 

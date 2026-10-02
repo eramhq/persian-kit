@@ -107,9 +107,13 @@ jobs:
           node-version: 22
           cache: npm
 
-      # jsdom and jQuery for the WooCommerce script tests.
+      # jsdom and jQuery for the script tests.
       - name: Install npm dependencies
         run: npm ci
+
+      # The date field tests load the built date picker.
+      - name: Build
+        run: npm run build
 
       - name: Unit tests
         run: npm run test:js
