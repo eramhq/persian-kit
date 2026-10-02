@@ -7,6 +7,8 @@ use PersianKit\Modules\AdminFont\AdminFontModule;
 use PersianKit\Modules\CharNormalization\CharNormalizationModule;
 use PersianKit\Modules\DateConversion\DateConversionModule;
 use PersianKit\Modules\DigitConversion\DigitConversionModule;
+use PersianKit\Modules\Forms\AcfModule;
+use PersianKit\Modules\Forms\Cf7Module;
 use PersianKit\Modules\Utilities\UtilitiesModule;
 use PersianKit\Modules\WooCommerce\WooCommerceModule;
 use PersianKit\Modules\ZWNJEditor\ZWNJEditorModule;
@@ -43,6 +45,9 @@ class ActivationTest extends WordPressIntegrationTestCase
         $this->assertSame(ZWNJEditorModule::defaults(), $settings[ZWNJEditorModule::key()]);
         $this->assertSame(WooCommerceModule::defaults(), $settings[WooCommerceModule::key()]);
         $this->assertSame(UtilitiesModule::defaults(), $settings[UtilitiesModule::key()]);
+        $this->assertSame(Cf7Module::defaults(), $settings[Cf7Module::key()]);
+        $this->assertSame(AcfModule::defaults(), $settings[AcfModule::key()]);
+        $this->assertArrayNotHasKey('forms', $settings);
     }
 
     public function test_activate_records_the_schema_version(): void
@@ -112,5 +117,51 @@ class ActivationTest extends WordPressIntegrationTestCase
 
         $settings = get_option('persian_kit_settings', []);
         $this->assertSame(UtilitiesModule::defaults(), $settings[UtilitiesModule::key()]);
+    }
+
+    /**
+     * @return array<string, array{array<string, bool>, bool, bool}>
+     */
+    public static function formsSettings(): array
+    {
+        return [
+            'both on'              => [['enabled' => true, 'cf7' => true, 'acf' => true], true, true],
+            'CF7 off'              => [['enabled' => true, 'cf7' => false, 'acf' => true], false, true],
+            'ACF off'              => [['enabled' => true, 'cf7' => true, 'acf' => false], true, false],
+            'module off'           => [['enabled' => false, 'cf7' => true, 'acf' => true], false, false],
+            'options never saved'  => [['enabled' => true], true, true],
+        ];
+    }
+
+    /**
+     * @param array<string, bool> $forms
+     * @dataProvider formsSettings
+     */
+    public function test_upgrade_to_version_3_splits_the_forms_module(array $forms, bool $cf7, bool $acf): void
+    {
+        update_option('persian_kit_settings', [
+            'forms'     => $forms,
+            'utilities' => ['enabled' => true, 'persian_slugs' => false],
+        ]);
+        update_option('persian_kit_db_version', 2);
+
+        InstallManager::maybeUpgrade();
+
+        $settings = get_option('persian_kit_settings');
+        $this->assertSame(['enabled' => $cf7], $settings['cf7']);
+        $this->assertSame(['enabled' => $acf], $settings['acf']);
+        $this->assertArrayNotHasKey('forms', $settings);
+        $this->assertSame(['enabled' => true, 'persian_slugs' => false], $settings['utilities']);
+        $this->assertSame(3, (int) get_option('persian_kit_db_version'));
+    }
+
+    public function test_upgrade_to_version_3_leaves_a_site_without_forms_settings_alone(): void
+    {
+        update_option('persian_kit_settings', ['utilities' => ['enabled' => true]]);
+        update_option('persian_kit_db_version', 2);
+
+        InstallManager::maybeUpgrade();
+
+        $this->assertSame(['utilities' => ['enabled' => true]], get_option('persian_kit_settings'));
     }
 }

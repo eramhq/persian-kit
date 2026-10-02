@@ -72,10 +72,24 @@ class WooCommerceModuleTest extends TestCase
         ], $this->bootAndListFetched(['checkout_normalize' => false, 'checkout_validate' => false, 'city_select' => true]));
     }
 
+    public function test_admin_date_fields_have_their_own_option(): void
+    {
+        Functions\when('is_admin')->justReturn(true);
+
+        $this->assertSame([
+            WooDateDisplayFilter::class,
+            CheckoutInputNormalizer::class,
+            CheckoutValidator::class,
+            NationalIdField::class,
+        ], $this->bootAndListFetched(['dates_admin' => false]));
+    }
+
     public function test_inactive_plugins_names_woocommerce_when_it_is_missing(): void
     {
         Functions\when('__')->returnArg();
+        $this->assertSame('commerce', WooCommerceModule::category());
         $this->assertSame([], $this->makeModule()->inactivePlugins());
+        $this->assertTrue($this->makeModule()->isAvailable());
 
         $withoutWooCommerce = new class (Mockery::mock(SettingsManager::class)) extends WooCommerceModule {
             protected function supportsWooCommerce(): bool
@@ -85,6 +99,7 @@ class WooCommerceModuleTest extends TestCase
         };
 
         $this->assertSame(['WooCommerce'], $withoutWooCommerce->inactivePlugins());
+        $this->assertFalse($withoutWooCommerce->isAvailable());
     }
 
     public function test_sanitize_settings_keeps_known_national_id_modes_only(): void
@@ -97,7 +112,8 @@ class WooCommerceModuleTest extends TestCase
             'checkout_validate'  => true,
             'national_id'        => 'required',
             'city_select'        => false,
-        ], $module->sanitizeSettings(['enabled' => '1', 'checkout_normalize' => '0', 'checkout_validate' => '1', 'national_id' => 'required']));
+            'dates_admin'        => true,
+        ], $module->sanitizeSettings(['enabled' => '1', 'checkout_normalize' => '0', 'checkout_validate' => '1', 'national_id' => 'required', 'dates_admin' => '1']));
 
         $this->assertSame('off', $module->sanitizeSettings(['national_id' => 'always'])['national_id']);
     }
@@ -110,6 +126,7 @@ class WooCommerceModuleTest extends TestCase
             'checkout_validate'  => true,
             'national_id'        => 'off',
             'city_select'        => false,
+            'dates_admin'        => true,
         ], WooCommerceModule::defaults());
     }
 

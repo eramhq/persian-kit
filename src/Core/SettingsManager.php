@@ -77,6 +77,21 @@ class SettingsManager
     }
 
     /**
+     * Drops a module's stored settings, such as a module that was replaced.
+     */
+    public function removeModule(string $moduleKey): void
+    {
+        $settings = $this->load();
+
+        if (!array_key_exists($moduleKey, $settings)) {
+            return;
+        }
+
+        unset($settings[$moduleKey]);
+        $this->save($settings);
+    }
+
+    /**
      * @param array<string, mixed> $defaults
      */
     public function setDefaults(string $moduleKey, array $defaults): void

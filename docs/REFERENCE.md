@@ -570,7 +570,7 @@ Filters the built-in compatibility guidance for other Persian plugins.
 
 ## WooCommerce Checkout
 
-The WooCommerce module's checkout options (settings page, Integrations tab) apply to the classic (shortcode) checkout, the block checkout and My Account > Addresses:
+The WooCommerce module's checkout options (settings page, WooCommerce tab, Checkout and addresses) apply to the classic (shortcode) checkout, the block checkout and My Account > Addresses:
 
 - `checkout_normalize`: Persian and Arabic digits in phone numbers and postcodes become English digits, postcodes lose spaces and dashes, and Arabic ي/ك in names, company, address and city become Persian ی/ک, for every country. The block checkout is fixed in the Store API request (`rest_pre_dispatch`, including batch requests), because WooCommerce's own phone and postcode checks reject Persian digits before any checkout hook runs.
 - `checkout_validate`: for addresses in Iran, the phone must pass `persian_kit_validate_phone()` (mobile or landline) and the postcode `persian_kit_validate_postal_code()`. The block checkout reports these errors when the order is placed, as WooCommerce does for its own address checks.
@@ -593,9 +593,39 @@ $nationalId = \PersianKit\Modules\WooCommerce\NationalIdField::get($order); // '
 
 WooCommerce shows the block field on the order screen, in emails and in My Account for orders placed through the block checkout. Persian Kit shows it on the order screen and in order emails for the other orders, and for every order while the field is off.
 
+## Integrations
+
+An integration is a module that works with another plugin: WooCommerce (`woocommerce`), Contact Form 7 (`cf7`) and ACF (`acf`). Each turns on by itself when its plugin is active, and does nothing while it is not. The plugin is checked when the page loads, by its classes, functions and constants, so a network-activated plugin counts on every site.
+
+- WooCommerce has its own tab on the settings page, shown only while WooCommerce is active, with a card for each section: Checkout and addresses, Prices and currency, Dates. `?tab=woocommerce#checkout` (`#prices`, `#dates`) links to one. While WooCommerce is inactive, `?tab=woocommerce` opens the first tab. Under Dates, `dates_admin` turns the Jalali date pickers on the order, product and coupon screens, and the month filter on the orders list, on or off; dates on orders and in emails follow the Jalali dates module.
+- The Integrations tab has a card for each other integration, grouped as Forms, Store and Compatibility. A plugin that is active but too old, or that needs an add-on (such as a Pro version), has a card that says why, with its switch disabled.
+- Plugins that are not active are listed under "Also works with", each with a link to its WordPress.org page. One that was set up on this site before says its settings are kept: stored settings stay until the plugin is active again.
+- A card is marked New until the Integrations or WooCommerce tab is opened once after its plugin was activated. The keys of the integrations that have been seen are stored per site in the `persian_kit_seen_integrations` option.
+- Integrations add no admin notices. Advice about another Persian plugin that does the same work is shown at the top of the settings page, as before, and on the card or tab of the integration it concerns.
+
+Values are stored in their standard form, with English digits and Gregorian dates, and shown as Persian digits and Jalali dates where people read them. Exports and other plugins keep working with the stored values.
+
+### Turning an integration off
+
+A field type Persian Kit adds to a form plugin keeps rendering while the integration is off, as a plain text input that accepts any text and is not checked. Forms built with it never show the raw form tag. The integration's card names the forms that use these fields when it is switched off, before it is saved.
+
+If Persian Kit itself is deactivated, its field types are gone: Contact Form 7 then prints a tag such as `[national_id your-id]` as text. Replace these tags before deactivating Persian Kit.
+
+### Writing an integration
+
+A module becomes an integration by returning a category and the plugins it needs (`src/Contracts/ModuleInterface.php`):
+
+- `category()`: `forms`, `commerce` or `compat`; `null` for modules that need no other plugin.
+- `requiredPlugins()`: the plugin it integrates with, then any add-on it also needs. Each has a `name`, a `check` callable, and optionally a `version` callable, a `minVersion`, and its WordPress.org `slug` and logo file (`icon`).
+- `isAvailable()` and `unavailableReason()` (built on `requiredPlugins()` in `AbstractModule`): the reason's code is `AbstractModule::REASON_INACTIVE`, `REASON_OUTDATED` or `REASON_MISSING`.
+- `boot()` runs while the module is on and its plugins are available. `bootDisabled()` runs while it is off and they are available: register fallbacks there, such as plain inputs for its field types.
+- `formsUsingFields()`: the forms that use its field types, for the warning shown when it is switched off.
+
+`PersianKit\Modules\Forms\IranianFieldTypes` defines the Iranian field types once (label, input attributes, error message, validation and the stored form) for every form plugin; their group is called "Iranian fields" in the form editor.
+
 ## Forms
 
-The Forms module works with Contact Form 7 and ACF; each has its own switch (`cf7`, `acf`) and does nothing while that plugin is inactive.
+Contact Form 7 (`cf7`) and ACF (`acf`) are separate integrations, each with its own switch.
 
 ### Contact Form 7
 
@@ -612,7 +642,9 @@ The Forms module works with Contact Form 7 and ACF; each has its own switch (`cf
 | `[card_ir name]` | `persian_kit_validate_card_number()` | 16 digits |
 | `[iban_ir name]` | `persian_kit_validate_iban()` | `IR` and 24 digits |
 
-Their error messages are on each form's Messages tab.
+Their error messages are on each form's Messages tab. In the form editor (Contact Form 7 6.0 or newer), a button for each one opens CF7's tag generator.
+
+While the integration is off, the Iranian fields are plain text inputs: nothing is checked or changed, and their buttons are gone from the form editor. The settings page lists the forms that use them, from a scan of the forms' templates that is cached and cleared when a form is saved, trashed or deleted.
 
 ### ACF
 
@@ -635,7 +667,7 @@ wp persian-kit normalize [--dry-run] [--post-type=post,page] [--batch-size=100] 
 
 Settings are stored in the `persian_kit_settings` option, per module under these keys. Stored values are read on top of each module's defaults, so a key added in an update takes its default until the settings are saved.
 
-The settings page (the Persian Kit menu) has four tabs: Display, Writing and Integrations hold the modules, and Tools holds the batch tool that fixes letters in existing posts. One form spans the three module tabs, so Save sends every module's settings; `AdminPage::GROUPS` maps each module key to its tab, and `?tab=` opens one.
+The settings page (the Persian Kit menu) has five tabs: Display and Writing hold the core modules, WooCommerce (only while WooCommerce is active) and Integrations hold the [integrations](#integrations), and Tools holds the batch tool that fixes letters in existing posts. One form spans the module tabs, so Save sends every module's settings; `AdminPage::GROUPS` maps each core module key to its tab, and `?tab=` opens one. A tab that is not shown, or a module whose plugin is not active, sends nothing, so its stored settings are kept.
 
 | Module key | On the settings page | Settings (new-install default) |
 | --- | --- | --- |
@@ -645,9 +677,10 @@ The settings page (the Persian Kit menu) has four tabs: Display, Writing and Int
 | `char_normalization` | Writing > Persian ی and ک | `enabled` (on), `normalize_on_save` (off), `teh_marbuta` (off), `half_space_fix` (off) |
 | `zwnj_editor` | Writing > Half-space key | `enabled` (on) |
 | `utilities` | Writing > Persian slugs | `enabled` (on), `persian_slugs` (on) |
-| `woocommerce` | Integrations > WooCommerce | `enabled` (on), `checkout_normalize` (on), `checkout_validate` (on), `national_id` (`off`), `city_select` (off) |
-| `forms` | Integrations > Forms | `enabled` (on), `cf7` (on), `acf` (on) |
+| `woocommerce` | WooCommerce | `enabled` (on), `checkout_normalize` (on), `checkout_validate` (on), `national_id` (`off`), `city_select` (off), `dates_admin` (on) |
+| `cf7` | Integrations > Forms > Contact Form 7 | `enabled` (on) |
+| `acf` | Integrations > Forms > ACF | `enabled` (on) |
 
 The option is registered with the Settings API (group `persian_kit`), so every write is sanitized, whether it comes from the settings page or from `update_option()`. Each module's values are merged over what is stored and sanitized by the module; a module left out keeps its stored values, and keys that are not module keys are dropped. Booleans are stored as `true`/`false`.
 
-`persian_kit_db_version` records the settings schema version. Sites upgraded from a version before 2 keep their earlier behaviour: digit conversion stays as it was (with the new `dates`, `numbers` and `prices` options off) and `normalize_on_save` is on.
+`persian_kit_db_version` records the settings schema version. Sites upgraded from a version before 2 keep their earlier behaviour: digit conversion stays as it was (with the new `dates`, `numbers` and `prices` options off) and `normalize_on_save` is on. Version 3 replaced the `forms` key with `cf7` and `acf`: each is on when `forms` and its option (`forms.cf7`, `forms.acf`) were both on.

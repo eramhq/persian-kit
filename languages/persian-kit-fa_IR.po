@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Persian Kit 1.0.0-beta.4\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/persian-kit\n"
-"POT-Creation-Date: 2026-10-02T13:01:21+00:00\n"
+"POT-Creation-Date: 2026-10-02T14:19:31+00:00\n"
 "PO-Revision-Date: 2026-10-01 00:00+0000\n"
 "Last-Translator: Persian Kit contributors\n"
 "Language-Team: Persian (Iran)\n"
@@ -13,12 +13,12 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: WP-CLI 2.12.0\n"
-"X-Domain: persian-kit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
+"X-Domain: persian-kit\n"
+"X-Generator: WP-CLI 2.12.0\n"
 
 #. Plugin Name of the plugin
-#: persian-kit.php src/Core/AdminPage.php:95 src/Core/AdminPage.php:96
+#: persian-kit.php src/Core/AdminPage.php:109 src/Core/AdminPage.php:110
 #: src/Core/ConflictDetector.php:144 src/Service/Assets/AssetManager.php:45
 #: views/admin/partials/footer.php:30 views/admin/partials/header.php:35
 msgid "Persian Kit"
@@ -46,27 +46,66 @@ msgstr ""
 msgid "https://flavor.dev"
 msgstr ""
 
-#: src/Core/AdminPage.php:87
+#. translators: %s: plugin name, such as "Contact Form 7".
+#: src/Abstracts/AbstractModule.php:90
+#, php-format
+msgid "%s is not active on this site."
+msgstr "%s در این سایت فعال نیست."
+
+#. translators: %s: plugin name, such as "Elementor Pro".
+#: src/Abstracts/AbstractModule.php:95
+#, php-format
+msgid "Needs %s."
+msgstr "به %s نیاز دارد."
+
+#. translators: 1: plugin name, 2: oldest version that works, 3: version on
+#. this site.
+#: src/Abstracts/AbstractModule.php:105
+#, php-format
+msgid "Needs %1$s %2$s or newer (this site has %3$s)."
+msgstr "به %1$s نسخه %2$s یا جدیدتر نیاز دارد (نسخه این سایت %3$s است)."
+
+#: src/Core/AdminPage.php:101
 msgid "Settings"
 msgstr "تنظیمات"
 
-#: src/Core/AdminPage.php:161
+#: src/Core/AdminPage.php:262
+msgid "Forms"
+msgstr "فرم‌ها"
+
+#: src/Core/AdminPage.php:263
+msgid "Store"
+msgstr "فروشگاه"
+
+#: src/Core/AdminPage.php:264
+#: views/admin/partials/compatibility-guidance.php:16
+msgid "Compatibility"
+msgstr "سازگاری"
+
+#: src/Core/AdminPage.php:341
 msgid "You do not have permission to access this page."
 msgstr "شما اجازه دسترسی به این صفحه را ندارید."
 
-#: src/Core/AdminPage.php:178
+#: src/Core/AdminPage.php:360 views/admin/partials/woocommerce-settings.php:109
 msgid "Display"
 msgstr "نمایش"
 
-#: src/Core/AdminPage.php:179
+#: src/Core/AdminPage.php:361
 msgid "Writing"
 msgstr "نگارش"
 
-#: src/Core/AdminPage.php:180
+#: src/Core/AdminPage.php:362 src/Core/ConflictDetector.php:40
+#: src/Core/ConflictDetector.php:82
+#: src/Modules/WooCommerce/WooCommerceModule.php:19
+#: src/Modules/WooCommerce/WooCommerceModule.php:53
+msgid "WooCommerce"
+msgstr "ووکامرس"
+
+#: src/Core/AdminPage.php:363
 msgid "Integrations"
 msgstr "یکپارچه‌سازی"
 
-#: src/Core/AdminPage.php:181
+#: src/Core/AdminPage.php:364
 msgid "Tools"
 msgstr "ابزارها"
 
@@ -103,6 +142,7 @@ msgstr "تاریخ شمسی در ووکامرس"
 #: src/Core/ConflictDetector.php:37 src/Core/ConflictDetector.php:58
 #: src/Core/ConflictDetector.php:78
 #: src/Modules/DigitConversion/DigitConversionModule.php:21
+#: views/admin/partials/woocommerce-settings.php:110
 msgid "Persian digits"
 msgstr "اعداد فارسی"
 
@@ -117,12 +157,6 @@ msgstr "ی و ک فارسی"
 #: src/Modules/AdminFont/AdminFontModule.php:26
 msgid "Admin font"
 msgstr "فونت پیشخوان"
-
-#: src/Core/ConflictDetector.php:40 src/Core/ConflictDetector.php:82
-#: src/Modules/WooCommerce/WooCommerceModule.php:19
-#: src/Modules/WooCommerce/WooCommerceModule.php:129
-msgid "WooCommerce"
-msgstr "ووکامرس"
 
 #: src/Core/ConflictDetector.php:41 src/Core/ConflictDetector.php:61
 #: src/Core/ConflictDetector.php:81
@@ -203,6 +237,8 @@ msgstr ""
 
 #: src/Core/ConflictDetector.php:154
 #: views/admin/partials/compatibility-guidance.php:36
+#: views/admin/partials/integration-card.php:71
+#: views/admin/partials/woocommerce-tab.php:37
 msgid "Review recommended settings"
 msgstr "دیدن تنظیمات پیشنهادی"
 
@@ -341,58 +377,111 @@ msgstr "فیلتر بر اساس تاریخ"
 msgid "Show ۱۲۳ instead of 123 in your site's content."
 msgstr "نمایش ۱۲۳ به‌جای ⁦123⁩ در محتوای سایت."
 
-#: src/Modules/Forms/Cf7IranianFields.php:75
+#: src/Modules/Forms/AcfModule.php:21
+msgid "ACF"
+msgstr "ACF"
+
+#: src/Modules/Forms/AcfModule.php:26
+msgid ""
+"Jalali date picker for Date Picker and Date Time Picker fields. Dates are "
+"still saved as Gregorian."
+msgstr ""
+"تقویم شمسی برای فیلدهای ⁦Date Picker⁩ و ⁦Date Time Picker⁩. تاریخ‌ها همچنان "
+"میلادی ذخیره می‌شوند."
+
+#: src/Modules/Forms/Cf7IranianFields.php:76
 msgid "Mobile number that the sender entered is invalid"
 msgstr "شماره موبایلی که فرستنده وارد کرده نامعتبر است"
 
-#: src/Modules/Forms/Cf7IranianFields.php:76
-msgid "Enter a valid Iranian mobile number, such as 09121234567."
-msgstr "یک شماره موبایل معتبر ایرانی وارد کنید، مثل ⁦09121234567⁩."
-
-#: src/Modules/Forms/Cf7IranianFields.php:79
+#: src/Modules/Forms/Cf7IranianFields.php:77
 msgid "National ID that the sender entered is invalid"
 msgstr "کد ملی‌ای که فرستنده وارد کرده نامعتبر است"
 
+#: src/Modules/Forms/Cf7IranianFields.php:78
+msgid "Postcode that the sender entered is invalid"
+msgstr "کد پستی‌ای که فرستنده وارد کرده نامعتبر است"
+
+#: src/Modules/Forms/Cf7IranianFields.php:79
+msgid "Bank card number that the sender entered is invalid"
+msgstr "شماره کارتی که فرستنده وارد کرده نامعتبر است"
+
 #: src/Modules/Forms/Cf7IranianFields.php:80
+msgid "IBAN that the sender entered is invalid"
+msgstr "شماره شبایی که فرستنده وارد کرده نامعتبر است"
+
+#: src/Modules/Forms/Cf7Module.php:21
+msgid "Contact Form 7"
+msgstr "Contact Form 7"
+
+#: src/Modules/Forms/Cf7Module.php:26
+msgid ""
+"Jalali date picker for date fields, and Iranian fields such as mobile number "
+"and national ID."
+msgstr ""
+"تقویم شمسی برای فیلدهای تاریخ، و فیلدهای ایرانی مثل شماره موبایل و کد ملی."
+
+#. translators: %s: field type, such as "National ID".
+#: src/Modules/Forms/Cf7TagGenerator.php:54
+#, php-format
+msgid "%s field form-tag generator"
+msgstr "سازنده تگ فیلد %s"
+
+#. translators: %s: group name, "Iranian fields".
+#: src/Modules/Forms/Cf7TagGenerator.php:63
+#, php-format
+msgid ""
+"%s are checked when the form is sent, and saved and emailed with English "
+"digits."
+msgstr ""
+"%s هنگام ارسال فرم بررسی می‌شوند و با رقم‌های انگلیسی ذخیره و ایمیل می‌شوند."
+
+#: src/Modules/Forms/IranianFieldTypes.php:58
+msgid "Iranian fields"
+msgstr "فیلدهای ایرانی"
+
+#: src/Modules/Forms/IranianFieldTypes.php:64
+msgid "Mobile number"
+msgstr "شماره موبایل"
+
+#: src/Modules/Forms/IranianFieldTypes.php:65
+#: src/Modules/WooCommerce/NationalIdField.php:90
+#: src/Modules/WooCommerce/NationalIdField.php:118
+#: src/Modules/WooCommerce/NationalIdField.php:216
+msgid "National ID"
+msgstr "کد ملی"
+
+#: src/Modules/Forms/IranianFieldTypes.php:66
+msgid "Postcode"
+msgstr "کد پستی"
+
+#: src/Modules/Forms/IranianFieldTypes.php:67
+msgid "Bank card number"
+msgstr "شماره کارت بانکی"
+
+#: src/Modules/Forms/IranianFieldTypes.php:68
+msgid "IBAN (Sheba)"
+msgstr "شماره شبا"
+
+#: src/Modules/Forms/IranianFieldTypes.php:90
+msgid "Enter a valid Iranian mobile number, such as 09121234567."
+msgstr "یک شماره موبایل معتبر ایرانی وارد کنید، مثل ⁦09121234567⁩."
+
+#: src/Modules/Forms/IranianFieldTypes.php:91
 #: src/Modules/WooCommerce/CheckoutValidator.php:128
 msgid "The national ID is not valid. Check the 10 digits on the national card."
 msgstr "کد ملی معتبر نیست. ۱۰ رقم روی کارت ملی را بررسی کنید."
 
-#: src/Modules/Forms/Cf7IranianFields.php:83
-msgid "Postcode that the sender entered is invalid"
-msgstr "کد پستی‌ای که فرستنده وارد کرده نامعتبر است"
-
-#: src/Modules/Forms/Cf7IranianFields.php:84
+#: src/Modules/Forms/IranianFieldTypes.php:92
 msgid "Enter a valid Iranian postcode. Postcodes have 10 digits."
 msgstr "یک کد پستی معتبر ایرانی وارد کنید. کد پستی ۱۰ رقم دارد."
 
-#: src/Modules/Forms/Cf7IranianFields.php:87
-msgid "Bank card number that the sender entered is invalid"
-msgstr "شماره کارتی که فرستنده وارد کرده نامعتبر است"
-
-#: src/Modules/Forms/Cf7IranianFields.php:88
+#: src/Modules/Forms/IranianFieldTypes.php:93
 msgid "The card number is not valid. Check the 16 digits on the card."
 msgstr "شماره کارت معتبر نیست. ۱۶ رقم روی کارت را بررسی کنید."
 
-#: src/Modules/Forms/Cf7IranianFields.php:91
-msgid "IBAN that the sender entered is invalid"
-msgstr "شماره شبایی که فرستنده وارد کرده نامعتبر است"
-
-#: src/Modules/Forms/Cf7IranianFields.php:92
+#: src/Modules/Forms/IranianFieldTypes.php:94
 msgid "The IBAN (Sheba) is not valid. It has IR and 24 digits."
 msgstr "شماره شبا معتبر نیست. شبا با ⁦IR⁩ شروع می‌شود و ۲۴ رقم دارد."
-
-#: src/Modules/Forms/FormsModule.php:20
-msgid "Forms"
-msgstr "فرم‌ها"
-
-#: src/Modules/Forms/FormsModule.php:25
-msgid ""
-"Jalali date picker for Contact Form 7 and ACF. Dates are still saved as "
-"Gregorian."
-msgstr ""
-"انتخابگر تاریخ شمسی برای ⁦Contact Form 7⁩ و ⁦ACF⁩. تاریخ‌ها همچنان میلادی ذخیره "
-"می‌شوند."
 
 #: src/Modules/Utilities/UtilitiesModule.php:24
 msgid "Keep Persian letters in post and category addresses."
@@ -426,12 +515,6 @@ msgstr "کد پستی آدرس ارسال"
 msgid "Billing postcode"
 msgstr "کد پستی صورت‌حساب"
 
-#: src/Modules/WooCommerce/NationalIdField.php:90
-#: src/Modules/WooCommerce/NationalIdField.php:118
-#: src/Modules/WooCommerce/NationalIdField.php:216
-msgid "National ID"
-msgstr "کد ملی"
-
 #: src/Modules/WooCommerce/NationalIdField.php:91
 msgid "National ID (optional)"
 msgstr "کد ملی (اختیاری)"
@@ -445,6 +528,27 @@ msgid ""
 "Jalali dates in the shop admin and emails, and checkout fields for Iran."
 msgstr ""
 "تاریخ شمسی در مدیریت فروشگاه و ایمیل‌ها، و فیلدهای صفحه پرداخت برای ایران."
+
+#: src/Modules/WooCommerce/WooCommerceModule.php:71
+msgid "Checkout and addresses"
+msgstr "پرداخت و آدرس"
+
+#: src/Modules/WooCommerce/WooCommerceModule.php:72
+msgid "What customers type at checkout, and fields for Iran."
+msgstr "آنچه مشتری در صفحه پرداخت می‌نویسد، و فیلدهای ویژه ایران."
+
+#: src/Modules/WooCommerce/WooCommerceModule.php:75
+msgid "Prices and currency"
+msgstr "قیمت‌ها و واحد پول"
+
+#: src/Modules/WooCommerce/WooCommerceModule.php:79
+msgid "Dates"
+msgstr "تاریخ‌ها"
+
+#: src/Modules/WooCommerce/WooCommerceModule.php:80
+msgid "Dates on orders and in emails follow Jalali dates on the Display tab."
+msgstr ""
+"تاریخ سفارش‌ها و ایمیل‌ها از تنظیم «تاریخ شمسی» در زبانه نمایش پیروی می‌کنند."
 
 #: src/Modules/WooCommerce/WooOrderMonthFilter.php:199
 msgid "All Jalali dates"
@@ -494,10 +598,6 @@ msgstr ""
 "بعد از «می» و پیش از «ها»، «تر» و «ترین». ممکن است کلمه‌هایی را که باید جدا "
 "بمانند به هم بچسباند."
 
-#: views/admin/partials/compatibility-guidance.php:16
-msgid "Compatibility"
-msgstr "سازگاری"
-
 #: views/admin/partials/compatibility-guidance.php:30
 msgid "Supplementary"
 msgstr "مکمل"
@@ -543,6 +643,7 @@ msgid "Post and comment counts"
 msgstr "تعداد نوشته‌ها و دیدگاه‌ها"
 
 #: views/admin/partials/digit-conversion-settings.php:18
+#: views/admin/partials/woocommerce-settings.php:111
 msgid "Shop prices"
 msgstr "قیمت‌های فروشگاه"
 
@@ -563,6 +664,8 @@ msgid "Source on GitHub"
 msgstr "کد منبع در GitHub"
 
 #: views/admin/partials/footer.php:21 views/admin/partials/header.php:48
+#: views/admin/partials/integration-card.php:52
+#: views/admin/partials/integrations-tab.php:55
 msgid "(opens in a new tab)"
 msgstr "(در زبانه تازه باز می‌شود)"
 
@@ -578,27 +681,12 @@ msgstr "ساخته‌شده برای وردپرس فارسی. رایگان و م
 msgid "About Persian Kit"
 msgstr "درباره Persian Kit"
 
-#: views/admin/partials/forms-settings.php:17
-msgid "Contact Form 7"
-msgstr "Contact Form 7"
-
-#: views/admin/partials/forms-settings.php:18
-msgid "Date picker, plus fields such as [mobile_ir] and [national_id]."
-msgstr "انتخابگر تاریخ، و فیلدهایی مثل ⁦[mobile_ir]⁩ و ⁦[national_id]⁩."
-
-#: views/admin/partials/forms-settings.php:21
-msgid "ACF"
-msgstr "ACF"
-
-#: views/admin/partials/forms-settings.php:22
-msgid "Date picker for Date and Date Time fields."
-msgstr "انتخابگر تاریخ برای فیلدهای ⁦Date Picker⁩ و ⁦Date Time Picker⁩."
-
 #: views/admin/partials/header.php:25
 msgid "What's new"
 msgstr "تازه‌ها"
 
 #: views/admin/partials/header.php:26
+#: views/admin/partials/integrations-tab.php:54
 msgid "Docs"
 msgstr "راهنما"
 
@@ -618,11 +706,62 @@ msgstr "تغییرها با ذخیره اعمال می‌شوند."
 msgid "Persian Kit settings"
 msgstr "تنظیمات Persian Kit"
 
-#. translators: %s: plugin names, such as "Contact Form 7 and ACF".
-#: views/admin/partials/module-toggle.php:55
+#: views/admin/partials/integration-card.php:88
+msgid "New"
+msgstr "جدید"
+
+#: views/admin/partials/integration-card.php:94
+msgid "Your settings are kept"
+msgstr "تنظیمات شما نگه داشته شده است"
+
+#: views/admin/partials/integration-card.php:95
+msgid "Not active on this site"
+msgstr "در این سایت فعال نیست"
+
+#: views/admin/partials/integration-card.php:104
+msgid "Active automatically"
+msgstr "خودکار فعال است"
+
+#: views/admin/partials/integration-card.php:149
+msgid "(no title)"
+msgstr "(بدون عنوان)"
+
+#. translators: %s: number of other forms.
+#: views/admin/partials/integration-card.php:153
 #, php-format
-msgid "Not active on this site: %s."
-msgstr "غیرفعال در این سایت: %s."
+msgid "%s other"
+msgid_plural "%s others"
+msgstr[0] "%s فرم دیگر"
+
+#. translators: 1: number of forms, 2: their names, such as "Contact, Order
+#. and Signup".
+#: views/admin/partials/integration-card.php:163
+#, php-format
+msgid ""
+"%1$s form uses Persian Kit fields: %2$s. While this is off, those fields "
+"accept any text."
+msgid_plural ""
+"%1$s forms use Persian Kit fields: %2$s. While this is off, those fields "
+"accept any text."
+msgstr[0] ""
+"%1$s فرم از فیلدهای Persian Kit استفاده می‌کند: %2$s. تا وقتی این خاموش است، "
+"این فیلدها هر متنی را می‌پذیرند."
+
+#: views/admin/partials/integration-card.php:185
+msgid "Plugin page on WordPress.org"
+msgstr "صفحه افزونه در وردپرس"
+
+#: views/admin/partials/integrations-tab.php:28
+msgid "None of the supported plugins are active on this site."
+msgstr "هیچ‌کدام از افزونه‌های پشتیبانی‌شده در این سایت فعال نیستند."
+
+#: views/admin/partials/integrations-tab.php:45
+msgid "Also works with"
+msgstr "با این افزونه‌ها هم کار می‌کند"
+
+#: views/admin/partials/integrations-tab.php:52
+msgid "Activate one and Persian Kit works with it by itself."
+msgstr "هر کدام را فعال کنید، Persian Kit خودکار با آن کار می‌کند."
 
 #: views/admin/partials/tools.php:28
 msgid "Fix letters in existing posts"
@@ -710,57 +849,87 @@ msgstr "«اعداد فارسی» و «اصلاح حروف هنگام ذخیره
 msgid "Got it"
 msgstr "متوجه شدم"
 
-#: views/admin/partials/woocommerce-settings.php:17
+#: views/admin/partials/woocommerce-jump.php:14
+msgid "WooCommerce sections"
+msgstr "بخش‌های ووکامرس"
+
+#: views/admin/partials/woocommerce-settings.php:24
 msgid "Fix what customers type"
 msgstr "اصلاح نوشته‌های مشتری"
 
-#: views/admin/partials/woocommerce-settings.php:18
+#: views/admin/partials/woocommerce-settings.php:25
 msgid ""
 "English digits in phone numbers and postcodes, Persian ی and ک in names."
 msgstr "رقم انگلیسی در تلفن و کد پستی، ی و ک فارسی در نام‌ها."
 
-#: views/admin/partials/woocommerce-settings.php:21
+#: views/admin/partials/woocommerce-settings.php:28
 msgid "Check phone numbers and postcodes"
 msgstr "بررسی تلفن و کد پستی"
 
-#: views/admin/partials/woocommerce-settings.php:22
+#: views/admin/partials/woocommerce-settings.php:29
 msgid "For addresses in Iran only."
 msgstr "فقط برای آدرس‌های ایران."
 
-#: views/admin/partials/woocommerce-settings.php:25
+#: views/admin/partials/woocommerce-settings.php:32
 msgid "City list for Iran"
 msgstr "فهرست شهرهای ایران"
 
-#: views/admin/partials/woocommerce-settings.php:26
+#: views/admin/partials/woocommerce-settings.php:33
 msgid "Suggests the province's cities. Customers can still type a village."
 msgstr ""
 "شهرهای استان را پیشنهاد می‌دهد. مشتری همچنان می‌تواند نام روستا را بنویسد."
 
-#: views/admin/partials/woocommerce-settings.php:31
+#: views/admin/partials/woocommerce-settings.php:38
 msgid "Off"
 msgstr "خاموش"
 
-#: views/admin/partials/woocommerce-settings.php:32
+#: views/admin/partials/woocommerce-settings.php:39
 msgid "Optional"
 msgstr "اختیاری"
 
-#: views/admin/partials/woocommerce-settings.php:33
+#: views/admin/partials/woocommerce-settings.php:40
 msgid "Required"
 msgstr "الزامی"
 
-#: views/admin/partials/woocommerce-settings.php:51
+#: views/admin/partials/woocommerce-settings.php:78
 msgid "National ID at checkout"
 msgstr "کد ملی در صفحه پرداخت"
 
-#: views/admin/partials/woocommerce-settings.php:65
+#: views/admin/partials/woocommerce-settings.php:92
 msgid "Shown on the order and in emails."
 msgstr "در سفارش و ایمیل‌ها نشان داده می‌شود."
 
-#: views/admin/settings.php:96
+#. translators: %s: link to the setting, such as "Display › Persian digits ›
+#. Shop prices".
+#: views/admin/partials/woocommerce-settings.php:104
+#, php-format
+msgid "Persian digits in prices are set under %s."
+msgstr "اعداد فارسی در قیمت‌ها در %s تنظیم می‌شود."
+
+#: views/admin/partials/woocommerce-settings.php:127
+msgid "Jalali date picker in the shop admin"
+msgstr "تقویم شمسی در مدیریت فروشگاه"
+
+#: views/admin/partials/woocommerce-settings.php:128
+msgid ""
+"Order, product and coupon dates, and the month filter on the orders list."
+msgstr "تاریخ‌های سفارش، محصول و کد تخفیف، و فیلتر ماه در فهرست سفارش‌ها."
+
+#. translators: 1: name of another plugin, 2: Persian Kit module name.
+#: views/admin/partials/woocommerce-tab.php:32
+#, php-format
+msgid ""
+"%1$s is active and handles some of the same things. We recommend turning off "
+"%2$s here."
+msgstr ""
+"%1$s فعال است و بخشی از همین کارها را انجام می‌دهد. پیشنهاد می‌کنیم «%2$s» را "
+"اینجا خاموش کنید."
+
+#: views/admin/settings.php:114
 msgid "Save changes"
 msgstr "ذخیره تغییرات"
 
-#: views/admin/settings.php:98
+#: views/admin/settings.php:116
 msgid "Unsaved changes"
 msgstr "تغییرهای ذخیره‌نشده"
 
@@ -783,7 +952,8 @@ msgstr "%s نوشته بررسی شد…"
 msgid "No posts need fixing."
 msgstr "هیچ نوشته‌ای نیاز به اصلاح ندارد."
 
-#. translators: 1: number of posts that would change, 2: number of posts checked.
+#. translators: 1: number of posts that would change, 2: number of posts
+#. checked.
 #: public/js/admin.js:4393
 msgid "%1$s post of %2$s checked would change."
 msgid_plural "%1$s posts of %2$s checked would change."

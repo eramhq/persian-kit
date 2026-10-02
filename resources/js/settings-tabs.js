@@ -2,7 +2,8 @@
  * Alpine component for the settings page tabs. The page works without it:
  * each tab is a link to ?tab=<name> and the server marks the active one.
  * This switches panels in place, keeps the address and the form's
- * redirect target on the current tab, and notices unsaved edits.
+ * redirect target on the current tab, notices unsaved edits, and tells the
+ * server when the integrations were seen, so their New badges go away.
  */
 export default function settingsTabs() {
     return {
@@ -19,12 +20,17 @@ export default function settingsTabs() {
                 tab.addEventListener('keydown', (event) => this.onKeydown(event, tab));
             });
 
-            // The Plugins screen's compatibility notice links to these cards.
-            if (window.location.hash === '#persian-kit-compatibility') {
-                this.$el.querySelectorAll('#persian-kit-compatibility details').forEach((details) => {
-                    details.open = true;
-                });
-            }
+            // The Plugins screen's compatibility notice, and the advice on
+            // cards and tabs, link to these cards.
+            const openCompatibility = () => {
+                if (window.location.hash === '#persian-kit-compatibility') {
+                    this.$el.querySelectorAll('#persian-kit-compatibility details').forEach((details) => {
+                        details.open = true;
+                    });
+                }
+            };
+            openCompatibility();
+            window.addEventListener('hashchange', openCompatibility);
 
             const form = this.form();
             if (form) {
@@ -97,6 +103,10 @@ export default function settingsTabs() {
                 }
             });
 
+            if (name === 'integrations' || name === 'woocommerce') {
+                this.markIntegrationsSeen(name);
+            }
+
             // The Tools tab is outside the form and saves nothing.
             const saveBar = this.$el.querySelector('.persian-kit-savebar');
             if (saveBar) {
@@ -114,6 +124,21 @@ export default function settingsTabs() {
             if (referer) {
                 referer.value = url.pathname + url.search;
             }
+        },
+
+        // The page carries a nonce only while an integration is unseen.
+        // Each tab is reported once.
+        markIntegrationsSeen(tab) {
+            const nonce = this.$el.dataset.seenNonce;
+            this.seenTabs = this.seenTabs || [];
+            if (!nonce || !window.ajaxurl || this.seenTabs.includes(tab)) {
+                return;
+            }
+
+            this.seenTabs.push(tab);
+
+            const body = new URLSearchParams({ action: 'persian_kit_seen_integrations', _ajax_nonce: nonce, tab });
+            window.fetch(window.ajaxurl, { method: 'POST', credentials: 'same-origin', body }).catch(() => {});
         },
     };
 }

@@ -6,6 +6,8 @@ use PersianKit\Core\ModuleRegistry;
 use PersianKit\Core\SettingsManager;
 use PersianKit\Modules\DigitConversion\DigitConversionModule;
 use PersianKit\Modules\CharNormalization\CharNormalizationModule;
+use PersianKit\Modules\Forms\AcfModule;
+use PersianKit\Modules\Forms\Cf7Module;
 
 defined('ABSPATH') || exit;
 
@@ -19,7 +21,7 @@ class InstallManager
     /**
      * Bump when stored settings need a migration, and add the step to migrate().
      */
-    public const DB_VERSION = 2;
+    public const DB_VERSION = 3;
 
     public static function activate(bool $networkWide): void
     {
@@ -109,5 +111,29 @@ class InstallManager
                 ),
             ]);
         }
+
+        if ($fromVersion < 3) {
+            self::splitFormsModule($settings);
+        }
+    }
+
+    /**
+     * Version 3 split the Forms module, with its Contact Form 7 and ACF
+     * options, into a module for each plugin.
+     */
+    private static function splitFormsModule(SettingsManager $settings): void
+    {
+        $forms = $settings->module('forms');
+        if ($forms === []) {
+            return;
+        }
+
+        $enabled = (bool) ($forms['enabled'] ?? true);
+
+        $settings->updateModules([
+            Cf7Module::key() => array_replace(Cf7Module::defaults(), ['enabled' => $enabled && (bool) ($forms['cf7'] ?? true)]),
+            AcfModule::key() => array_replace(AcfModule::defaults(), ['enabled' => $enabled && (bool) ($forms['acf'] ?? true)]),
+        ]);
+        $settings->removeModule('forms');
     }
 }

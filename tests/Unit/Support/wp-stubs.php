@@ -7,6 +7,19 @@ if (!defined('WP_LANG_DIR')) {
     define('WP_LANG_DIR', sys_get_temp_dir() . '/persian-kit-unit-tests/languages');
 }
 
+if (!defined('WEEK_IN_SECONDS')) {
+    define('WEEK_IN_SECONDS', 604800);
+}
+
+if (!class_exists('WP_Post')) {
+    class WP_Post
+    {
+        public int $ID = 0;
+        public string $post_type = 'post';
+        public string $post_title = '';
+    }
+}
+
 if (!class_exists('WP_Query')) {
     class WP_Query
     {

@@ -5,9 +5,10 @@ if (!defined('WP_UNINSTALL_PLUGIN')) {
 }
 
 $persianKitDeleteOptions = static function (): void {
-    foreach (['persian_kit_settings', 'persian_kit_db_version', 'persian_kit_show_welcome', 'persian_kit_normalize_job', 'persian_kit_normalize_cursor'] as $option) {
+    foreach (['persian_kit_settings', 'persian_kit_db_version', 'persian_kit_show_welcome', 'persian_kit_seen_integrations', 'persian_kit_normalize_job', 'persian_kit_normalize_cursor'] as $option) {
         delete_option($option);
     }
+    delete_transient('persian_kit_cf7_field_usage');
 };
 
 if (is_multisite()) {
