@@ -35,34 +35,36 @@ $nationalIdModes = [
 
 $nationalId = $moduleSettings['national_id'] ?? \PersianKit\Modules\WooCommerce\NationalIdField::OFF;
 ?>
-<?php foreach ($checkboxes as $settingKey => $checkbox) : ?>
-    <div class="persian-kit-setting-row">
-        <label>
-            <input type="hidden" name="persian_kit_settings[woocommerce][<?php echo esc_attr($settingKey); ?>]" value="0">
-            <input
-                type="checkbox"
-                name="persian_kit_settings[woocommerce][<?php echo esc_attr($settingKey); ?>]"
-                value="1"
-                <?php checked(!empty($moduleSettings[$settingKey])); ?>
-            >
-            <?php echo esc_html($checkbox['label']); ?>
-        </label>
-        <p class="description"><?php echo esc_html($checkbox['description']); ?></p>
-    </div>
-<?php endforeach; ?>
+<ul class="persian-kit-options">
+    <?php foreach ($checkboxes as $settingKey => $checkbox) : ?>
+        <?php
+        \PersianKit\Components\View::load('admin/partials/checkbox-option', [
+            'moduleKey'  => 'woocommerce',
+            'settingKey' => $settingKey,
+            'label'      => $checkbox['label'],
+            'help'       => $checkbox['description'],
+            'checked'    => !empty($moduleSettings[$settingKey]),
+        ]);
+        ?>
+    <?php endforeach; ?>
 
-<div class="persian-kit-setting-row">
-    <label for="persian-kit-national-id">
-        <?php esc_html_e('National ID field at checkout', 'persian-kit'); ?>
-    </label>
-    <select id="persian-kit-national-id" name="persian_kit_settings[woocommerce][national_id]">
-        <?php foreach ($nationalIdModes as $value => $label) : ?>
-            <option value="<?php echo esc_attr($value); ?>" <?php selected($nationalId, $value); ?>>
-                <?php echo esc_html($label); ?>
-            </option>
-        <?php endforeach; ?>
-    </select>
-    <p class="description">
-        <?php esc_html_e('Asks for the customer\'s national ID (کد ملی) and checks it. Required asks every customer, in any country. The ID is shown on the order screen and in order emails.', 'persian-kit'); ?>
-    </p>
-</div>
+    <li class="persian-kit-option persian-kit-option--select">
+        <label class="persian-kit-option__label" for="persian-kit-national-id">
+            <?php esc_html_e('National ID field at checkout', 'persian-kit'); ?>
+        </label>
+        <select
+            id="persian-kit-national-id"
+            name="persian_kit_settings[woocommerce][national_id]"
+            aria-describedby="persian-kit-national-id-help"
+        >
+            <?php foreach ($nationalIdModes as $value => $label) : ?>
+                <option value="<?php echo esc_attr($value); ?>" <?php selected($nationalId, $value); ?>>
+                    <?php echo esc_html($label); ?>
+                </option>
+            <?php endforeach; ?>
+        </select>
+        <span class="persian-kit-option__help" id="persian-kit-national-id-help">
+            <?php esc_html_e('Asks for the customer\'s national ID (کد ملی) and checks it. Required asks every customer, in any country. The ID is shown on the order screen and in order emails.', 'persian-kit'); ?>
+        </span>
+    </li>
+</ul>

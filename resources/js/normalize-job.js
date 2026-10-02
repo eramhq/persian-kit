@@ -41,15 +41,13 @@ export default function normalizeJob(config = {}) {
         },
 
         init() {
-            // The fix runs with the saved settings, so edits elsewhere in the
-            // form must be saved first. The panel's own inputs are not settings.
-            const form = this.$el.closest('form');
+            // The fix runs with the saved settings, so edits in the settings
+            // form must be saved first. This panel sits outside that form.
+            const form = document.getElementById('persian-kit-settings-form');
             if (form) {
-                const markDirty = (event) => {
-                    if (!this.$el.contains(event.target)) {
-                        this.settingsDirty = true;
-                        this.confirming = false;
-                    }
+                const markDirty = () => {
+                    this.settingsDirty = true;
+                    this.confirming = false;
                 };
                 form.addEventListener('change', markDirty);
                 form.addEventListener('input', markDirty);

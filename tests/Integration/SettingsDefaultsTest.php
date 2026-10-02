@@ -100,7 +100,7 @@ class SettingsDefaultsTest extends WordPressIntegrationTestCase
 
         $this->assertFalse($this->settings()->module('date_conversion', 'jalali_permalinks'));
         $this->assertMatchesRegularExpression(
-            '/<input type="hidden" name="persian_kit_settings\[date_conversion\]\[jalali_permalinks\]" value="0">\s*<input\s+type="checkbox"\s+name="persian_kit_settings\[date_conversion\]\[jalali_permalinks\]"\s+value="1"\s+>/s',
+            '/<input type="hidden" name="persian_kit_settings\[date_conversion\]\[jalali_permalinks\]" value="0">\s*<input\s+type="checkbox"\s+name="persian_kit_settings\[date_conversion\]\[jalali_permalinks\]"\s+value="1"(?:\s+aria-describedby="[^"]*")?\s*>/s',
             $this->renderSettingsPage()
         );
     }

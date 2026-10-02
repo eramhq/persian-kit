@@ -20,8 +20,24 @@
 }
 
 .persian-kit-wrap .persian-kit-page-description {
-    margin-bottom: 1.5em;
+    margin-bottom: 1em;
     color: #646970;
+}
+
+/* Elements that set their own display still honour hidden and x-cloak. */
+.persian-kit-wrap [hidden],
+.persian-kit-wrap [x-cloak] {
+    display: none !important;
+}
+
+/* Tabs */
+.persian-kit-wrap .persian-kit-tabs {
+    margin-bottom: 1em;
+}
+
+.persian-kit-panel:focus-visible {
+    outline: 2px solid var(--pk-color-primary);
+    outline-offset: 2px;
 }
 
 .persian-kit-compatibility {
@@ -149,7 +165,7 @@
     background: var(--pk-color-bg);
     border: 1px solid var(--pk-color-border);
     border-radius: var(--pk-radius);
-    margin-bottom: 1em;
+    margin-bottom: 12px;
 }
 
 /* Module header — flex row */
@@ -157,7 +173,8 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 16px;
+    gap: 16px;
+    padding: 12px 16px;
 }
 
 .persian-kit-module__info {
@@ -187,7 +204,6 @@
     align-items: center;
     cursor: pointer;
     flex-shrink: 0;
-    margin-inline-start: 16px;
 }
 
 .persian-kit-module__toggle input[type="checkbox"] {
@@ -240,11 +256,62 @@
 /* Settings area */
 .persian-kit-module__settings {
     border-top: 1px solid var(--pk-color-border);
-    padding: 16px;
+    padding: 12px 16px;
 }
 
-.persian-kit-module__settings .persian-kit-setting-row + .persian-kit-setting-row {
-    margin-top: 1em;
+.persian-kit-module__settings > * {
+    margin-block: 0;
+}
+
+.persian-kit-module__settings > * + * {
+    margin-top: 12px;
+}
+
+.persian-kit-module__settings fieldset {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    min-width: 0;
+}
+
+.persian-kit-options__legend {
+    padding: 0;
+    margin-bottom: 8px;
+    font-weight: 600;
+}
+
+/* Options: one per line, the help line under its label */
+.persian-kit-options {
+    display: grid;
+    gap: 10px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.persian-kit-option {
+    display: grid;
+    gap: 2px;
+    margin: 0;
+}
+
+.persian-kit-option__help {
+    color: #646970;
+    font-size: 13px;
+    /* Lines up with the label text, past the checkbox. */
+    padding-inline-start: 24px;
+}
+
+.persian-kit-option--select {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 4px 8px;
+}
+
+.persian-kit-option--select .persian-kit-option__help {
+    flex-basis: 100%;
+    padding-inline-start: 0;
 }
 
 /* Warning text */
@@ -252,16 +319,53 @@
     color: var(--pk-color-danger);
 }
 
-/* Setting separator */
-.persian-kit-setting-separator {
-    border: none;
-    border-top: 1px solid var(--pk-color-border);
-    margin: 1.5em 0;
+/* Save bar: stays at the bottom of the screen while the form scrolls */
+.persian-kit-savebar {
+    position: sticky;
+    bottom: 0;
+    z-index: 10;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px 16px;
+    margin-top: 16px;
+    padding: 12px 16px;
+    background: var(--pk-color-bg);
+    border: 1px solid var(--pk-color-border);
+    border-radius: var(--pk-radius);
+    box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.06);
 }
 
-/* Setting row title */
-.persian-kit-setting-row__title {
-    margin: 0 0 0.5em;
+.persian-kit-savebar__status {
+    color: #646970;
+}
+
+.persian-kit-savebar__status::before {
+    content: "";
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    margin-inline-end: 6px;
+    border-radius: 50%;
+    background: #dba617;
+    vertical-align: middle;
+}
+
+/* Tools */
+.persian-kit-tool {
+    background: var(--pk-color-bg);
+    border: 1px solid var(--pk-color-border);
+    border-radius: var(--pk-radius);
+    padding: 16px;
+}
+
+.persian-kit-tool__title {
+    margin: 0 0 4px;
+    font-size: 14px;
+}
+
+.persian-kit-tool > .description {
+    margin: 0 0 12px;
 }
 
 /* Batch actions */
@@ -289,17 +393,14 @@
 
 .persian-kit-progress .spinner {
     float: none;
-    margin: 0 4px 0 0;
+    margin: 0;
+    margin-inline-end: 4px;
 }
 
-/* Inline notices inside settings */
-.persian-kit-module__settings .notice.inline {
+/* Inline notices inside the tool */
+.persian-kit-tool .notice.inline {
+    margin: 0 0 1em;
     padding: 0.5em 1em;
-}
-
-/* Footer */
-.persian-kit-footer {
-    margin-top: 1em;
 }
 
 /* Batch post type picker */
@@ -313,11 +414,6 @@
 .persian-kit-post-types legend {
     font-weight: 600;
     margin-bottom: 0.25em;
-}
-
-/* Batch confirmation */
-.persian-kit-module__settings .persian-kit-batch-confirm {
-    margin: 0 0 1em;
 }
 
 /* Welcome notice */
@@ -337,4 +433,18 @@
 .persian-kit-warning-list {
     list-style: disc;
     padding-inline-start: 1.5em;
+}
+
+/* Narrow screens */
+@media screen and (max-width: 600px) {
+    .persian-kit-compatibility__recommendation {
+        flex-direction: column;
+        gap: 0.25em;
+    }
+
+    .persian-kit-module__header,
+    .persian-kit-module__settings,
+    .persian-kit-tool {
+        padding-inline: 12px;
+    }
 }
