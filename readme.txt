@@ -32,6 +32,7 @@ Persian Kit is a modular WordPress plugin for Persian-language sites. It focuses
 * WooCommerce Jalali date support for supported screens (HPOS-compatible)
 * WooCommerce checkout for Iran: Persian digits in phone numbers and postcodes are saved as English digits, Iranian phone numbers and postcodes are checked, an optional national ID (کد ملی) field, and optional city suggestions for each province
 * Persian digits in the WooCommerce cart and checkout blocks' prices
+* Persian digits in WooCommerce emails: order numbers, prices, quantities and dates, while phone numbers, postcodes and links keep English digits (off until you turn it on)
 * Thousand toman and thousand rial currencies for WooCommerce, with prices in rials in the product data search engines read
 * Works with Yoast SEO and Rank Math: prices in rials and Gregorian dates in what they give search engines, and Jalali titles on date archives
 * A Jalali date picker for Contact Form 7 and ACF date fields, WooCommerce's admin date fields and the post date in the classic editor and Quick Edit, which keep saving Gregorian dates
@@ -108,6 +109,10 @@ No. WooCommerce features, and the WooCommerce tab on the settings page, only app
 = What does Persian Kit change at the WooCommerce checkout? =
 
 With the WooCommerce module on (WooCommerce tab), what customers type is fixed before it is saved: Persian and Arabic digits in phone numbers and postcodes become English digits, and Arabic ي and ك in names and addresses become Persian ی and ک. For addresses in Iran, the phone must be a valid mobile or landline number and the postcode must have 10 valid digits. Both work in the classic checkout, the block checkout and My Account. You can also ask for the customer's national ID (optional or required); it is checked, and shown on the order screen and in order emails.
+
+= Can WooCommerce emails show Persian digits? =
+
+Yes. Turn on Display > Persian digits > WooCommerce emails. Order numbers, prices, quantities and dates in emails in Persian then use Persian digits, in the subject too. Phone numbers, postcodes, coupon codes and links keep English digits, so they can be copied and still work. A customer who pastes an order number in Persian digits into the order tracking form, or an admin who pastes it into the order search, still finds the order. Gmail may not find "123" in a subject that says "۱۲۳"; to keep order numbers in English digits, return false from the `persian_kit_digit_conversion` filter for `woocommerce_email_order_number`.
 
 = Can I sell only to some provinces? =
 

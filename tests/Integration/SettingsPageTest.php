@@ -35,6 +35,8 @@ class SettingsPageTest extends WordPressIntegrationTestCase
         ['persian_kit_settings[digit_conversion][numbers]', 'checkbox', '1', true],
         ['persian_kit_settings[digit_conversion][prices]', 'hidden', '0', false],
         ['persian_kit_settings[digit_conversion][prices]', 'checkbox', '1', true],
+        ['persian_kit_settings[digit_conversion][emails]', 'hidden', '0', false],
+        ['persian_kit_settings[digit_conversion][emails]', 'checkbox', '1', false],
         ['persian_kit_settings[date_conversion][enabled]', 'hidden', '0', false],
         ['persian_kit_settings[date_conversion][enabled]', 'checkbox', '1', true],
         ['persian_kit_settings[date_conversion][global_conversion]', 'hidden', '0', false],

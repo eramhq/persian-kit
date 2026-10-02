@@ -474,7 +474,7 @@ add_filter('persian_kit_date_display', function (string $date, string $format, i
 
 ### `persian_kit_digit_conversion`
 
-Return `false` to stop digit conversion on one hook. The second argument is the hook name: `the_content`, `the_title`, `get_the_excerpt`, `comment_text`, `widget_text`, `widget_text_content`, `human_time_diff` or `get_the_terms`. With the module's options on, also `persian_kit_date_display` (Jalali dates), `number_format_i18n` (counts), `formatted_woocommerce_price` (WooCommerce prices) and `woocommerce_block_prices` (the script that converts prices drawn by the cart and checkout blocks, loaded on those pages only).
+Return `false` to stop digit conversion on one hook. The second argument is the hook name: `the_content`, `the_title`, `get_the_excerpt`, `comment_text`, `widget_text`, `widget_text_content`, `human_time_diff` or `get_the_terms`. With the module's options on, also `persian_kit_date_display` (Jalali dates), `number_format_i18n` (counts), `formatted_woocommerce_price` (WooCommerce prices), `woocommerce_block_prices` (the script that converts prices drawn by the cart and checkout blocks, loaded on those pages only), `woocommerce_emails` (everything in [WooCommerce emails](#woocommerce-emails)) and `woocommerce_email_order_number` (order numbers in emails only).
 
 Text inside `<pre>`, `<code>`, `<kbd>` and `<samp>` elements keeps its digits.
 
@@ -484,7 +484,7 @@ add_filter('persian_kit_digit_conversion', function (bool $enabled, string $hook
 }, 10, 2);
 ```
 
-Digit conversion never runs on admin screens, in REST responses or in feeds. The email exclusion is narrow: it skips only text filtered while a `wp_mail` filter is running. Content rendered before `wp_mail()` is called, such as an email template that calls `the_title` or `the_content`, is still converted.
+Digit conversion never runs on admin screens, in REST responses or in feeds. Outgoing mail is skipped while a `wp_mail` filter is running; content rendered before `wp_mail()` is called, such as an email template that calls `the_title` or `the_content`, is still converted. WooCommerce emails are the exception: the site-wide filters leave them alone, and they follow their own option, [WooCommerce emails](#woocommerce-emails).
 
 ### `persian_kit_char_normalization`
 
@@ -580,7 +580,7 @@ Filters the built-in compatibility guidance for other Persian plugins.
 
 The WooCommerce module's checkout options (settings page, WooCommerce tab, Checkout and addresses) apply to the classic (shortcode) checkout, the block checkout and My Account > Addresses:
 
-- `checkout_normalize`: Persian and Arabic digits in phone numbers and postcodes become English digits, postcodes lose spaces and dashes, and Arabic ي/ك in names, company, address and city become Persian ی/ک, for every country. The block checkout is fixed in the Store API request (`rest_pre_dispatch`, including batch requests), because WooCommerce's own phone and postcode checks reject Persian digits before any checkout hook runs.
+- `checkout_normalize`: Persian and Arabic digits in phone numbers and postcodes become English digits, postcodes lose spaces and dashes, and Arabic ي/ك in names, company, address and city become Persian ی/ک, for every country. The block checkout is fixed in the Store API request (`rest_pre_dispatch`, including batch requests), because WooCommerce's own phone and postcode checks reject Persian digits before any checkout hook runs. Order numbers typed with Persian or Arabic digits are found too: in the order tracking form (`[woocommerce_order_tracking]`, at priority 1 of `woocommerce_shortcode_order_tracking_order_id`, before plugins that make their own order numbers) and in the admin's order search (WooCommerce › Orders, with order tables or posts storage, and `wc_order_search()`).
 - `checkout_validate`: for addresses in Iran, the phone must pass `persian_kit_validate_phone()` (mobile or landline) and the postcode `persian_kit_validate_postal_code()`. The block checkout reports these errors when the order is placed, as WooCommerce does for its own address checks.
 - `national_id` (`off`, `optional`, `required`): a national ID field, checked with `persian_kit_validate_national_id()` and stored in English digits. `required` asks every customer, in any country.
 - `city_select`: for Iranian addresses, the city field suggests the province's cities (a native `<datalist>`), in the block and classic checkout, the classic cart's shipping calculator and My Account (the cart block has no address form). The field stays a text field and nothing is checked against the list, so customers can type a village. A user change of province clears a city that is on another province's list only. Browsers without datalist suggestions show a plain text field. The list is the Statistical Centre of Iran's 1403 country-divisions list of cities (`resources/data/ir-cities.json`, copied to `public/data/` by the build), keyed by WooCommerce state code.
@@ -624,6 +624,21 @@ Yoast SEO's and Rank Math's schema and Rank Math's Open Graph price tags are con
 Product feeds and accounting exports from other plugins may not accept `IRHT` or `IRHR`, which aren't ISO codes.
 
 If Persian Kit is deactivated while the store uses `IRHT` or `IRHR`, prices show without a symbol, and saving WooCommerce › Settings › General resets the currency to WooCommerce's default, because WooCommerce only saves a listed currency. Switch the currency back to toman or rial first (and convert the prices).
+
+## WooCommerce Emails
+
+Display › Persian digits › WooCommerce emails (`emails`, off by default) gives WooCommerce emails Persian digits where people read them: order numbers, prices, quantities (also refunded ones, `<del>2</del> <ins>1</ins>`) and dates, Jalali or Gregorian, in the HTML and plain-text body, and the order number and date in the subject and heading. It applies to every email WooCommerce builds from its `emails/…` template parts, whoever sends it: an admin changing an order's status, the classic or block checkout, cron and WP-CLI.
+
+- **Persian emails only.** Digits are converted while the email's language is Persian (`determine_locale()` starts with `fa`). WooCommerce switches to the customer's language for customer emails, so on a bilingual store an English email keeps English digits.
+- **Values, not the body.** Each value is converted where WooCommerce formats it (`formatted_woocommerce_price`, `woocommerce_email_order_item_quantity`, `woocommerce_order_number` at `PHP_INT_MAX`, `date_i18n`), never the whole body. Formats machines read, such as `<time datetime>`, keep English digits.
+- **Subject and heading.** Only the values of `{order_number}` and `{order_date}` are converted (`woocommerce_email_format_string`), not the site title or other text. `{order_date}` is a Jalali date while the WooCommerce module is on, as in the body.
+- **What keeps English digits:** phone numbers, postcodes, email addresses, national IDs, coupon codes, SKUs, product options (such as "Size: 42"), bank details, tracking numbers, the "downloads remaining" count, attachments such as PDF invoices, and SMS. Links keep English digits too: while an email renders, `esc_url()` output (`clean_url`) turns Persian digits back into English, so a link built from an order number or a price still works.
+- **The order's structured data** (`woocommerce_structured_data_order`, at `PHP_INT_MAX`) keeps English digits and a numeric quantity, whichever plugin converted them.
+- **Opt out** with `persian_kit_digit_conversion`: `woocommerce_emails` turns it all off, `woocommerce_email_order_number` keeps order numbers in English digits while prices and dates convert.
+
+While the option is off, emails keep English digits, also on a request whose pages have Persian digits, such as the classic checkout. Customers and admins can paste an order number in Persian digits into the order tracking form and the order search (see [WooCommerce Checkout](#woocommerce-checkout)). Gmail searches for "123" may not match "۱۲۳" in a subject; a store that minds can keep order numbers in English digits.
+
+Another plugin that converts digits in emails, such as Persian WooCommerce's Persian prices or wp-parsidate's email option, still does so; converting twice changes nothing.
 
 ## Integrations
 
@@ -715,7 +730,7 @@ The settings page (the Persian Kit menu) has five tabs: Display and Writing hold
 
 | Module key | On the settings page | Settings (new-install default) |
 | --- | --- | --- |
-| `digit_conversion` | Display > Persian digits | `enabled` (off), `dates`, `numbers`, `prices` (on) |
+| `digit_conversion` | Display > Persian digits | `enabled` (off), `dates`, `numbers`, `prices` (on), `emails` (off, WooCommerce emails) |
 | `date_conversion` | Display > Jalali dates | `enabled` (on), `global_conversion` (off), `jalali_archives` (on), `jalali_permalinks` (off) |
 | `admin_font` | Display > Admin font | `enabled` (on), `font` (`vazirmatn`, `noto-sans-arabic`, `ibm-plex-sans-arabic`; default `vazirmatn`) |
 | `char_normalization` | Writing > Persian ی and ک | `enabled` (on), `normalize_on_save` (off), `teh_marbuta` (off), `half_space_fix` (off) |

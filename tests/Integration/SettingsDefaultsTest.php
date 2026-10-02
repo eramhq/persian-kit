@@ -176,7 +176,7 @@ class SettingsDefaultsTest extends WordPressIntegrationTestCase
         update_option('persian_kit_settings', ['digit_conversion' => ['prices' => true]] + get_option('persian_kit_settings'));
 
         $this->assertSame(
-            ['enabled' => true, 'dates' => false, 'numbers' => true, 'prices' => true],
+            ['enabled' => true, 'dates' => false, 'numbers' => true, 'prices' => true, 'emails' => false],
             get_option('persian_kit_settings')['digit_conversion']
         );
     }

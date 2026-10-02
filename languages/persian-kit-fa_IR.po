@@ -1,26 +1,27 @@
-# Persian (Iran) translation for Persian Kit.
-# Copyright (C) 2026 Navid Kashani
-# This file is distributed under the GPL v2 or later.
 msgid ""
 msgstr ""
 "Project-Id-Version: Persian Kit 1.0.0-beta.4\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/persian-kit\n"
-"POT-Creation-Date: 2026-10-02T16:02:30+00:00\n"
-"PO-Revision-Date: 2026-10-01 00:00+0000\n"
 "Last-Translator: Persian Kit contributors\n"
 "Language-Team: Persian (Iran)\n"
-"Language: fa_IR\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"POT-Creation-Date: 2026-10-02T16:02:30+00:00\n"
+"PO-Revision-Date: 2026-10-01 00:00+0000\n"
+"Language: fa_IR\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 "X-Domain: persian-kit\n"
 "X-Generator: WP-CLI 2.12.0\n"
 
 #. Plugin Name of the plugin
-#: persian-kit.php src/Core/AdminPage.php:111 src/Core/AdminPage.php:112
-#: src/Core/ConflictDetector.php:144 src/Service/Assets/AssetManager.php:45
-#: views/admin/partials/footer.php:30 views/admin/partials/header.php:35
+#: persian-kit.php
+#: src/Core/AdminPage.php:111
+#: src/Core/AdminPage.php:112
+#: src/Core/ConflictDetector.php:144
+#: src/Service/Assets/AssetManager.php:45
+#: views/admin/partials/footer.php:30
+#: views/admin/partials/header.php:35
 msgid "Persian Kit"
 msgstr "Persian Kit"
 
@@ -32,9 +33,7 @@ msgstr ""
 #. Description of the plugin
 #: persian-kit.php
 msgid "A modular Persian (Farsi) language toolkit for WordPress."
-msgstr ""
-"ابزارهای زبان فارسی برای وردپرس، که هر کدام را جداگانه می‌توانید روشن یا "
-"خاموش کنید."
+msgstr "ابزارهای زبان فارسی برای وردپرس، که هر کدام را جداگانه می‌توانید روشن یا خاموش کنید."
 
 #. Author of the plugin
 #: persian-kit.php
@@ -85,7 +84,8 @@ msgstr "سازگاری"
 msgid "You do not have permission to access this page."
 msgstr "شما اجازه دسترسی به این صفحه را ندارید."
 
-#: src/Core/AdminPage.php:370 views/admin/partials/woocommerce-settings.php:180
+#: src/Core/AdminPage.php:370
+#: views/admin/partials/woocommerce-settings.php:180
 msgid "Display"
 msgstr "نمایش"
 
@@ -93,7 +93,8 @@ msgstr "نمایش"
 msgid "Writing"
 msgstr "نگارش"
 
-#: src/Core/AdminPage.php:372 src/Core/ConflictDetector.php:40
+#: src/Core/AdminPage.php:372
+#: src/Core/ConflictDetector.php:40
 #: src/Core/ConflictDetector.php:82
 #: src/Modules/WooCommerce/WooCommerceModule.php:19
 #: src/Modules/WooCommerce/WooCommerceModule.php:54
@@ -111,23 +112,25 @@ msgstr "ابزارها"
 
 #: src/Core/ConflictDetector.php:27
 msgid "WP-Parsidate is already handling some Persian date and text features."
-msgstr ""
-"افزونه WP-Parsidate بخشی از کارهای مربوط به تاریخ و متن فارسی را از قبل "
-"انجام می‌دهد."
+msgstr "افزونه WP-Parsidate بخشی از کارهای مربوط به تاریخ و متن فارسی را از قبل انجام می‌دهد."
 
-#: src/Core/ConflictDetector.php:29 src/Core/ConflictDetector.php:36
-#: src/Core/ConflictDetector.php:50 src/Core/ConflictDetector.php:57
+#: src/Core/ConflictDetector.php:29
+#: src/Core/ConflictDetector.php:36
+#: src/Core/ConflictDetector.php:50
+#: src/Core/ConflictDetector.php:57
 #: src/Core/ConflictDetector.php:76
 #: src/Modules/DateConversion/DateConversionModule.php:19
 #: views/admin/partials/digit-conversion-settings.php:16
 msgid "Jalali dates"
 msgstr "تاریخ شمسی"
 
-#: src/Core/ConflictDetector.php:30 src/Core/ConflictDetector.php:51
+#: src/Core/ConflictDetector.php:30
+#: src/Core/ConflictDetector.php:51
 msgid "Digit conversion in content"
 msgstr "تبدیل اعداد در محتوا"
 
-#: src/Core/ConflictDetector.php:31 src/Core/ConflictDetector.php:52
+#: src/Core/ConflictDetector.php:31
+#: src/Core/ConflictDetector.php:52
 msgid "Arabic-to-Persian text normalization"
 msgstr "یکسان‌سازی حروف عربی به فارسی"
 
@@ -139,32 +142,37 @@ msgstr "فونت پیشخوان و ویرایشگر"
 msgid "WooCommerce Jalali dates"
 msgstr "تاریخ شمسی در ووکامرس"
 
-#: src/Core/ConflictDetector.php:37 src/Core/ConflictDetector.php:58
+#: src/Core/ConflictDetector.php:37
+#: src/Core/ConflictDetector.php:58
 #: src/Core/ConflictDetector.php:78
 #: src/Modules/DigitConversion/DigitConversionModule.php:21
 #: views/admin/partials/woocommerce-settings.php:181
 msgid "Persian digits"
 msgstr "اعداد فارسی"
 
-#: src/Core/ConflictDetector.php:38 src/Core/ConflictDetector.php:59
+#: src/Core/ConflictDetector.php:38
+#: src/Core/ConflictDetector.php:59
 #: src/Core/ConflictDetector.php:79
 #: src/Modules/CharNormalization/CharNormalizationModule.php:20
 msgid "Persian ی and ک"
 msgstr "ی و ک فارسی"
 
-#: src/Core/ConflictDetector.php:39 src/Core/ConflictDetector.php:60
+#: src/Core/ConflictDetector.php:39
+#: src/Core/ConflictDetector.php:60
 #: src/Core/ConflictDetector.php:80
 #: src/Modules/AdminFont/AdminFontModule.php:26
 msgid "Admin font"
 msgstr "فونت پیشخوان"
 
-#: src/Core/ConflictDetector.php:41 src/Core/ConflictDetector.php:61
+#: src/Core/ConflictDetector.php:41
+#: src/Core/ConflictDetector.php:61
 #: src/Core/ConflictDetector.php:81
 #: src/Modules/ZWNJEditor/ZWNJEditorModule.php:19
 msgid "Half-space key"
 msgstr "کلید نیم‌فاصله"
 
-#: src/Core/ConflictDetector.php:42 src/Core/ConflictDetector.php:62
+#: src/Core/ConflictDetector.php:42
+#: src/Core/ConflictDetector.php:62
 #: src/Core/ConflictDetector.php:83
 #: src/Modules/Utilities/UtilitiesModule.php:19
 msgid "Persian slugs"
@@ -172,9 +180,7 @@ msgstr "نامک فارسی"
 
 #: src/Core/ConflictDetector.php:48
 msgid "WP Jalali is already handling some Persian date and text features."
-msgstr ""
-"افزونه WP Jalali بخشی از کارهای مربوط به تاریخ و متن فارسی را از قبل انجام "
-"می‌دهد."
+msgstr "افزونه WP Jalali بخشی از کارهای مربوط به تاریخ و متن فارسی را از قبل انجام می‌دهد."
 
 #: src/Core/ConflictDetector.php:53
 msgid "Some admin and editor styling"
@@ -185,21 +191,12 @@ msgid "Jalali archive and permalink behavior"
 msgstr "بایگانی‌ها و پیوندهای یکتای شمسی"
 
 #: src/Core/ConflictDetector.php:64
-msgid ""
-"Persian Kit also serves Jalali archive pages such as /1405/07/, and can put "
-"Jalali dates in post links, as WP Jalali does: turn on \"Jalali dates in "
-"post links\" under Jalali dates."
-msgstr ""
-"Persian Kit هم برگه‌های بایگانی شمسی مثل ⁦/1405/07/⁩ را نشان می‌دهد و مثل WP "
-"Jalali می‌تواند تاریخ شمسی را در پیوند نوشته‌ها بگذارد: در بخش «تاریخ شمسی»، "
-"«تاریخ شمسی در پیوند نوشته‌ها» را روشن کنید."
+msgid "Persian Kit also serves Jalali archive pages such as /1405/07/, and can put Jalali dates in post links, as WP Jalali does: turn on \"Jalali dates in post links\" under Jalali dates."
+msgstr "Persian Kit هم برگه‌های بایگانی شمسی مثل ⁦/1405/07/⁩ را نشان می‌دهد و مثل WP Jalali می‌تواند تاریخ شمسی را در پیوند نوشته‌ها بگذارد: در بخش «تاریخ شمسی»، «تاریخ شمسی در پیوند نوشته‌ها» را روشن کنید."
 
 #: src/Core/ConflictDetector.php:69
-msgid ""
-"Persian WooCommerce is already handling WooCommerce-specific Persian date "
-"features."
-msgstr ""
-"افزونه ووکامرس فارسی تاریخ‌های شمسی مخصوص ووکامرس را از قبل مدیریت می‌کند."
+msgid "Persian WooCommerce is already handling WooCommerce-specific Persian date features."
+msgstr "افزونه ووکامرس فارسی تاریخ‌های شمسی مخصوص ووکامرس را از قبل مدیریت می‌کند."
 
 #: src/Core/ConflictDetector.php:71
 msgid "WooCommerce Jalali date inputs"
@@ -219,21 +216,13 @@ msgid "Convert every date (advanced)"
 msgstr "تبدیل همه تاریخ‌ها (پیشرفته)"
 
 #: src/Core/ConflictDetector.php:85
-msgid ""
-"Let Persian WooCommerce handle Woo-specific dates. Persian Kit can still "
-"handle normal WordPress dates."
-msgstr ""
-"تاریخ‌های مخصوص ووکامرس را به ووکامرس فارسی بسپارید. Persian Kit همچنان "
-"می‌تواند تاریخ‌های معمول وردپرس را شمسی کند."
+msgid "Let Persian WooCommerce handle Woo-specific dates. Persian Kit can still handle normal WordPress dates."
+msgstr "تاریخ‌های مخصوص ووکامرس را به ووکامرس فارسی بسپارید. Persian Kit همچنان می‌تواند تاریخ‌های معمول وردپرس را شمسی کند."
 
 #: src/Core/ConflictDetector.php:145
 #: views/admin/partials/compatibility-guidance.php:41
-msgid ""
-"Another Persian plugin does some of the same things. Use one plugin for each "
-"feature."
-msgstr ""
-"افزونه فارسی دیگری هم بخشی از همین کارها را انجام می‌دهد. برای هر قابلیت فقط "
-"از یک افزونه استفاده کنید."
+msgid "Another Persian plugin does some of the same things. Use one plugin for each feature."
+msgstr "افزونه فارسی دیگری هم بخشی از همین کارها را انجام می‌دهد. برای هر قابلیت فقط از یک افزونه استفاده کنید."
 
 #: src/Core/ConflictDetector.php:154
 #: views/admin/partials/compatibility-guidance.php:36
@@ -320,12 +309,8 @@ msgid "%1$s – %2$s"
 msgstr "%1$s – %2$s"
 
 #: src/Modules/DateConversion/DateConversionModule.php:24
-msgid ""
-"Post, comment and admin dates in the Shamsi calendar. Saved dates stay "
-"Gregorian."
-msgstr ""
-"تاریخ نوشته‌ها، دیدگاه‌ها و پیشخوان به تقویم شمسی. تاریخ‌های ذخیره‌شده میلادی "
-"می‌مانند."
+msgid "Post, comment and admin dates in the Shamsi calendar. Saved dates stay Gregorian."
+msgstr "تاریخ نوشته‌ها، دیدگاه‌ها و پیشخوان به تقویم شمسی. تاریخ‌های ذخیره‌شده میلادی می‌مانند."
 
 #: src/Modules/DateConversion/DateFilters.php:252
 msgid "Activity"
@@ -382,12 +367,8 @@ msgid "ACF"
 msgstr "ACF"
 
 #: src/Modules/Forms/AcfModule.php:26
-msgid ""
-"Jalali date picker for Date Picker and Date Time Picker fields. Dates are "
-"still saved as Gregorian."
-msgstr ""
-"تقویم شمسی برای فیلدهای ⁦Date Picker⁩ و ⁦Date Time Picker⁩. تاریخ‌ها همچنان "
-"میلادی ذخیره می‌شوند."
+msgid "Jalali date picker for Date Picker and Date Time Picker fields. Dates are still saved as Gregorian."
+msgstr "تقویم شمسی برای فیلدهای ⁦Date Picker⁩ و ⁦Date Time Picker⁩. تاریخ‌ها همچنان میلادی ذخیره می‌شوند."
 
 #: src/Modules/Forms/Cf7IranianFields.php:76
 msgid "Mobile number that the sender entered is invalid"
@@ -414,11 +395,8 @@ msgid "Contact Form 7"
 msgstr "Contact Form 7"
 
 #: src/Modules/Forms/Cf7Module.php:26
-msgid ""
-"Jalali date picker for date fields, and Iranian fields such as mobile number "
-"and national ID."
-msgstr ""
-"تقویم شمسی برای فیلدهای تاریخ، و فیلدهای ایرانی مثل شماره موبایل و کد ملی."
+msgid "Jalali date picker for date fields, and Iranian fields such as mobile number and national ID."
+msgstr "تقویم شمسی برای فیلدهای تاریخ، و فیلدهای ایرانی مثل شماره موبایل و کد ملی."
 
 #. translators: %s: field type, such as "National ID".
 #: src/Modules/Forms/Cf7TagGenerator.php:54
@@ -429,11 +407,8 @@ msgstr "سازنده تگ فیلد %s"
 #. translators: %s: group name, "Iranian fields".
 #: src/Modules/Forms/Cf7TagGenerator.php:63
 #, php-format
-msgid ""
-"%s are checked when the form is sent, and saved and emailed with English "
-"digits."
-msgstr ""
-"%s هنگام ارسال فرم بررسی می‌شوند و با رقم‌های انگلیسی ذخیره و ایمیل می‌شوند."
+msgid "%s are checked when the form is sent, and saved and emailed with English digits."
+msgstr "%s هنگام ارسال فرم بررسی می‌شوند و با رقم‌های انگلیسی ذخیره و ایمیل می‌شوند."
 
 #: src/Modules/Forms/IranianFieldTypes.php:58
 msgid "Iranian fields"
@@ -488,9 +463,7 @@ msgid "Rank Math SEO"
 msgstr "Rank Math SEO"
 
 #: src/Modules/Seo/RankMathModule.php:29
-msgid ""
-"Prices in rials in the schema and Open Graph tags search engines read. Dates "
-"in schema, Open Graph and sitemaps stay Gregorian."
+msgid "Prices in rials in the schema and Open Graph tags search engines read. Dates in schema, Open Graph and sitemaps stay Gregorian."
 msgstr "قیمت‌ها به ریال در اسکیما و برچسب‌های Open Graph که موتورهای جستجو می‌خوانند. تاریخ‌ها در اسکیما، Open Graph و نقشه سایت میلادی می‌مانند."
 
 #: src/Modules/Seo/YoastModule.php:24
@@ -498,9 +471,7 @@ msgid "Yoast SEO"
 msgstr "Yoast SEO"
 
 #: src/Modules/Seo/YoastModule.php:29
-msgid ""
-"Prices in rials in the schema search engines read. Dates in schema, Open "
-"Graph and sitemaps stay Gregorian."
+msgid "Prices in rials in the schema search engines read. Dates in schema, Open Graph and sitemaps stay Gregorian."
 msgstr "قیمت‌ها به ریال در اسکیمایی که موتورهای جستجو می‌خوانند. تاریخ‌ها در اسکیما، Open Graph و نقشه سایت میلادی می‌مانند."
 
 #: src/Modules/Utilities/UtilitiesModule.php:24
@@ -544,17 +515,12 @@ msgid "Iranian thousand rial"
 msgstr "هزار ریال ایران"
 
 #: src/Modules/WooCommerce/IranianCurrencies.php:89
-msgid ""
-"Changing the currency doesn't convert prices, shipping costs or coupons."
+msgid "Changing the currency doesn't convert prices, shipping costs or coupons."
 msgstr "تغییر واحد پولی، قیمت‌ها، هزینه‌های ارسال و کوپن‌ها را تبدیل نمی‌کند."
 
 #: src/Modules/WooCommerce/IranianCurrencies.php:90
-msgid ""
-"Before you pick thousand toman or thousand rial, check that your payment "
-"gateway supports it."
-msgstr ""
-"پیش از انتخاب هزار تومان یا هزار ریال، مطمئن شوید درگاه پرداخت شما از آن "
-"پشتیبانی می‌کند."
+msgid "Before you pick thousand toman or thousand rial, check that your payment gateway supports it."
+msgstr "پیش از انتخاب هزار تومان یا هزار ریال، مطمئن شوید درگاه پرداخت شما از آن پشتیبانی می‌کند."
 
 #: src/Modules/WooCommerce/IranianCurrencies.php:91
 msgid "For prices like 12.5, set the number of decimals below."
@@ -579,12 +545,8 @@ msgid "%1$s is not valid. Please enter one of the following: %2$s"
 msgstr "%1$s معتبر نیست. لطفا یکی از موارد زیر را وارد کنید: %2$s"
 
 #: src/Modules/WooCommerce/WooCommerceModule.php:24
-msgid ""
-"Jalali dates in the shop admin and emails, checkout fields for Iran, and "
-"thousand toman and thousand rial currencies."
-msgstr ""
-"تاریخ شمسی در مدیریت فروشگاه و ایمیل‌ها، فیلدهای صفحه پرداخت برای ایران، و "
-"واحدهای پولی هزار تومان و هزار ریال."
+msgid "Jalali dates in the shop admin and emails, checkout fields for Iran, and thousand toman and thousand rial currencies."
+msgstr "تاریخ شمسی در مدیریت فروشگاه و ایمیل‌ها، فیلدهای صفحه پرداخت برای ایران، و واحدهای پولی هزار تومان و هزار ریال."
 
 #: src/Modules/WooCommerce/WooCommerceModule.php:71
 msgid "Checkout and addresses"
@@ -604,8 +566,7 @@ msgstr "تاریخ‌ها"
 
 #: src/Modules/WooCommerce/WooCommerceModule.php:80
 msgid "Dates on orders and in emails follow Jalali dates on the Display tab."
-msgstr ""
-"تاریخ سفارش‌ها و ایمیل‌ها از تنظیم «تاریخ شمسی» در زبانه نمایش پیروی می‌کنند."
+msgstr "تاریخ سفارش‌ها و ایمیل‌ها از تنظیم «تاریخ شمسی» در زبانه نمایش پیروی می‌کنند."
 
 #: src/Modules/WooCommerce/WooOrderMonthFilter.php:199
 msgid "All Jalali dates"
@@ -620,12 +581,8 @@ msgid "Insert Zero-Width Non-Joiner (Shift+Space)"
 msgstr "درج نیم‌فاصله (Shift+Space)"
 
 #: src/Service/Assets/AssetManager.php:46
-msgid ""
-"The generated admin assets are missing. Build the plugin before packaging or "
-"using it from source."
-msgstr ""
-"فایل‌های ساخته‌شده پیشخوان پیدا نشدند. پیش از بسته‌بندی یا استفاده از کد منبع، "
-"افزونه را بسازید (build)."
+msgid "The generated admin assets are missing. Build the plugin before packaging or using it from source."
+msgstr "فایل‌های ساخته‌شده پیشخوان پیدا نشدند. پیش از بسته‌بندی یا استفاده از کد منبع، افزونه را بسازید (build)."
 
 #: views/admin/partials/admin-font-settings.php:22
 msgid "Font"
@@ -637,8 +594,7 @@ msgstr "اصلاح حروف هنگام ذخیره"
 
 #: views/admin/partials/char-normalization-settings.php:18
 msgid "Arabic ي and ك become ی and ک in posts, comments and terms."
-msgstr ""
-"ي و ك عربی در نوشته‌ها، دیدگاه‌ها، دسته‌ها و برچسب‌ها به ی و ک تبدیل می‌شوند."
+msgstr "ي و ك عربی در نوشته‌ها، دیدگاه‌ها، دسته‌ها و برچسب‌ها به ی و ک تبدیل می‌شوند."
 
 #: views/admin/partials/char-normalization-settings.php:21
 msgid "Also replace ة with ه"
@@ -649,11 +605,8 @@ msgid "Add half-spaces on save"
 msgstr "افزودن نیم‌فاصله هنگام ذخیره"
 
 #: views/admin/partials/char-normalization-settings.php:25
-msgid ""
-"After می and before ها, تر, ترین. Can join words that should stay apart."
-msgstr ""
-"بعد از «می» و پیش از «ها»، «تر» و «ترین». ممکن است کلمه‌هایی را که باید جدا "
-"بمانند به هم بچسباند."
+msgid "After می and before ها, تر, ترین. Can join words that should stay apart."
+msgstr "بعد از «می» و پیش از «ها»، «تر» و «ترین». ممکن است کلمه‌هایی را که باید جدا بمانند به هم بچسباند."
 
 #: views/admin/partials/compatibility-guidance.php:30
 msgid "Supplementary"
@@ -688,23 +641,18 @@ msgid "/1405/07/09/my-post/. Old links redirect."
 msgstr "مثل ⁦/1405/07/09/my-post/⁩. پیوندهای قبلی به پیوند تازه می‌روند."
 
 #: views/admin/partials/date-conversion-settings.php:26
-msgid ""
-"Only if your theme still shows Gregorian dates. It can confuse SEO, booking "
-"and form plugins."
-msgstr ""
-"فقط اگر قالب هنوز تاریخ میلادی نشان می‌دهد. ممکن است افزونه‌های سئو، رزرو و "
-"فرم را به اشتباه بیندازد."
+msgid "Only if your theme still shows Gregorian dates. It can confuse SEO, booking and form plugins."
+msgstr "فقط اگر قالب هنوز تاریخ میلادی نشان می‌دهد. ممکن است افزونه‌های سئو، رزرو و فرم را به اشتباه بیندازد."
 
 #: views/admin/partials/digit-conversion-settings.php:17
 msgid "Post and comment counts"
 msgstr "تعداد نوشته‌ها و دیدگاه‌ها"
 
 #: views/admin/partials/digit-conversion-settings.php:18
-#: views/admin/partials/woocommerce-settings.php:182
 msgid "Shop prices"
 msgstr "قیمت‌های فروشگاه"
 
-#: views/admin/partials/digit-conversion-settings.php:22
+#: views/admin/partials/digit-conversion-settings.php:26
 msgid "Also in:"
 msgstr "همچنین در:"
 
@@ -720,13 +668,15 @@ msgstr "گزارش اشکال"
 msgid "Source on GitHub"
 msgstr "کد منبع در GitHub"
 
-#: views/admin/partials/footer.php:21 views/admin/partials/header.php:48
+#: views/admin/partials/footer.php:21
+#: views/admin/partials/header.php:48
 #: views/admin/partials/integration-card.php:52
 #: views/admin/partials/integrations-tab.php:55
 msgid "(opens in a new tab)"
 msgstr "(در زبانه تازه باز می‌شود)"
 
-#: views/admin/partials/footer.php:32 views/admin/partials/header.php:38
+#: views/admin/partials/footer.php:32
+#: views/admin/partials/header.php:38
 msgid "Version"
 msgstr "نسخه"
 
@@ -793,15 +743,9 @@ msgstr[0] "%s فرم دیگر"
 #. translators: 1: number of forms, 2: their names, such as "Contact, Order and Signup".
 #: views/admin/partials/integration-card.php:165
 #, php-format
-msgid ""
-"%1$s form uses Persian Kit fields: %2$s. While this is off, those fields "
-"accept any text."
-msgid_plural ""
-"%1$s forms use Persian Kit fields: %2$s. While this is off, those fields "
-"accept any text."
-msgstr[0] ""
-"%1$s فرم از فیلدهای Persian Kit استفاده می‌کند: %2$s. تا وقتی این خاموش است، "
-"این فیلدها هر متنی را می‌پذیرند."
+msgid "%1$s form uses Persian Kit fields: %2$s. While this is off, those fields accept any text."
+msgid_plural "%1$s forms use Persian Kit fields: %2$s. While this is off, those fields accept any text."
+msgstr[0] "%1$s فرم از فیلدهای Persian Kit استفاده می‌کند: %2$s. تا وقتی این خاموش است، این فیلدها هر متنی را می‌پذیرند."
 
 #: views/admin/partials/integration-card.php:187
 msgid "Plugin page on WordPress.org"
@@ -825,8 +769,7 @@ msgstr "اصلاح حروف نوشته‌های موجود"
 
 #: views/admin/partials/tools.php:30
 msgid "Count first, then fix. Back up your database before fixing."
-msgstr ""
-"اول بشمارید، بعد اصلاح کنید. پیش از اصلاح از پایگاه داده پشتیبان بگیرید."
+msgstr "اول بشمارید، بعد اصلاح کنید. پیش از اصلاح از پایگاه داده پشتیبان بگیرید."
 
 #: views/admin/partials/tools.php:36
 msgid "Post types"
@@ -894,8 +837,7 @@ msgstr "به Persian Kit خوش آمدید"
 
 #: views/admin/partials/welcome.php:15
 msgid "Turn each part on or off below. Your saved posts are not changed."
-msgstr ""
-"هر بخش را جداگانه روشن یا خاموش کنید. نوشته‌های ذخیره‌شده شما تغییر نمی‌کنند."
+msgstr "هر بخش را جداگانه روشن یا خاموش کنید. نوشته‌های ذخیره‌شده شما تغییر نمی‌کنند."
 
 #: views/admin/partials/welcome.php:16
 msgid "Persian digits and fixing letters on save start off."
@@ -914,8 +856,7 @@ msgid "Fix what customers type"
 msgstr "اصلاح نوشته‌های مشتری"
 
 #: views/admin/partials/woocommerce-settings.php:25
-msgid ""
-"English digits in phone numbers and postcodes, Persian ی and ک in names."
+msgid "English digits in phone numbers and postcodes, Persian ی and ک in names."
 msgstr "رقم انگلیسی در تلفن و کد پستی، ی و ک فارسی در نام‌ها."
 
 #: views/admin/partials/woocommerce-settings.php:28
@@ -932,8 +873,7 @@ msgstr "فهرست شهرهای ایران"
 
 #: views/admin/partials/woocommerce-settings.php:33
 msgid "Suggests the province's cities. Customers can still type a village."
-msgstr ""
-"شهرهای استان را پیشنهاد می‌دهد. مشتری همچنان می‌تواند نام روستا را بنویسد."
+msgstr "شهرهای استان را پیشنهاد می‌دهد. مشتری همچنان می‌تواند نام روستا را بنویسد."
 
 #: views/admin/partials/woocommerce-settings.php:38
 msgid "Off"
@@ -964,12 +904,8 @@ msgid "Pick at least one province. Until then, all provinces are listed."
 msgstr "دست کم یک استان انتخاب کنید. تا آن موقع همه استان‌ها نمایش داده می‌شوند."
 
 #: views/admin/partials/woocommerce-settings.php:128
-msgid ""
-"Applies to addresses in Iran. Checkout, the cart and My Account list only "
-"these; the shop admin still lists all."
-msgstr ""
-"برای آدرس‌های ایران. صفحه پرداخت، سبد خرید و حساب کاربری فقط همین‌ها را نشان "
-"می‌دهند؛ مدیریت فروشگاه همه را نشان می‌دهد."
+msgid "Applies to addresses in Iran. Checkout, the cart and My Account list only these; the shop admin still lists all."
+msgstr "برای آدرس‌های ایران. صفحه پرداخت، سبد خرید و حساب کاربری فقط همین‌ها را نشان می‌دهند؛ مدیریت فروشگاه همه را نشان می‌دهد."
 
 #: views/admin/partials/woocommerce-settings.php:135
 msgid "National ID at checkout"
@@ -982,12 +918,8 @@ msgstr "در سفارش و ایمیل‌ها نشان داده می‌شود."
 #. translators: %s: link to the setting, such as "WooCommerce › Settings › General › Currency".
 #: views/admin/partials/woocommerce-settings.php:167
 #, php-format
-msgid ""
-"Thousand toman and thousand rial can be picked under %s. Switching doesn't "
-"convert saved prices. Search engines get prices in rials."
-msgstr ""
-"هزار تومان و هزار ریال را می‌توانید در %s انتخاب کنید. تغییر واحد پولی، "
-"قیمت‌های ذخیره‌شده را تبدیل نمی‌کند. موتورهای جستجو قیمت‌ها را به ریال می‌گیرند."
+msgid "Thousand toman and thousand rial can be picked under %s. Switching doesn't convert saved prices. Search engines get prices in rials."
+msgstr "هزار تومان و هزار ریال را می‌توانید در %s انتخاب کنید. تغییر واحد پولی، قیمت‌های ذخیره‌شده را تبدیل نمی‌کند. موتورهای جستجو قیمت‌ها را به ریال می‌گیرند."
 
 #: views/admin/partials/woocommerce-settings.php:171
 msgctxt "WooCommerce menu"
@@ -1004,30 +936,19 @@ msgctxt "WooCommerce setting"
 msgid "Currency"
 msgstr "واحد پولی"
 
-#. translators: %s: link to the setting, such as "Display › Persian digits › Shop prices".
-#: views/admin/partials/woocommerce-settings.php:178
-#, php-format
-msgid "Persian digits in prices are set under %s."
-msgstr "اعداد فارسی در قیمت‌ها در %s تنظیم می‌شود."
-
-#: views/admin/partials/woocommerce-settings.php:198
+#: views/admin/partials/woocommerce-settings.php:197
 msgid "Jalali date picker in the shop admin"
 msgstr "تقویم شمسی در مدیریت فروشگاه"
 
-#: views/admin/partials/woocommerce-settings.php:199
-msgid ""
-"Order, product and coupon dates, and the month filter on the orders list."
+#: views/admin/partials/woocommerce-settings.php:198
+msgid "Order, product and coupon dates, and the month filter on the orders list."
 msgstr "تاریخ‌های سفارش، محصول و کد تخفیف، و فیلتر ماه در فهرست سفارش‌ها."
 
 #. translators: 1: name of another plugin, 2: Persian Kit module name.
 #: views/admin/partials/woocommerce-tab.php:32
 #, php-format
-msgid ""
-"%1$s is active and handles some of the same things. We recommend turning off "
-"%2$s here."
-msgstr ""
-"%1$s فعال است و بخشی از همین کارها را انجام می‌دهد. پیشنهاد می‌کنیم «%2$s» را "
-"اینجا خاموش کنید."
+msgid "%1$s is active and handles some of the same things. We recommend turning off %2$s here."
+msgstr "%1$s فعال است و بخشی از همین کارها را انجام می‌دهد. پیشنهاد می‌کنیم «%2$s» را اینجا خاموش کنید."
 
 #: views/admin/settings.php:114
 msgid "Save changes"
@@ -1039,16 +960,19 @@ msgstr "تغییرهای ذخیره‌نشده"
 
 #. translators: 1: number of posts checked, 2: number of posts fixed.
 #: public/js/admin.js:4329
+#, js-format
 msgid "%1$s posts checked, %2$s fixed…"
 msgstr "%1$s نوشته بررسی شد، %2$s مورد اصلاح شد…"
 
 #. translators: 1: number of posts checked, 2: number of posts fixed.
 #: public/js/admin.js:4339
+#, js-format
 msgid "Done. %1$s posts checked, %2$s fixed."
 msgstr "تمام شد. %1$s نوشته بررسی شد و %2$s مورد اصلاح شد."
 
 #. translators: %s: number of posts checked so far.
 #: public/js/admin.js:4375
+#, js-format
 msgid "Checked %s posts…"
 msgstr "%s نوشته بررسی شد…"
 
@@ -1058,6 +982,21 @@ msgstr "هیچ نوشته‌ای نیاز به اصلاح ندارد."
 
 #. translators: 1: number of posts that would change, 2: number of posts checked.
 #: public/js/admin.js:4393
+#, js-format
 msgid "%1$s post of %2$s checked would change."
 msgid_plural "%1$s posts of %2$s checked would change."
 msgstr[0] "%1$s نوشته از %2$s نوشته بررسی‌شده تغییر می‌کند."
+
+#: views/admin/partials/digit-conversion-settings.php:20
+msgid "WooCommerce emails"
+msgstr "ایمیل‌های ووکامرس"
+
+#: views/admin/partials/digit-conversion-settings.php:21
+msgid "Order numbers, prices, quantities and dates. Phone numbers, postcodes and links keep English digits."
+msgstr "شماره سفارش، قیمت، تعداد و تاریخ. تلفن، کد پستی و پیوندها رقم انگلیسی می‌مانند."
+
+#. translators: %s: link to the setting, such as "Display › Persian digits".
+#: views/admin/partials/woocommerce-settings.php:178
+#, php-format
+msgid "Persian digits in prices and emails are set under %s."
+msgstr "اعداد فارسی در قیمت‌ها و ایمیل‌ها در %s تنظیم می‌شود."

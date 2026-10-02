@@ -1,0 +1,228 @@
+<?php
+
+namespace PersianKit\Modules\DigitConversion;
+
+use PersianKit\Dependencies\Eram\Abzar\Digits\DigitConverter;
+use PersianKit\Modules\DateConversion\DateDisplayGuard;
+
+defined('ABSPATH') || exit;
+
+/**
+ * Persian digits in WooCommerce emails, in the values people read: order
+ * numbers, prices, quantities and dates, in the body and in the subject and
+ * heading. What people copy or machines read keeps English digits: phone
+ * numbers, postcodes, links, coupon codes and the order's structured data
+ * for Gmail. The body is never converted as a whole.
+ *
+ * Every email body (HTML, plain text and the multipart plain part) is built
+ * from template parts named emails/…, so the converters work only while one
+ * renders, and only for emails in Persian: WooCommerce switches to the
+ * customer's locale for customer emails.
+ */
+class WooCommerceEmailDigits
+{
+    private const TEMPLATE_PREFIX = 'emails/';
+
+    /** Placeholders in subjects and headings whose values are converted. */
+    private const ORDER_NUMBER_PLACEHOLDER = '{order_number}';
+    private const ORDER_DATE_PLACEHOLDER = '{order_date}';
+
+    private static int $depth = 0;
+
+    public function __construct(private bool $orderNumbers = true)
+    {
+    }
+
+    /**
+     * Tracks email rendering, also while emails are not converted, so the
+     * site-wide digit filters can leave emails alone.
+     */
+    public static function trackRendering(): void
+    {
+        add_action('woocommerce_before_template_part', [self::class, 'enterTemplate']);
+        add_action('woocommerce_after_template_part', [self::class, 'leaveTemplate']);
+    }
+
+    public static function isRendering(): bool
+    {
+        return self::$depth > 0;
+    }
+
+    public static function enterTemplate(mixed $templateName = ''): void
+    {
+        if (is_string($templateName) && str_starts_with($templateName, self::TEMPLATE_PREFIX)) {
+            self::$depth++;
+        }
+    }
+
+    public static function leaveTemplate(mixed $templateName = ''): void
+    {
+        if (is_string($templateName) && str_starts_with($templateName, self::TEMPLATE_PREFIX)) {
+            self::$depth = max(0, self::$depth - 1);
+        }
+    }
+
+    public function register(): void
+    {
+        // Inside wc_price(), before WooCommerce wraps the number in HTML.
+        add_filter('formatted_woocommerce_price', [$this, 'filterText'], 99);
+        add_filter('woocommerce_email_order_item_quantity', [$this, 'filterQuantity'], 99);
+        add_filter('date_i18n', [$this, 'filterDate'], 99, 2);
+        add_filter('woocommerce_email_format_string', [$this, 'filterFormatString'], 20, 2);
+
+        // Last, after plugins that make their own order numbers.
+        if ($this->orderNumbers) {
+            add_filter('woocommerce_order_number', [$this, 'filterText'], PHP_INT_MAX);
+        }
+
+        // Links and the order's structured data keep English digits, whichever
+        // plugin converted them.
+        add_filter('clean_url', [$this, 'filterUrl'], PHP_INT_MAX);
+        add_filter('woocommerce_structured_data_order', [$this, 'filterStructuredData'], PHP_INT_MAX);
+    }
+
+    /**
+     * Prices and order numbers. Order numbers are the order's ID (an int)
+     * unless a plugin makes its own.
+     */
+    public function filterText(mixed $text): mixed
+    {
+        if (!(is_string($text) || is_int($text)) || !self::converts()) {
+            return $text;
+        }
+
+        return DigitConverter::toPersian((string) $text);
+    }
+
+    /**
+     * An int, or HTML for refunded items: <del>2</del> <ins>1</ins>.
+     */
+    public function filterQuantity(mixed $quantity): mixed
+    {
+        if (!self::converts()) {
+            return $quantity;
+        }
+
+        if (is_int($quantity) || is_float($quantity)) {
+            return DigitConverter::toPersian((string) $quantity);
+        }
+
+        return is_string($quantity) ? DigitConversionModule::convertContent($quantity) : $quantity;
+    }
+
+    /**
+     * Jalali or Gregorian, as the date filters left it; formats machines read
+     * keep English digits.
+     */
+    public function filterDate(mixed $date, mixed $format = ''): mixed
+    {
+        if (!is_string($date) || !self::converts() || DateDisplayGuard::shouldBypass((string) $format)) {
+            return $date;
+        }
+
+        return DigitConverter::toPersian($date);
+    }
+
+    /**
+     * Subjects and headings are filled in outside the email's template parts,
+     * so the order number and date placeholders are converted here: only
+     * their values, not the site title or the text around them.
+     */
+    public function filterFormatString(mixed $string, mixed $email = null): mixed
+    {
+        if (!is_string($string) || $string === '' || !self::isPersianEmail()) {
+            return $string;
+        }
+
+        $placeholders = is_object($email) && isset($email->placeholders) && is_array($email->placeholders)
+            ? $email->placeholders
+            : [];
+
+        $keys = $this->orderNumbers
+            ? [self::ORDER_NUMBER_PLACEHOLDER, self::ORDER_DATE_PLACEHOLDER]
+            : [self::ORDER_DATE_PLACEHOLDER];
+
+        foreach ($keys as $key) {
+            $value = $placeholders[$key] ?? null;
+            if (!(is_string($value) || is_int($value))) {
+                continue;
+            }
+
+            $value = (string) $value;
+            if (!preg_match('/[0-9]/', $value)) {
+                continue;
+            }
+
+            // Whole values only: order 12 leaves the 12 in "2012" alone.
+            $string = (string) preg_replace_callback(
+                '/(?<![0-9])' . preg_quote($value, '/') . '(?![0-9])/u',
+                static fn (): string => DigitConverter::toPersian($value),
+                $string
+            );
+        }
+
+        return $string;
+    }
+
+    /**
+     * esc_url() output: a link built from an order number or a price, by
+     * WooCommerce or another plugin, keeps working.
+     */
+    public function filterUrl(mixed $url): mixed
+    {
+        if (!is_string($url) || !self::isRendering()) {
+            return $url;
+        }
+
+        return DigitConverter::toEnglish($url);
+    }
+
+    /**
+     * The order's structured data in HTML emails reuses the order number and
+     * quantity filters; Gmail reads it, so its digits go back to English and
+     * the quantity back to a number.
+     *
+     * @param mixed $markup
+     * @return mixed
+     */
+    public function filterStructuredData($markup)
+    {
+        return is_array($markup) ? self::englishDigits($markup) : $markup;
+    }
+
+    /**
+     * @param array<mixed> $data
+     * @return array<mixed>
+     */
+    private static function englishDigits(array $data): array
+    {
+        foreach ($data as $key => $value) {
+            if (is_array($value)) {
+                $data[$key] = self::englishDigits($value);
+            } elseif (is_string($value)) {
+                $data[$key] = DigitConverter::toEnglish($value);
+            }
+        }
+
+        if (isset($data['eligibleQuantity']['value']) && is_string($data['eligibleQuantity']['value']) && ctype_digit($data['eligibleQuantity']['value'])) {
+            $data['eligibleQuantity']['value'] = (int) $data['eligibleQuantity']['value'];
+        }
+
+        return $data;
+    }
+
+    private static function converts(): bool
+    {
+        return self::isRendering() && self::isPersianEmail();
+    }
+
+    /**
+     * The email's language: WooCommerce switches to the customer's locale
+     * while it builds a customer email, so on a bilingual store an English
+     * email keeps English digits.
+     */
+    private static function isPersianEmail(): bool
+    {
+        return str_starts_with(determine_locale(), 'fa');
+    }
+}

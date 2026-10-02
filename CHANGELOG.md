@@ -46,6 +46,13 @@ New compatibility integrations for Yoast SEO (`yoast`) and Rank Math (`rank_math
 - Checked: the dates both plugins give search engines (schema, Open Graph and sitemaps) stay Gregorian with Latin digits, with Jalali dates' global conversion and Persian digits on. Nothing needed changing.
 - Fixed: with Yoast SEO (or Rank Math with date archives on), a date archive's title named the Gregorian month, such as "January 1405" on /1405/01/. It names the Jalali month now, as without them.
 
+### WooCommerce emails in Persian digits
+
+- New option, Display › Persian digits › WooCommerce emails (off by default): order numbers, prices, quantities and dates in WooCommerce emails, and the order number and date in the subject and heading, use Persian digits. Phone numbers, postcodes, links, coupon codes and the order's structured data for Gmail keep English digits. It covers every order email, also those sent when an admin changes an order's status and those from the block checkout, and only emails in Persian, so an English email on a bilingual store keeps English digits. The `persian_kit_digit_conversion` filter turns it off with `woocommerce_emails`, or for order numbers only with `woocommerce_email_order_number`.
+- Changed: emails now follow this option only. Before, emails sent during a classic checkout or by cron got Persian prices and dates from the site-wide filters, and others didn't. With the option off, emails keep English digits.
+- `{order_date}` in email subjects and headings, such as the customer note's "…order from {order_date}", is a Jalali date, as in the body.
+- The order tracking form and the order search under WooCommerce › Orders find an order number typed or pasted with Persian digits ("۱۲۳"). Part of Fix what customers type.
+
 ### WooCommerce checkout for Iran
 
 New options under WooCommerce (WooCommerce tab, Checkout and addresses). They apply to the classic checkout, the block checkout and My Account > Addresses, and add to what WooCommerce already has for Iran (provinces, the IRR and IRT currencies).

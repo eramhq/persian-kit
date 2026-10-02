@@ -126,6 +126,9 @@ class WooCommerceModule extends AbstractModule
         $container->register(CheckoutInputNormalizer::class, function () {
             return new CheckoutInputNormalizer();
         });
+        $container->register(OrderNumberInput::class, function () {
+            return new OrderNumberInput();
+        });
         $container->register(CheckoutValidator::class, function () {
             return new CheckoutValidator();
         });
@@ -157,9 +160,11 @@ class WooCommerceModule extends AbstractModule
         $container->get(SchemaPrices::class)->register();
         $container->get(WooDateDisplayFilter::class)->register();
 
-        // Checkout runs on the front end, in the Store API and through admin-ajax.
+        // Checkout runs on the front end, in the Store API and through admin-ajax;
+        // order numbers are also typed into the tracking form and order search.
         if ($this->setting('checkout_normalize')) {
             $container->get(CheckoutInputNormalizer::class)->register();
+            $container->get(OrderNumberInput::class)->register();
         }
 
         if ($this->setting('checkout_validate')) {

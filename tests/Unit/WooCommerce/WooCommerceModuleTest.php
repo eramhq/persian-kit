@@ -12,6 +12,7 @@ use PersianKit\Modules\WooCommerce\CheckoutValidator;
 use PersianKit\Modules\WooCommerce\CityField;
 use PersianKit\Modules\WooCommerce\IranianCurrencies;
 use PersianKit\Modules\WooCommerce\NationalIdField;
+use PersianKit\Modules\WooCommerce\OrderNumberInput;
 use PersianKit\Modules\WooCommerce\ProvinceLimit;
 use PersianKit\Modules\WooCommerce\SchemaPrices;
 use PersianKit\Modules\WooCommerce\WooAdminDateFields;
@@ -45,6 +46,7 @@ class WooCommerceModuleTest extends TestCase
             SchemaPrices::class,
             WooDateDisplayFilter::class,
             CheckoutInputNormalizer::class,
+            OrderNumberInput::class,
             CheckoutValidator::class,
             NationalIdField::class,
         ], $this->bootAndListFetched());
@@ -58,6 +60,7 @@ class WooCommerceModuleTest extends TestCase
             SchemaPrices::class,
             WooDateDisplayFilter::class,
             CheckoutInputNormalizer::class,
+            OrderNumberInput::class,
             CheckoutValidator::class,
             NationalIdField::class,
             WooOrderMonthFilter::class,
@@ -86,6 +89,7 @@ class WooCommerceModuleTest extends TestCase
             SchemaPrices::class,
             WooDateDisplayFilter::class,
             CheckoutInputNormalizer::class,
+            OrderNumberInput::class,
             CheckoutValidator::class,
             NationalIdField::class,
         ], $this->bootAndListFetched(['dates_admin' => false]));
