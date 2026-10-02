@@ -21,6 +21,10 @@ $checkboxes = [
         'label'       => __('Check Iranian phone numbers and postcodes', 'persian-kit'),
         'description' => __('For addresses in Iran, the phone must be a valid mobile or landline number and the postcode must have 10 valid digits. Addresses in other countries are not checked.', 'persian-kit'),
     ],
+    'city_select'        => [
+        'label'       => __('City dropdown for Iranian addresses', 'persian-kit'),
+        'description' => __('Lists the cities of the chosen province in the classic checkout and in My Account. The block checkout keeps a text field for the city, because WooCommerce does not let plugins change it.', 'persian-kit'),
+    ],
 ];
 
 $nationalIdModes = [

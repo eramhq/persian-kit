@@ -30,7 +30,7 @@ Persian Kit is a modular WordPress plugin for Persian-language sites. It focuses
 * Persian slugs that keep Persian letters readable (can be turned off)
 * PHP validation and formatting helpers for common Iranian data
 * WooCommerce Jalali date support for supported screens (HPOS-compatible)
-* WooCommerce checkout for Iran: Persian digits in phone numbers and postcodes are saved as English digits, Iranian phone numbers and postcodes are checked, and an optional national ID (کد ملی) field
+* WooCommerce checkout for Iran: Persian digits in phone numbers and postcodes are saved as English digits, Iranian phone numbers and postcodes are checked, an optional national ID (کد ملی) field, and an optional city dropdown for each province (classic checkout)
 
 = Bundled software =
 
@@ -99,6 +99,14 @@ No. WooCommerce features only activate when WooCommerce is installed and active.
 = What does Persian Kit change at the WooCommerce checkout? =
 
 With WooCommerce Support on, what customers type is fixed before it is saved: Persian and Arabic digits in phone numbers and postcodes become English digits, and Arabic ي and ك in names and addresses become Persian ی and ک. For addresses in Iran, the phone must be a valid mobile or landline number and the postcode must have 10 valid digits. Both work in the classic checkout, the block checkout and My Account. You can also ask for the customer's national ID (optional or required); it is checked, and shown on the order screen and in order emails.
+
+= Why is the city not a dropdown in the block checkout? =
+
+The city dropdown works in the classic (shortcode) checkout and in My Account. WooCommerce does not let plugins turn the block checkout's city field into a dropdown, so it stays a text field there.
+
+= Where does the list of cities come from? =
+
+From the Statistical Centre of Iran's country-divisions list for 1403 (amar.org.ir): the 1,454 cities of its 31 provinces.
 
 == Changelog ==
 

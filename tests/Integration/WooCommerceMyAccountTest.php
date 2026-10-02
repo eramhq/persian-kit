@@ -2,6 +2,7 @@
 
 namespace PersianKit\Tests\Integration;
 
+use PersianKit\Modules\WooCommerce\CityField;
 use PersianKit\Tests\Integration\Support\WordPressIntegrationTestCase;
 
 /**
@@ -78,6 +79,25 @@ class WooCommerceMyAccountTest extends WordPressIntegrationTestCase
             'billing_postcode' => '10115',
             'billing_phone'    => '030 1234567',
         ]), implode(' | ', $this->errorNotices()));
+    }
+
+    public function test_the_city_is_a_dropdown_of_the_province_cities(): void
+    {
+        (new CityField(dirname(__DIR__, 2) . '/resources/data/ir-cities.json'))->register();
+        WC()->customer->set_billing_state('QHM');
+        WC()->customer->set_billing_city('');
+
+        $fields = WC()->countries->get_address_fields('IR', 'billing_');
+
+        $this->assertSame('select', $fields['billing_city']['type']);
+        $this->assertSame(['', 'قم', 'جعفریه', 'دستجرد', 'سلفچگان', 'قاهان', 'قنوات', 'کهک'], array_keys($fields['billing_city']['options']));
+
+        // A city saved before, which the province's list lacks, stays selectable.
+        WC()->customer->set_billing_city('تهران');
+        $this->assertSame('تهران', array_key_last(WC()->countries->get_address_fields('IR', 'billing_')['billing_city']['options']));
+
+        $german = WC()->countries->get_address_fields('DE', 'billing_');
+        $this->assertSame('text', $german['billing_city']['type'] ?? 'text');
     }
 
     /**

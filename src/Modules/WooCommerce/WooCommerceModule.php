@@ -34,6 +34,7 @@ class WooCommerceModule extends AbstractModule
             'checkout_normalize' => true,
             'checkout_validate'  => true,
             'national_id'        => NationalIdField::OFF,
+            'city_select'        => false,
         ];
     }
 
@@ -55,6 +56,7 @@ class WooCommerceModule extends AbstractModule
             'checkout_normalize' => !empty($values['checkout_normalize']),
             'checkout_validate'  => !empty($values['checkout_validate']),
             'national_id'        => in_array($nationalId, NationalIdField::MODES, true) ? $nationalId : NationalIdField::OFF,
+            'city_select'        => !empty($values['city_select']),
         ];
     }
 
@@ -81,6 +83,9 @@ class WooCommerceModule extends AbstractModule
         $container->register(NationalIdField::class, function () {
             return new NationalIdField((string) $this->setting('national_id'));
         });
+        $container->register(CityField::class, function () {
+            return new CityField(PERSIAN_KIT_DIR . CityField::DATA_FILE);
+        });
     }
 
     public function boot(ServiceContainer $container): void
@@ -102,6 +107,10 @@ class WooCommerceModule extends AbstractModule
 
         // Also when the field is off, so national IDs already saved on orders stay visible.
         $container->get(NationalIdField::class)->register();
+
+        if ($this->setting('city_select')) {
+            $container->get(CityField::class)->register();
+        }
 
         // Order screens, product and coupon edit screens, and the variations
         // save through admin-ajax.

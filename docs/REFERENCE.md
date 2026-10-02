@@ -521,6 +521,7 @@ The WooCommerce Support module's checkout options apply to the classic (shortcod
 - `checkout_normalize`: Persian and Arabic digits in phone numbers and postcodes become English digits, postcodes lose spaces and dashes, and Arabic ي/ك in names, company, address and city become Persian ی/ک, for every country. The block checkout is fixed in the Store API request (`rest_pre_dispatch`, including batch requests), because WooCommerce's own phone and postcode checks reject Persian digits before any checkout hook runs.
 - `checkout_validate`: for addresses in Iran, the phone must pass `persian_kit_validate_phone()` (mobile or landline) and the postcode `persian_kit_validate_postal_code()`. The block checkout reports these errors when the order is placed, as WooCommerce does for its own address checks.
 - `national_id` (`off`, `optional`, `required`): a national ID field, checked with `persian_kit_validate_national_id()` and stored in English digits. `required` asks every customer, in any country.
+- `city_select`: the city becomes a dropdown of the province's cities for Iranian addresses, in the classic checkout and in My Account. The block checkout keeps a text field. The list is the Statistical Centre of Iran's 1403 country-divisions list of cities (`resources/data/ir-cities.json`, copied to `public/data/` by the build), keyed by WooCommerce state code.
 
 ### National ID
 
@@ -561,7 +562,7 @@ Settings are stored in the `persian_kit_settings` option, per module under these
 | `char_normalization` | `enabled` (on), `normalize_on_save` (off), `teh_marbuta` (off), `half_space_fix` (off) |
 | `admin_font` | `enabled` (on), `font` (`vazirmatn`) |
 | `zwnj_editor` | `enabled` (on) |
-| `woocommerce` | `enabled` (on), `checkout_normalize` (on), `checkout_validate` (on), `national_id` (`off`) |
+| `woocommerce` | `enabled` (on), `checkout_normalize` (on), `checkout_validate` (on), `national_id` (`off`), `city_select` (off) |
 | `utilities` | `enabled` (on), `persian_slugs` (on) |
 
 The option is registered with the Settings API (group `persian_kit`), so every write is sanitized, whether it comes from the settings screen or from `update_option()`. Each module's values are merged over what is stored and sanitized by the module; a module left out keeps its stored values, and keys that are not module keys are dropped. Booleans are stored as `true`/`false`.

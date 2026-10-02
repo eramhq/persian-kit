@@ -9,6 +9,7 @@ use PersianKit\Container\ServiceContainer;
 use PersianKit\Core\SettingsManager;
 use PersianKit\Modules\WooCommerce\CheckoutInputNormalizer;
 use PersianKit\Modules\WooCommerce\CheckoutValidator;
+use PersianKit\Modules\WooCommerce\CityField;
 use PersianKit\Modules\WooCommerce\NationalIdField;
 use PersianKit\Modules\WooCommerce\WooAdminDateFields;
 use PersianKit\Modules\WooCommerce\WooCommerceModule;
@@ -67,7 +68,8 @@ class WooCommerceModuleTest extends TestCase
         $this->assertSame([
             WooDateDisplayFilter::class,
             NationalIdField::class,
-        ], $this->bootAndListFetched(['checkout_normalize' => false, 'checkout_validate' => false]));
+            CityField::class,
+        ], $this->bootAndListFetched(['checkout_normalize' => false, 'checkout_validate' => false, 'city_select' => true]));
     }
 
     public function test_sanitize_settings_keeps_known_national_id_modes_only(): void
@@ -79,6 +81,7 @@ class WooCommerceModuleTest extends TestCase
             'checkout_normalize' => false,
             'checkout_validate'  => true,
             'national_id'        => 'required',
+            'city_select'        => false,
         ], $module->sanitizeSettings(['enabled' => '1', 'checkout_normalize' => '0', 'checkout_validate' => '1', 'national_id' => 'required']));
 
         $this->assertSame('off', $module->sanitizeSettings(['national_id' => 'always'])['national_id']);
@@ -91,6 +94,7 @@ class WooCommerceModuleTest extends TestCase
             'checkout_normalize' => true,
             'checkout_validate'  => true,
             'national_id'        => 'off',
+            'city_select'        => false,
         ], WooCommerceModule::defaults());
     }
 

@@ -29,6 +29,15 @@ Integration tests run on WordPress's PHPUnit 9.6 runner with `phpunit-integratio
 
 When WooCommerce is installed next to the plugin (`wp-content/plugins/woocommerce`), or in the directory `PERSIAN_KIT_TESTS_WOOCOMMERCE_DIR` names, the integration tests load it and create its tables, and the WooCommerce checkout and My Account tests run; otherwise those tests are skipped. CI downloads the WooCommerce release pinned in `.github/workflows/ci.yml`. Set `PERSIAN_KIT_TESTS_WITHOUT_WOOCOMMERCE=1` to run the suite without it.
 
+### Run JavaScript tests
+
+```bash
+npm ci
+npm run test:js
+```
+
+The tests in `tests/js/` run on Node's test runner. The city dropdown script is tested in a [jsdom](https://github.com/jsdom/jsdom) page with the jQuery release WordPress ships; both are dev dependencies only.
+
 ### Static analysis and coding standards
 
 ```bash
@@ -56,6 +65,7 @@ npm run dist
 
 - unit tests, PHPStan and PHPCS on PHP 8.1 and 8.4
 - integration tests against WordPress 7.1, with WooCommerce, on PHP 8.1 and 8.4
+- JavaScript tests on Node 22
 - `npm run dist` and Plugin Check on the built plugin
 
 ## Release Flow
@@ -72,6 +82,6 @@ npm run dist
 - Built assets live in `public/`.
 - `eram/abzar` and `eram/daynum` are copied into `packages/` under the `PersianKit\Dependencies\` namespace by wp-scoper after every `composer install`/`update`. The plugin loads them from there; `vendor/` is development-only.
 - `scripts/prepare-bundled-libraries.php` then copies each library's LICENSE next to it and adds a `phpcs:ignoreFile` line to each copied library file, so Plugin Check reviews only Persian Kit's own code. Their exception messages are never printed, and as plain PHP libraries they can't use WordPress escaping.
-- Every JavaScript file in `public/js/` is built from `resources/`. `npm run build` empties `public/` first, so a new script must be added to `scripts/copy-assets.mjs` and `scripts/verify-build.mjs`.
+- Every JavaScript file in `public/js/` is built from `resources/`. `npm run build` empties `public/` first, so a new script, or a data file such as `resources/data/ir-cities.json`, must be added to `scripts/copy-assets.mjs` and `scripts/verify-build.mjs`. `resources/` is not shipped.
 - `npm run build:pot` includes JavaScript strings. Scripts with translatable strings call `wp_set_script_translations()`.
 - The dist script respects `.distignore`.

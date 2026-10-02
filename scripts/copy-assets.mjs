@@ -60,6 +60,16 @@ const copies = [
         src: 'resources/js/woocommerce-date-fields.js',
         dest: 'public/js/woocommerce-date-fields.js',
     },
+    // WooCommerce classic checkout city dropdown
+    {
+        src: 'resources/js/woocommerce-city-select.js',
+        dest: 'public/js/woocommerce-city-select.js',
+    },
+    // Iranian cities by WooCommerce state code
+    {
+        src: 'resources/data/ir-cities.json',
+        dest: 'public/data/ir-cities.json',
+    },
     // Media library grid Jalali month filter
     {
         src: 'resources/js/media-grid-date-filter.js',
