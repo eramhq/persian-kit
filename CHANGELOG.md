@@ -2,6 +2,10 @@
 
 All notable changes to this project will be documented in this file.
 
+## [Unreleased]
+
+- A cut-off post address under a Jalali date, such as `/1405/07/09/my-po/`, redirects (301) to the post on that date whose slug starts with it, as WordPress does for Gregorian dates. Before, it returned "not found", because WordPress looked for the year 1405.
+
 ## [1.0.0-beta.4] - 2026-10-01
 
 First WordPress.org release. Includes everything listed under 1.0.0-beta.3 and 1.0.0-beta.2, plus the changes below.

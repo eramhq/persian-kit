@@ -227,6 +227,84 @@ class JalaliPermalinksTest extends WordPressIntegrationTestCase
         $this->assertSame(0, apply_filters('old_slug_redirect_post_id', 0));
     }
 
+    public function test_a_partial_slug_under_a_jalali_date_guesses_the_post(): void
+    {
+        $this->bootDateConversionWith(['jalali_permalinks' => true]);
+        $postId = $this->postOn('2026-10-01 10:00:00', 'my-post');
+
+        $this->go_to(home_url('/1405/07/09/my-po/'));
+
+        $this->assertTrue(is_404());
+        $this->assertSame(get_permalink($postId), redirect_guess_404_permalink());
+        $this->assertSame(home_url('/1405/07/09/my-post/'), get_permalink($postId));
+    }
+
+    public function test_a_partial_slug_under_a_jalali_month_guesses_the_post(): void
+    {
+        $this->set_permalink_structure('/%year%/%monthnum%/%postname%/');
+        $this->bootDateConversionWith(['jalali_permalinks' => true]);
+        $this->postOn('2026-10-01 10:00:00', 'my-post');
+
+        $this->go_to(home_url('/1405/07/my-po/'));
+
+        $this->assertSame(home_url('/1405/07/my-post/'), redirect_guess_404_permalink());
+    }
+
+    public function test_the_guess_keeps_the_feed_and_the_page(): void
+    {
+        $this->bootDateConversionWith(['jalali_permalinks' => true]);
+        $postId = $this->postOn('2026-10-01 10:00:00', 'my-post');
+
+        $this->go_to(home_url('/1405/07/09/my-po/feed/'));
+        $this->assertSame(get_post_comments_feed_link($postId, 'feed'), redirect_guess_404_permalink());
+        $this->assertStringStartsWith(home_url('/1405/07/09/my-post/feed/'), redirect_guess_404_permalink());
+
+        $this->go_to(home_url('/1405/07/09/my-po/2/'));
+        $this->assertSame(home_url('/1405/07/09/my-post/2/'), redirect_guess_404_permalink());
+    }
+
+    public function test_an_old_jalali_address_guesses_the_gregorian_permalink_with_the_option_off(): void
+    {
+        $this->bootDateConversionWith(['jalali_permalinks' => false]);
+        $this->postOn('2026-10-01 10:00:00', 'my-post');
+
+        $this->go_to(home_url('/1405/07/09/my-po/'));
+
+        $this->assertSame(home_url('/2026/10/01/my-post/'), redirect_guess_404_permalink());
+    }
+
+    public function test_no_guess_on_another_day_for_a_strict_guess_or_for_a_draft(): void
+    {
+        $this->bootDateConversionWith(['jalali_permalinks' => true]);
+        $this->postOn('2026-10-01 10:00:00', 'my-post');
+        self::factory()->post->create([
+            'post_status' => 'draft',
+            'post_date'   => '2026-10-01 11:00:00',
+            'post_name'   => 'my-draft',
+        ]);
+
+        // The right slug, on 10 Mehr.
+        $this->go_to(home_url('/1405/07/10/my-post/'));
+        $this->assertFalse(redirect_guess_404_permalink());
+
+        $this->go_to(home_url('/1405/07/09/my-d/'));
+        $this->assertFalse(redirect_guess_404_permalink());
+
+        add_filter('strict_redirect_guess_404_permalink', '__return_true');
+        $this->go_to(home_url('/1405/07/09/my-po/'));
+        $this->assertFalse(redirect_guess_404_permalink());
+    }
+
+    public function test_a_partial_slug_under_a_gregorian_date_guesses_the_jalali_permalink(): void
+    {
+        $this->bootDateConversionWith(['jalali_permalinks' => true]);
+        $this->postOn('2026-10-01 10:00:00', 'my-post');
+
+        $this->go_to(home_url('/2026/10/01/my-po/'));
+
+        $this->assertSame(home_url('/1405/07/09/my-post/'), redirect_guess_404_permalink());
+    }
+
     public function test_url_to_postid_resolves_the_jalali_address(): void
     {
         $this->bootDateConversionWith(['jalali_permalinks' => true]);

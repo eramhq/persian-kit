@@ -25,6 +25,7 @@ class JalaliPermalinks
         // Before core's redirect_canonical() and wp_old_slug_redirect().
         add_action('template_redirect', [$this, 'redirectToCurrentCalendar'], 9);
         add_filter('old_slug_redirect_post_id', [$this, 'findByOldSlug']);
+        add_filter('pre_redirect_guess_404_permalink', [$this, 'guess404Permalink']);
     }
 
     public function registerJalaliLinks(): void
@@ -185,6 +186,69 @@ class JalaliPermalinks
         wp_cache_set($cacheKey, $found, 'persian_kit');
 
         return $found;
+    }
+
+    /**
+     * Core guesses a cut-off address (/1405/07/09/my-po/) with YEAR(),
+     * MONTH() and DAYOFMONTH(), which never match a Jalali date. Guess the
+     * same way within the Jalali date's Gregorian range. False when nothing
+     * matches, so core does not run its own query.
+     */
+    public function guess404Permalink(mixed $pre): mixed
+    {
+        $name = get_query_var('name');
+        if ($pre !== null || !is_string($name) || $name === '') {
+            return $pre;
+        }
+
+        $range = self::requestedRange();
+        if ($range === null) {
+            return $pre;
+        }
+
+        global $wpdb;
+
+        $statuses = array_values(array_filter(get_post_stati(), 'is_post_status_viewable'));
+        $postTypes = array_values(array_filter(get_post_types(['exclude_from_search' => false]), 'is_post_type_viewable'));
+
+        $requestedTypes = get_query_var('post_type');
+        if (!empty($requestedTypes)) {
+            $postTypes = array_values(array_intersect((array) $requestedTypes, $postTypes));
+        }
+        if ($statuses === [] || $postTypes === []) {
+            return false;
+        }
+
+        // Without the trailing %, the escaped pattern matches the slug exactly.
+        $strict = (bool) apply_filters('strict_redirect_guess_404_permalink', false);
+        $namePattern = $wpdb->esc_like($name) . ($strict ? '' : '%');
+
+        // Core's query, on a date range. Runs only on a 404.
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+        $postId = (int) $wpdb->get_var($wpdb->prepare(
+            "SELECT ID FROM {$wpdb->posts}
+            WHERE post_name LIKE %s
+              AND post_type IN (" . implode(',', array_fill(0, count($postTypes), '%s')) . ")
+              AND post_date >= %s AND post_date <= %s
+              AND post_status IN (" . implode(',', array_fill(0, count($statuses), '%s')) . ")",
+            array_merge([$namePattern], $postTypes, [$range['start'], $range['end']], $statuses)
+        ));
+
+        if ($postId === 0) {
+            return false;
+        }
+
+        $feed = get_query_var('feed');
+        if (is_string($feed) && $feed !== '') {
+            return get_post_comments_feed_link($postId, $feed);
+        }
+
+        $page = (int) get_query_var('page');
+        if ($page > 1) {
+            return trailingslashit((string) get_permalink($postId)) . user_trailingslashit((string) $page, 'single_paged');
+        }
+
+        return get_permalink($postId);
     }
 
     /**
