@@ -19,7 +19,7 @@ class ModuleRegistryTest extends TestCase
     {
         $keys = array_map(static fn (string $moduleClass): string => $moduleClass::key(), ModuleRegistry::MODULES);
 
-        $this->assertCount(7, $keys);
+        $this->assertCount(8, $keys);
         $this->assertSame($keys, array_values(array_unique($keys)));
     }
 }

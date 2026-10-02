@@ -8,6 +8,8 @@ use PersianKit\Modules\DateConversion\DatePicker;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
+require_once dirname(__DIR__, 3) . '/src/functions.php';
+
 class DatePickerTest extends TestCase
 {
     /** @var array<string, list<mixed>> */

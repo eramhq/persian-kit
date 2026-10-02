@@ -13,5 +13,6 @@ parameters:
     scanFiles:
         - vendor/php-stubs/woocommerce-stubs/woocommerce-stubs.php
         - tests/stubs/wp-cli.php
+        - tests/stubs/contact-form-7.php
     bootstrapFiles:
         - tests/phpstan-bootstrap.php
