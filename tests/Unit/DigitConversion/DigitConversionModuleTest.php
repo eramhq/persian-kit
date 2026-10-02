@@ -8,6 +8,7 @@ use Mockery;
 use PersianKit\Container\ServiceContainer;
 use PersianKit\Core\SettingsManager;
 use PersianKit\Modules\DigitConversion\DigitConversionModule;
+use PersianKit\Modules\DigitConversion\WooCommerceEmailDigits;
 use PersianKit\Tests\Unit\Support\FailsPcre;
 use PHPUnit\Framework\TestCase;
 
@@ -197,10 +198,77 @@ class DigitConversionModuleTest extends TestCase
         $this->assertFalse(DigitConversionModule::defaults()['enabled']);
     }
 
+    public function test_woocommerce_emails_start_off_and_are_sanitized(): void
+    {
+        $this->assertFalse(DigitConversionModule::defaults()['emails']);
+        $this->assertTrue($this->makeModule()->sanitizeSettings(['emails' => '1'])['emails']);
+        $this->assertFalse($this->makeModule()->sanitizeSettings([])['emails']);
+    }
+
+    public function test_email_digits_register_in_the_admin_when_the_option_is_on(): void
+    {
+        Functions\when('is_admin')->justReturn(true);
+        Functions\when('wp_doing_ajax')->justReturn(false);
+
+        $this->bootModule(['emails' => true], true);
+
+        $this->assertNotFalse(has_filter('woocommerce_email_format_string'));
+        $this->assertNotFalse(has_filter('woocommerce_order_number'));
+        $this->assertNotFalse(has_action('woocommerce_before_template_part', [WooCommerceEmailDigits::class, 'enterTemplate']));
+        $this->assertFalse(has_filter('the_content'), 'the admin still keeps its digits');
+    }
+
+    public function test_email_digits_are_off_by_default_but_emails_are_still_tracked(): void
+    {
+        Functions\when('is_admin')->justReturn(false);
+
+        $this->bootModule([], true);
+
+        $this->assertFalse(has_filter('woocommerce_email_format_string'));
+        $this->assertNotFalse(has_action('woocommerce_before_template_part', [WooCommerceEmailDigits::class, 'enterTemplate']));
+    }
+
+    public function test_email_digits_need_woocommerce(): void
+    {
+        Functions\when('is_admin')->justReturn(false);
+
+        $this->bootModule(['emails' => true]);
+
+        $this->assertFalse(has_filter('woocommerce_email_format_string'));
+        $this->assertFalse(has_action('woocommerce_before_template_part'));
+    }
+
+    public function test_email_digits_have_opt_outs(): void
+    {
+        Functions\when('is_admin')->justReturn(false);
+        Monkey\Filters\expectApplied('persian_kit_digit_conversion')
+            ->andReturnUsing(static fn (bool $convert, string $hook): bool => $hook !== 'woocommerce_email_order_number');
+
+        $this->bootModule(['emails' => true], true);
+
+        $this->assertNotFalse(has_filter('formatted_woocommerce_price'));
+        $this->assertFalse(has_filter('woocommerce_order_number'), 'order numbers opted out on their own');
+    }
+
+    public function test_site_wide_filters_leave_emails_to_their_own_option(): void
+    {
+        $module = $this->makeModule();
+
+        WooCommerceEmailDigits::enterTemplate('emails/email-order-details.php');
+        try {
+            $this->assertSame('120,000', $module->filterText('120,000'));
+        } finally {
+            WooCommerceEmailDigits::leaveTemplate('emails/email-order-details.php');
+        }
+
+        Functions\when('doing_filter')->alias(static fn (?string $hook = null): bool => $hook === 'woocommerce_email_format_string');
+        $this->assertSame('10 Mehr 1405', $module->filterText('10 Mehr 1405'), 'subjects and headings too');
+    }
+
     /**
      * @param array<string, mixed> $settings
      */
-    private function makeModule(array $settings = []): DigitConversionModule
+    private function makeModule(array $settings = [], bool $withWooCommerce = false): DigitConversionModule
     {
         $merged = array_replace(DigitConversionModule::defaults(), ['enabled' => true], $settings);
         $manager = Mockery::mock(SettingsManager::class);
@@ -208,17 +276,29 @@ class DigitConversionModuleTest extends TestCase
             static fn (string $key, ?string $subKey = null, mixed $default = null) => $subKey === null ? $merged : ($merged[$subKey] ?? $default)
         );
 
-        return new DigitConversionModule($manager);
+        if (!$withWooCommerce) {
+            return new DigitConversionModule($manager);
+        }
+
+        return new DigitConversionModuleWithWooCommerce($manager);
     }
 
     /**
      * @param array<string, mixed> $settings
      */
-    private function bootModule(array $settings = []): DigitConversionModule
+    private function bootModule(array $settings = [], bool $withWooCommerce = false): DigitConversionModule
     {
-        $module = $this->makeModule($settings);
+        $module = $this->makeModule($settings, $withWooCommerce);
         $module->boot(Mockery::mock(ServiceContainer::class));
 
         return $module;
+    }
+}
+
+class DigitConversionModuleWithWooCommerce extends DigitConversionModule
+{
+    protected function wooCommerceLoaded(): bool
+    {
+        return true;
     }
 }

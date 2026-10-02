@@ -31,7 +31,7 @@ class DigitConversionModule extends AbstractModule
      */
     public static function defaults(): array
     {
-        return ['enabled' => false, 'dates' => true, 'numbers' => true, 'prices' => true];
+        return ['enabled' => false, 'dates' => true, 'numbers' => true, 'prices' => true, 'emails' => false];
     }
 
     public function settingsView(): ?string
@@ -50,6 +50,7 @@ class DigitConversionModule extends AbstractModule
             'dates'   => !empty($values['dates']),
             'numbers' => !empty($values['numbers']),
             'prices'  => !empty($values['prices']),
+            'emails'  => !empty($values['emails']),
         ];
     }
 
@@ -59,6 +60,15 @@ class DigitConversionModule extends AbstractModule
 
     public function boot(ServiceContainer $container): void
     {
+        // Emails are sent from the admin, REST, cron and checkout alike.
+        if ($this->wooCommerceLoaded()) {
+            WooCommerceEmailDigits::trackRendering();
+
+            if ($this->setting('emails') && $this->allows('woocommerce_emails')) {
+                (new WooCommerceEmailDigits($this->allows('woocommerce_email_order_number')))->register();
+            }
+        }
+
         if (!$this->isFrontendRequest()) {
             return;
         }
@@ -83,7 +93,7 @@ class DigitConversionModule extends AbstractModule
         if ($this->setting('prices')) {
             $this->registerFilter('formatted_woocommerce_price', [$this, 'filterText']);
 
-            if (apply_filters('persian_kit_digit_conversion', true, 'woocommerce_block_prices')) {
+            if ($this->allows('woocommerce_block_prices')) {
                 add_action('wp_enqueue_scripts', [$this, 'enqueueBlockPriceScript']);
             }
         }
@@ -197,7 +207,9 @@ class DigitConversionModule extends AbstractModule
 
     /**
      * REST responses, feeds and outgoing mail are read by machines or mail
-     * clients, so their digits stay as stored.
+     * clients, so their digits stay as stored. WooCommerce emails follow
+     * their own option (WooCommerceEmailDigits), in the body and in the
+     * subject and heading.
      */
     private function shouldConvertNow(): bool
     {
@@ -209,13 +221,27 @@ class DigitConversionModule extends AbstractModule
             return false;
         }
 
+        if (WooCommerceEmailDigits::isRendering() || doing_filter('woocommerce_email_format_string')) {
+            return false;
+        }
+
         return !doing_filter('wp_mail');
+    }
+
+    protected function wooCommerceLoaded(): bool
+    {
+        return function_exists('WC');
     }
 
     private function registerFilter(string $hook, callable $callback): void
     {
-        if (apply_filters('persian_kit_digit_conversion', true, $hook)) {
+        if ($this->allows($hook)) {
             add_filter($hook, $callback, 99);
         }
+    }
+
+    private function allows(string $hook): bool
+    {
+        return (bool) apply_filters('persian_kit_digit_conversion', true, $hook);
     }
 }

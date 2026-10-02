@@ -38,6 +38,30 @@ class WooDateDisplayFilterTest extends TestCase
         $this->assertNotFalse(has_action('woocommerce_after_template_part', [$filter, 'leaveTemplate']));
         $this->assertNotFalse(has_filter('render_block_data', [$filter, 'enterBlock']));
         $this->assertNotFalse(has_filter('render_block', [$filter, 'leaveBlock']));
+        $this->assertSame(10, has_filter('woocommerce_email_format_string', [$filter, 'filterEmailOrderDate']));
+    }
+
+    public function test_order_date_in_email_subjects_becomes_jalali(): void
+    {
+        Functions\when('wc_date_format')->justReturn('F j, Y');
+        $email = $this->email('March 21, 2026', new \DateTimeImmutable('2026-03-21 10:00:00', new \DateTimeZone('Asia/Tehran')));
+
+        $subject = (new WooDateDisplayFilter())->filterEmailOrderDate('Note added to your Shop order from March 21, 2026', $email);
+
+        $this->assertSame('Note added to your Shop order from فروردین 1, 1405', $subject);
+        $this->assertSame('فروردین 1, 1405', $email->placeholders['{order_date}'], 'kept for the filters after this one');
+    }
+
+    public function test_order_date_in_email_subjects_needs_an_order_with_a_date(): void
+    {
+        Functions\when('wc_date_format')->justReturn('F j, Y');
+        $filter = new WooDateDisplayFilter();
+        $subject = 'Your Shop order from March 21, 2026';
+
+        $this->assertSame($subject, $filter->filterEmailOrderDate($subject, $this->email('March 21, 2026', null)));
+        $this->assertSame($subject, $filter->filterEmailOrderDate($subject, (object) ['placeholders' => ['{order_date}' => 'March 21, 2026'], 'object' => null]));
+        $this->assertSame($subject, $filter->filterEmailOrderDate($subject, (object) ['placeholders' => []]));
+        $this->assertSame($subject, $filter->filterEmailOrderDate($subject, null));
     }
 
     public function test_dates_outside_woocommerce_contexts_are_untouched(): void
@@ -116,6 +140,14 @@ class WooDateDisplayFilterTest extends TestCase
             '2026-03-21T00:00:00+00:00',
             $filter->filterDateI18n('2026-03-21T00:00:00+00:00', DATE_RFC3339, self::NOWRUZ_1405, true)
         );
+    }
+
+    private function email(string $orderDate, ?\DateTimeInterface $created): object
+    {
+        return (object) [
+            'placeholders' => ['{order_date}' => $orderDate],
+            'object'       => new \WC_Order(['date_created' => $created]),
+        ];
     }
 
     private function screen(string $id, string $postType): \WP_Screen

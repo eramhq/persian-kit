@@ -16,6 +16,10 @@ $options = [
     'dates'   => ['label' => __('Jalali dates', 'persian-kit')],
     'numbers' => ['label' => __('Post and comment counts', 'persian-kit')],
     'prices'  => ['label' => __('Shop prices', 'persian-kit')],
+    'emails'  => [
+        'label' => __('WooCommerce emails', 'persian-kit'),
+        'help'  => __('Order numbers, prices, quantities and dates. Phone numbers, postcodes and links keep English digits.', 'persian-kit'),
+    ],
 ];
 ?>
 <fieldset>

@@ -174,12 +174,11 @@ $sectionStart('prices', wp_kses(
             ])
         ),
         sprintf(
-            /* translators: %s: link to the setting, such as "Display › Persian digits › Shop prices". */
-            esc_html__('Persian digits in prices are set under %s.', 'persian-kit'),
+            /* translators: %s: link to the setting, such as "Display › Persian digits". */
+            esc_html__('Persian digits in prices and emails are set under %s.', 'persian-kit'),
             $sectionLink(admin_url('admin.php?page=' . AdminPage::MENU_SLUG . '&tab=display'), [
                 __('Display', 'persian-kit'),
                 __('Persian digits', 'persian-kit'),
-                __('Shop prices', 'persian-kit'),
             ])
         ),
     ]),
