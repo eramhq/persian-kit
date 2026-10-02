@@ -1,0 +1,27 @@
+/* Jalali date picker for form fields (resources/js/date-field.js). */
+
+.persian-kit-date-field {
+    display: inline-flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+    max-width: 100%;
+}
+
+intl-datepicker.persian-kit-date-picker {
+    max-width: 100%;
+    /* The page's font instead of the component's system font. */
+    font-family: inherit;
+    font-size: inherit;
+    /* The admin colour scheme's accent, and light colours: the component
+       turns dark when the system is in dark mode, also on a light page.
+       Themes can override any --idp-* property. */
+    --idp-primary: var(--wp-admin-theme-color, #2271b1);
+    --idp-bg: #fff;
+    --idp-text: #1e1e1e;
+    --idp-border: #8c8f94;
+    --idp-hover: #f0f0f1;
+    --idp-range-bg: #f0f6fc;
+    --idp-muted: #646970;
+    --idp-radius: 4px;
+}

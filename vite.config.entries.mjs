@@ -1,21 +1,14 @@
 import { defineConfig } from 'vite';
 import { resolve } from 'path';
+import { readFileSync } from 'fs';
 
 const entry = process.env.ENTRY || 'admin';
+const datepickerVersion = JSON.parse(readFileSync(resolve(__dirname, 'node_modules/intl-datepicker/package.json'), 'utf8')).version;
 
-export default defineConfig({
-    publicDir: false,
-    build: {
-        lib: {
-            entry: resolve(__dirname, `resources/entries/${entry}-entry.js`),
-            formats: ['iife'],
-            name: `persianKit_${entry}`,
-            fileName: () => `${entry}.js`,
-        },
-        rollupOptions: {
-            output: {
-                // Alpine.js ships without a licence header; keep its MIT notice in the bundle.
-                banner: `/*!
+// Licence notices for the libraries each entry bundles.
+const banners = {
+    // Alpine.js ships without a licence header; keep its MIT notice in the bundle.
+    admin: `/*!
  * Includes Alpine.js (https://alpinejs.dev)
  * Copyright (c) 2019-2025 Caleb Porzio and contributors
  *
@@ -34,8 +27,32 @@ export default defineConfig({
  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */`,
+    datepicker: `/*!
+ * Includes intl-datepicker ${datepickerVersion} (https://github.com/eramhq/intl-datepicker)
+ * Copyright (c) 2026 Navid Kashani. MIT License; see public/licenses/intl-datepicker.txt.
+ *
+ * Includes @internationalized/date (https://github.com/adobe/react-spectrum)
+ * Copyright 2019 Adobe. Apache License 2.0; see public/licenses/internationalized-date.txt.
+ */`,
+};
+
+export default defineConfig({
+    publicDir: false,
+    build: {
+        lib: {
+            entry: resolve(__dirname, `resources/entries/${entry}-entry.js`),
+            formats: ['iife'],
+            name: `persianKit_${entry}`,
+            fileName: () => `${entry}.js`,
+        },
+        rollupOptions: {
+            output: {
+                banner: banners[entry] ?? '',
             },
         },
+        // The date picker's class fields stay native: lowering them puts
+        // helper variables outside the IIFE, in the global scope.
+        target: entry === 'datepicker' ? 'es2022' : 'modules',
         outDir: resolve(__dirname, 'public/js'),
         emptyOutDir: false,
         minify: false,
