@@ -619,13 +619,15 @@ A note under the Currency field says that changing the currency doesn't convert 
 
 **Prices for search engines.** Search engines accept ISO 4217 codes only, and Iran's is `IRR`. Structured data priced in `IRT`, `IRHT` or `IRHR` is converted to whole rials (`"price": "1200000"`, `"priceCurrency": "IRR"`) in WooCommerce's product markup (`woocommerce_structured_data_product`) and order markup (`woocommerce_structured_data_order`, in order emails), at priority 1 so later callbacks get rials. It covers `price`, `lowPrice`, `highPrice`, `minPrice` and `maxPrice` next to `priceCurrency`, `value`, `minValue` and `maxValue` next to `currency` (`MonetaryAmount`), and an order's `discount`. Each node is converted by its own currency, so a USD price from a multi-currency plugin is left alone, and converting twice changes nothing. Prices shoppers see are never changed. `persian_kit_schema_rial_prices` turns it off.
 
+Yoast SEO's and Rank Math's schema and Rank Math's Open Graph price tags are converted the same way; see [SEO plugins](#seo-plugins).
+
 Product feeds and accounting exports from other plugins may not accept `IRHT` or `IRHR`, which aren't ISO codes.
 
 If Persian Kit is deactivated while the store uses `IRHT` or `IRHR`, prices show without a symbol, and saving WooCommerce › Settings › General resets the currency to WooCommerce's default, because WooCommerce only saves a listed currency. Switch the currency back to toman or rial first (and convert the prices).
 
 ## Integrations
 
-An integration is a module that works with another plugin: WooCommerce (`woocommerce`), Contact Form 7 (`cf7`) and ACF (`acf`). Each turns on by itself when its plugin is active, and does nothing while it is not. The plugin is checked when the page loads, by its classes, functions and constants, so a network-activated plugin counts on every site.
+An integration is a module that works with another plugin: WooCommerce (`woocommerce`), Contact Form 7 (`cf7`), ACF (`acf`), Yoast SEO (`yoast`) and Rank Math (`rank_math`). Each turns on by itself when its plugin is active, and does nothing while it is not. The plugin is checked when the page loads, by its classes, functions and constants, so a network-activated plugin counts on every site.
 
 - WooCommerce has its own tab on the settings page, shown only while WooCommerce is active, with a card for each section: Checkout and addresses, Prices and currency, Dates. `?tab=woocommerce#checkout` (`#prices`, `#dates`) links to one. While WooCommerce is inactive, `?tab=woocommerce` opens the first tab. Under Dates, `dates_admin` turns the Jalali date pickers on the order, product and coupon screens, and the month filter on the orders list, on or off; dates on orders and in emails follow the Jalali dates module.
 - The Integrations tab has a card for each other integration, grouped as Forms, Store and Compatibility. A plugin that is active but too old, or that needs an add-on (such as a Pro version), has a card that says why, with its switch disabled.
@@ -633,7 +635,19 @@ An integration is a module that works with another plugin: WooCommerce (`woocomm
 - A card is marked New until the Integrations or WooCommerce tab is opened once after its plugin was activated. The keys of the integrations that have been seen are stored per site in the `persian_kit_seen_integrations` option.
 - Integrations add no admin notices. Advice about another Persian plugin that does the same work is shown at the top of the settings page, as before, and on the card or tab of the integration it concerns.
 
+- Yoast SEO and Rank Math are compatibility integrations (category `compat`): their cards have no switch, and they work whenever their plugin is active. See [SEO plugins](#seo-plugins).
+
 Values are stored in their standard form, with English digits and Gregorian dates, and shown as Persian digits and Jalali dates where people read them. Exports and other plugins keep working with the stored values.
+
+### SEO plugins
+
+What Yoast SEO and Rank Math give search engines stays machine-readable while Persian Kit shows Jalali dates and Persian digits to people:
+
+- **Prices in rials.** Yoast's schema graph (`wpseo_schema_graph`) and Rank Math's JSON-LD (`rank_math/json_ld`) are converted with the same rules as WooCommerce's markup (see [WooCommerce Prices](#woocommerce-prices)), last, after every add-on has added to them. Rank Math's `product:price:amount` and `product:price:currency` tags are converted too (`rank_math/opengraph/facebook/product_price_amount` and `…_currency`); the amount tag has no currency of its own, so it is converted by the store's. Without WooCommerce no price is Iranian, so nothing changes. `persian_kit_schema_rial_prices` turns this off.
+- **Gregorian dates.** Schema `datePublished`/`dateModified`, `article:published_time`/`article:modified_time`/`og:updated_time` and sitemap `<lastmod>` stay Gregorian with Latin digits, with Jalali dates' global conversion on or off and Persian digits on. Both plugins format them with `DateTime` or in W3C/ATOM formats, which [`DateDisplayGuard`](../src/Modules/DateConversion/DateDisplayGuard.php) leaves alone, so nothing is hooked for this; the integration tests check it.
+- **Date archive titles.** Both plugins write the document title themselves, from a date variable that names the Gregorian month (Yoast showed "January 1405" on /1405/01/). On date archives, Yoast's `%%date%%` (`wpseo_replacements`) and Rank Math's `%date%` (`rank_math/replacements`) name the Jalali period, as WordPress's own title does. This follows the Jalali dates module, whether or not an SEO integration is on.
+
+Not covered: the Open Graph price tags of Yoast WooCommerce SEO (a paid add-on, so untested; its schema goes through `wpseo_schema_graph` and WooCommerce's markup), and other SEO plugins such as All in One SEO and SEOPress. `SchemaPrices::toRial()` converts any schema array for them.
 
 ### Turning an integration off
 

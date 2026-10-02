@@ -21,7 +21,8 @@ if (file_exists($wpTestsDir . '/includes/functions.php')) {
 
     require_once $wpTestsDir . '/includes/functions.php';
 
-    // Plugins the integration tests cover: WooCommerce, Contact Form 7, ACF. Each
+    // Plugins the integration tests cover: WooCommerce, Contact Form 7, ACF,
+    // Yoast SEO and Rank Math. Each
     // loads from PERSIAN_KIT_TESTS_<NAME>_DIR (as in CI), or when installed
     // next to the plugin. Their tests are skipped without them; set
     // PERSIAN_KIT_TESTS_WITHOUT_<NAME>=1 to run the suite without one.
@@ -29,6 +30,8 @@ if (file_exists($wpTestsDir . '/includes/functions.php')) {
         'WOOCOMMERCE' => 'woocommerce/woocommerce.php',
         'CF7'         => 'contact-form-7/wp-contact-form-7.php',
         'ACF'         => 'advanced-custom-fields/acf.php',
+        'YOAST'       => 'wordpress-seo/wp-seo.php',
+        'RANK_MATH'   => 'seo-by-rank-math/rank-math.php',
     ];
     $pluginFiles = [];
     foreach ($plugins as $name => $file) {
@@ -40,10 +43,37 @@ if (file_exists($wpTestsDir . '/includes/functions.php')) {
     }
     $loadWooCommerce = isset($pluginFiles['WOOCOMMERCE']);
 
+    // The plugins loaded here count as active, for is_plugin_active() checks
+    // such as Rank Math's for WooCommerce.
+    tests_add_filter('option_active_plugins', function ($active) use ($plugins, $pluginFiles) {
+        return array_values(array_unique(array_merge((array) $active, array_values(array_intersect_key($plugins, $pluginFiles)))));
+    });
+
+    // Rank Math does nothing on the front end until its account step is skipped.
+    if (isset($pluginFiles['RANK_MATH']) && !defined('RANK_MATH_REGISTRATION_SKIP')) {
+        define('RANK_MATH_REGISTRATION_SKIP', true);
+    }
+
     tests_add_filter('muplugins_loaded', function () use ($pluginFiles) {
+        // The Rank Math modules the tests cover, before it loads them.
+        if (isset($pluginFiles['RANK_MATH'])) {
+            update_option('rank_math_modules', ['sitemap', 'rich-snippet', 'woocommerce']);
+        }
+
         foreach ($pluginFiles as $path) {
             require $path;
         }
+
+        // Yoast SEO and Rank Math keep the page they describe for the rest of
+        // the request; each go_to() is a new one.
+        add_action('wp', function () {
+            if (function_exists('YoastSEO')) {
+                YoastSEO()->classes->get(\Yoast\WP\SEO\Memoizers\Meta_Tags_Context_Memoizer::class)->clear();
+            }
+            if (class_exists(\RankMath\Paper\Paper::class)) {
+                \RankMath\Paper\Paper::reset();
+            }
+        }, 0);
 
         require dirname(__DIR__) . '/persian-kit.php';
     });
@@ -54,6 +84,20 @@ if (file_exists($wpTestsDir . '/includes/functions.php')) {
             \WC_Install::install();
             $GLOBALS['wp_roles'] = null;
             wp_roles();
+        });
+    }
+
+    if (isset($pluginFiles['RANK_MATH'])) {
+        // Its other defaults (titles, sitemaps), as on activation.
+        tests_add_filter('setup_theme', function () {
+            (new \RankMath\Installer())->activation(false);
+
+            // Rank Math sends date archives to the home page by default;
+            // the archive tests need them.
+            $titles = get_option('rank-math-options-titles', []);
+            update_option('rank-math-options-titles', ['disable_date_archives' => 'off'] + $titles);
+            // It read its settings before they existed.
+            rank_math()->settings->reset();
         });
     }
 

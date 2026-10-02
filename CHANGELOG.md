@@ -38,6 +38,14 @@ Contact Form 7, ACF and WooCommerce are now integrations: each turns on by itsel
 - A note under WooCommerce › Settings › General › Currency says that changing the currency doesn't convert prices, shipping costs or coupons, to check the payment gateway supports thousand toman, and to set the number of decimals for prices like 12.5.
 - Prices in WooCommerce's structured data are in rials (`IRR`) for a store priced in toman, thousand toman or thousand rial: product pages for search engines and order emails for Gmail. Search engines don't accept `IRT`, which isn't an ISO currency code, so toman stores had invalid product markup before. Prices shoppers see don't change. The `persian_kit_schema_rial_prices` filter keeps the store's own currency.
 
+### Yoast SEO and Rank Math
+
+New compatibility integrations for Yoast SEO (`yoast`) and Rank Math (`rank_math`), with a card each under Integrations › Compatibility. They have no switch: each works while its plugin is active.
+
+- Prices in Yoast's and Rank Math's schema, and Rank Math's `product:price` Open Graph tags, are in rials (`IRR`) for a store priced in toman, thousand toman or thousand rial. Rank Math wrote its own product schema with `IRHT` before. The `persian_kit_schema_rial_prices` filter keeps the store's own currency.
+- Checked: the dates both plugins give search engines (schema, Open Graph and sitemaps) stay Gregorian with Latin digits, with Jalali dates' global conversion and Persian digits on. Nothing needed changing.
+- Fixed: with Yoast SEO (or Rank Math with date archives on), a date archive's title named the Gregorian month, such as "January 1405" on /1405/01/. It names the Jalali month now, as without them.
+
 ### WooCommerce checkout for Iran
 
 New options under WooCommerce (WooCommerce tab, Checkout and addresses). They apply to the classic checkout, the block checkout and My Account > Addresses, and add to what WooCommerce already has for Iran (provinces, the IRR and IRT currencies).

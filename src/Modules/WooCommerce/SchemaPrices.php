@@ -65,6 +65,35 @@ class SchemaPrices
     }
 
     /**
+     * The rials in one unit of $currency when its amounts are to be
+     * converted, or null when they are kept: a currency that isn't
+     * Iranian, rials already, or a store that opted out.
+     */
+    public static function factor(string $currency): ?int
+    {
+        $factor = IranianCurrencies::rialFactor($currency);
+
+        if ($factor === null || $factor === 1 || !apply_filters('persian_kit_schema_rial_prices', true, $currency)) {
+            return null;
+        }
+
+        return $factor;
+    }
+
+    /**
+     * $amount times $factor, as a whole number of rials without separators
+     * or an exponent. Anything but a number is returned as it is.
+     */
+    public static function scale(mixed $amount, int $factor): mixed
+    {
+        if (!is_int($amount) && !is_float($amount) && !(is_string($amount) && is_numeric($amount))) {
+            return $amount;
+        }
+
+        return number_format(round((float) $amount * $factor), 0, '.', '');
+    }
+
+    /**
      * @param array<mixed> $node
      * @param list<string> $amountKeys
      * @return array<mixed>
@@ -72,31 +101,20 @@ class SchemaPrices
     private static function convert(array $node, string $currencyKey, array $amountKeys): array
     {
         $currency = $node[$currencyKey] ?? null;
-        if (!is_string($currency)) {
-            return $node;
-        }
+        $factor = is_string($currency) ? self::factor($currency) : null;
 
-        $factor = IranianCurrencies::rialFactor($currency);
-        if ($factor === null || $factor === 1 || !apply_filters('persian_kit_schema_rial_prices', true, $currency)) {
+        if ($factor === null) {
             return $node;
         }
 
         foreach ($amountKeys as $key) {
-            if (isset($node[$key]) && (is_int($node[$key]) || is_float($node[$key]) || (is_string($node[$key]) && is_numeric($node[$key])))) {
-                $node[$key] = self::rials((float) $node[$key] * $factor);
+            if (array_key_exists($key, $node)) {
+                $node[$key] = self::scale($node[$key], $factor);
             }
         }
 
         $node[$currencyKey] = IranianCurrencies::RIAL;
 
         return $node;
-    }
-
-    /**
-     * A whole number of rials, without separators or an exponent.
-     */
-    private static function rials(float $amount): string
-    {
-        return number_format(round($amount), 0, '.', '');
     }
 }

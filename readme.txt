@@ -33,6 +33,7 @@ Persian Kit is a modular WordPress plugin for Persian-language sites. It focuses
 * WooCommerce checkout for Iran: Persian digits in phone numbers and postcodes are saved as English digits, Iranian phone numbers and postcodes are checked, an optional national ID (کد ملی) field, and optional city suggestions for each province
 * Persian digits in the WooCommerce cart and checkout blocks' prices
 * Thousand toman and thousand rial currencies for WooCommerce, with prices in rials in the product data search engines read
+* Works with Yoast SEO and Rank Math: prices in rials and Gregorian dates in what they give search engines, and Jalali titles on date archives
 * A Jalali date picker for Contact Form 7 and ACF date fields, WooCommerce's admin date fields and the post date in the classic editor and Quick Edit, which keep saving Gregorian dates
 * Contact Form 7 fields that check Iranian mobile numbers, national IDs, postcodes, card numbers and IBANs
 
@@ -115,6 +116,10 @@ Yes. Under WooCommerce > Checkout and addresses, choose "Only these provinces" a
 = Can my store price in thousand toman? =
 
 Yes. Pick "Iranian thousand toman" (هزار تومان) or "Iranian thousand rial" (هزار ریال) under WooCommerce > Settings > General > Currency. Changing the currency doesn't convert prices you have saved, shipping costs or coupons, so update them yourself, and check that your payment gateway supports thousand toman first. Search engines get prices in rials, because they don't accept toman. Before you deactivate Persian Kit, switch the currency back to toman or rial.
+
+= Does Persian Kit work with Yoast SEO and Rank Math? =
+
+Yes. While either is active, the product prices they give search engines are in rials, because search engines don't accept toman, and their dates in schema, Open Graph tags and sitemaps stay Gregorian, which search engines need. Date archive titles name the Jalali month. Nothing needs setting up.
 
 = Does Persian Kit work with Contact Form 7 and ACF? =
 

@@ -13,6 +13,8 @@ use PersianKit\Contracts\ModuleInterface;
 use PersianKit\Core\SettingsManager;
 use PersianKit\Modules\Forms\AcfModule;
 use PersianKit\Modules\Forms\Cf7Module;
+use PersianKit\Modules\Seo\RankMathModule;
+use PersianKit\Modules\Seo\YoastModule;
 use PersianKit\Modules\WooCommerce\WooCommerceModule;
 use PersianKit\Tests\Integration\Support\FakesPluginState;
 use PersianKit\Tests\Integration\Support\WordPressIntegrationTestCase;
@@ -390,13 +392,15 @@ class SettingsPageTest extends WordPressIntegrationTestCase
             'woocommerce' => $this->withPlugin(WooCommerceModule::class, false),
             'cf7'         => $this->withPlugin(Cf7Module::class, false),
             'acf'         => $this->withPlugin(AcfModule::class, false),
+            'yoast'       => $this->withPlugin(YoastModule::class, false),
+            'rank_math'   => $this->withPlugin(RankMathModule::class, false),
         ]);
 
         $this->assertSame(
             'None of the supported plugins are active on this site.',
             trim($xpath->evaluate('string(//*[@id="persian-kit-panel-integrations"]//*[contains(@class, "persian-kit-empty__title")])'))
         );
-        $this->assertSame(3, $xpath->query('//*[@id="persian-kit-group-also"]/following-sibling::ul/li')->length);
+        $this->assertSame(5, $xpath->query('//*[@id="persian-kit-group-also"]/following-sibling::ul/li')->length);
     }
 
     public function test_turning_off_an_integration_warns_about_the_forms_that_use_it(): void
@@ -546,6 +550,12 @@ class SettingsPageTest extends WordPressIntegrationTestCase
                 use FakesPluginState;
             },
             AcfModule::class => new class ($settings) extends AcfModule {
+                use FakesPluginState;
+            },
+            YoastModule::class => new class ($settings) extends YoastModule {
+                use FakesPluginState;
+            },
+            RankMathModule::class => new class ($settings) extends RankMathModule {
                 use FakesPluginState;
             },
         };
