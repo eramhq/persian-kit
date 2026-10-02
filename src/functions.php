@@ -24,6 +24,7 @@ use PersianKit\Dependencies\Eram\Abzar\Validation\PhoneNumber;
 use PersianKit\Dependencies\Eram\Abzar\Validation\PlateNumber;
 use PersianKit\Dependencies\Eram\Abzar\Validation\PostalCode;
 use PersianKit\Dependencies\Eram\Abzar\Validation\ValidationResult;
+use PersianKit\Modules\DateConversion\DatePicker;
 use PersianKit\Modules\DateConversion\JalaliFormatter;
 
 defined('ABSPATH') || exit;
@@ -126,6 +127,25 @@ function persian_kit_date(string $format, int|string $timestamp = '', ?\DateTime
 function persian_kit_gregorian_date(string $format, int|string $timestamp = '', ?\DateTimeZone $timezone = null): string
 {
     return JalaliFormatter::gregorianFormat($format, $timestamp, $timezone);
+}
+
+/**
+ * Attributes that turn an <input> into a Jalali date picker field, and load
+ * the picker on the page. The field still submits a Gregorian date.
+ *
+ *     <input type="text" name="birthday" <?php echo persian_kit_date_field_attributes(['max' => '2010-12-31']); ?>>
+ *
+ * @param array{format?: string, type?: string, min?: string, max?: string, disable_past?: bool, disable_future?: bool, locale?: string} $options
+ *        format: 'Y-m-d' (default), 'Ymd' or 'Y-m-d H:i:s'. type: 'date'
+ *        (default), 'range', 'multiple', 'month' or 'year'. min and max:
+ *        Gregorian or Jalali dates.
+ * @return string Escaped HTML attributes.
+ */
+function persian_kit_date_field_attributes(array $options = []): string
+{
+    DatePicker::enqueue();
+
+    return DatePicker::attributesHtml(DatePicker::attributes($options));
 }
 
 function persian_kit_number_format(int|float|string $number, string $separator = ','): string

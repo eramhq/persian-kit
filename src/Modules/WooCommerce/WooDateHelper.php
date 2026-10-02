@@ -41,35 +41,4 @@ class WooDateHelper
             'end' => $end->toDateTimeImmutable()->format('Y-m-d'),
         ];
     }
-
-    public static function normalizeDateInputForWooSave(string $value): string
-    {
-        $value = DigitConverter::toEnglish(trim($value));
-
-        if ($value === '') {
-            return '';
-        }
-
-        if (!preg_match('/^(?<year>\d{4})-(?<month>\d{2})-(?<day>\d{2})$/', $value, $matches)) {
-            return $value;
-        }
-
-        $year = (int) $matches['year'];
-        $month = (int) $matches['month'];
-        $day = (int) $matches['day'];
-
-        if ($year >= 1700) {
-            return $value;
-        }
-
-        if ($year < 1200 || $year > 1600) {
-            return $value;
-        }
-
-        try {
-            return CivilDateTime::fromJalali($year, $month, $day)->toDateTimeImmutable()->format('Y-m-d');
-        } catch (\Throwable $exception) {
-            return $value;
-        }
-    }
 }

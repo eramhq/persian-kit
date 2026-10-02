@@ -3,6 +3,7 @@
 namespace PersianKit\Modules\WooCommerce;
 
 use PersianKit\Dependencies\Eram\Abzar\Digits\DigitConverter;
+use PersianKit\Modules\DateConversion\DateInputParser;
 
 defined('ABSPATH') || exit;
 
@@ -75,7 +76,7 @@ class WooPostedDateNormalizer
         }
 
         foreach ($_POST[$key] as $index => $value) {
-            $_POST[$key][$index] = wp_slash(WooDateHelper::normalizeDateInputForWooSave($this->sanitizeScalar($value)));
+            $_POST[$key][$index] = wp_slash(DateInputParser::normalize($this->sanitizeScalar($value)));
         }
     }
 
@@ -85,7 +86,7 @@ class WooPostedDateNormalizer
             return;
         }
 
-        $_POST[$key] = wp_slash(WooDateHelper::normalizeDateInputForWooSave($this->sanitizeScalar($_POST[$key])));
+        $_POST[$key] = wp_slash(DateInputParser::normalize($this->sanitizeScalar($_POST[$key])));
     }
 
     private function normalizeDigitsField(string $key): void
