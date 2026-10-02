@@ -18,7 +18,19 @@
  *   data-persian-kit-date-min/-max ISO dates; default to the input's min/max
  *   data-persian-kit-date-disable-past, data-persian-kit-date-disable-future
  *   data-persian-kit-date-locale   default window.persianKitDateField.locale
+ *   data-persian-kit-date-hint     'off' hides the typing hint under the
+ *                                  field (screen readers still read it) and
+ *                                  makes the picker as wide as a date
  *   required, disabled, readonly, placeholder
+ *
+ * A value already in the field can also be a Jalali date in the field's
+ * format (WooCommerce writes its fields with date_i18n(), which Persian Kit
+ * may turn Jalali), with Persian or Arabic digits and / as separator. The
+ * picker shows it, and the field keeps it until a date is picked.
+ *
+ * Integrations that change a field's value with a script call
+ * PersianKitDateField.refresh(input) afterwards, and reach the picker, for
+ * min and max, with PersianKitDateField.picker(input).
  *
  * Without JavaScript the input stays a text field, and the server converts a
  * typed Jalali date (DateInputParser).
@@ -38,22 +50,46 @@
     var config = window.persianKitDateField || {};
     var labels = config.labels || {};
 
-    /** Input => its picker. */
+    /** Years read as Jalali in a field value. */
+    var JALALI_YEARS = [1200, 1600];
+
+    /** Input => {picker, refresh}. */
     var bound = new WeakMap();
+
+    /** Persian and Arabic digits as English digits. */
+    function toAsciiDigits(value) {
+        return String(value).replace(/[\u06F0-\u06F9\u0660-\u0669]/g, function (digit) {
+            var code = digit.charCodeAt(0);
+            return String(code - (code >= 0x06F0 ? 0x06F0 : 0x0660));
+        });
+    }
 
     /**
      * A field value in the given format as an ISO date and an HH:MM time.
+     * A Jalali date (years 1200 to 1600) is converted.
      *
      * @return {{date: string, time: string}|null}
      */
     function parse(value, format) {
-        var match = FORMATS[format].pattern.exec(String(value || '').trim());
+        var text = toAsciiDigits(value || '').trim();
+        var pattern = FORMATS[format].pattern;
+        var match = pattern.exec(text) || pattern.exec(text.replace(/\//g, '-'));
         if (!match) {
             return null;
         }
 
+        var date = match[1] + '-' + match[2] + '-' + match[3];
+        var year = Number(match[1]);
+        if (year >= JALALI_YEARS[0] && year <= JALALI_YEARS[1]) {
+            var calendar = window.PersianKitCalendar;
+            date = calendar ? calendar.jalaliToIso(year, Number(match[2]), Number(match[3])) : null;
+            if (!date) {
+                return null;
+            }
+        }
+
         return {
-            date: match[1] + '-' + match[2] + '-' + match[3],
+            date: date,
             time: match[4] ? match[4] + ':' + match[5] : '',
         };
     }
@@ -98,6 +134,9 @@
 
         var picker = document.createElement('intl-datepicker');
         picker.className = 'persian-kit-date-picker';
+        if (option(input, 'hint') === 'off') {
+            picker.classList.add('persian-kit-date-picker--no-hint');
+        }
         picker.setAttribute('calendar', 'persian');
         picker.setAttribute('locale', option(input, 'locale') || config.locale || 'fa-IR');
         picker.setAttribute('allow-input', '');
@@ -172,7 +211,14 @@
             }
         }
 
+        // Set while refresh() puts the field's value into the picker.
+        var quiet = false;
+
         function sync() {
+            if (quiet) {
+                return;
+            }
+
             var value = picker.value || '';
 
             if (type === 'date' && value !== '') {
@@ -188,6 +234,28 @@
             input.dispatchEvent(new Event('change', { bubbles: true }));
         }
 
+        // The field's current value into the picker and the time input,
+        // without writing the field or firing events.
+        function refresh() {
+            var parsed = type === 'date' ? parse(input.value, format) : null;
+            var pickerValue = type === 'date' ? (parsed ? parsed.date : '') : input.value;
+
+            quiet = true;
+            try {
+                if (pickerValue && typeof picker.setValue === 'function') {
+                    picker.setValue(pickerValue);
+                } else if (!pickerValue && typeof picker.clear === 'function') {
+                    picker.clear();
+                }
+            } finally {
+                quiet = false;
+            }
+
+            if (time) {
+                time.value = parsed ? parsed.time : '';
+            }
+        }
+
         show(initial);
 
         wrapper.appendChild(picker);
@@ -196,7 +264,7 @@
         }
         input.parentNode.insertBefore(wrapper, input);
         input.type = 'hidden';
-        bound.set(input, picker);
+        bound.set(input, { picker: picker, refresh: refresh });
 
         picker.addEventListener('intl-change', sync);
         if (time) {
@@ -208,18 +276,8 @@
         if (input.form) {
             input.form.addEventListener('reset', function () {
                 window.setTimeout(function () {
-                    var parsed = type === 'date' ? parse(initial, format) : null;
-                    var pickerValue = type === 'date' ? (parsed ? parsed.date : '') : initial;
-
-                    if (pickerValue && typeof picker.setValue === 'function') {
-                        picker.setValue(pickerValue);
-                    } else if (!pickerValue && typeof picker.clear === 'function') {
-                        picker.clear();
-                    }
-                    if (time) {
-                        time.value = parsed ? parsed.time : '';
-                    }
                     input.value = initial;
+                    refresh();
                 });
             });
         }
@@ -252,7 +310,28 @@
         }).observe(document.documentElement, { childList: true, subtree: true });
     }
 
-    window.PersianKitDateField = { upgrade: upgrade, upgradeAll: upgradeAll, parse: parse, serialize: serialize };
+    /** Re-reads a field's value into its picker after a script changed it. */
+    function refresh(input) {
+        var field = bound.get(input);
+        if (field) {
+            field.refresh();
+        }
+    }
+
+    /** The <intl-datepicker> of an upgraded field, or null. */
+    function pickerOf(input) {
+        var field = bound.get(input);
+        return field ? field.picker : null;
+    }
+
+    window.PersianKitDateField = {
+        upgrade: upgrade,
+        upgradeAll: upgradeAll,
+        refresh: refresh,
+        picker: pickerOf,
+        parse: parse,
+        serialize: serialize,
+    };
 
     if (document.readyState === 'loading') {
         document.addEventListener('DOMContentLoaded', start);

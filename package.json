@@ -16,6 +16,7 @@
         "test:js": "node --test 'tests/js/*.test.mjs'"
     },
     "dependencies": {
+        "@internationalized/date": "3.12.4",
         "alpinejs": "^3.17.4",
         "intl-datepicker": "0.4.1"
     },
