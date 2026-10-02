@@ -262,6 +262,19 @@ class SettingsPageTest extends WordPressIntegrationTestCase
             iterator_to_array($xpath->query($boxes . '[@checked]'))
         ));
         $this->assertSame('only', $xpath->query('//input[@type="radio"][@checked]')->item(0)?->getAttribute('value'));
+        $this->assertSame(0, $xpath->query('//ul[contains(@class, "persian-kit-provinces")][@x-cloak]')->length, 'the grid shows');
+    }
+
+    public function test_the_province_grid_is_hidden_while_all_provinces_is_picked(): void
+    {
+        if (!class_exists('WooCommerce')) {
+            $this->markTestSkipped('WooCommerce is not loaded.');
+        }
+
+        $xpath = $this->render(['woocommerce' => $this->withPlugin(WooCommerceModule::class, true)]);
+
+        $this->assertSame('all', $xpath->query('//input[@type="radio"][@checked]')->item(0)?->getAttribute('value'));
+        $this->assertSame(1, $xpath->query('//ul[contains(@class, "persian-kit-provinces")][@x-cloak][@x-show="scope === \'only\'"]')->length);
     }
 
     public function test_the_woocommerce_tab_repeats_the_advice_of_an_overlapping_plugin(): void

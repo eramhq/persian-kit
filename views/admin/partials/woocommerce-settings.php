@@ -102,7 +102,8 @@ $sectionStart = static function (string $id, string $descriptionHtml = '') use (
                         </div>
                         <?php // Sent when no box is ticked, or the boxes are off, so the list is saved empty. ?>
                         <input type="hidden" name="persian_kit_settings[woocommerce][allowed_states][]" value="">
-                        <ul class="persian-kit-provinces" :aria-disabled="scope === 'all'">
+                        <?php // Hidden and off while "All provinces" is picked, so the boxes send nothing. ?>
+                        <ul class="persian-kit-provinces" x-show="scope === 'only'"<?php echo $allowedStates === [] ? ' x-cloak' : ''; ?>>
                             <?php foreach ($provinces as $code => $name) : ?>
                                 <li>
                                     <label>
