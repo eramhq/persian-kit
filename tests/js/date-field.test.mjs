@@ -206,11 +206,101 @@ test('a form reset restores the first value in the picker and the input', async 
     assert.equal(empty.value, '');
 });
 
-test('values in other formats are left in the input until a date is picked', async () => {
-    const window = await page('<form><input name="visit" data-persian-kit-date value="۱۴۰۵/۰۷/۱۰"></form>');
+test('a Jalali value in the field is shown, and kept until a date is picked', async () => {
+    const window = await page(`
+        <form>
+            <input name="a" data-persian-kit-date value="1405-07-10">
+            <input name="b" data-persian-kit-date value="۱۴۰۵/۰۷/۱۰">
+            <input name="c" data-persian-kit-date data-persian-kit-date-format="Ymd" value="14050710">
+            <input name="d" data-persian-kit-date data-persian-kit-date-format="Y-m-d H:i:s" value="١٤٠٥-٠٧-١٠ ٠٨:١٥:٠٠">
+        </form>`);
+    const { document } = window;
+    const pickers = [...document.querySelectorAll('intl-datepicker')];
+
+    assert.deepEqual(pickers.map((picker) => picker.value), ['2026-10-02', '2026-10-02', '2026-10-02', '2026-10-02']);
+    assert.equal(pickers[0].displayValue, '۱۴۰۵/۰۷/۱۰');
+    assert.equal(document.querySelector('input.persian-kit-date-time').value, '08:15');
+
+    // The server converts a value nobody changed (DateInputParser).
+    assert.equal(document.querySelector('input[name="b"]').value, '۱۴۰۵/۰۷/۱۰');
+
+    pickers[2].setValue('2026-10-03');
+    assert.equal(document.querySelector('input[name="c"]').value, '20261003');
+});
+
+test('values in other formats are left in the input', async () => {
+    const window = await page(`
+        <form>
+            <input name="visit" data-persian-kit-date value="next Friday">
+            <input name="nonday" data-persian-kit-date value="1405-12-31">
+        </form>`);
     const { document } = window;
 
-    // The server converts a typed Jalali date (DateInputParser).
-    assert.equal(document.querySelector('intl-datepicker').value, '');
-    assert.equal(document.querySelector('input[name="visit"]').value, '۱۴۰۵/۰۷/۱۰');
+    // 1405 is not a leap year: Esfand has 29 days.
+    assert.deepEqual([...document.querySelectorAll('intl-datepicker')].map((picker) => picker.value), ['', '']);
+    assert.equal(document.querySelector('input[name="visit"]').value, 'next Friday');
+});
+
+test('refresh() reads a value a script wrote, without events', async () => {
+    const window = await page(`
+        <form>
+            <input name="from" data-persian-kit-date value="2026-03-21">
+            <input name="at" data-persian-kit-date data-persian-kit-date-format="Y-m-d H:i:s" value="2026-03-21 08:15:00">
+        </form>`);
+    const { document, PersianKitDateField } = window;
+    const from = document.querySelector('input[name="from"]');
+    const at = document.querySelector('input[name="at"]');
+    const events = [];
+    document.querySelector('form').addEventListener('change', (event) => events.push(event.target.name));
+    document.querySelector('form').addEventListener('input', (event) => events.push(event.target.name));
+
+    // As jQuery's .val('') does: no events.
+    from.value = '';
+    PersianKitDateField.refresh(from);
+    assert.equal(PersianKitDateField.picker(from).value, '');
+    assert.equal(from.value, '');
+
+    // The value the picker held before is shown again.
+    PersianKitDateField.picker(from).setValue('2026-10-02');
+    events.length = 0;
+    from.value = '2026-03-21';
+    PersianKitDateField.refresh(from);
+    assert.equal(PersianKitDateField.picker(from).value, '2026-03-21');
+
+    // A Jalali value stays in the field.
+    from.value = '1405-07-10';
+    PersianKitDateField.refresh(from);
+    assert.equal(PersianKitDateField.picker(from).value, '2026-10-02');
+    assert.equal(from.value, '1405-07-10');
+
+    at.value = '2026-10-02 17:40:00';
+    PersianKitDateField.refresh(at);
+    assert.equal(PersianKitDateField.picker(at).value, '2026-10-02');
+    assert.equal(document.querySelector('input.persian-kit-date-time').value, '17:40');
+
+    assert.deepEqual(events, []);
+
+    // Picking still writes the field.
+    PersianKitDateField.picker(from).setValue('2026-10-05');
+    assert.equal(from.value, '2026-10-05');
+    assert.deepEqual(events, ['from', 'from']);
+});
+
+test('picker() returns the field\'s picker', async () => {
+    const window = await page('<form><input name="a" data-persian-kit-date><input name="b" data-persian-kit-date><input name="plain"></form>');
+    const { document, PersianKitDateField } = window;
+    const [a, b] = document.querySelectorAll('intl-datepicker');
+
+    assert.equal(PersianKitDateField.picker(document.querySelector('input[name="a"]')), a);
+    assert.equal(PersianKitDateField.picker(document.querySelector('input[name="b"]')), b);
+    assert.equal(PersianKitDateField.picker(document.querySelector('input[name="plain"]')), null);
+});
+
+test('hint="off" marks the picker to hide its typing hint', async () => {
+    const window = await page('<form><input name="a" data-persian-kit-date data-persian-kit-date-hint="off"><input name="b" data-persian-kit-date></form>');
+    const [a, b] = window.document.querySelectorAll('intl-datepicker');
+
+    assert.ok(a.classList.contains('persian-kit-date-picker--no-hint'));
+    assert.ok(!b.classList.contains('persian-kit-date-picker--no-hint'));
+    assert.ok(a.hasAttribute('allow-input'));
 });

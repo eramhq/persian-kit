@@ -2,6 +2,7 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { runInNewContext } from 'node:vm';
+import { JSDOM } from 'jsdom';
 import { CalendarDate, GregorianCalendar, PersianCalendar, toCalendar } from '@internationalized/date';
 
 // The date picker's Persian calendar (@internationalized/date, ICU's rule),
@@ -14,6 +15,12 @@ const years = JSON.parse(readFileSync(new URL('../fixtures/persian-years.json', 
 const context = {};
 runInNewContext(readFileSync(new URL('../../resources/js/jalali.js', import.meta.url), 'utf8'), context);
 const Jalali = context.PersianKitJalali;
+
+// The conversions the date picker bundle gives the other scripts
+// (window.PersianKitCalendar, resources/entries/datepicker-entry.js).
+const bundle = new JSDOM('<!doctype html>', { runScripts: 'outside-only' }).window;
+bundle.eval(readFileSync(new URL('../../public/js/datepicker.js', import.meta.url), 'utf8'));
+const PersianKitCalendar = bundle.PersianKitCalendar;
 
 const persian = new PersianCalendar();
 const gregorian = new GregorianCalendar();
@@ -39,4 +46,22 @@ test('the admin date editors agree with the date picker', () => {
         assert.equal(iso, farvardin1, `1 Farvardin ${year}`);
         assert.equal(Jalali.jalaliMonthLength(12, Number(year)), esfandLength, `Esfand ${year}`);
     }
+});
+
+test('the date picker bundle converts dates by the same calendar', () => {
+    for (const [year, [farvardin1, esfandLength]] of Object.entries(years)) {
+        assert.equal(PersianKitCalendar.jalaliToIso(Number(year), 1, 1), farvardin1, `1 Farvardin ${year}`);
+        assert.deepEqual({ ...PersianKitCalendar.isoToJalali(farvardin1) }, { year: Number(year), month: 1, day: 1 }, farvardin1);
+        assert.notEqual(PersianKitCalendar.jalaliToIso(Number(year), 12, esfandLength), null, `Esfand ${esfandLength}, ${year}`);
+        assert.equal(PersianKitCalendar.jalaliToIso(Number(year), 12, esfandLength + 1), null, `Esfand ${esfandLength + 1}, ${year}`);
+    }
+});
+
+test('the bundle rejects dates that do not exist', () => {
+    assert.equal(PersianKitCalendar.jalaliToIso(1405, 13, 1), null);
+    assert.equal(PersianKitCalendar.jalaliToIso(1405, 7, 0), null);
+    assert.equal(PersianKitCalendar.jalaliToIso(1405, 7, 31), null);
+    assert.equal(PersianKitCalendar.jalaliToIso('1405', '07', '10'), '2026-10-02');
+    assert.equal(PersianKitCalendar.isoToJalali('2026-02-30'), null);
+    assert.equal(PersianKitCalendar.isoToJalali('1405/07/10'), null);
 });
