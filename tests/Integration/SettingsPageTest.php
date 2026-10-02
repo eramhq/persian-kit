@@ -132,6 +132,14 @@ class SettingsPageTest extends WordPressIntegrationTestCase
             }
         }
 
+        // Provinces you deliver to: an empty list by default, so none is ticked.
+        if ($this->module('woocommerce')->isAvailable()) {
+            $expected[] = ['persian_kit_settings[woocommerce][allowed_states][]', 'hidden', '', false];
+            foreach (array_keys(WC()->countries->get_states('IR')) as $code) {
+                $expected[] = ['persian_kit_settings[woocommerce][allowed_states][]', 'checkbox', $code, false];
+            }
+        }
+
         $this->assertEqualsCanonicalizing($expected, $fields);
         $this->assertCount(count($expected), $fields);
     }
@@ -236,6 +244,24 @@ class SettingsPageTest extends WordPressIntegrationTestCase
         ));
         // The sections hide while the module is off.
         $this->assertSame(3, $xpath->query($panel . '//section[@x-show="enabled"]')->length);
+    }
+
+    public function test_the_province_grid_shows_the_saved_provinces(): void
+    {
+        if (!class_exists('WooCommerce')) {
+            $this->markTestSkipped('WooCommerce is not loaded.');
+        }
+
+        update_option('persian_kit_settings', ['woocommerce' => ['enabled' => true, 'allowed_states' => ['THR']]]);
+        $xpath = $this->render(['woocommerce' => $this->withPlugin(WooCommerceModule::class, true)]);
+        $boxes = '//*[@id="persian-kit-panel-woocommerce"]//input[@type="checkbox"][@name="persian_kit_settings[woocommerce][allowed_states][]"]';
+
+        $this->assertSame(31, $xpath->query($boxes)->length);
+        $this->assertSame(['THR'], array_map(
+            static fn (DOMElement $box): string => $box->getAttribute('value'),
+            iterator_to_array($xpath->query($boxes . '[@checked]'))
+        ));
+        $this->assertSame('only', $xpath->query('//input[@type="radio"][@checked]')->item(0)?->getAttribute('value'));
     }
 
     public function test_the_woocommerce_tab_repeats_the_advice_of_an_overlapping_plugin(): void

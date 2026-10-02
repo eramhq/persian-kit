@@ -40,6 +40,7 @@ class WooCommerceModule extends AbstractModule
             'checkout_validate'  => true,
             'national_id'        => NationalIdField::OFF,
             'city_select'        => false,
+            'allowed_states'     => [],
             'dates_admin'        => true,
         ];
     }
@@ -103,6 +104,7 @@ class WooCommerceModule extends AbstractModule
             'checkout_validate'  => !empty($values['checkout_validate']),
             'national_id'        => in_array($nationalId, NationalIdField::MODES, true) ? $nationalId : NationalIdField::OFF,
             'city_select'        => !empty($values['city_select']),
+            'allowed_states'     => ProvinceLimit::sanitizeCodes($values['allowed_states'] ?? [], self::provinces()),
             'dates_admin'        => !empty($values['dates_admin']),
         ];
     }
@@ -133,6 +135,9 @@ class WooCommerceModule extends AbstractModule
         $container->register(CityField::class, function () {
             return new CityField(PERSIAN_KIT_DIR . CityField::DATA_FILE);
         });
+        $container->register(ProvinceLimit::class, function () {
+            return new ProvinceLimit($this->allowedStates());
+        });
     }
 
     public function boot(ServiceContainer $container): void
@@ -155,6 +160,10 @@ class WooCommerceModule extends AbstractModule
             $container->get(CityField::class)->register();
         }
 
+        if ($this->allowedStates() !== []) {
+            $container->get(ProvinceLimit::class)->register();
+        }
+
         // Order screens, product and coupon edit screens, and the variations
         // save through admin-ajax.
         if ($this->setting('dates_admin') && is_admin()) {
@@ -162,6 +171,33 @@ class WooCommerceModule extends AbstractModule
             $container->get(WooAdminDateFields::class)->register();
             $container->get(WooPostedDateNormalizer::class)->register();
         }
+    }
+
+    /**
+     * Iran's provinces by WooCommerce code, with WooCommerce's (translated)
+     * names: all of them in the admin, the listed ones on the storefront.
+     * Empty without WooCommerce.
+     *
+     * @return array<string, string>
+     */
+    public static function provinces(): array
+    {
+        // WooCommerce creates its country list on init.
+        if (!function_exists('WC') || !did_action('woocommerce_init')) {
+            return [];
+        }
+
+        $states = WC()->countries->get_states(ProvinceLimit::COUNTRY);
+
+        return is_array($states) ? array_filter($states, 'is_string') : [];
+    }
+
+    /**
+     * @return list<string>
+     */
+    private function allowedStates(): array
+    {
+        return ProvinceLimit::sanitizeCodes($this->setting('allowed_states'), []);
     }
 
     protected function supportsWooCommerce(): bool

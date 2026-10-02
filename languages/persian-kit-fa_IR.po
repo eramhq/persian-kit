@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Persian Kit 1.0.0-beta.4\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/persian-kit\n"
-"POT-Creation-Date: 2026-10-02T14:19:31+00:00\n"
+"POT-Creation-Date: 2026-10-02T15:10:53+00:00\n"
 "PO-Revision-Date: 2026-10-01 00:00+0000\n"
 "Last-Translator: Persian Kit contributors\n"
 "Language-Team: Persian (Iran)\n"
@@ -58,8 +58,7 @@ msgstr "%s در این سایت فعال نیست."
 msgid "Needs %s."
 msgstr "به %s نیاز دارد."
 
-#. translators: 1: plugin name, 2: oldest version that works, 3: version on
-#. this site.
+#. translators: 1: plugin name, 2: oldest version that works, 3: version on this site.
 #: src/Abstracts/AbstractModule.php:105
 #, php-format
 msgid "Needs %1$s %2$s or newer (this site has %3$s)."
@@ -82,30 +81,30 @@ msgstr "فروشگاه"
 msgid "Compatibility"
 msgstr "سازگاری"
 
-#: src/Core/AdminPage.php:341
+#: src/Core/AdminPage.php:349
 msgid "You do not have permission to access this page."
 msgstr "شما اجازه دسترسی به این صفحه را ندارید."
 
-#: src/Core/AdminPage.php:360 views/admin/partials/woocommerce-settings.php:109
+#: src/Core/AdminPage.php:368 views/admin/partials/woocommerce-settings.php:165
 msgid "Display"
 msgstr "نمایش"
 
-#: src/Core/AdminPage.php:361
+#: src/Core/AdminPage.php:369
 msgid "Writing"
 msgstr "نگارش"
 
-#: src/Core/AdminPage.php:362 src/Core/ConflictDetector.php:40
+#: src/Core/AdminPage.php:370 src/Core/ConflictDetector.php:40
 #: src/Core/ConflictDetector.php:82
 #: src/Modules/WooCommerce/WooCommerceModule.php:19
-#: src/Modules/WooCommerce/WooCommerceModule.php:53
+#: src/Modules/WooCommerce/WooCommerceModule.php:54
 msgid "WooCommerce"
 msgstr "ووکامرس"
 
-#: src/Core/AdminPage.php:363
+#: src/Core/AdminPage.php:371
 msgid "Integrations"
 msgstr "یکپارچه‌سازی"
 
-#: src/Core/AdminPage.php:364
+#: src/Core/AdminPage.php:372
 msgid "Tools"
 msgstr "ابزارها"
 
@@ -142,7 +141,7 @@ msgstr "تاریخ شمسی در ووکامرس"
 #: src/Core/ConflictDetector.php:37 src/Core/ConflictDetector.php:58
 #: src/Core/ConflictDetector.php:78
 #: src/Modules/DigitConversion/DigitConversionModule.php:21
-#: views/admin/partials/woocommerce-settings.php:110
+#: views/admin/partials/woocommerce-settings.php:166
 msgid "Persian digits"
 msgstr "اعداد فارسی"
 
@@ -523,6 +522,16 @@ msgstr "کد ملی (اختیاری)"
 msgid "National ID:"
 msgstr "کد ملی:"
 
+#: src/Modules/WooCommerce/ProvinceLimit.php:176
+msgid "Province"
+msgstr "استان"
+
+#. translators: 1: the province field's label, 2: the provinces the store delivers to.
+#: src/Modules/WooCommerce/ProvinceLimit.php:181
+#, php-format
+msgid "%1$s is not valid. Please enter one of the following: %2$s"
+msgstr "%1$s معتبر نیست. لطفا یکی از موارد زیر را وارد کنید: %2$s"
+
 #: src/Modules/WooCommerce/WooCommerceModule.php:24
 msgid ""
 "Jalali dates in the shop admin and emails, and checkout fields for Iran."
@@ -643,7 +652,7 @@ msgid "Post and comment counts"
 msgstr "تعداد نوشته‌ها و دیدگاه‌ها"
 
 #: views/admin/partials/digit-conversion-settings.php:18
-#: views/admin/partials/woocommerce-settings.php:111
+#: views/admin/partials/woocommerce-settings.php:167
 msgid "Shop prices"
 msgstr "قیمت‌های فروشگاه"
 
@@ -706,36 +715,35 @@ msgstr "تغییرها با ذخیره اعمال می‌شوند."
 msgid "Persian Kit settings"
 msgstr "تنظیمات Persian Kit"
 
-#: views/admin/partials/integration-card.php:88
+#: views/admin/partials/integration-card.php:84
 msgid "New"
 msgstr "جدید"
 
-#: views/admin/partials/integration-card.php:94
+#: views/admin/partials/integration-card.php:90
 msgid "Your settings are kept"
 msgstr "تنظیمات شما نگه داشته شده است"
 
-#: views/admin/partials/integration-card.php:95
+#: views/admin/partials/integration-card.php:91
 msgid "Not active on this site"
 msgstr "در این سایت فعال نیست"
 
-#: views/admin/partials/integration-card.php:104
+#: views/admin/partials/integration-card.php:100
 msgid "Active automatically"
 msgstr "خودکار فعال است"
 
-#: views/admin/partials/integration-card.php:149
+#: views/admin/partials/integration-card.php:151
 msgid "(no title)"
 msgstr "(بدون عنوان)"
 
 #. translators: %s: number of other forms.
-#: views/admin/partials/integration-card.php:153
+#: views/admin/partials/integration-card.php:155
 #, php-format
 msgid "%s other"
 msgid_plural "%s others"
 msgstr[0] "%s فرم دیگر"
 
-#. translators: 1: number of forms, 2: their names, such as "Contact, Order
-#. and Signup".
-#: views/admin/partials/integration-card.php:163
+#. translators: 1: number of forms, 2: their names, such as "Contact, Order and Signup".
+#: views/admin/partials/integration-card.php:165
 #, php-format
 msgid ""
 "%1$s form uses Persian Kit fields: %2$s. While this is off, those fields "
@@ -747,7 +755,7 @@ msgstr[0] ""
 "%1$s فرم از فیلدهای Persian Kit استفاده می‌کند: %2$s. تا وقتی این خاموش است، "
 "این فیلدها هر متنی را می‌پذیرند."
 
-#: views/admin/partials/integration-card.php:185
+#: views/admin/partials/integration-card.php:187
 msgid "Plugin page on WordPress.org"
 msgstr "صفحه افزونه در وردپرس"
 
@@ -891,26 +899,49 @@ msgstr "اختیاری"
 msgid "Required"
 msgstr "الزامی"
 
-#: views/admin/partials/woocommerce-settings.php:78
+#: views/admin/partials/woocommerce-settings.php:92
+msgid "Provinces you deliver to"
+msgstr "استان‌هایی که به آنها ارسال می‌کنید"
+
+#: views/admin/partials/woocommerce-settings.php:96
+msgid "All provinces"
+msgstr "همه استان‌ها"
+
+#: views/admin/partials/woocommerce-settings.php:100
+msgid "Only these provinces"
+msgstr "فقط این استان‌ها"
+
+#: views/admin/partials/woocommerce-settings.php:123
+msgid "Pick at least one province. Until then, all provinces are listed."
+msgstr "دست کم یک استان انتخاب کنید. تا آن موقع همه استان‌ها نمایش داده می‌شوند."
+
+#: views/admin/partials/woocommerce-settings.php:127
+msgid ""
+"Applies to addresses in Iran. Checkout, the cart and My Account list only "
+"these; the shop admin still lists all."
+msgstr ""
+"برای آدرس‌های ایران. صفحه پرداخت، سبد خرید و حساب کاربری فقط همین‌ها را نشان "
+"می‌دهند؛ مدیریت فروشگاه همه را نشان می‌دهد."
+
+#: views/admin/partials/woocommerce-settings.php:134
 msgid "National ID at checkout"
 msgstr "کد ملی در صفحه پرداخت"
 
-#: views/admin/partials/woocommerce-settings.php:92
+#: views/admin/partials/woocommerce-settings.php:148
 msgid "Shown on the order and in emails."
 msgstr "در سفارش و ایمیل‌ها نشان داده می‌شود."
 
-#. translators: %s: link to the setting, such as "Display › Persian digits ›
-#. Shop prices".
-#: views/admin/partials/woocommerce-settings.php:104
+#. translators: %s: link to the setting, such as "Display › Persian digits › Shop prices".
+#: views/admin/partials/woocommerce-settings.php:160
 #, php-format
 msgid "Persian digits in prices are set under %s."
 msgstr "اعداد فارسی در قیمت‌ها در %s تنظیم می‌شود."
 
-#: views/admin/partials/woocommerce-settings.php:127
+#: views/admin/partials/woocommerce-settings.php:183
 msgid "Jalali date picker in the shop admin"
 msgstr "تقویم شمسی در مدیریت فروشگاه"
 
-#: views/admin/partials/woocommerce-settings.php:128
+#: views/admin/partials/woocommerce-settings.php:184
 msgid ""
 "Order, product and coupon dates, and the month filter on the orders list."
 msgstr "تاریخ‌های سفارش، محصول و کد تخفیف، و فیلتر ماه در فهرست سفارش‌ها."
@@ -952,8 +983,7 @@ msgstr "%s نوشته بررسی شد…"
 msgid "No posts need fixing."
 msgstr "هیچ نوشته‌ای نیاز به اصلاح ندارد."
 
-#. translators: 1: number of posts that would change, 2: number of posts
-#. checked.
+#. translators: 1: number of posts that would change, 2: number of posts checked.
 #: public/js/admin.js:4393
 msgid "%1$s post of %2$s checked would change."
 msgid_plural "%1$s posts of %2$s checked would change."

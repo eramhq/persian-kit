@@ -131,9 +131,24 @@ class SettingsDefaultsTest extends WordPressIntegrationTestCase
         ]));
 
         $this->assertSame(
-            ['enabled' => true, 'checkout_normalize' => true, 'checkout_validate' => false, 'national_id' => 'required', 'city_select' => false, 'dates_admin' => true],
+            ['enabled' => true, 'checkout_normalize' => true, 'checkout_validate' => false, 'national_id' => 'required', 'city_select' => false, 'allowed_states' => [], 'dates_admin' => true],
             get_option('persian_kit_settings')['woocommerce']
         );
+    }
+
+    public function test_the_provinces_you_deliver_to_are_saved_and_cleared(): void
+    {
+        // The form sends an empty value first, then the ticked boxes.
+        update_option('persian_kit_settings', $this->formInput([
+            'woocommerce' => ['enabled' => '1', 'allowed_states' => ['', 'THR', 'ABZ', 'THR', 'NOPE']],
+        ]));
+        $this->assertSame(['THR', 'ABZ'], get_option('persian_kit_settings')['woocommerce']['allowed_states']);
+
+        // "All provinces": the boxes are off, so only the empty value is sent.
+        update_option('persian_kit_settings', $this->formInput([
+            'woocommerce' => ['enabled' => '1', 'allowed_states' => ['']],
+        ]));
+        $this->assertSame([], get_option('persian_kit_settings')['woocommerce']['allowed_states']);
     }
 
     public function test_a_module_missing_from_the_input_keeps_its_stored_values(): void

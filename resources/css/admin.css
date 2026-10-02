@@ -735,6 +735,73 @@ a.persian-kit-version:focus {
     padding-inline-start: 0;
 }
 
+/* Provinces: two radios, then a grid of checkboxes that reads down the columns. */
+.persian-kit-option--provinces {
+    gap: 6px;
+}
+
+.persian-kit-option--provinces fieldset {
+    min-width: 0;
+    margin: 0;
+    padding: 0;
+    border: 0;
+}
+
+.persian-kit-option--provinces legend {
+    margin-block-end: 6px;
+    padding: 0;
+    font-weight: 600;
+}
+
+.persian-kit-option--provinces .persian-kit-option__help {
+    padding-inline-start: 0;
+}
+
+.persian-kit-choices {
+    display: grid;
+    justify-items: start;
+    gap: 6px;
+}
+
+.persian-kit-provinces {
+    columns: 3;
+    column-gap: 16px;
+    margin-block: 4px 0;
+    margin-inline: 24px 0;
+    padding: 10px 12px 4px;
+    list-style: none;
+    background: var(--pk-surface-2);
+    border: 1px solid var(--pk-border);
+    border-radius: var(--pk-radius-small);
+}
+
+.persian-kit-provinces li {
+    margin: 0 0 6px;
+    break-inside: avoid;
+}
+
+/* A long name wraps under itself, not under the box. */
+.persian-kit-provinces label {
+    display: flex;
+    align-items: flex-start;
+    gap: 6px;
+}
+
+.persian-kit-wrap .persian-kit-provinces input[type="checkbox"] {
+    flex: none;
+    margin: 2px 0 0;
+}
+
+.persian-kit-provinces[aria-disabled="true"] {
+    opacity: 0.55;
+}
+
+.persian-kit-wrap .persian-kit-provinces__hint {
+    margin-block: 2px 0;
+    margin-inline: 24px 0;
+    font-size: 12px;
+}
+
 .persian-kit-wrap .persian-kit-warning {
     color: var(--pk-danger);
 }
@@ -1421,5 +1488,9 @@ a.persian-kit-version:focus {
 
     .persian-kit-integrations {
         grid-template-columns: minmax(0, 1fr);
+    }
+
+    .persian-kit-provinces {
+        columns: 1;
     }
 }
