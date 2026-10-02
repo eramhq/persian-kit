@@ -5,6 +5,7 @@ namespace PersianKit\Modules\DigitConversion;
 use PersianKit\Dependencies\Eram\Abzar\Digits\DigitConverter;
 use PersianKit\Modules\DateConversion\DateDisplayGuard;
 use PersianKit\Modules\WooCommerce\EmailEditorTags;
+use PersianKit\Service\Language\ContentLanguage;
 
 defined('ABSPATH') || exit;
 
@@ -17,10 +18,10 @@ defined('ABSPATH') || exit;
  *
  * Every email body (HTML, plain text and the multipart plain part) is built
  * from template parts named emails/…, so the converters work only while one
- * renders, and only for emails in Persian: WooCommerce switches to the
- * customer's locale for customer emails. In the block email editor, the
- * personalization tags (order number, date, totals) are filled in after the
- * template parts, so their callbacks count as rendering too.
+ * renders, and only for emails in Persian (isPersianEmail()). In the block
+ * email editor, the personalization tags (order number, date, totals) are
+ * filled in after the template parts, so their callbacks count as rendering
+ * too.
  */
 class WooCommerceEmailDigits
 {
@@ -345,12 +346,14 @@ class WooCommerceEmailDigits
     }
 
     /**
-     * The email's language: WooCommerce switches to the customer's locale
-     * while it builds a customer email, so on a bilingual store an English
-     * email keeps English digits.
+     * The email's language. WooCommerce switches to the site's locale while
+     * it builds a customer email (switch_to_locale()), Polylang for
+     * WooCommerce to the customer's, and WooCommerce Multilingual switches
+     * WPML's language (ContentLanguage follows each), so an English email
+     * keeps English digits.
      */
     private static function isPersianEmail(): bool
     {
-        return str_starts_with(determine_locale(), 'fa');
+        return ContentLanguage::isPersianLocale(ContentLanguage::currentLocale());
     }
 }

@@ -2,6 +2,8 @@
 
 namespace PersianKit\Modules\DateConversion;
 
+use PersianKit\Service\Language\ContentLanguage;
+
 defined('ABSPATH') || exit;
 
 /**
@@ -21,8 +23,9 @@ class JalaliCalendar
      */
     public function filterCalendar(mixed $output, mixed $args = []): mixed
     {
-        // Core caches '' when there are no posts at all.
-        if (!is_string($output) || $output === '') {
+        // Core caches '' when there are no posts at all. Pages not in
+        // Persian keep core's Gregorian month.
+        if (!is_string($output) || $output === '' || !ContentLanguage::displaysPersian()) {
             return $output;
         }
 

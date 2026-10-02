@@ -5,15 +5,20 @@ namespace PersianKit\Tests\Unit\Forms;
 use Brain\Monkey;
 use Brain\Monkey\Functions;
 use PersianKit\Modules\Forms\Cf7DateField;
+use PersianKit\Service\Language\ContentLanguage;
 use PersianKit\Tests\Unit\Forms\Support\FakeMailTag;
+use PersianKit\Tests\Unit\Support\UsesLanguages;
 use PHPUnit\Framework\TestCase;
 
 class Cf7DateFieldTest extends TestCase
 {
+    use UsesLanguages;
+
     protected function setUp(): void
     {
         parent::setUp();
         Monkey\setUp();
+        ContentLanguage::reset();
 
         Functions\when('wp_timezone')->justReturn(new \DateTimeZone('Asia/Tehran'));
         Functions\when('get_option')->alias(fn (string $option) => $option === 'date_format' ? 'Y/m/d' : false);
@@ -22,6 +27,7 @@ class Cf7DateFieldTest extends TestCase
 
     protected function tearDown(): void
     {
+        \WPCF7_Submission::$current = null;
         Monkey\tearDown();
         parent::tearDown();
     }
@@ -89,5 +95,34 @@ class Cf7DateFieldTest extends TestCase
         $this->assertSame('', $field->formatMailTag('', '', false, new FakeMailTag()));
         $this->assertSame('soon', $field->formatMailTag('soon', 'soon', true, new FakeMailTag()));
         $this->assertSame(['2026-10-02'], $field->formatMailTag(['2026-10-02'], ['2026-10-02'], false, new FakeMailTag()));
+    }
+
+    public function test_pages_not_in_persian_keep_cf7s_date_input(): void
+    {
+        $this->inLanguage('en_US');
+        $html = '<input type="date" name="when" class="wpcf7-date persian-kit-jalali-date">';
+
+        $this->assertSame($html, (new Cf7DateField(true))->upgradeInputs($html));
+    }
+
+    public function test_mail_follows_the_language_of_the_page_the_form_was_on(): void
+    {
+        $source = $this->inLanguage('fa_IR');
+        $source->posts = [11 => 'en_US', 12 => 'fa_IR'];
+        $field = new Cf7DateField(true);
+
+        \WPCF7_Submission::$current = new \WPCF7_Submission(['container_post_id' => 11]);
+        $this->assertSame('2026-10-02', $field->formatMailTag('2026-10-02', '2026-10-02', false, new FakeMailTag()));
+
+        \WPCF7_Submission::$current = new \WPCF7_Submission(['container_post_id' => 12]);
+        $this->assertSame('1405/07/10', $field->formatMailTag('2026-10-02', '2026-10-02', false, new FakeMailTag()));
+    }
+
+    public function test_mail_from_a_form_on_no_page_follows_the_current_language(): void
+    {
+        $this->inLanguage('en_US');
+        \WPCF7_Submission::$current = new \WPCF7_Submission(['container_post_id' => 0]);
+
+        $this->assertSame('2026-10-02', (new Cf7DateField(true))->formatMailTag('2026-10-02', '2026-10-02', false, new FakeMailTag()));
     }
 }

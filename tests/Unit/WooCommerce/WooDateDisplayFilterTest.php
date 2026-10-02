@@ -8,9 +8,13 @@ use Brain\Monkey;
 use Brain\Monkey\Functions;
 use PersianKit\Modules\WooCommerce\WooDateDisplayFilter;
 use PHPUnit\Framework\TestCase;
+use PersianKit\Service\Language\ContentLanguage;
+use PersianKit\Tests\Unit\Support\UsesLanguages;
 
 class WooDateDisplayFilterTest extends TestCase
 {
+    use UsesLanguages;
+
     /** 2026-03-21 00:00 local, as the offset timestamp date_i18n receives. */
     private const NOWRUZ_1405 = 1774051200;
 
@@ -18,6 +22,7 @@ class WooDateDisplayFilterTest extends TestCase
     {
         parent::setUp();
         Monkey\setUp();
+        ContentLanguage::reset();
 
         Functions\when('wp_timezone')->justReturn(new \DateTimeZone('Asia/Tehran'));
         Functions\when('wc_get_order_types')->justReturn(['shop_order', 'shop_order_refund']);
@@ -69,6 +74,24 @@ class WooDateDisplayFilterTest extends TestCase
 
         $this->assertSame('Note added to your Shop order from فروردین 1, 1405', $subject);
         $this->assertSame('فروردین 1, 1405', $email->placeholders['{order_date}'], 'kept for the filters after this one');
+    }
+
+    public function test_emails_and_pages_not_in_persian_keep_gregorian_dates(): void
+    {
+        Functions\when('wc_date_format')->justReturn('F j, Y');
+        $email = $this->email('March 21, 2026', new \DateTimeImmutable('2026-03-21 10:00:00', new \DateTimeZone('Asia/Tehran')));
+        $filter = new WooDateDisplayFilter();
+
+        // WooCommerce Multilingual switches WPML's language for an English customer.
+        $this->inLanguage('fa_IR', true)->switched = 'en_US';
+
+        $subject = 'Note added to your Shop order from March 21, 2026';
+        $this->assertSame($subject, $filter->filterEmailOrderDate($subject, $email));
+
+        $this->inLanguage('en_US');
+        $filter->enterTemplate();
+        $this->assertSame('2026/03/21', $filter->filterDateI18n('2026/03/21', 'Y/m/d', self::NOWRUZ_1405));
+        $filter->leaveTemplate();
     }
 
     public function test_order_date_in_email_subjects_needs_an_order_with_a_date(): void

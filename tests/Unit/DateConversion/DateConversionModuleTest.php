@@ -21,10 +21,14 @@ use PersianKit\Modules\DateConversion\MediaAttachmentDateFormatter;
 use PersianKit\Modules\DateConversion\MediaGridDateFilter;
 use PersianKit\Modules\DateConversion\PostTypeMonthFilter;
 use PersianKit\Modules\DateConversion\RestApiExtension;
+use PersianKit\Service\Language\ContentLanguage;
+use PersianKit\Tests\Unit\Support\UsesLanguages;
 use PHPUnit\Framework\TestCase;
 
 class DateConversionModuleTest extends TestCase
 {
+    use UsesLanguages;
+
     private const FRONT_SERVICES = [
         DateFilters::class,
         DateArchiveFilter::class,
@@ -36,8 +40,8 @@ class DateConversionModuleTest extends TestCase
     ];
 
     private const ADMIN_SERVICES = [
-        PostTypeMonthFilter::class,
         MediaAttachmentDateFormatter::class,
+        PostTypeMonthFilter::class,
         MediaGridDateFilter::class,
         AdminDateScript::class,
     ];
@@ -48,6 +52,7 @@ class DateConversionModuleTest extends TestCase
     {
         parent::setUp();
         Monkey\setUp();
+        ContentLanguage::reset();
     }
 
     protected function tearDown(): void
@@ -69,6 +74,26 @@ class DateConversionModuleTest extends TestCase
     public function test_boot_in_admin_registers_admin_services(): void
     {
         Functions\when('is_admin')->justReturn(true);
+
+        $this->assertSame(
+            array_merge(self::FRONT_SERVICES, self::ADMIN_SERVICES),
+            $this->bootAndListFetched()
+        );
+    }
+
+    public function test_admins_whose_language_is_not_persian_get_no_jalali_admin_screens(): void
+    {
+        $this->inLanguage('en_US', true);
+
+        $this->assertSame(
+            array_merge(self::FRONT_SERVICES, [MediaAttachmentDateFormatter::class]),
+            $this->bootAndListFetched()
+        );
+    }
+
+    public function test_admins_whose_language_is_persian_get_jalali_admin_screens(): void
+    {
+        $this->inLanguage('fa_IR', true);
 
         $this->assertSame(
             array_merge(self::FRONT_SERVICES, self::ADMIN_SERVICES),

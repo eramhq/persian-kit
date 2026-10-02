@@ -2,6 +2,8 @@
 
 namespace PersianKit\Modules\DateConversion;
 
+use PersianKit\Service\Language\ContentLanguage;
+
 defined('ABSPATH') || exit;
 
 /**
@@ -11,10 +13,16 @@ defined('ABSPATH') || exit;
  * JalaliDateArchive already resolves a Jalali year in a single-post request.
  * This class writes the links, redirects addresses in the other calendar to
  * the current one, and finds posts by an old slug or date under a Jalali date.
+ *
+ * On multilingual sites only Persian posts get Jalali dates; the others keep
+ * Gregorian ones, and their Jalali addresses redirect to them.
  */
 class JalaliPermalinks
 {
     private const DATE_TAGS = ['%year%', '%monthnum%', '%day%'];
+
+    /** Jalali dates for every post, while redirectUrl() looks up a post's Jalali link. */
+    private bool $forceJalali = false;
 
     /**
      * Redirects and old-slug lookups. These run whichever calendar the links
@@ -41,6 +49,10 @@ class JalaliPermalinks
     public function filterStructure(mixed $structure, mixed $post): mixed
     {
         if (!is_string($structure) || !$post instanceof \WP_Post || !self::hasDateTags($structure)) {
+            return $structure;
+        }
+
+        if (!$this->forceJalali && !ContentLanguage::postIsPersian($post)) {
             return $structure;
         }
 
@@ -270,7 +282,8 @@ class JalaliPermalinks
 
     /**
      * The post's permalink with Jalali or Gregorian dates, whichever the
-     * links currently use.
+     * links currently use. Jalali here means Jalali whatever the post's
+     * language.
      */
     private function permalinkIn(\WP_Post $post, bool $jalali): string
     {
@@ -282,12 +295,16 @@ class JalaliPermalinks
         }
         if ($jalali) {
             add_filter('pre_post_link', $callback, 10, 2);
+            $this->forceJalali = true;
         }
 
-        $link = get_permalink($post);
-
-        if ($jalali) {
-            remove_filter('pre_post_link', $callback, 10);
+        try {
+            $link = get_permalink($post);
+        } finally {
+            if ($jalali) {
+                $this->forceJalali = false;
+                remove_filter('pre_post_link', $callback, 10);
+            }
         }
         if ($priority !== false) {
             add_filter('pre_post_link', $callback, $priority, 2);

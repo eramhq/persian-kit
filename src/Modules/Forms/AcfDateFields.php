@@ -5,6 +5,7 @@ namespace PersianKit\Modules\Forms;
 use PersianKit\Modules\DateConversion\DateDisplayGuard;
 use PersianKit\Modules\DateConversion\DatePicker;
 use PersianKit\Modules\DateConversion\JalaliFormatter;
+use PersianKit\Service\Language\ContentLanguage;
 
 defined('ABSPATH') || exit;
 
@@ -80,8 +81,9 @@ class AcfDateFields
         $type = (string) ($field['type'] ?? '');
 
         // Fields from ACF before 5.0 store their own save_format; ACF's
-        // script converts those.
-        if (!isset(self::TYPES[$type]) || !empty($field['save_format'])) {
+        // script converts those. Pages not in Persian, and admins whose
+        // language is not Persian, get ACF's own picker.
+        if (!isset(self::TYPES[$type]) || !empty($field['save_format']) || !ContentLanguage::displaysPersian()) {
             if (isset($this->acfRenderers[$type])) {
                 call_user_func($this->acfRenderers[$type], $field);
             }
@@ -130,7 +132,7 @@ class AcfDateFields
      */
     public function startJalaliValue($value, $postId = null, $field = null)
     {
-        if (!is_array($field) || wp_is_serving_rest_request()) {
+        if (!is_array($field) || wp_is_serving_rest_request() || !ContentLanguage::displaysPersian()) {
             return $value;
         }
 

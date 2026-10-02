@@ -5,6 +5,7 @@ namespace PersianKit\Modules\Forms;
 use PersianKit\Modules\DateConversion\DateInputParser;
 use PersianKit\Modules\DateConversion\DatePicker;
 use PersianKit\Modules\DateConversion\JalaliFormatter;
+use PersianKit\Service\Language\ContentLanguage;
 
 defined('ABSPATH') || exit;
 
@@ -14,7 +15,8 @@ defined('ABSPATH') || exit;
  * JavaScript it is a text field, and a typed Jalali date is converted
  * (Cf7InputNormalizer).
  *
- * [date name gregorian] keeps CF7's own date input.
+ * [date name gregorian] keeps CF7's own date input, as do date fields on
+ * pages not in Persian.
  */
 class Cf7DateField
 {
@@ -62,7 +64,7 @@ class Cf7DateField
      */
     public function upgradeInputs(string $html): string
     {
-        if (!str_contains($html, self::CLASS_NAME)) {
+        if (!str_contains($html, self::CLASS_NAME) || !ContentLanguage::displaysPersian()) {
             return $html;
         }
 
@@ -104,6 +106,7 @@ class Cf7DateField
     {
         if (!is_string($submitted) || !is_object($mailTag) || !method_exists($mailTag, 'get_option')
             || !empty($mailTag->get_option('format')) || !empty($mailTag->get_option('do_not_heat'))
+            || !$this->sentFromPersianPage()
         ) {
             return $replaced;
         }
@@ -116,5 +119,17 @@ class Cf7DateField
         }
 
         return $html ? esc_html($jalali) : $jalali;
+    }
+
+    /**
+     * Forms are sent through REST, which has no page language of its own,
+     * so the page the form was on decides.
+     */
+    private function sentFromPersianPage(): bool
+    {
+        $submission = class_exists('WPCF7_Submission') ? \WPCF7_Submission::get_instance() : null;
+        $pageId = $submission === null ? 0 : (int) $submission->get_meta('container_post_id');
+
+        return $pageId > 0 ? ContentLanguage::postIsPersian($pageId) : ContentLanguage::displaysPersian();
     }
 }

@@ -3,6 +3,7 @@
 namespace PersianKit\Modules\DateConversion;
 
 use PersianKit\Dependencies\Eram\Abzar\Digits\DigitConverter;
+use PersianKit\Service\Language\ContentLanguage;
 
 defined('ABSPATH') || exit;
 
@@ -108,11 +109,12 @@ class DateArchiveFilter
     }
 
     /**
-     * The Jalali label for the date archive being viewed, or null elsewhere.
+     * The Jalali label for the date archive being viewed, or null elsewhere
+     * and on pages not in Persian.
      */
     public function currentArchiveLabel(): ?string
     {
-        if (is_admin() || !is_date() || is_feed()) {
+        if (is_admin() || !is_date() || is_feed() || !ContentLanguage::displaysPersian()) {
             return null;
         }
 

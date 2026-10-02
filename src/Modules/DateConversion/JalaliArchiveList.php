@@ -2,6 +2,8 @@
 
 namespace PersianKit\Modules\DateConversion;
 
+use PersianKit\Service\Language\ContentLanguage;
+
 defined('ABSPATH') || exit;
 
 /**
@@ -45,7 +47,8 @@ class JalaliArchiveList
         $this->list = '';
         $this->pendingCalls = 0;
 
-        if (is_string($where) && is_array($args) && in_array($args['type'] ?? '', self::TYPES, true)) {
+        // Pages not in Persian keep core's Gregorian list.
+        if (is_string($where) && is_array($args) && in_array($args['type'] ?? '', self::TYPES, true) && ContentLanguage::displaysPersian()) {
             $this->where = $where;
             $this->args = $args;
         }

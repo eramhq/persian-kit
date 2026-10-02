@@ -4,6 +4,7 @@ namespace PersianKit\Modules\WooCommerce;
 
 use PersianKit\Abstracts\AbstractModule;
 use PersianKit\Container\ServiceContainer;
+use PersianKit\Service\Language\ContentLanguage;
 
 defined('ABSPATH') || exit;
 
@@ -185,8 +186,12 @@ class WooCommerceModule extends AbstractModule
         // Order screens, product and coupon edit screens, and the variations
         // save through admin-ajax.
         if ($this->setting('dates_admin') && is_admin()) {
-            $container->get(WooOrderMonthFilter::class)->register();
-            $container->get(WooAdminDateFields::class)->register();
+            // Jalali for admins whose language is Persian. A typed Jalali
+            // date is read the same in any language.
+            if (ContentLanguage::displaysPersian()) {
+                $container->get(WooOrderMonthFilter::class)->register();
+                $container->get(WooAdminDateFields::class)->register();
+            }
             $container->get(WooPostedDateNormalizer::class)->register();
         }
     }

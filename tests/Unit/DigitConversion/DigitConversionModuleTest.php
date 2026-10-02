@@ -9,17 +9,21 @@ use PersianKit\Container\ServiceContainer;
 use PersianKit\Core\SettingsManager;
 use PersianKit\Modules\DigitConversion\DigitConversionModule;
 use PersianKit\Modules\DigitConversion\WooCommerceEmailDigits;
+use PersianKit\Service\Language\ContentLanguage;
 use PersianKit\Tests\Unit\Support\FailsPcre;
+use PersianKit\Tests\Unit\Support\UsesLanguages;
 use PHPUnit\Framework\TestCase;
 
 class DigitConversionModuleTest extends TestCase
 {
     use FailsPcre;
+    use UsesLanguages;
 
     protected function setUp(): void
     {
         parent::setUp();
         Monkey\setUp();
+        ContentLanguage::reset();
         Functions\when('wp_is_serving_rest_request')->justReturn(false);
         Functions\when('is_feed')->justReturn(false);
         Functions\when('doing_filter')->justReturn(false);
@@ -119,6 +123,30 @@ class DigitConversionModuleTest extends TestCase
         Functions\when('is_feed')->justReturn(false);
         Functions\when('doing_filter')->alias(static fn (?string $hook = null): bool => $hook === 'wp_mail');
         $this->assertSame('<p>12</p>', $module->filterContent('<p>12</p>'));
+    }
+
+    public function test_on_multilingual_sites_only_persian_pages_are_converted(): void
+    {
+        $module = $this->makeModule();
+
+        $this->inLanguage('en_US');
+        $this->assertSame('12', $module->filterText('12'));
+        $this->assertSame('<p>12</p>', $module->filterContent('<p>12</p>'));
+        $this->assertSame('Top 10', $module->filterTerms([(object) ['name' => 'Top 10']])[0]->name);
+
+        $this->inLanguage('fa_IR');
+        $this->assertSame('۱۲', $module->filterText('12'));
+    }
+
+    public function test_block_price_script_skips_pages_not_in_persian(): void
+    {
+        Functions\expect('wp_enqueue_script')->never();
+        Functions\when('is_cart')->justReturn(true);
+        Functions\when('has_block')->justReturn(true);
+        $this->inLanguage('en_US');
+
+        $this->makeModule()->enqueueBlockPriceScript();
+        $this->addToAssertionCount(1);
     }
 
     public function test_terms_are_renamed_on_copies(): void

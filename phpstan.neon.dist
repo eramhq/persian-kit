@@ -15,6 +15,7 @@ parameters:
         - tests/stubs/wp-cli.php
         - tests/stubs/contact-form-7.php
         - tests/stubs/acf.php
+        - tests/stubs/polylang.php
         - tests/stubs/woocommerce-email-editor.php
     bootstrapFiles:
         - tests/phpstan-bootstrap.php

@@ -2,6 +2,8 @@
 
 namespace PersianKit\Modules\DateConversion;
 
+use PersianKit\Service\Language\ContentLanguage;
+
 defined('ABSPATH') || exit;
 
 class MediaAttachmentDateFormatter
@@ -17,7 +19,7 @@ class MediaAttachmentDateFormatter
      */
     public function filterAttachmentData(array $response, object $attachment, mixed $meta = null): array
     {
-        if (!isset($response['dateFormatted']) || empty($attachment->post_date)) {
+        if (!isset($response['dateFormatted']) || empty($attachment->post_date) || !ContentLanguage::displaysPersian()) {
             return $response;
         }
 

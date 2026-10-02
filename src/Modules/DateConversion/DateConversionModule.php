@@ -4,6 +4,7 @@ namespace PersianKit\Modules\DateConversion;
 
 use PersianKit\Abstracts\AbstractModule;
 use PersianKit\Container\ServiceContainer;
+use PersianKit\Service\Language\ContentLanguage;
 
 defined('ABSPATH') || exit;
 
@@ -130,10 +131,16 @@ class DateConversionModule extends AbstractModule
         // Admin screens, admin-ajax (the media grid) and admin-post only.
         // is_admin() is false for REST, cron and WP-CLI.
         if (is_admin()) {
-            $container->get(PostTypeMonthFilter::class)->register();
+            // Also used by admin-ajax from the front end, so it checks the
+            // language as it runs.
             $container->get(MediaAttachmentDateFormatter::class)->register();
-            $container->get(MediaGridDateFilter::class)->register();
-            $container->get(AdminDateScript::class)->register();
+
+            // In the admin, the language is the admin's own, known already.
+            if (ContentLanguage::displaysPersian()) {
+                $container->get(PostTypeMonthFilter::class)->register();
+                $container->get(MediaGridDateFilter::class)->register();
+                $container->get(AdminDateScript::class)->register();
+            }
         }
     }
 

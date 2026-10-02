@@ -2,21 +2,19 @@
 
 namespace PersianKit\Modules\DateConversion;
 
+use PersianKit\Service\Language\ContentLanguage;
+
 defined('ABSPATH') || exit;
 
 class DateFilters
 {
     private bool $globalConversion;
-    private string $defaultDateFormat;
-    private string $defaultTimeFormat;
 
     private static bool $inFilter = false;
 
     public function __construct(bool $globalConversion)
     {
         $this->globalConversion = $globalConversion;
-        $this->defaultDateFormat = get_option('date_format');
-        $this->defaultTimeFormat = get_option('time_format');
     }
 
     /**
@@ -67,7 +65,7 @@ class DateFilters
             return $date;
         }
 
-        return $this->formatStored($format ?: $this->defaultDateFormat, $post->post_date ?? null, $post->post_date_gmt ?? null, $date);
+        return $this->formatStored($format ?: $this->defaultDateFormat(), $post->post_date ?? null, $post->post_date_gmt ?? null, $date);
     }
 
     public function filterTheDate(string $date, string $format, string $before, string $after): string
@@ -82,7 +80,7 @@ class DateFilters
             return $date;
         }
 
-        $formatted = JalaliFormatter::fromLocalMysql($format ?: $this->defaultDateFormat, $post->post_date);
+        $formatted = JalaliFormatter::fromLocalMysql($format ?: $this->defaultDateFormat(), $post->post_date);
 
         return $formatted === null ? $date : $before . $formatted . $after;
     }
@@ -93,7 +91,7 @@ class DateFilters
             return $time;
         }
 
-        return $this->formatStored($format ?: $this->defaultTimeFormat, $post->post_date ?? null, $post->post_date_gmt ?? null, $time);
+        return $this->formatStored($format ?: $this->defaultTimeFormat(), $post->post_date ?? null, $post->post_date_gmt ?? null, $time);
     }
 
     public function filterModifiedDate(string $date, string $format, ?object $post = null): string
@@ -102,7 +100,7 @@ class DateFilters
             return $date;
         }
 
-        return $this->formatStored($format ?: $this->defaultDateFormat, $post->post_modified ?? null, $post->post_modified_gmt ?? null, $date);
+        return $this->formatStored($format ?: $this->defaultDateFormat(), $post->post_modified ?? null, $post->post_modified_gmt ?? null, $date);
     }
 
     public function filterModifiedTime(string $time, string $format, ?object $post = null): string
@@ -111,7 +109,7 @@ class DateFilters
             return $time;
         }
 
-        return $this->formatStored($format ?: $this->defaultTimeFormat, $post->post_modified ?? null, $post->post_modified_gmt ?? null, $time);
+        return $this->formatStored($format ?: $this->defaultTimeFormat(), $post->post_modified ?? null, $post->post_modified_gmt ?? null, $time);
     }
 
     public function filterCommentDate(string $date, string $format, ?object $comment = null): string
@@ -120,7 +118,7 @@ class DateFilters
             return $date;
         }
 
-        return $this->formatStored($format ?: $this->defaultDateFormat, $comment->comment_date ?? null, $comment->comment_date_gmt ?? null, $date);
+        return $this->formatStored($format ?: $this->defaultDateFormat(), $comment->comment_date ?? null, $comment->comment_date_gmt ?? null, $date);
     }
 
     public function filterCommentTime(string $time, string $format, bool $gmt, bool $translate, ?object $comment = null): string
@@ -129,7 +127,7 @@ class DateFilters
             return $time;
         }
 
-        $format = $format ?: $this->defaultTimeFormat;
+        $format = $format ?: $this->defaultTimeFormat();
 
         if ($gmt) {
             return JalaliFormatter::fromGmtMysql($format, $comment->comment_date_gmt ?? null, new \DateTimeZone('UTC')) ?? $time;
@@ -176,7 +174,7 @@ class DateFilters
         }
 
         $attrs = is_array($block['attrs'] ?? null) ? $block['attrs'] : [];
-        $format = $attrs['format'] ?? $this->defaultDateFormat;
+        $format = $attrs['format'] ?? $this->defaultDateFormat();
 
         if ($format === 'human-diff' || DateDisplayGuard::shouldBypass($format)) {
             return $blockContent;
@@ -198,13 +196,13 @@ class DateFilters
      */
     public function filterLatestCommentsBlock(string $blockContent, array $block, ?object $instance = null): string
     {
-        if ($this->shouldSkipFrontendBlockConversion() || DateDisplayGuard::shouldBypass($this->defaultDateFormat)) {
+        if ($this->shouldSkipFrontendBlockConversion() || DateDisplayGuard::shouldBypass($this->defaultDateFormat())) {
             return $blockContent;
         }
 
         return $this->replaceRenderedTimeText(
             $blockContent,
-            fn (string $datetime, string $innerHtml): string => esc_html(JalaliFormatter::format($this->defaultDateFormat, $datetime))
+            fn (string $datetime, string $innerHtml): string => esc_html(JalaliFormatter::format($this->defaultDateFormat(), $datetime))
         );
     }
 
@@ -230,6 +228,11 @@ class DateFilters
 
     public function addAdminBarClock(object $adminBar): void
     {
+        // On the front end it follows the page's language, as the admin bar does not.
+        if (!ContentLanguage::displaysPersian()) {
+            return;
+        }
+
         $jalaliDate = JalaliFormatter::format('l j F Y');
 
         $adminBar->add_node([
@@ -283,6 +286,19 @@ class DateFilters
         }
 
         return $result;
+    }
+
+    /**
+     * Read on each call: Polylang and WPML translate the formats per language.
+     */
+    private function defaultDateFormat(): string
+    {
+        return (string) get_option('date_format');
+    }
+
+    private function defaultTimeFormat(): string
+    {
+        return (string) get_option('time_format');
     }
 
     /**
