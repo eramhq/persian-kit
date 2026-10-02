@@ -143,8 +143,17 @@ jobs:
       - uses: shivammathur/setup-php@v2
         with:
           php-version: '8.1'
-          tools: wp-cli
           coverage: none
+
+      # dist.sh needs `wp` for the POT file. setup-php's wp-cli tool fails
+      # ("Could not setup wp-cli") without failing the step, so install the
+      # release phar, checked against its published SHA-512.
+      - name: Install WP-CLI
+        run: |
+          curl -fsSL -o /tmp/wp-cli.phar https://github.com/wp-cli/wp-cli/releases/download/v2.12.0/wp-cli-2.12.0.phar
+          echo "be928f6b8ca1e8dfb9d2f4b75a13aa4aee0896f8a9a0a1c45cd5d2c98605e6172e6d014dda2e27f88c98befc16c040cbb2bd1bfa121510ea5cdf5f6a30fe8832  /tmp/wp-cli.phar" | sha512sum --check
+          sudo install -m 755 /tmp/wp-cli.phar /usr/local/bin/wp
+          wp --version
 
       - uses: actions/setup-node@v7
         with:
