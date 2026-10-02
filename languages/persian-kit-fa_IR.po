@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Persian Kit 1.0.0-beta.4\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/persian-kit\n"
-"POT-Creation-Date: 2026-10-02T03:08:32+00:00\n"
+"POT-Creation-Date: 2026-10-02T04:56:02+00:00\n"
 "PO-Revision-Date: 2026-10-01 00:00+0000\n"
 "Last-Translator: Persian Kit contributors\n"
 "Language-Team: Persian (Iran)\n"
@@ -290,6 +290,10 @@ msgstr ""
 msgid "Activity"
 msgstr "فعالیت"
 
+#: src/Modules/DateConversion/DatePicker.php:54
+msgid "Time"
+msgstr "زمان"
+
 #. translators: Post calendar label. %s: Date.
 #: src/Modules/DateConversion/JalaliCalendar.php:144
 #, php-format
@@ -338,6 +342,58 @@ msgstr ""
 "انگلیسی (123) فارسی (۱۲۳) نشان می‌دهد. پیشخوان، خوراک‌ها و REST API اعداد "
 "انگلیسی را نگه می‌دارند."
 
+#: src/Modules/Forms/Cf7IranianFields.php:75
+msgid "Mobile number that the sender entered is invalid"
+msgstr "شمارهٔ موبایلی که فرستنده وارد کرده نامعتبر است"
+
+#: src/Modules/Forms/Cf7IranianFields.php:76
+msgid "Enter a valid Iranian mobile number, such as 09121234567."
+msgstr "یک شمارهٔ موبایل معتبر ایرانی وارد کنید، مثل ⁦09121234567⁩."
+
+#: src/Modules/Forms/Cf7IranianFields.php:79
+msgid "National ID that the sender entered is invalid"
+msgstr "کد ملی‌ای که فرستنده وارد کرده نامعتبر است"
+
+#: src/Modules/Forms/Cf7IranianFields.php:80
+#: src/Modules/WooCommerce/CheckoutValidator.php:128
+msgid "The national ID is not valid. Check the 10 digits on the national card."
+msgstr "کد ملی معتبر نیست. ۱۰ رقم روی کارت ملی را بررسی کنید."
+
+#: src/Modules/Forms/Cf7IranianFields.php:83
+msgid "Postcode that the sender entered is invalid"
+msgstr "کد پستی‌ای که فرستنده وارد کرده نامعتبر است"
+
+#: src/Modules/Forms/Cf7IranianFields.php:84
+msgid "Enter a valid Iranian postcode. Postcodes have 10 digits."
+msgstr "یک کد پستی معتبر ایرانی وارد کنید. کد پستی ۱۰ رقم دارد."
+
+#: src/Modules/Forms/Cf7IranianFields.php:87
+msgid "Bank card number that the sender entered is invalid"
+msgstr "شمارهٔ کارتی که فرستنده وارد کرده نامعتبر است"
+
+#: src/Modules/Forms/Cf7IranianFields.php:88
+msgid "The card number is not valid. Check the 16 digits on the card."
+msgstr "شمارهٔ کارت معتبر نیست. ۱۶ رقم روی کارت را بررسی کنید."
+
+#: src/Modules/Forms/Cf7IranianFields.php:91
+msgid "IBAN that the sender entered is invalid"
+msgstr "شماره شبایی که فرستنده وارد کرده نامعتبر است"
+
+#: src/Modules/Forms/Cf7IranianFields.php:92
+msgid "The IBAN (Sheba) is not valid. It has IR and 24 digits."
+msgstr "شماره شبا معتبر نیست. شبا با ⁦IR⁩ شروع می‌شود و ۲۴ رقم دارد."
+
+#: src/Modules/Forms/FormsModule.php:20
+msgid "Forms"
+msgstr "فرم‌ها"
+
+#: src/Modules/Forms/FormsModule.php:25
+msgid ""
+"A Jalali date picker in Contact Form 7 and ACF date fields, and Iranian "
+"field checks in Contact Form 7. Dates are still saved and sent as Gregorian "
+"dates. Does nothing unless Contact Form 7 or ACF is active."
+msgstr "انتخابگر تاریخ شمسی برای فیلدهای تاریخ ⁦Contact Form 7⁩ و ⁦ACF⁩، و بررسی فیلدهای ایرانی در ⁦Contact Form 7⁩. تاریخ‌ها همچنان میلادی ذخیره و فرستاده می‌شوند. بدون ⁦Contact Form 7⁩ یا ⁦ACF⁩ کاری انجام نمی‌دهد."
+
 #: src/Modules/Utilities/UtilitiesModule.php:24
 msgid ""
 "Controls Persian slugs only. The persian_kit_* helper functions for "
@@ -373,10 +429,6 @@ msgstr "کد پستی آدرس ارسال"
 #: src/Modules/WooCommerce/CheckoutValidator.php:110
 msgid "Billing postcode"
 msgstr "کد پستی صورت‌حساب"
-
-#: src/Modules/WooCommerce/CheckoutValidator.php:128
-msgid "The national ID is not valid. Check the 10 digits on the national card."
-msgstr "کد ملی معتبر نیست. ۱۰ رقم روی کارت ملی را بررسی کنید."
 
 #: src/Modules/WooCommerce/CityField.php:100
 #: src/Modules/WooCommerce/CityField.php:117
@@ -683,6 +735,31 @@ msgstr "اعداد فارسی در این موارد هم استفاده شود"
 #: views/admin/partials/digit-conversion-settings.php:48
 msgid "Text inside code, <kbd> and <samp> elements keeps its digits."
 msgstr "اعداد داخل کد و عنصرهای <kbd> و <samp> تغییر نمی‌کنند."
+
+#: views/admin/partials/forms-settings.php:17
+msgid "Contact Form 7"
+msgstr "Contact Form 7"
+
+#: views/admin/partials/forms-settings.php:18
+msgid ""
+"Date fields get a Jalali date picker and still send a Gregorian date, which "
+"emails show as a Jalali date while Date Conversion is on. Adds [mobile_ir], "
+"[national_id], [postcode_ir], [card_ir] and [iban_ir] fields that check what "
+"is typed, and turns Persian digits into English digits in date, phone and "
+"number fields. Write [date name gregorian] to keep a Gregorian date field."
+msgstr "فیلدهای تاریخ انتخابگر تاریخ شمسی می‌گیرند و همچنان تاریخ میلادی می‌فرستند که تا وقتی «تاریخ شمسی» روشن است، در ایمیل‌ها شمسی نشان داده می‌شود. فیلدهای ⁦[mobile_ir]⁩، ⁦[national_id]⁩، ⁦[postcode_ir]⁩، ⁦[card_ir]⁩ و ⁦[iban_ir]⁩ را اضافه می‌کند که آنچه تایپ شده را بررسی می‌کنند، و رقم‌های فارسی را در فیلدهای تاریخ، تلفن و عدد به رقم انگلیسی تبدیل می‌کند. برای نگه داشتن فیلد تاریخ میلادی بنویسید ⁦[date name gregorian]⁩."
+
+#: views/admin/partials/forms-settings.php:21
+msgid "ACF date fields"
+msgstr "فیلدهای تاریخ ⁦ACF⁩"
+
+#: views/admin/partials/forms-settings.php:22
+msgid ""
+"Date Picker and Date Time Picker fields get a Jalali date picker, on edit "
+"screens and in acf_form(). Values are stored as before. While Date "
+"Conversion is on, get_field() and the_field() return Jalali dates in the "
+"field's return format, except formats such as Ymd that code reads."
+msgstr "فیلدهای ⁦Date Picker⁩ و ⁦Date Time Picker⁩ در صفحه‌های ویرایش و در ⁦acf_form()⁩ انتخابگر تاریخ شمسی می‌گیرند. مقدارها مثل قبل ذخیره می‌شوند. تا وقتی «تاریخ شمسی» روشن است، ⁦get_field()⁩ و ⁦the_field()⁩ تاریخ شمسی را در قالب خروجی فیلد برمی‌گردانند، جز قالب‌هایی مثل ⁦Ymd⁩ که کد آن‌ها را می‌خواند."
 
 #: views/admin/partials/utilities-settings.php:26
 msgid "Persian slugs"
