@@ -542,6 +542,18 @@ add_filter('persian_kit_woocommerce_validate', function (bool $validate, string 
 }, 10, 4);
 ```
 
+### `persian_kit_woocommerce_cities`
+
+Filters the city suggestions of the [`city_select`](#woocommerce-checkout) option: an array of city names keyed by WooCommerce state code (`THR`, `ESF`, …). Add the villages you deliver to, or drop a province. Keys must be strings and names non-empty strings; anything else is dropped. It runs once per request, when the script is loaded.
+
+```php
+add_filter('persian_kit_woocommerce_cities', function (array $cities) {
+    $cities['THR'][] = 'امامه';
+
+    return $cities;
+});
+```
+
 ### `persian_kit_acf_jalali_value`
 
 Return `false` to keep an ACF date field's template value Gregorian. `$field` is the ACF field array. See [ACF](#acf).
@@ -563,7 +575,7 @@ The WooCommerce module's checkout options (settings page, Integrations tab) appl
 - `checkout_normalize`: Persian and Arabic digits in phone numbers and postcodes become English digits, postcodes lose spaces and dashes, and Arabic ي/ك in names, company, address and city become Persian ی/ک, for every country. The block checkout is fixed in the Store API request (`rest_pre_dispatch`, including batch requests), because WooCommerce's own phone and postcode checks reject Persian digits before any checkout hook runs.
 - `checkout_validate`: for addresses in Iran, the phone must pass `persian_kit_validate_phone()` (mobile or landline) and the postcode `persian_kit_validate_postal_code()`. The block checkout reports these errors when the order is placed, as WooCommerce does for its own address checks.
 - `national_id` (`off`, `optional`, `required`): a national ID field, checked with `persian_kit_validate_national_id()` and stored in English digits. `required` asks every customer, in any country.
-- `city_select`: the city becomes a dropdown of the province's cities for Iranian addresses, in the classic checkout and in My Account. The block checkout keeps a text field. The list is the Statistical Centre of Iran's 1403 country-divisions list of cities (`resources/data/ir-cities.json`, copied to `public/data/` by the build), keyed by WooCommerce state code.
+- `city_select`: for Iranian addresses, the city field suggests the province's cities (a native `<datalist>`), in the block and classic checkout, the classic cart's shipping calculator and My Account (the cart block has no address form). The field stays a text field and nothing is checked against the list, so customers can type a village. A user change of province clears a city that is on another province's list only. Browsers without datalist suggestions show a plain text field. The list is the Statistical Centre of Iran's 1403 country-divisions list of cities (`resources/data/ir-cities.json`, copied to `public/data/` by the build), keyed by WooCommerce state code.
 
 ### National ID
 

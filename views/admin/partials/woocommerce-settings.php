@@ -23,7 +23,7 @@ $options = [
     ],
     'city_select'        => [
         'label' => __('City list for Iran', 'persian-kit'),
-        'help'  => __('Classic checkout and My Account.', 'persian-kit'),
+        'help'  => __('Suggests the province\'s cities. Customers can still type a village.', 'persian-kit'),
     ],
 ];
 

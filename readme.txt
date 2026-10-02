@@ -30,7 +30,7 @@ Persian Kit is a modular WordPress plugin for Persian-language sites. It focuses
 * Persian slugs that keep Persian letters readable (can be turned off)
 * PHP validation and formatting helpers for common Iranian data
 * WooCommerce Jalali date support for supported screens (HPOS-compatible)
-* WooCommerce checkout for Iran: Persian digits in phone numbers and postcodes are saved as English digits, Iranian phone numbers and postcodes are checked, an optional national ID (کد ملی) field, and an optional city dropdown for each province (classic checkout)
+* WooCommerce checkout for Iran: Persian digits in phone numbers and postcodes are saved as English digits, Iranian phone numbers and postcodes are checked, an optional national ID (کد ملی) field, and optional city suggestions for each province
 * Persian digits in the WooCommerce cart and checkout blocks' prices
 * A Jalali date picker for Contact Form 7 and ACF date fields, WooCommerce's admin date fields and the post date in the classic editor and Quick Edit, which keep saving Gregorian dates
 * Contact Form 7 fields that check Iranian mobile numbers, national IDs, postcodes, card numbers and IBANs
@@ -109,9 +109,9 @@ With the WooCommerce module on (Integrations tab), what customers type is fixed 
 
 Yes. With the Forms module on, Contact Form 7's date fields and ACF's Date Picker and Date Time Picker fields get a Jalali date picker. The dates are still saved and sent as Gregorian dates, so existing entries, emails and theme code keep working; while Jalali dates is on, Contact Form 7 emails and ACF values in templates show the Jalali date. Contact Form 7 also gets [mobile_ir], [national_id], [postcode_ir], [card_ir] and [iban_ir] fields that check what is typed.
 
-= Why is the city not a dropdown in the block checkout? =
+= Can customers enter a village? =
 
-The city dropdown works in the classic (shortcode) checkout and in My Account. WooCommerce does not let plugins turn the block checkout's city field into a dropdown, so it stays a text field there.
+Yes. With the city list on, the city field suggests the province's cities, but customers can still type a village or any place that isn't listed.
 
 = Where does the list of cities come from? =
 

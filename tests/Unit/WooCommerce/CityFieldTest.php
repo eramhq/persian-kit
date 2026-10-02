@@ -3,7 +3,7 @@
 namespace PersianKit\Tests\Unit\WooCommerce;
 
 use Brain\Monkey;
-use Brain\Monkey\Functions;
+use Brain\Monkey\Filters;
 use PersianKit\Modules\WooCommerce\CityField;
 use PHPUnit\Framework\TestCase;
 
@@ -15,16 +15,10 @@ class CityFieldTest extends TestCase
     {
         parent::setUp();
         Monkey\setUp();
-        Functions\stubTranslationFunctions();
-        Functions\when('is_admin')->justReturn(false);
-        Functions\when('wp_doing_ajax')->justReturn(false);
-        Functions\when('sanitize_text_field')->returnArg();
-        Functions\when('wp_unslash')->returnArg();
     }
 
     protected function tearDown(): void
     {
-        unset($_POST['billing_state'], $_POST['billing_city']);
         Monkey\tearDown();
         parent::tearDown();
     }
@@ -54,39 +48,34 @@ class CityFieldTest extends TestCase
         $this->assertSame([], (new CityField('/does/not/exist.json'))->cities());
     }
 
-    public function test_iranian_city_becomes_a_select_of_the_province_cities(): void
+    public function test_the_filter_can_add_places_and_its_result_is_cleaned(): void
     {
-        $_POST['billing_state'] = 'QHM';
-        $_POST['billing_city'] = 'قم';
+        Filters\expectApplied('persian_kit_woocommerce_cities')
+            ->once()
+            ->andReturnUsing(static function (array $cities): array {
+                $cities['QHM'][] = 'روستای من';
+                $cities['XYZ'] = ['جایی', 7, '', ['nested']];
+                $cities[3] = ['عدد'];
+                $cities['BAD'] = 'not a list';
 
-        $fields = (new CityField(self::DATA_FILE))->filterBillingFields(['billing_city' => ['type' => 'text']], 'IR');
+                return $cities;
+            });
 
-        $this->assertSame('select', $fields['billing_city']['type']);
-        $this->assertSame(['', 'قم', 'جعفریه'], array_slice(array_keys($fields['billing_city']['options']), 0, 3));
+        $field = new CityField(self::DATA_FILE);
+        $cities = $field->cities();
+
+        $this->assertSame('روستای من', end($cities['QHM']));
+        $this->assertSame(['جایی'], $cities['XYZ']);
+        $this->assertArrayNotHasKey(3, $cities);
+        $this->assertArrayNotHasKey('BAD', $cities);
+        $this->assertSame($cities, $field->cities(), 'filtered once, then kept');
     }
 
-    public function test_a_saved_city_the_list_lacks_is_kept(): void
+    public function test_a_filter_returning_nothing_useful_gives_no_cities(): void
     {
-        $options = (new CityField(self::DATA_FILE))->options('QHM', 'روستای من');
+        Filters\expectApplied('persian_kit_woocommerce_cities')->once()->andReturn(null);
 
-        $this->assertArrayHasKey('روستای من', $options);
-        $this->assertSame('Select a city…', $options['']);
-    }
-
-    public function test_other_countries_keep_a_text_city(): void
-    {
-        $fields = (new CityField(self::DATA_FILE))->filterShippingFields(['shipping_city' => ['type' => 'text']], 'DE');
-
-        $this->assertSame('text', $fields['shipping_city']['type']);
-    }
-
-    public function test_admin_screens_keep_a_text_city(): void
-    {
-        Functions\when('is_admin')->justReturn(true);
-
-        $fields = (new CityField(self::DATA_FILE))->filterBillingFields(['billing_city' => ['type' => 'text']], 'IR');
-
-        $this->assertSame('text', $fields['billing_city']['type']);
+        $this->assertSame([], (new CityField(self::DATA_FILE))->cities());
     }
 
     /**
