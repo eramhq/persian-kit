@@ -82,12 +82,28 @@ class FormsModule extends AbstractModule
         return (bool) $this->settings->module(DateConversionModule::key(), 'enabled', true);
     }
 
-    private function supportsContactForm7(): bool
+    /**
+     * @return list<string>
+     */
+    public function inactivePlugins(): array
+    {
+        $inactive = [];
+        if (!$this->supportsContactForm7()) {
+            $inactive[] = 'Contact Form 7';
+        }
+        if (!$this->supportsAcf()) {
+            $inactive[] = 'ACF';
+        }
+
+        return $inactive;
+    }
+
+    protected function supportsContactForm7(): bool
     {
         return defined('WPCF7_VERSION') && function_exists('wpcf7_add_form_tag');
     }
 
-    private function supportsAcf(): bool
+    protected function supportsAcf(): bool
     {
         return function_exists('acf_get_field_type');
     }

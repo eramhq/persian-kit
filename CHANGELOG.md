@@ -10,6 +10,8 @@ All notable changes to this project will be documented in this file.
 - Every module and option has one short line instead of a paragraph, in English and Persian. Modules are named for what they do: Digit Conversion is now Persian digits, Date Conversion Jalali dates, Character Normalization Persian ی and ک, ZWNJ Editor Support Half-space key, Utilities Persian slugs and WooCommerce Support WooCommerce. No setting, option key or default changed.
 - "Fix existing posts" moved out of the letters module to the Tools tab, as "Fix letters in existing posts".
 - The save button stays at the bottom of the screen and says "Unsaved changes" after an edit.
+- The WooCommerce and Forms cards say when WooCommerce, Contact Form 7 or ACF is not active, since their options then do nothing.
+- The compatibility notice on other admin screens uses the same short text as the settings page.
 - The Persian translation no longer uses diacritics, such as the ezafe mark.
 
 - Fixed: with Persian slugs, a post, page or category reached by its ID (`/?p=123`, `/?page_id=`, `/?cat=`) redirected to a broken address such as `/بر_ا__-آز_ا_ش_-سا_-1405/` and a 404 on some servers (seen with PHP on macOS). Links to Persian slugs are now percent-encoded, as WordPress's own Persian slugs are; the slug itself keeps its letters. The `persian_kit_utilities` filter turns this off with the `encode_links` feature.

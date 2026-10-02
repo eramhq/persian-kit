@@ -121,7 +121,15 @@ class WooCommerceModule extends AbstractModule
         }
     }
 
-    private function supportsWooCommerce(): bool
+    /**
+     * @return list<string>
+     */
+    public function inactivePlugins(): array
+    {
+        return $this->supportsWooCommerce() ? [] : [__('WooCommerce', 'persian-kit')];
+    }
+
+    protected function supportsWooCommerce(): bool
     {
         return class_exists('WooCommerce') || function_exists('wc_get_orders');
     }

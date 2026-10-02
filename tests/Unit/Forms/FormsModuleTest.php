@@ -61,6 +61,33 @@ class FormsModuleTest extends TestCase
         ], $this->bootAndListFetched(['acf' => false]));
     }
 
+    public function test_inactive_plugins_names_contact_form_7_and_acf_when_missing(): void
+    {
+        $this->assertSame([], $this->makeModule()->inactivePlugins());
+
+        $manager = Mockery::mock(SettingsManager::class);
+        $without = static fn (bool $cf7, bool $acf): FormsModule => new class ($manager, $cf7, $acf) extends FormsModule {
+            public function __construct(SettingsManager $settings, private bool $cf7, private bool $acf)
+            {
+                parent::__construct($settings);
+            }
+
+            protected function supportsContactForm7(): bool
+            {
+                return $this->cf7;
+            }
+
+            protected function supportsAcf(): bool
+            {
+                return $this->acf;
+            }
+        };
+
+        $this->assertSame(['Contact Form 7'], $without(false, true)->inactivePlugins());
+        $this->assertSame(['ACF'], $without(true, false)->inactivePlugins());
+        $this->assertSame(['Contact Form 7', 'ACF'], $without(false, false)->inactivePlugins());
+    }
+
     public function test_sanitize_settings_stores_booleans(): void
     {
         $this->assertSame(

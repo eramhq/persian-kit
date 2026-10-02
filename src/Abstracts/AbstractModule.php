@@ -46,6 +46,14 @@ abstract class AbstractModule implements ModuleInterface
     }
 
     /**
+     * @return list<string>
+     */
+    public function inactivePlugins(): array
+    {
+        return [];
+    }
+
+    /**
      * @param array<string, mixed> $values
      * @return array<string, mixed>
      */

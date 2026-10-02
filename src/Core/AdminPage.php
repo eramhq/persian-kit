@@ -104,6 +104,7 @@ class AdminPage
                 'key'         => $key,
                 'label'       => $module::label(),
                 'description' => $module::description(),
+                'inactive'    => $module->inactivePlugins(),
                 'instance'    => $module,
                 'settings'    => $moduleSettings,
             ];

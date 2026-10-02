@@ -27,6 +27,14 @@ interface ModuleInterface
     public function settingsView(): ?string;
 
     /**
+     * Names of the plugins this module works with that are not active, shown
+     * on the module's card. Empty when it needs none or they are all active.
+     *
+     * @return list<string>
+     */
+    public function inactivePlugins(): array;
+
+    /**
      * @param array<string, mixed> $values
      * @return array<string, mixed>
      */

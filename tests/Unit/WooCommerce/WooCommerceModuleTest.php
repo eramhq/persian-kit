@@ -72,6 +72,21 @@ class WooCommerceModuleTest extends TestCase
         ], $this->bootAndListFetched(['checkout_normalize' => false, 'checkout_validate' => false, 'city_select' => true]));
     }
 
+    public function test_inactive_plugins_names_woocommerce_when_it_is_missing(): void
+    {
+        Functions\when('__')->returnArg();
+        $this->assertSame([], $this->makeModule()->inactivePlugins());
+
+        $withoutWooCommerce = new class (Mockery::mock(SettingsManager::class)) extends WooCommerceModule {
+            protected function supportsWooCommerce(): bool
+            {
+                return false;
+            }
+        };
+
+        $this->assertSame(['WooCommerce'], $withoutWooCommerce->inactivePlugins());
+    }
+
     public function test_sanitize_settings_keeps_known_national_id_modes_only(): void
     {
         $module = $this->makeModule();

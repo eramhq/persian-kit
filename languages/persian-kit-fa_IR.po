@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Persian Kit 1.0.0-beta.4\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/persian-kit\n"
-"POT-Creation-Date: 2026-10-02T06:33:17+00:00\n"
+"POT-Creation-Date: 2026-10-02T07:26:05+00:00\n"
 "PO-Revision-Date: 2026-10-01 00:00+0000\n"
 "Last-Translator: Persian Kit contributors\n"
 "Language-Team: Persian (Iran)\n"
@@ -50,23 +50,23 @@ msgstr ""
 msgid "Settings"
 msgstr "تنظیمات"
 
-#: src/Core/AdminPage.php:130
+#: src/Core/AdminPage.php:131
 msgid "You do not have permission to access this page."
 msgstr "شما اجازه دسترسی به این صفحه را ندارید."
 
-#: src/Core/AdminPage.php:147
+#: src/Core/AdminPage.php:148
 msgid "Display"
 msgstr "نمایش"
 
-#: src/Core/AdminPage.php:148
+#: src/Core/AdminPage.php:149
 msgid "Writing"
 msgstr "نگارش"
 
-#: src/Core/AdminPage.php:149
+#: src/Core/AdminPage.php:150
 msgid "Integrations"
 msgstr "یکپارچه‌سازی"
 
-#: src/Core/AdminPage.php:150
+#: src/Core/AdminPage.php:151
 msgid "Tools"
 msgstr "ابزارها"
 
@@ -120,6 +120,7 @@ msgstr "فونت پیشخوان"
 
 #: src/Core/ConflictDetector.php:40 src/Core/ConflictDetector.php:82
 #: src/Modules/WooCommerce/WooCommerceModule.php:19
+#: src/Modules/WooCommerce/WooCommerceModule.php:129
 msgid "WooCommerce"
 msgstr "ووکامرس"
 
@@ -192,12 +193,13 @@ msgstr ""
 "می‌تواند تاریخ‌های معمول وردپرس را شمسی کند."
 
 #: src/Core/ConflictDetector.php:145
+#: views/admin/partials/compatibility-guidance.php:18
 msgid ""
-"Another Persian plugin is already handling some of the same features. To "
-"avoid mixed results, use only one plugin for each feature area."
+"Another Persian plugin does some of the same things. Use one plugin for each "
+"feature."
 msgstr ""
-"افزونه فارسی دیگری هم بخشی از همین کارها را انجام می‌دهد. برای اینکه نتیجه‌ها "
-"با هم قاطی نشوند، هر کار را فقط به یک افزونه بسپارید."
+"افزونه فارسی دیگری هم بخشی از همین کارها را انجام می‌دهد. برای هر قابلیت فقط "
+"از یک افزونه استفاده کنید."
 
 #: src/Core/ConflictDetector.php:154
 msgid "Review recommended settings"
@@ -500,14 +502,6 @@ msgstr ""
 msgid "Compatibility"
 msgstr "سازگاری"
 
-#: views/admin/partials/compatibility-guidance.php:18
-msgid ""
-"Another Persian plugin does some of the same things. Use one plugin for each "
-"feature."
-msgstr ""
-"افزونه فارسی دیگری هم بخشی از همین کارها را انجام می‌دهد. برای هر قابلیت فقط "
-"از یک افزونه استفاده کنید."
-
 #: views/admin/partials/compatibility-guidance.php:29
 msgid "Supplementary"
 msgstr "مکمل"
@@ -575,6 +569,12 @@ msgstr "ACF"
 #: views/admin/partials/forms-settings.php:22
 msgid "Date picker for Date and Date Time fields."
 msgstr "انتخابگر تاریخ برای فیلدهای ⁦Date Picker⁩ و ⁦Date Time Picker⁩."
+
+#. translators: %s: plugin names, such as "Contact Form 7 and ACF".
+#: views/admin/partials/module-toggle.php:48
+#, php-format
+msgid "Not active on this site: %s."
+msgstr "غیرفعال در این سایت: %s."
 
 #: views/admin/partials/tools.php:23
 msgid "Fix letters in existing posts"
@@ -715,11 +715,11 @@ msgstr "تغییرها با ذخیره اعمال می‌شوند."
 msgid "Persian Kit settings"
 msgstr "تنظیمات Persian Kit"
 
-#: views/admin/settings.php:107
+#: views/admin/settings.php:108
 msgid "Save changes"
 msgstr "ذخیره تغییرات"
 
-#: views/admin/settings.php:109
+#: views/admin/settings.php:110
 msgid "Unsaved changes"
 msgstr "تغییرهای ذخیره‌نشده"
 

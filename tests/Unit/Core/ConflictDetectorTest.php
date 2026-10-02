@@ -146,7 +146,7 @@ class ConflictDetectorTest extends TestCase
         $output = ob_get_clean();
 
         $this->assertIsString($output);
-        $this->assertStringContainsString('Another Persian plugin is already handling some of the same features.', $output);
+        $this->assertStringContainsString('Another Persian plugin does some of the same things. Use one plugin for each feature.', $output);
         $this->assertStringContainsString('WP-Parsidate is already handling some Persian date and text features.', $output);
         $this->assertStringContainsString('Review recommended settings', $output);
     }

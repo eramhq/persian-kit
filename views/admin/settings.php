@@ -95,6 +95,7 @@ $panelAttributes = static function (string $tab) use ($activeTab): string {
                         'moduleKey'         => $moduleData['key'],
                         'moduleLabel'       => $moduleData['label'],
                         'moduleDescription' => $moduleData['description'],
+                        'inactivePlugins'   => $moduleData['inactive'],
                         'module'            => $moduleData['instance'],
                         'moduleSettings'    => $moduleData['settings'],
                     ]);
