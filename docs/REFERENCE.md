@@ -576,6 +576,9 @@ The WooCommerce module's checkout options (settings page, WooCommerce tab, Check
 - `checkout_validate`: for addresses in Iran, the phone must pass `persian_kit_validate_phone()` (mobile or landline) and the postcode `persian_kit_validate_postal_code()`. The block checkout reports these errors when the order is placed, as WooCommerce does for its own address checks.
 - `national_id` (`off`, `optional`, `required`): a national ID field, checked with `persian_kit_validate_national_id()` and stored in English digits. `required` asks every customer, in any country.
 - `city_select`: for Iranian addresses, the city field suggests the province's cities (a native `<datalist>`), in the block and classic checkout, the classic cart's shipping calculator and My Account (the cart block has no address form). The field stays a text field and nothing is checked against the list, so customers can type a village. A user change of province clears a city that is on another province's list only. Browsers without datalist suggestions show a plain text field. The list is the Statistical Centre of Iran's 1403 country-divisions list of cities (`resources/data/ir-cities.json`, copied to `public/data/` by the build), keyed by WooCommerce state code.
+- `allowed_states` ("Provinces you deliver to"): a list of WooCommerce's Iran province codes (`THR`, `ABZ`, …); empty, the default, means all provinces. While it has codes, Iranian addresses on the storefront list only those provinces: the block and classic checkout, the classic cart's shipping calculator and My Account > Addresses, for billing and shipping. WooCommerce's own checks refuse any other province, at the classic checkout ("Province is not valid. Please enter one of the following: …") and in the Store API (`invalid_state`); Persian Kit adds the same check to My Account, which WooCommerce leaves out. It is one `woocommerce_states` filter, applied to front-end requests and Store API (`/wc/store/`) requests only, so the shop admin, cron, WP-CLI and other REST routes keep all 31 provinces. Past addresses in a province no longer listed keep its name (`woocommerce_formatted_address_replacements`). With one province, an Iranian address without one (or with a state of another country) reads as that province on the storefront, so both checkouts start with it selected; nothing stored changes until the customer saves. On the settings page, "All provinces" saves an empty list, and "Only these provinces" with nothing ticked does too.
+
+WooCommerce already orders an Iranian address province, city, then address, in both checkouts and in My Account; Persian Kit doesn't change the order.
 
 ### National ID
 
@@ -677,7 +680,7 @@ The settings page (the Persian Kit menu) has five tabs: Display and Writing hold
 | `char_normalization` | Writing > Persian ی and ک | `enabled` (on), `normalize_on_save` (off), `teh_marbuta` (off), `half_space_fix` (off) |
 | `zwnj_editor` | Writing > Half-space key | `enabled` (on) |
 | `utilities` | Writing > Persian slugs | `enabled` (on), `persian_slugs` (on) |
-| `woocommerce` | WooCommerce | `enabled` (on), `checkout_normalize` (on), `checkout_validate` (on), `national_id` (`off`), `city_select` (off), `dates_admin` (on) |
+| `woocommerce` | WooCommerce | `enabled` (on), `checkout_normalize` (on), `checkout_validate` (on), `national_id` (`off`), `city_select` (off), `allowed_states` (`[]`, all provinces), `dates_admin` (on) |
 | `cf7` | Integrations > Forms > Contact Form 7 | `enabled` (on) |
 | `acf` | Integrations > Forms > ACF | `enabled` (on) |
 

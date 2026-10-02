@@ -11,6 +11,7 @@ use PersianKit\Modules\WooCommerce\CheckoutInputNormalizer;
 use PersianKit\Modules\WooCommerce\CheckoutValidator;
 use PersianKit\Modules\WooCommerce\CityField;
 use PersianKit\Modules\WooCommerce\NationalIdField;
+use PersianKit\Modules\WooCommerce\ProvinceLimit;
 use PersianKit\Modules\WooCommerce\WooAdminDateFields;
 use PersianKit\Modules\WooCommerce\WooCommerceModule;
 use PersianKit\Modules\WooCommerce\WooDateDisplayFilter;
@@ -112,6 +113,7 @@ class WooCommerceModuleTest extends TestCase
             'checkout_validate'  => true,
             'national_id'        => 'required',
             'city_select'        => false,
+            'allowed_states'     => [],
             'dates_admin'        => true,
         ], $module->sanitizeSettings(['enabled' => '1', 'checkout_normalize' => '0', 'checkout_validate' => '1', 'national_id' => 'required', 'dates_admin' => '1']));
 
@@ -126,8 +128,27 @@ class WooCommerceModuleTest extends TestCase
             'checkout_validate'  => true,
             'national_id'        => 'off',
             'city_select'        => false,
+            'allowed_states'     => [],
             'dates_admin'        => true,
         ], WooCommerceModule::defaults());
+    }
+
+    public function test_sanitize_settings_keeps_valid_province_codes_once(): void
+    {
+        $module = $this->makeModule();
+
+        // The hidden field sends '' with the ticked boxes.
+        $this->assertSame(['THR', 'ABZ'], $module->sanitizeSettings(['allowed_states' => ['', 'THR', 'abz', 'THR', 'nope']])['allowed_states']);
+        $this->assertSame([], $module->sanitizeSettings(['allowed_states' => ['']])['allowed_states']);
+        $this->assertSame([], $module->sanitizeSettings(['allowed_states' => 'THR'])['allowed_states']);
+    }
+
+    public function test_chosen_provinces_turn_the_province_limit_on(): void
+    {
+        Functions\when('is_admin')->justReturn(false);
+
+        $this->assertNotContains(ProvinceLimit::class, $this->bootAndListFetched());
+        $this->assertContains(ProvinceLimit::class, $this->bootAndListFetched(['allowed_states' => ['THR']]));
     }
 
     /**

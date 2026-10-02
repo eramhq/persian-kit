@@ -42,6 +42,15 @@ $nationalIdModes = [
 
 $nationalId = $moduleSettings['national_id'] ?? NationalIdField::OFF;
 
+// Sorted by name in the admin's language.
+$provinces = WooCommerceModule::provinces();
+if (function_exists('wc_asort_by_locale')) {
+    wc_asort_by_locale($provinces);
+} else {
+    asort($provinces);
+}
+$allowedStates = is_array($moduleSettings['allowed_states'] ?? null) ? $moduleSettings['allowed_states'] : [];
+
 /**
  * Opens a section card with its heading and description. $descriptionHtml,
  * when given, is already escaped and replaces the plain description.
@@ -72,6 +81,53 @@ $sectionStart = static function (string $id, string $descriptionHtml = '') use (
                 ]);
                 ?>
             <?php endforeach; ?>
+
+            <?php if ($provinces !== []) : ?>
+                <?php // The radios only switch the grid on and off; an empty list means all provinces. ?>
+                <li
+                    class="persian-kit-option persian-kit-option--provinces"
+                    x-data="{ scope: '<?php echo $allowedStates !== [] ? 'only' : 'all'; ?>', ticked: <?php echo (int) count($allowedStates); ?> }"
+                >
+                    <fieldset aria-describedby="persian-kit-provinces-help">
+                        <legend><?php esc_html_e('Provinces you deliver to', 'persian-kit'); ?></legend>
+                        <div class="persian-kit-choices">
+                            <label>
+                                <input type="radio" name="persian-kit-province-scope" value="all" x-model="scope" <?php checked($allowedStates === []); ?>>
+                                <?php esc_html_e('All provinces', 'persian-kit'); ?>
+                            </label>
+                            <label>
+                                <input type="radio" name="persian-kit-province-scope" value="only" x-model="scope" <?php checked($allowedStates !== []); ?>>
+                                <?php esc_html_e('Only these provinces', 'persian-kit'); ?>
+                            </label>
+                        </div>
+                        <?php // Sent when no box is ticked, or the boxes are off, so the list is saved empty. ?>
+                        <input type="hidden" name="persian_kit_settings[woocommerce][allowed_states][]" value="">
+                        <ul class="persian-kit-provinces" :aria-disabled="scope === 'all'">
+                            <?php foreach ($provinces as $code => $name) : ?>
+                                <li>
+                                    <label>
+                                        <input
+                                            type="checkbox"
+                                            name="persian_kit_settings[woocommerce][allowed_states][]"
+                                            value="<?php echo esc_attr($code); ?>"
+                                            :disabled="scope === 'all'"
+                                            @change="ticked += $event.target.checked ? 1 : -1"
+                                            <?php checked(in_array($code, $allowedStates, true)); ?>
+                                        >
+                                        <?php echo esc_html($name); ?>
+                                    </label>
+                                </li>
+                            <?php endforeach; ?>
+                        </ul>
+                        <p class="persian-kit-provinces__hint persian-kit-warning" x-show="scope === 'only' && ticked === 0" x-cloak>
+                            <?php esc_html_e('Pick at least one province. Until then, all provinces are listed.', 'persian-kit'); ?>
+                        </p>
+                    </fieldset>
+                    <span class="persian-kit-option__help" id="persian-kit-provinces-help">
+                        <?php esc_html_e('Applies to addresses in Iran. Checkout, the cart and My Account list only these; the shop admin still lists all.', 'persian-kit'); ?>
+                    </span>
+                </li>
+            <?php endif; ?>
 
             <li class="persian-kit-option persian-kit-option--select">
                 <label class="persian-kit-option__label" for="persian-kit-national-id">
