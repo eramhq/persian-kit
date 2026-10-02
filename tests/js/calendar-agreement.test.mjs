@@ -6,7 +6,7 @@ import { JSDOM } from 'jsdom';
 import { CalendarDate, GregorianCalendar, PersianCalendar, toCalendar } from '@internationalized/date';
 
 // The date picker's Persian calendar (@internationalized/date, ICU's rule),
-// the admin date editors (resources/js/jalali.js) and the server (daynum,
+// the block editor's date editor (resources/js/jalali.js) and the server (daynum,
 // tests/Unit/DateConversion/CalendarAgreementTest.php) must agree, or a
 // picked date is saved one day off. tests/fixtures/persian-years.json holds,
 // for each year, the Gregorian date of 1 Farvardin and the length of Esfand.
@@ -38,7 +38,7 @@ test('the fixture is what the date picker calendar computes', () => {
     }
 });
 
-test('the admin date editors agree with the date picker', () => {
+test('the block editor\'s date editor agrees with the date picker', () => {
     for (const [year, [farvardin1, esfandLength]] of Object.entries(years)) {
         const [gy, gm, gd] = Jalali.jalaliToGregorian(Number(year), 1, 1);
         const iso = `${gy}-${String(gm).padStart(2, '0')}-${String(gd).padStart(2, '0')}`;

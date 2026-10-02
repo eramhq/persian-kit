@@ -21,7 +21,7 @@
  *   data-persian-kit-date-hint     'off' hides the typing hint under the
  *                                  field (screen readers still read it) and
  *                                  makes the picker as wide as a date
- *   required, disabled, readonly, placeholder
+ *   required, disabled, readonly, placeholder, aria-label
  *
  * A value already in the field can also be a Jalali date in the field's
  * format (WooCommerce writes its fields with date_i18n(), which Persian Kit
@@ -165,9 +165,11 @@
             }
         });
 
-        if (input.placeholder) {
-            picker.setAttribute('placeholder', input.placeholder);
-        }
+        ['placeholder', 'aria-label'].forEach(function (name) {
+            if (input.getAttribute(name)) {
+                picker.setAttribute(name, input.getAttribute(name));
+            }
+        });
 
         // Labels pointing at the input name and focus the picker instead;
         // the input keeps its id for scripts that read the value by id.

@@ -5,8 +5,9 @@ namespace PersianKit\Modules\DateConversion;
 defined('ABSPATH') || exit;
 
 /**
- * Registers the shared Jalali calendar script (public/js/jalali.js) and the
- * translated labels the date editors built on it use.
+ * Registers the Jalali calendar script (public/js/jalali.js) and the
+ * translated labels of the block editor's date editor, which is built on it.
+ * The other admin date fields use the date picker (DatePicker).
  */
 final class JalaliScript
 {

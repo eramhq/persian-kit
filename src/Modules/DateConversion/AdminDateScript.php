@@ -13,7 +13,7 @@ class AdminDateScript
     }
 
     /**
-     * Enqueue Jalali conversion + admin date override only where the classic UI needs it.
+     * Enqueue the Jalali date picker for the post date where the classic UI needs it.
      *
      * Quick Edit lives on edit.php. Classic Editor lives on post.php / post-new.php,
      * but block-editor screens get their own dedicated assets via enqueueGutenberg().
@@ -24,14 +24,12 @@ class AdminDateScript
             return;
         }
 
-        JalaliScript::register();
-
-        wp_enqueue_script('persian-kit-jalali');
+        DatePicker::enqueue();
 
         wp_enqueue_script(
-            'persian-kit-admin-date',
-            PERSIAN_KIT_URL . 'public/js/admin-date-override.js',
-            ['jquery', 'persian-kit-jalali'],
+            'persian-kit-classic-date',
+            PERSIAN_KIT_URL . 'public/js/classic-date-fields.js',
+            ['jquery', DatePicker::FIELD],
             PERSIAN_KIT_VERSION,
             true
         );
