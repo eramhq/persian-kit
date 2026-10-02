@@ -42,14 +42,13 @@ class AcfModule extends AbstractModule
     }
 
     /**
-     * @return list<array{name: string, check: callable(): bool, version?: callable(): ?string, minVersion?: string, slug?: string, icon?: string}>
+     * @return list<array{name: string, check: callable(): bool, version?: callable(): ?string, minVersion?: string, slug?: string}>
      */
     public function requiredPlugins(): array
     {
         return [[
             'name'    => 'ACF',
             'slug'    => 'advanced-custom-fields',
-            'icon'    => 'icon.svg',
             'check'   => fn (): bool => $this->supportsAcf(),
             'version' => static fn (): ?string => defined('ACF_VERSION') ? (string) ACF_VERSION : null,
         ]];

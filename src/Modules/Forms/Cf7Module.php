@@ -42,14 +42,13 @@ class Cf7Module extends AbstractModule
     }
 
     /**
-     * @return list<array{name: string, check: callable(): bool, version?: callable(): ?string, minVersion?: string, slug?: string, icon?: string}>
+     * @return list<array{name: string, check: callable(): bool, version?: callable(): ?string, minVersion?: string, slug?: string}>
      */
     public function requiredPlugins(): array
     {
         return [[
             'name'    => 'Contact Form 7',
             'slug'    => 'contact-form-7',
-            'icon'    => 'icon.svg',
             'check'   => fn (): bool => $this->supportsContactForm7(),
             'version' => static fn (): ?string => defined('WPCF7_VERSION') ? (string) WPCF7_VERSION : null,
         ]];

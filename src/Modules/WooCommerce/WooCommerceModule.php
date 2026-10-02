@@ -45,14 +45,13 @@ class WooCommerceModule extends AbstractModule
     }
 
     /**
-     * @return list<array{name: string, check: callable(): bool, version?: callable(): ?string, minVersion?: string, slug?: string, icon?: string}>
+     * @return list<array{name: string, check: callable(): bool, version?: callable(): ?string, minVersion?: string, slug?: string}>
      */
     public function requiredPlugins(): array
     {
         return [[
             'name'    => __('WooCommerce', 'persian-kit'),
             'slug'    => 'woocommerce',
-            'icon'    => 'icon.svg',
             'check'   => fn (): bool => $this->supportsWooCommerce(),
             'version' => static fn (): ?string => defined('WC_VERSION') ? (string) WC_VERSION : null,
         ]];

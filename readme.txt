@@ -50,10 +50,6 @@ Persian Kit ships and credits the following third-party components:
 
 All bundled components are GPL-compatible. Their license texts ship with the plugin: `packages/eram/*/LICENSE`, `public/fonts/vazirmatn/OFL.txt`, `public/fonts/noto-sans-arabic/OFL.txt`, `public/fonts/ibm-plex-sans-arabic/OFL.txt`, `public/licenses/` and the header of `public/js/admin.js`.
 
-= External services =
-
-Persian Kit sends no data anywhere. The WooCommerce and Integrations tabs of its settings page show the logos of the plugins it works with, such as WooCommerce and Contact Form 7, which the browser loads from WordPress.org's plugin directory (ps.w.org), as WordPress's own Plugins screens do. They are requested without a referrer, so they do not tell WordPress.org which site asked. See the [WordPress.org privacy policy](https://wordpress.org/about/privacy/).
-
 = Source code =
 
 Full source, build instructions, and issue tracker:

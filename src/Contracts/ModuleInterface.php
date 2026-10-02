@@ -40,10 +40,9 @@ interface ModuleInterface
      * check:      true while the plugin is active.
      * version:    the installed version, or null when it is unknown.
      * minVersion: the oldest version the module works with.
-     * slug:       its WordPress.org slug, for the link and logo on its card.
-     * icon:       its logo's file name in the WordPress.org assets, such as icon.svg.
+     * slug:       its WordPress.org slug, for the link on its card.
      *
-     * @return list<array{name: string, check: callable(): bool, version?: callable(): ?string, minVersion?: string, slug?: string, icon?: string}>
+     * @return list<array{name: string, check: callable(): bool, version?: callable(): ?string, minVersion?: string, slug?: string}>
      */
     public function requiredPlugins(): array;
 

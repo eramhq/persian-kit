@@ -616,7 +616,7 @@ If Persian Kit itself is deactivated, its field types are gone: Contact Form 7 t
 A module becomes an integration by returning a category and the plugins it needs (`src/Contracts/ModuleInterface.php`):
 
 - `category()`: `forms`, `commerce` or `compat`; `null` for modules that need no other plugin.
-- `requiredPlugins()`: the plugin it integrates with, then any add-on it also needs. Each has a `name`, a `check` callable, and optionally a `version` callable, a `minVersion`, and its WordPress.org `slug` and logo file (`icon`).
+- `requiredPlugins()`: the plugin it integrates with, then any add-on it also needs. Each has a `name`, a `check` callable, and optionally a `version` callable, a `minVersion` and its WordPress.org `slug` (for the link on its card).
 - `isAvailable()` and `unavailableReason()` (built on `requiredPlugins()` in `AbstractModule`): the reason's code is `AbstractModule::REASON_INACTIVE`, `REASON_OUTDATED` or `REASON_MISSING`.
 - `boot()` runs while the module is on and its plugins are available. `bootDisabled()` runs while it is off and they are available: register fallbacks there, such as plain inputs for its field types.
 - `formsUsingFields()`: the forms that use its field types, for the warning shown when it is switched off.

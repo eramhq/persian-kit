@@ -41,7 +41,6 @@ class Cf7FieldUsage
             'fields'           => 'ids',
             'orderby'          => 'title',
             'order'            => 'ASC',
-            'suppress_filters' => true,
         ]);
 
         foreach ($ids as $id) {
