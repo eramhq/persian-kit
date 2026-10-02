@@ -164,6 +164,8 @@ class JalaliPermalinksTest extends WordPressIntegrationTestCase
             'post_name'   => 'photo',
             'post_status' => 'inherit',
         ]);
+        // Rank Math sends attachment pages to their post, and exits.
+        add_filter('rank_math/frontend/attachment/redirect_url', '__return_empty_string');
 
         $this->go_to(home_url('/2026/10/01/my-post/photo/'));
 

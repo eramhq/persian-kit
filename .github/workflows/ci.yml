@@ -61,13 +61,17 @@ jobs:
     env:
       WP_CORE_DIR: /tmp/wordpress
       WP_VERSION: ${{ matrix.wp }}
-      # The checkout and form integration tests run against these releases.
+      # The checkout, form and SEO integration tests run against these releases.
       WOOCOMMERCE_VERSION: '10.6.2'
       PERSIAN_KIT_TESTS_WOOCOMMERCE_DIR: /tmp/wordpress/wp-content/plugins/woocommerce
       CF7_VERSION: '6.1.7'
       PERSIAN_KIT_TESTS_CF7_DIR: /tmp/wordpress/wp-content/plugins/contact-form-7
       ACF_VERSION: '6.8.10'
       PERSIAN_KIT_TESTS_ACF_DIR: /tmp/wordpress/wp-content/plugins/advanced-custom-fields
+      WORDPRESS_SEO_VERSION: '28.6'
+      PERSIAN_KIT_TESTS_YOAST_DIR: /tmp/wordpress/wp-content/plugins/wordpress-seo
+      RANK_MATH_VERSION: '1.0.279'
+      PERSIAN_KIT_TESTS_RANK_MATH_DIR: /tmp/wordpress/wp-content/plugins/seo-by-rank-math
       WP_TEST_DB_HOST: 127.0.0.1
       WP_TEST_DB_USER: root
       WP_TEST_DB_PASSWORD: root
@@ -105,6 +109,18 @@ jobs:
           curl -sSfL -o /tmp/acf.zip "https://downloads.wordpress.org/plugin/advanced-custom-fields.${ACF_VERSION}.zip"
           unzip -q /tmp/acf.zip -d "$WP_CORE_DIR/wp-content/plugins"
           test -f "$PERSIAN_KIT_TESTS_ACF_DIR/acf.php"
+
+      - name: Download Yoast SEO
+        run: |
+          curl -sSfL -o /tmp/wordpress-seo.zip "https://downloads.wordpress.org/plugin/wordpress-seo.${WORDPRESS_SEO_VERSION}.zip"
+          unzip -q /tmp/wordpress-seo.zip -d "$WP_CORE_DIR/wp-content/plugins"
+          test -f "$PERSIAN_KIT_TESTS_YOAST_DIR/wp-seo.php"
+
+      - name: Download Rank Math
+        run: |
+          curl -sSfL -o /tmp/seo-by-rank-math.zip "https://downloads.wordpress.org/plugin/seo-by-rank-math.${RANK_MATH_VERSION}.zip"
+          unzip -q /tmp/seo-by-rank-math.zip -d "$WP_CORE_DIR/wp-content/plugins"
+          test -f "$PERSIAN_KIT_TESTS_RANK_MATH_DIR/rank-math.php"
 
       - name: Set up WordPress test library
         run: composer test:integration:setup

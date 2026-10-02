@@ -54,6 +54,8 @@ class AdminPage
         'woocommerce'        => 'cart',
         'cf7'                => 'form',
         'acf'                => 'fields',
+        'yoast'              => 'search',
+        'rank_math'          => 'search',
     ];
 
     public const REPO_URL = 'https://github.com/eramhq/persian-kit';

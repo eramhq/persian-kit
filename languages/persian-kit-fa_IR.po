@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Persian Kit 1.0.0-beta.4\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/persian-kit\n"
-"POT-Creation-Date: 2026-10-02T15:42:29+00:00\n"
+"POT-Creation-Date: 2026-10-02T16:02:30+00:00\n"
 "PO-Revision-Date: 2026-10-01 00:00+0000\n"
 "Last-Translator: Persian Kit contributors\n"
 "Language-Team: Persian (Iran)\n"
@@ -18,7 +18,7 @@ msgstr ""
 "X-Generator: WP-CLI 2.12.0\n"
 
 #. Plugin Name of the plugin
-#: persian-kit.php src/Core/AdminPage.php:109 src/Core/AdminPage.php:110
+#: persian-kit.php src/Core/AdminPage.php:111 src/Core/AdminPage.php:112
 #: src/Core/ConflictDetector.php:144 src/Service/Assets/AssetManager.php:45
 #: views/admin/partials/footer.php:30 views/admin/partials/header.php:35
 msgid "Persian Kit"
@@ -64,36 +64,36 @@ msgstr "به %s نیاز دارد."
 msgid "Needs %1$s %2$s or newer (this site has %3$s)."
 msgstr "به %1$s نسخه %2$s یا جدیدتر نیاز دارد (نسخه این سایت %3$s است)."
 
-#: src/Core/AdminPage.php:101
+#: src/Core/AdminPage.php:103
 msgid "Settings"
 msgstr "تنظیمات"
 
-#: src/Core/AdminPage.php:262
+#: src/Core/AdminPage.php:264
 msgid "Forms"
 msgstr "فرم‌ها"
 
-#: src/Core/AdminPage.php:263
+#: src/Core/AdminPage.php:265
 msgid "Store"
 msgstr "فروشگاه"
 
-#: src/Core/AdminPage.php:264
+#: src/Core/AdminPage.php:266
 #: views/admin/partials/compatibility-guidance.php:16
 msgid "Compatibility"
 msgstr "سازگاری"
 
-#: src/Core/AdminPage.php:349
+#: src/Core/AdminPage.php:351
 msgid "You do not have permission to access this page."
 msgstr "شما اجازه دسترسی به این صفحه را ندارید."
 
-#: src/Core/AdminPage.php:368 views/admin/partials/woocommerce-settings.php:180
+#: src/Core/AdminPage.php:370 views/admin/partials/woocommerce-settings.php:180
 msgid "Display"
 msgstr "نمایش"
 
-#: src/Core/AdminPage.php:369
+#: src/Core/AdminPage.php:371
 msgid "Writing"
 msgstr "نگارش"
 
-#: src/Core/AdminPage.php:370 src/Core/ConflictDetector.php:40
+#: src/Core/AdminPage.php:372 src/Core/ConflictDetector.php:40
 #: src/Core/ConflictDetector.php:82
 #: src/Modules/WooCommerce/WooCommerceModule.php:19
 #: src/Modules/WooCommerce/WooCommerceModule.php:54
@@ -101,11 +101,11 @@ msgstr "نگارش"
 msgid "WooCommerce"
 msgstr "ووکامرس"
 
-#: src/Core/AdminPage.php:371
+#: src/Core/AdminPage.php:373
 msgid "Integrations"
 msgstr "یکپارچه‌سازی"
 
-#: src/Core/AdminPage.php:372
+#: src/Core/AdminPage.php:374
 msgid "Tools"
 msgstr "ابزارها"
 
@@ -313,7 +313,7 @@ msgid "Choose at least one public post type."
 msgstr "دست‌کم یک نوع نوشته عمومی را انتخاب کنید."
 
 #. translators: 1: start of a date range, 2: end of a date range.
-#: src/Modules/DateConversion/DateArchiveFilter.php:163
+#: src/Modules/DateConversion/DateArchiveFilter.php:192
 #, php-format
 msgctxt "date range"
 msgid "%1$s – %2$s"
@@ -483,6 +483,26 @@ msgstr "شماره کارت معتبر نیست. ۱۶ رقم روی کارت ر�
 msgid "The IBAN (Sheba) is not valid. It has IR and 24 digits."
 msgstr "شماره شبا معتبر نیست. شبا با ⁦IR⁩ شروع می‌شود و ۲۴ رقم دارد."
 
+#: src/Modules/Seo/RankMathModule.php:24
+msgid "Rank Math SEO"
+msgstr "Rank Math SEO"
+
+#: src/Modules/Seo/RankMathModule.php:29
+msgid ""
+"Prices in rials in the schema and Open Graph tags search engines read. Dates "
+"in schema, Open Graph and sitemaps stay Gregorian."
+msgstr "قیمت‌ها به ریال در اسکیما و برچسب‌های Open Graph که موتورهای جستجو می‌خوانند. تاریخ‌ها در اسکیما، Open Graph و نقشه سایت میلادی می‌مانند."
+
+#: src/Modules/Seo/YoastModule.php:24
+msgid "Yoast SEO"
+msgstr "Yoast SEO"
+
+#: src/Modules/Seo/YoastModule.php:29
+msgid ""
+"Prices in rials in the schema search engines read. Dates in schema, Open "
+"Graph and sitemaps stay Gregorian."
+msgstr "قیمت‌ها به ریال در اسکیمایی که موتورهای جستجو می‌خوانند. تاریخ‌ها در اسکیما، Open Graph و نقشه سایت میلادی می‌مانند."
+
 #: src/Modules/Utilities/UtilitiesModule.php:24
 msgid "Keep Persian letters in post and category addresses."
 msgstr "حروف فارسی در نشانی نوشته‌ها و دسته‌ها می‌ماند."
@@ -532,7 +552,9 @@ msgstr "تغییر واحد پولی، قیمت‌ها، هزینه‌های ا�
 msgid ""
 "Before you pick thousand toman or thousand rial, check that your payment "
 "gateway supports it."
-msgstr "پیش از انتخاب هزار تومان یا هزار ریال، مطمئن شوید درگاه پرداخت شما از آن پشتیبانی می‌کند."
+msgstr ""
+"پیش از انتخاب هزار تومان یا هزار ریال، مطمئن شوید درگاه پرداخت شما از آن "
+"پشتیبانی می‌کند."
 
 #: src/Modules/WooCommerce/IranianCurrencies.php:91
 msgid "For prices like 12.5, set the number of decimals below."
@@ -560,7 +582,9 @@ msgstr "%1$s معتبر نیست. لطفا یکی از موارد زیر را و
 msgid ""
 "Jalali dates in the shop admin and emails, checkout fields for Iran, and "
 "thousand toman and thousand rial currencies."
-msgstr "تاریخ شمسی در مدیریت فروشگاه و ایمیل‌ها، فیلدهای صفحه پرداخت برای ایران، و واحدهای پولی هزار تومان و هزار ریال."
+msgstr ""
+"تاریخ شمسی در مدیریت فروشگاه و ایمیل‌ها، فیلدهای صفحه پرداخت برای ایران، و "
+"واحدهای پولی هزار تومان و هزار ریال."
 
 #: src/Modules/WooCommerce/WooCommerceModule.php:71
 msgid "Checkout and addresses"
@@ -961,7 +985,9 @@ msgstr "در سفارش و ایمیل‌ها نشان داده می‌شود."
 msgid ""
 "Thousand toman and thousand rial can be picked under %s. Switching doesn't "
 "convert saved prices. Search engines get prices in rials."
-msgstr "هزار تومان و هزار ریال را می‌توانید در %s انتخاب کنید. تغییر واحد پولی، قیمت‌های ذخیره‌شده را تبدیل نمی‌کند. موتورهای جستجو قیمت‌ها را به ریال می‌گیرند."
+msgstr ""
+"هزار تومان و هزار ریال را می‌توانید در %s انتخاب کنید. تغییر واحد پولی، "
+"قیمت‌های ذخیره‌شده را تبدیل نمی‌کند. موتورهای جستجو قیمت‌ها را به ریال می‌گیرند."
 
 #: views/admin/partials/woocommerce-settings.php:171
 msgctxt "WooCommerce menu"

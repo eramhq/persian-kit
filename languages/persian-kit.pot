@@ -9,15 +9,15 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-10-02T15:42:29+00:00\n"
+"POT-Creation-Date: 2026-10-02T16:02:30+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: persian-kit\n"
 
 #. Plugin Name of the plugin
 #: persian-kit.php
-#: src/Core/AdminPage.php:109
-#: src/Core/AdminPage.php:110
+#: src/Core/AdminPage.php:111
+#: src/Core/AdminPage.php:112
 #: src/Core/ConflictDetector.php:144
 #: src/Service/Assets/AssetManager.php:45
 #: views/admin/partials/footer.php:30
@@ -63,37 +63,37 @@ msgstr ""
 msgid "Needs %1$s %2$s or newer (this site has %3$s)."
 msgstr ""
 
-#: src/Core/AdminPage.php:101
+#: src/Core/AdminPage.php:103
 msgid "Settings"
 msgstr ""
 
-#: src/Core/AdminPage.php:262
+#: src/Core/AdminPage.php:264
 msgid "Forms"
 msgstr ""
 
-#: src/Core/AdminPage.php:263
+#: src/Core/AdminPage.php:265
 msgid "Store"
 msgstr ""
 
-#: src/Core/AdminPage.php:264
+#: src/Core/AdminPage.php:266
 #: views/admin/partials/compatibility-guidance.php:16
 msgid "Compatibility"
 msgstr ""
 
-#: src/Core/AdminPage.php:349
+#: src/Core/AdminPage.php:351
 msgid "You do not have permission to access this page."
 msgstr ""
 
-#: src/Core/AdminPage.php:368
+#: src/Core/AdminPage.php:370
 #: views/admin/partials/woocommerce-settings.php:180
 msgid "Display"
 msgstr ""
 
-#: src/Core/AdminPage.php:369
+#: src/Core/AdminPage.php:371
 msgid "Writing"
 msgstr ""
 
-#: src/Core/AdminPage.php:370
+#: src/Core/AdminPage.php:372
 #: src/Core/ConflictDetector.php:40
 #: src/Core/ConflictDetector.php:82
 #: src/Modules/WooCommerce/WooCommerceModule.php:19
@@ -102,11 +102,11 @@ msgstr ""
 msgid "WooCommerce"
 msgstr ""
 
-#: src/Core/AdminPage.php:371
+#: src/Core/AdminPage.php:373
 msgid "Integrations"
 msgstr ""
 
-#: src/Core/AdminPage.php:372
+#: src/Core/AdminPage.php:374
 msgid "Tools"
 msgstr ""
 
@@ -302,7 +302,7 @@ msgid "Choose at least one public post type."
 msgstr ""
 
 #. translators: 1: start of a date range, 2: end of a date range.
-#: src/Modules/DateConversion/DateArchiveFilter.php:163
+#: src/Modules/DateConversion/DateArchiveFilter.php:192
 #, php-format
 msgctxt "date range"
 msgid "%1$s – %2$s"
@@ -456,6 +456,22 @@ msgstr ""
 
 #: src/Modules/Forms/IranianFieldTypes.php:94
 msgid "The IBAN (Sheba) is not valid. It has IR and 24 digits."
+msgstr ""
+
+#: src/Modules/Seo/RankMathModule.php:24
+msgid "Rank Math SEO"
+msgstr ""
+
+#: src/Modules/Seo/RankMathModule.php:29
+msgid "Prices in rials in the schema and Open Graph tags search engines read. Dates in schema, Open Graph and sitemaps stay Gregorian."
+msgstr ""
+
+#: src/Modules/Seo/YoastModule.php:24
+msgid "Yoast SEO"
+msgstr ""
+
+#: src/Modules/Seo/YoastModule.php:29
+msgid "Prices in rials in the schema search engines read. Dates in schema, Open Graph and sitemaps stay Gregorian."
 msgstr ""
 
 #: src/Modules/Utilities/UtilitiesModule.php:24

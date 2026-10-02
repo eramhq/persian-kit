@@ -22,6 +22,10 @@ class DateArchiveFilter
     {
         add_filter('get_the_archive_title', [$this, 'filterArchiveTitle'], 10, 3);
         add_filter('document_title_parts', [$this, 'filterDocumentTitleParts']);
+        // Yoast SEO and Rank Math write the document title themselves, from
+        // a date variable that names the Gregorian period.
+        add_filter('wpseo_replacements', [$this, 'filterSeoReplacements']);
+        add_filter('rank_math/replacements', [$this, 'filterSeoReplacements']);
         add_filter('year_link', [$this, 'filterYearLink'], 10, 2);
         add_filter('month_link', [$this, 'filterMonthLink'], 10, 3);
         add_filter('day_link', [$this, 'filterDayLink'], 10, 4);
@@ -55,6 +59,31 @@ class DateArchiveFilter
         }
 
         return $parts;
+    }
+
+    /**
+     * Yoast SEO's %%date%% and Rank Math's %date% name the archive's Jalali
+     * period, in its title and description. On other pages they are the
+     * post's date and are left alone.
+     */
+    public function filterSeoReplacements(mixed $replacements): mixed
+    {
+        if (!is_array($replacements)) {
+            return $replacements;
+        }
+
+        $keys = array_intersect(['%%date%%', '%date%'], array_keys($replacements));
+        $label = $keys === [] ? null : $this->currentArchiveLabel();
+
+        if ($label === null) {
+            return $replacements;
+        }
+
+        foreach ($keys as $key) {
+            $replacements[$key] = $label;
+        }
+
+        return $replacements;
     }
 
     public function filterYearLink(string $link, mixed $year): string
