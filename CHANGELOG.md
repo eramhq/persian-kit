@@ -50,7 +50,7 @@ New compatibility integrations for Yoast SEO (`yoast`) and Rank Math (`rank_math
 
 On a site with WPML or Polylang, Persian Kit converted everything to Jalali dates and Persian digits whatever the language: an English page read "۱۰ مهر ۱۴۰۵", and saving an Arabic translation changed its ي and ك to ی and ک (#4). Now, on sites with WPML or Polylang and at least one language set up:
 
-- Pages and emails get Jalali dates and Persian digits only in Persian (`fa`, `fa_IR`, `fa_AF`): dates, digits, archive titles, the archive list and calendar, the admin bar clock, WooCommerce dates and email digits, and the Contact Form 7 and ACF date pickers. An email follows the language it is sent in, also when WooCommerce Multilingual switches WPML's language for it; a Contact Form 7 email follows the page the form was on.
+- Pages and emails get Jalali dates and Persian digits only in Persian (`fa`, `fa_IR`, `fa_AF`): dates, digits, archive titles, the archive list and calendar, the admin bar clock, WooCommerce dates and email digits, and the ACF date picker. An email follows the language it is sent in, also when WooCommerce Multilingual switches WPML's language for it. Contact Form 7 date fields and mail follow the form's own language, as Contact Form 7 shows the form in it, or else the page's.
 - Admin screens follow each admin's own language (Users › Profile › Language).
 - The writing tools apply to Persian content only, whoever edits it: the ی/ک and half-space fixes on save (posts, comments by their post, terms), Fix letters in existing posts, Persian slugs and the half-space key.
 - Jalali post permalinks follow each post's language. An English post's Jalali address redirects (301) to its Gregorian one.

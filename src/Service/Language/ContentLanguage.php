@@ -30,10 +30,34 @@ final class ContentLanguage
     /** Whether this admin-ajax request came from wp-admin; kept for the request. */
     private static ?bool $ajaxFromAdmin = null;
 
+    /** @var array{type: 'post'|'term', id: int}|null The post or term the current REST request saves. */
+    private static ?array $restObject = null;
+
     public static function register(): void
     {
         add_action('switch_blog', [self::class, 'forgetSite']);
+        add_filter('rest_request_before_callbacks', [self::class, 'captureRestObject'], 10, 3);
         self::source()?->register();
+    }
+
+    /**
+     * The block editor saves through REST, where filters such as
+     * sanitize_title get no post: the route names it.
+     */
+    public static function captureRestObject(mixed $response, mixed $handler = null, mixed $request = null): mixed
+    {
+        self::$restObject = null;
+
+        $controller = is_array($handler) && is_array($handler['callback'] ?? null) ? ($handler['callback'][0] ?? null) : null;
+        $id = $request instanceof \WP_REST_Request ? (int) $request->get_param('id') : 0;
+
+        if ($id > 0 && $controller instanceof \WP_REST_Posts_Controller) {
+            self::$restObject = ['type' => 'post', 'id' => $id];
+        } elseif ($id > 0 && $controller instanceof \WP_REST_Terms_Controller) {
+            self::$restObject = ['type' => 'term', 'id' => $id];
+        }
+
+        return $response;
     }
 
     public static function forgetSite(): void
@@ -187,6 +211,7 @@ final class ContentLanguage
         self::$sourceResolved = false;
         self::$multilingual = null;
         self::$ajaxFromAdmin = null;
+        self::$restObject = null;
     }
 
     private static function refererIsAdmin(): bool
@@ -222,8 +247,8 @@ final class ContentLanguage
 
     /**
      * The language of what is being saved: the language the request gives
-     * it, its own, the post open in the editor, the current language, the
-     * default one.
+     * it, its own (or that of the object the request saves, or of the post
+     * open in the editor), the current language, the default one.
      *
      * @param 'post'|'term' $objectType
      */
@@ -240,20 +265,27 @@ final class ContentLanguage
             $locale = $objectType === 'term' ? $source->termLocale($objectId) : $source->postLocale($objectId);
         }
 
-        if ($locale === null && $objectType === 'post' && $objectId === 0) {
-            $editedPost = self::editedPostId();
-            $locale = $editedPost > 0 ? $source->postLocale($editedPost) : null;
+        if ($locale === null && $objectId === 0) {
+            $edited = self::editedObjectId($objectType);
+            $locale = $edited === 0 ? null : ($objectType === 'term' ? $source->termLocale($edited) : $source->postLocale($edited));
         }
 
         return $locale ?? $source->currentLocale() ?? $source->defaultLocale();
     }
 
     /**
-     * The post open in the editor, on post.php and post-new.php.
+     * The post or term the REST request saves, or the post open in the
+     * editor (post.php and post-new.php).
+     *
+     * @param 'post'|'term' $objectType
      */
-    private static function editedPostId(): int
+    private static function editedObjectId(string $objectType): int
     {
-        if (!in_array($GLOBALS['pagenow'] ?? '', ['post.php', 'post-new.php'], true)) {
+        if (self::$restObject !== null) {
+            return self::$restObject['type'] === $objectType ? self::$restObject['id'] : 0;
+        }
+
+        if ($objectType !== 'post' || !in_array($GLOBALS['pagenow'] ?? '', ['post.php', 'post-new.php'], true)) {
             return 0;
         }
 

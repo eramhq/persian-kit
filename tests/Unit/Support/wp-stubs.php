@@ -222,8 +222,24 @@ if (!class_exists('WPCF7_Submission')) {
         public static ?self $current = null;
 
         /** @param array<string, mixed> $meta */
-        public function __construct(private array $meta = [])
+        public function __construct(private array $meta = [], private string $formLocale = '')
         {
+        }
+
+        public function get_contact_form(): object
+        {
+            $locale = $this->formLocale;
+
+            return new class ($locale) {
+                public function __construct(private string $locale)
+                {
+                }
+
+                public function locale(): string
+                {
+                    return $this->locale;
+                }
+            };
         }
 
         public static function get_instance(): ?self

@@ -16,7 +16,7 @@ defined('ABSPATH') || exit;
  */
 final class PolylangSource implements LanguageSource
 {
-    /** @var array<string, string>|null Locales by language slug. */
+    /** @var array<string, string>|null Locales by language slug and term ID. */
     private ?array $locales = null;
 
     /** @var array{type: string, id: int, lang: string}|null The current REST request's object and lang parameter. */
@@ -69,7 +69,7 @@ final class PolylangSource implements LanguageSource
 
     public function languages(): array
     {
-        return array_values($this->locales());
+        return array_values(array_unique($this->locales()));
     }
 
     public function currentLocale(): ?string
@@ -142,7 +142,8 @@ final class PolylangSource implements LanguageSource
     }
 
     /**
-     * The term forms' language box and Quick Edit.
+     * The term forms' language box (which sends the language's term ID)
+     * and Quick Edit.
      */
     private function requestedTermLanguage(int $termId): ?string
     {
@@ -163,17 +164,23 @@ final class PolylangSource implements LanguageSource
     }
 
     /**
+     * Locales by language slug and by the language's term ID: the term
+     * forms' language box sends the ID, the others the slug.
+     *
      * @return array<string, string>
      */
     private function locales(): array
     {
         if ($this->locales === null) {
-            $slugs = pll_languages_list(['fields' => 'slug']);
-            $locales = pll_languages_list(['fields' => 'locale']);
+            $locales = array_map('strval', pll_languages_list(['fields' => 'locale']));
+            $this->locales = [];
 
-            $this->locales = count($slugs) === count($locales)
-                ? array_filter(array_combine(array_map('strval', $slugs), array_map('strval', $locales)), static fn (string $locale): bool => $locale !== '')
-                : [];
+            foreach (['slug', 'term_id'] as $field) {
+                $keys = array_map('strval', pll_languages_list(['fields' => $field]));
+                if (count($keys) === count($locales)) {
+                    $this->locales += array_filter(array_combine($keys, $locales), static fn (string $locale): bool => $locale !== '');
+                }
+            }
         }
 
         return $this->locales;

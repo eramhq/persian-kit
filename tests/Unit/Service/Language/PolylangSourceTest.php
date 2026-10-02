@@ -20,8 +20,9 @@ class PolylangSourceTest extends TestCase
         Functions\when('wp_unslash')->returnArg();
         // fa_IR and fa_AF share the slug "fa" on a site with only one of them.
         Functions\when('pll_languages_list')->alias(static fn (array $args): array => match ($args['fields']) {
-            'slug'   => ['fa', 'en', 'ar'],
-            'locale' => ['fa_AF', 'en_US', 'ar'],
+            'slug'    => ['fa', 'en', 'ar'],
+            'term_id' => [19, 22, 26],
+            'locale'  => ['fa_AF', 'en_US', 'ar'],
         });
 
         $this->source = new PolylangSource();
@@ -111,10 +112,11 @@ class PolylangSourceTest extends TestCase
 
     public function test_the_term_forms(): void
     {
-        $_POST = ['term_lang_choice' => 'ar'];
+        // The language box sends the language's term ID.
+        $_POST = ['term_lang_choice' => '26'];
         $this->assertSame('ar', $this->source->requestedLocale('term', 0));
 
-        $_POST = ['tag_ID' => '3', 'term_lang_choice' => 'en'];
+        $_POST = ['tag_ID' => '3', 'term_lang_choice' => '22'];
         $this->assertSame('en_US', $this->source->requestedLocale('term', 3));
         $this->assertNull($this->source->requestedLocale('term', 4));
 

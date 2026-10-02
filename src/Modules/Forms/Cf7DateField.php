@@ -15,8 +15,8 @@ defined('ABSPATH') || exit;
  * JavaScript it is a text field, and a typed Jalali date is converted
  * (Cf7InputNormalizer).
  *
- * [date name gregorian] keeps CF7's own date input, as do date fields on
- * pages not in Persian.
+ * [date name gregorian] keeps CF7's own date input, as do forms in
+ * another language on multilingual sites.
  */
 class Cf7DateField
 {
@@ -60,7 +60,9 @@ class Cf7DateField
     }
 
     /**
-     * Marks the form's date inputs for the picker and loads it.
+     * Marks the form's date inputs for the picker and loads it. Contact
+     * Form 7 renders a form in its own language when that language is
+     * installed, otherwise in the page's.
      */
     public function upgradeInputs(string $html): string
     {
@@ -106,7 +108,7 @@ class Cf7DateField
     {
         if (!is_string($submitted) || !is_object($mailTag) || !method_exists($mailTag, 'get_option')
             || !empty($mailTag->get_option('format')) || !empty($mailTag->get_option('do_not_heat'))
-            || !$this->sentFromPersianPage()
+            || !$this->sentInPersian()
         ) {
             return $replaced;
         }
@@ -122,13 +124,29 @@ class Cf7DateField
     }
 
     /**
-     * Forms are sent through REST, which has no page language of its own,
-     * so the page the form was on decides.
+     * Contact Form 7 shows a form, and sends its mail, in the form's own
+     * language when that language is installed (wpcf7_switch_locale()), so
+     * the date picker follows it. Mail is sent through REST, which has no
+     * page language of its own, so without one the page the form was on
+     * decides.
      */
-    private function sentFromPersianPage(): bool
+    private function sentInPersian(): bool
     {
+        if (!ContentLanguage::isMultilingual()) {
+            return true;
+        }
+
         $submission = class_exists('WPCF7_Submission') ? \WPCF7_Submission::get_instance() : null;
-        $pageId = $submission === null ? 0 : (int) $submission->get_meta('container_post_id');
+        if ($submission === null) {
+            return ContentLanguage::displaysPersian();
+        }
+
+        $formLocale = (string) $submission->get_contact_form()->locale();
+        if ($formLocale !== '' && in_array($formLocale, array_merge(['en_US'], get_available_languages()), true)) {
+            return ContentLanguage::isPersianLocale($formLocale);
+        }
+
+        $pageId = (int) $submission->get_meta('container_post_id');
 
         return $pageId > 0 ? ContentLanguage::postIsPersian($pageId) : ContentLanguage::displaysPersian();
     }

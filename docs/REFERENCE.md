@@ -456,9 +456,9 @@ On a site with WPML or Polylang and at least one language set up, Persian Kit fo
 
 | What | Follows |
 | --- | --- |
-| Pages: digits, post and comment dates, `wp_date()` with global conversion, date archive titles (and Yoast's `%%date%%`, Rank Math's `%date%`), the archive list and calendar, the admin bar clock, WooCommerce dates on shop pages and My Account, the Contact Form 7 and ACF date pickers and ACF values | The page's language |
+| Pages: digits, post and comment dates, `wp_date()` with global conversion, date archive titles (and Yoast's `%%date%%`, Rank Math's `%date%`), the archive list and calendar, the admin bar clock, WooCommerce dates on shop pages and My Account, the ACF date picker and ACF values | The page's language |
 | Emails: WooCommerce email digits and dates | The email's language: a locale switched for it (`switch_to_locale()`, as WooCommerce and Polylang for WooCommerce do), or a language WPML switched to (`wpml_switch_language`, as WooCommerce Multilingual does) |
-| Contact Form 7 date mail tags | The language of the page the form was on |
+| Contact Form 7 date fields and their mail tags | The form's own language: Contact Form 7 shows a form and sends its mail in the language it was made in, when that language is installed. Otherwise the page's language |
 | Admin screens: date pickers, month filters, media dates, WooCommerce order, product and coupon dates | The admin's own language (Users › Profile › Language), also in the block editor |
 | Jalali post permalinks | Each post's language |
 | Writing tools: the ی/ک and half-space fixes on save, Fix letters in existing posts, Persian slugs, the half-space key | The language of what is saved, whoever saves it: an admin with an English profile still gets the fixes on a Persian post |
