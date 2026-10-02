@@ -27,6 +27,8 @@ composer test:integration
 
 Integration tests run on WordPress's PHPUnit 9.6 runner with `phpunit-integration.xml.dist`; unit tests use PHPUnit 10 and `phpunit.xml.dist`. The setup script reads the database settings from the site's `wp-config.php` and, on Local, finds the site's MySQL socket. The site's database must be running. Override any setting with `WP_TEST_DB_HOST`, `WP_TEST_DB_USER`, `WP_TEST_DB_PASSWORD`, `WP_CORE_DIR` or `WP_VERSION`.
 
+When WooCommerce is installed next to the plugin (`wp-content/plugins/woocommerce`), or in the directory `PERSIAN_KIT_TESTS_WOOCOMMERCE_DIR` names, the integration tests load it and create its tables, and the WooCommerce checkout and My Account tests run; otherwise those tests are skipped. CI downloads the WooCommerce release pinned in `.github/workflows/ci.yml`. Set `PERSIAN_KIT_TESTS_WITHOUT_WOOCOMMERCE=1` to run the suite without it.
+
 ### Static analysis and coding standards
 
 ```bash
@@ -53,7 +55,7 @@ npm run dist
 `.github/workflows/ci.yml` runs on every push to `main` and on pull requests:
 
 - unit tests, PHPStan and PHPCS on PHP 8.1 and 8.4
-- integration tests against WordPress 7.1 on PHP 8.1 and 8.4
+- integration tests against WordPress 7.1, with WooCommerce, on PHP 8.1 and 8.4
 - `npm run dist` and Plugin Check on the built plugin
 
 ## Release Flow

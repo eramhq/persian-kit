@@ -61,6 +61,9 @@ jobs:
     env:
       WP_CORE_DIR: /tmp/wordpress
       WP_VERSION: ${{ matrix.wp }}
+      # The checkout integration tests run against this WooCommerce release.
+      WOOCOMMERCE_VERSION: '10.6.2'
+      PERSIAN_KIT_TESTS_WOOCOMMERCE_DIR: /tmp/wordpress/wp-content/plugins/woocommerce
       WP_TEST_DB_HOST: 127.0.0.1
       WP_TEST_DB_USER: root
       WP_TEST_DB_PASSWORD: root
@@ -80,6 +83,12 @@ jobs:
         run: |
           mkdir -p "$WP_CORE_DIR"
           curl -sSL "https://wordpress.org/wordpress-${WP_VERSION}.tar.gz" | tar -xz --strip-components=1 -C "$WP_CORE_DIR"
+
+      - name: Download WooCommerce
+        run: |
+          curl -sSfL -o /tmp/woocommerce.zip "https://downloads.wordpress.org/plugin/woocommerce.${WOOCOMMERCE_VERSION}.zip"
+          unzip -q /tmp/woocommerce.zip -d "$WP_CORE_DIR/wp-content/plugins"
+          test -f "$PERSIAN_KIT_TESTS_WOOCOMMERCE_DIR/woocommerce.php"
 
       - name: Set up WordPress test library
         run: composer test:integration:setup

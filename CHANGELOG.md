@@ -7,6 +7,14 @@ All notable changes to this project will be documented in this file.
 - Fixed: with Persian slugs, a post, page or category reached by its ID (`/?p=123`, `/?page_id=`, `/?cat=`) redirected to a broken address such as `/بر_ا__-آز_ا_ش_-سا_-1405/` and a 404 on some servers (seen with PHP on macOS). Links to Persian slugs are now percent-encoded, as WordPress's own Persian slugs are; the slug itself keeps its letters. The `persian_kit_utilities` filter turns this off with the `encode_links` feature.
 - A cut-off post address under a Jalali date, such as `/1405/07/09/my-po/`, redirects (301) to the post on that date whose slug starts with it, as WordPress does for Gregorian dates. Before, it returned "not found", because WordPress looked for the year 1405.
 
+### WooCommerce checkout for Iran
+
+New options under WooCommerce Support. They apply to the classic checkout, the block checkout and My Account > Addresses, and add to what WooCommerce already has for Iran (provinces, the IRR and IRT currencies).
+
+- Fix what customers type (on by default): Persian and Arabic digits in phone numbers and postcodes become English digits, postcodes lose spaces and dashes (`۱۲۳۴۵-۶۷۸۹۰` is saved as `1234567890`), and Arabic ي/ك in names and addresses become Persian ی/ک. Before, the block checkout rejected a phone number typed in Persian digits as "not valid".
+- Check Iranian phone numbers and postcodes (on by default): for an address in Iran, the phone must be a valid mobile or landline number and the postcode must have 10 valid digits. Errors name the field. The `persian_kit_woocommerce_validate` filter skips one rule.
+- National ID field (off by default; optional or required): asks for the customer's national ID (کد ملی) and checks it. The block checkout gets a WooCommerce additional checkout field (`persian-kit/national-id`); the classic checkout a billing field. Both save the ID in English digits under the order and customer meta key `_wc_other/persian-kit/national-id`, read with `NationalIdField::get($order)`. It is shown on the order screen and in order emails.
+
 ### Character normalization
 
 - "Fix letters when content is saved" (was "…when posts are saved") also fixes new comments and their author names, the names and descriptions of categories, tags and other terms (WooCommerce product categories and tags included) and menu item titles. Each hook can be turned off with the `persian_kit_char_normalization` filter (`preprocess_comment`, `pre_term_name`, `pre_term_description`).

@@ -500,9 +500,43 @@ Return `false` to keep post permalinks Gregorian, whatever the option says. It i
 add_filter('persian_kit_jalali_permalinks', '__return_false');
 ```
 
+### `persian_kit_woocommerce_validate`
+
+Return `false` to skip one checkout check. `$rule` is `phone` or `postcode` (addresses in Iran only, in the classic and block checkout and in My Account > Addresses) or `national_id` (the national ID field, any country). `$group` is `billing` or `shipping`; `national_id` is always `billing`. An empty value is never checked here; WooCommerce's required-field check covers it.
+
+```php
+add_filter('persian_kit_woocommerce_validate', function (bool $validate, string $rule, string $group, string $value) {
+    return $rule === 'postcode' ? false : $validate;
+}, 10, 4);
+```
+
 ### `persian_kit_conflict_policies`
 
 Filters the built-in compatibility guidance for other Persian plugins.
+
+## WooCommerce Checkout
+
+The WooCommerce Support module's checkout options apply to the classic (shortcode) checkout, the block checkout and My Account > Addresses:
+
+- `checkout_normalize`: Persian and Arabic digits in phone numbers and postcodes become English digits, postcodes lose spaces and dashes, and Arabic ي/ك in names, company, address and city become Persian ی/ک, for every country. The block checkout is fixed in the Store API request (`rest_pre_dispatch`, including batch requests), because WooCommerce's own phone and postcode checks reject Persian digits before any checkout hook runs.
+- `checkout_validate`: for addresses in Iran, the phone must pass `persian_kit_validate_phone()` (mobile or landline) and the postcode `persian_kit_validate_postal_code()`. The block checkout reports these errors when the order is placed, as WooCommerce does for its own address checks.
+- `national_id` (`off`, `optional`, `required`): a national ID field, checked with `persian_kit_validate_national_id()` and stored in English digits. `required` asks every customer, in any country.
+
+### National ID
+
+The block checkout field is an additional checkout field with the id `persian-kit/national-id` in the `contact` location. The classic checkout field is `billing_national_id`. Both are saved under one meta key on the order and on the customer:
+
+```
+_wc_other/persian-kit/national-id
+```
+
+Read it with:
+
+```php
+$nationalId = \PersianKit\Modules\WooCommerce\NationalIdField::get($order); // '' when the order has none
+```
+
+WooCommerce shows the block field on the order screen, in emails and in My Account for orders placed through the block checkout. Persian Kit shows it on the order screen and in order emails for the other orders, and for every order while the field is off.
 
 ## WP-CLI
 
@@ -527,7 +561,7 @@ Settings are stored in the `persian_kit_settings` option, per module under these
 | `char_normalization` | `enabled` (on), `normalize_on_save` (off), `teh_marbuta` (off), `half_space_fix` (off) |
 | `admin_font` | `enabled` (on), `font` (`vazirmatn`) |
 | `zwnj_editor` | `enabled` (on) |
-| `woocommerce` | `enabled` (on) |
+| `woocommerce` | `enabled` (on), `checkout_normalize` (on), `checkout_validate` (on), `national_id` (`off`) |
 | `utilities` | `enabled` (on), `persian_slugs` (on) |
 
 The option is registered with the Settings API (group `persian_kit`), so every write is sanitized, whether it comes from the settings screen or from `update_option()`. Each module's values are merged over what is stored and sanitized by the module; a module left out keeps its stored values, and keys that are not module keys are dropped. Booleans are stored as `true`/`false`.

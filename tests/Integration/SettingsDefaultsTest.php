@@ -117,13 +117,23 @@ class SettingsDefaultsTest extends WordPressIntegrationTestCase
     public function test_bool_options_of_modules_without_their_own_sanitizer_are_booleans(): void
     {
         update_option('persian_kit_settings', $this->formInput([
-            'woocommerce' => ['enabled' => '0'],
             'zwnj_editor' => ['enabled' => '1'],
         ]));
 
         $stored = get_option('persian_kit_settings');
-        $this->assertSame(['enabled' => false], $stored['woocommerce']);
         $this->assertSame(['enabled' => true], $stored['zwnj_editor']);
+    }
+
+    public function test_woocommerce_checkout_options_are_saved_with_their_defaults(): void
+    {
+        update_option('persian_kit_settings', $this->formInput([
+            'woocommerce' => ['enabled' => '1', 'checkout_validate' => '0', 'national_id' => 'required'],
+        ]));
+
+        $this->assertSame(
+            ['enabled' => true, 'checkout_normalize' => true, 'checkout_validate' => false, 'national_id' => 'required'],
+            get_option('persian_kit_settings')['woocommerce']
+        );
     }
 
     public function test_a_module_missing_from_the_input_keeps_its_stored_values(): void

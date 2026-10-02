@@ -21,7 +21,7 @@ class WooCommerceModule extends AbstractModule
 
     public static function description(): string
     {
-        return __('Jalali date fields and month filters on WooCommerce order, product and coupon screens, and Jalali dates on order pages and emails customers see. Does nothing unless WooCommerce is active.', 'persian-kit');
+        return __('Jalali date fields and month filters on WooCommerce order, product and coupon screens, Jalali dates on order pages and emails customers see, and checkout fields that work for Iranian addresses. Does nothing unless WooCommerce is active.', 'persian-kit');
     }
 
     /**
@@ -29,7 +29,33 @@ class WooCommerceModule extends AbstractModule
      */
     public static function defaults(): array
     {
-        return ['enabled' => true];
+        return [
+            'enabled'            => true,
+            'checkout_normalize' => true,
+            'checkout_validate'  => true,
+            'national_id'        => NationalIdField::OFF,
+        ];
+    }
+
+    public function settingsView(): ?string
+    {
+        return 'admin/partials/woocommerce-settings';
+    }
+
+    /**
+     * @param array<string, mixed> $values
+     * @return array<string, mixed>
+     */
+    public function sanitizeSettings(array $values): array
+    {
+        $nationalId = $values['national_id'] ?? NationalIdField::OFF;
+
+        return [
+            'enabled'            => !empty($values['enabled']),
+            'checkout_normalize' => !empty($values['checkout_normalize']),
+            'checkout_validate'  => !empty($values['checkout_validate']),
+            'national_id'        => in_array($nationalId, NationalIdField::MODES, true) ? $nationalId : NationalIdField::OFF,
+        ];
     }
 
     public function register(ServiceContainer $container): void
@@ -46,6 +72,15 @@ class WooCommerceModule extends AbstractModule
         $container->register(WooDateDisplayFilter::class, function () {
             return new WooDateDisplayFilter();
         });
+        $container->register(CheckoutInputNormalizer::class, function () {
+            return new CheckoutInputNormalizer();
+        });
+        $container->register(CheckoutValidator::class, function () {
+            return new CheckoutValidator();
+        });
+        $container->register(NationalIdField::class, function () {
+            return new NationalIdField((string) $this->setting('national_id'));
+        });
     }
 
     public function boot(ServiceContainer $container): void
@@ -55,6 +90,18 @@ class WooCommerceModule extends AbstractModule
         }
 
         $container->get(WooDateDisplayFilter::class)->register();
+
+        // Checkout runs on the front end, in the Store API and through admin-ajax.
+        if ($this->setting('checkout_normalize')) {
+            $container->get(CheckoutInputNormalizer::class)->register();
+        }
+
+        if ($this->setting('checkout_validate')) {
+            $container->get(CheckoutValidator::class)->register();
+        }
+
+        // Also when the field is off, so national IDs already saved on orders stay visible.
+        $container->get(NationalIdField::class)->register();
 
         // Order screens, product and coupon edit screens, and the variations
         // save through admin-ajax.
