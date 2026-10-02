@@ -75,25 +75,25 @@ Persian Kit ships a Persian (fa_IR) translation of its settings screen. Once a l
 
 = What does Persian Kit change when I activate it? =
 
-Nothing in your saved content. On a new install, dates are shown as Jalali, search matches both Arabic and Persian spellings of ی and ک, Persian slugs and the editor half-space shortcut are on, and the admin uses the Vazirmatn font when its language is Persian. Persian digits and fixing letters on save start off. The settings screen shows a short summary of each module the first time you open it. Sites upgrading from an earlier version keep their settings.
+Nothing in your saved content. On a new install, dates are shown as Jalali, search matches both Arabic and Persian spellings of ی and ک, Persian slugs and the editor half-space shortcut are on, and the admin uses the Vazirmatn font when its language is Persian. Persian digits and fixing letters on save start off. The settings page shows a short welcome note the first time you open it. Sites upgrading from an earlier version keep their settings.
 
 = How does Persian Kit change slugs? =
 
-With the Utilities module's "Persian slugs" option on (the default), new posts and terms with Persian titles get slugs that keep the Persian letters, with a half-space turned into "-". Titles without Persian letters are slugged by WordPress as usual. Existing slugs are never rewritten, and older URLs keep working. Turn the option off to use WordPress's percent-encoded slugs instead. Either way, links in your pages are percent-encoded, as WordPress's own Persian links are; browsers show them with Persian letters.
+With "Use Persian slugs" on under Writing > Persian slugs (the default), new posts and terms with Persian titles get slugs that keep the Persian letters, with a half-space turned into "-". Titles without Persian letters are slugged by WordPress as usual. Existing slugs are never rewritten, and older URLs keep working. Turn the option off to use WordPress's percent-encoded slugs instead. Either way, links in your pages are percent-encoded, as WordPress's own Persian links are; browsers show them with Persian letters.
 
 = What does Persian Kit change in the admin? =
 
-With Date Conversion on, the dashboard's Activity widget, post lists and the admin bar show Jalali dates. The Activity widget is WordPress's own widget re-rendered with Jalali dates. The admin font applies only when the admin language is Persian or right-to-left.
+With Jalali dates on, the dashboard's Activity widget, post lists and the admin bar show Jalali dates. The Activity widget is WordPress's own widget re-rendered with Jalali dates. The admin font applies only when the admin language is Persian or right-to-left.
 
 = How do date archives work? =
 
-With Date Conversion on, a date archive whose year is below 1700 is Jalali: `/1405/07/` lists the posts of Mehr 1405, `/1405/` those of the Jalali year and `/1405/07/09/` those of one day, and the title reads "مهر 1405". The Archives and Calendar widgets and blocks list Jalali months and days and link to these pages; turn that off with the "Show the archive list and calendar in Jalali" option.
+With Jalali dates on, a date archive whose year is below 1700 is Jalali: `/1405/07/` lists the posts of Mehr 1405, `/1405/` those of the Jalali year and `/1405/07/09/` those of one day, and the title reads "مهر 1405". The Archives and Calendar widgets and blocks list Jalali months and days and link to these pages; turn that off with the "Jalali archives and calendar" option.
 
 Gregorian archives such as `/2025/03/` keep working. Every Gregorian month spans two Jalali months, so their title names both (for example "اسفند 1403 – فروردین 1404").
 
 = Can post permalinks use Jalali dates? =
 
-Yes, if your permalink structure has the date, such as "Day and name". Turn on "Use Jalali dates in post permalinks" under Date Conversion, and posts link to `/1405/07/09/my-post/` instead of `/2026/10/01/my-post/`. Old Gregorian links redirect to the new ones, and turning the option off again redirects the Jalali links back.
+Yes, if your permalink structure has the date, such as "Day and name". Turn on "Jalali dates in post links" under Display > Jalali dates, and posts link to `/1405/07/09/my-post/` instead of `/2026/10/01/my-post/`. Old Gregorian links redirect to the new ones, and turning the option off again redirects the Jalali links back.
 
 The Jalali links only work while Persian Kit is active. If you deactivate it, they return "not found", so turn the option off first; the Gregorian links then work, and the Jalali ones redirect to them until you deactivate.
 
@@ -103,11 +103,11 @@ No. WooCommerce features only activate when WooCommerce is installed and active.
 
 = What does Persian Kit change at the WooCommerce checkout? =
 
-With WooCommerce Support on, what customers type is fixed before it is saved: Persian and Arabic digits in phone numbers and postcodes become English digits, and Arabic ي and ك in names and addresses become Persian ی and ک. For addresses in Iran, the phone must be a valid mobile or landline number and the postcode must have 10 valid digits. Both work in the classic checkout, the block checkout and My Account. You can also ask for the customer's national ID (optional or required); it is checked, and shown on the order screen and in order emails.
+With the WooCommerce module on (Integrations tab), what customers type is fixed before it is saved: Persian and Arabic digits in phone numbers and postcodes become English digits, and Arabic ي and ك in names and addresses become Persian ی and ک. For addresses in Iran, the phone must be a valid mobile or landline number and the postcode must have 10 valid digits. Both work in the classic checkout, the block checkout and My Account. You can also ask for the customer's national ID (optional or required); it is checked, and shown on the order screen and in order emails.
 
 = Does Persian Kit work with Contact Form 7 and ACF? =
 
-Yes. With the Forms module on, Contact Form 7's date fields and ACF's Date Picker and Date Time Picker fields get a Jalali date picker. The dates are still saved and sent as Gregorian dates, so existing entries, emails and theme code keep working; while Date Conversion is on, Contact Form 7 emails and ACF values in templates show the Jalali date. Contact Form 7 also gets [mobile_ir], [national_id], [postcode_ir], [card_ir] and [iban_ir] fields that check what is typed.
+Yes. With the Forms module on, Contact Form 7's date fields and ACF's Date Picker and Date Time Picker fields get a Jalali date picker. The dates are still saved and sent as Gregorian dates, so existing entries, emails and theme code keep working; while Jalali dates is on, Contact Form 7 emails and ACF values in templates show the Jalali date. Contact Form 7 also gets [mobile_ir], [national_id], [postcode_ir], [card_ir] and [iban_ir] fields that check what is typed.
 
 = Why is the city not a dropdown in the block checkout? =
 

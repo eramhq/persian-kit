@@ -141,7 +141,7 @@ Typical flow:
 
 ### Guard calls when Persian Kit may be inactive
 
-The helpers exist only while Persian Kit is active. They are defined as soon as the plugin loads, before `persian_kit_loaded` fires, and they work even when the Utilities module is switched off (that switch only controls Persian slugs). A theme or plugin that should keep working without Persian Kit checks first and falls back:
+The helpers exist only while Persian Kit is active. They are defined as soon as the plugin loads, before `persian_kit_loaded` fires, and they work even when the Persian slugs module (`utilities`) is switched off (that switch only controls slugs). A theme or plugin that should keep working without Persian Kit checks first and falls back:
 
 ```php
 function mytheme_post_date(): string

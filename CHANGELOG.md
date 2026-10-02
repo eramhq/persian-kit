@@ -4,27 +4,35 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Settings page
+
+- The page has tabs: Display (Persian digits, Jalali dates, admin font), Writing (Persian ی and ک, half-space key, Persian slugs), Integrations (WooCommerce, Forms) and Tools. Save from any tab saves every setting and returns to that tab. The tabs work without JavaScript too.
+- Every module and option has one short line instead of a paragraph, in English and Persian. Modules are named for what they do: Digit Conversion is now Persian digits, Date Conversion Jalali dates, Character Normalization Persian ی and ک, ZWNJ Editor Support Half-space key, Utilities Persian slugs and WooCommerce Support WooCommerce. No setting, option key or default changed.
+- "Fix existing posts" moved out of the letters module to the Tools tab, as "Fix letters in existing posts".
+- The save button stays at the bottom of the screen and says "Unsaved changes" after an edit.
+- The Persian translation no longer uses diacritics, such as the ezafe mark.
+
 - Fixed: with Persian slugs, a post, page or category reached by its ID (`/?p=123`, `/?page_id=`, `/?cat=`) redirected to a broken address such as `/بر_ا__-آز_ا_ش_-سا_-1405/` and a 404 on some servers (seen with PHP on macOS). Links to Persian slugs are now percent-encoded, as WordPress's own Persian slugs are; the slug itself keeps its letters. The `persian_kit_utilities` filter turns this off with the `encode_links` feature.
 - A cut-off post address under a Jalali date, such as `/1405/07/09/my-po/`, redirects (301) to the post on that date whose slug starts with it, as WordPress does for Gregorian dates. Before, it returned "not found", because WordPress looked for the year 1405.
 
 ### WooCommerce checkout for Iran
 
-New options under WooCommerce Support. They apply to the classic checkout, the block checkout and My Account > Addresses, and add to what WooCommerce already has for Iran (provinces, the IRR and IRT currencies).
+New options under WooCommerce (Integrations tab). They apply to the classic checkout, the block checkout and My Account > Addresses, and add to what WooCommerce already has for Iran (provinces, the IRR and IRT currencies).
 
 - Fix what customers type (on by default): Persian and Arabic digits in phone numbers and postcodes become English digits, postcodes lose spaces and dashes (`۱۲۳۴۵-۶۷۸۹۰` is saved as `1234567890`), and Arabic ي/ك in names and addresses become Persian ی/ک. Before, the block checkout rejected a phone number typed in Persian digits as "not valid".
-- Check Iranian phone numbers and postcodes (on by default): for an address in Iran, the phone must be a valid mobile or landline number and the postcode must have 10 valid digits. Errors name the field. The `persian_kit_woocommerce_validate` filter skips one rule.
-- National ID field (off by default; optional or required): asks for the customer's national ID (کد ملی) and checks it. The block checkout gets a WooCommerce additional checkout field (`persian-kit/national-id`); the classic checkout a billing field. Both save the ID in English digits under the order and customer meta key `_wc_other/persian-kit/national-id`, read with `NationalIdField::get($order)`. It is shown on the order screen and in order emails.
-- City dropdown (off by default): for Iranian addresses in the classic checkout and My Account, the city is a dropdown of the province's cities, refilled when the province changes and turned back into a text field for other countries. The list holds the 1,454 cities of the Statistical Centre of Iran's 1403 country-divisions list. The block checkout keeps a text field, because WooCommerce does not let plugins change it.
-- With Digit Conversion's WooCommerce prices option on, prices in the cart and checkout blocks show Persian digits too. A small script, loaded on those pages only, converts the prices the blocks draw in the browser.
+- Check phone numbers and postcodes (on by default): for an address in Iran, the phone must be a valid mobile or landline number and the postcode must have 10 valid digits. Errors name the field. The `persian_kit_woocommerce_validate` filter skips one rule.
+- National ID at checkout (off by default; optional or required): asks for the customer's national ID (کد ملی) and checks it. The block checkout gets a WooCommerce additional checkout field (`persian-kit/national-id`); the classic checkout a billing field. Both save the ID in English digits under the order and customer meta key `_wc_other/persian-kit/national-id`, read with `NationalIdField::get($order)`. It is shown on the order screen and in order emails.
+- City list for Iran (off by default): for Iranian addresses in the classic checkout and My Account, the city is a dropdown of the province's cities, refilled when the province changes and turned back into a text field for other countries. The list holds the 1,454 cities of the Statistical Centre of Iran's 1403 country-divisions list. The block checkout keeps a text field, because WooCommerce does not let plugins change it.
+- With Persian digits' Shop prices option on, prices in the cart and checkout blocks show Persian digits too. A small script, loaded on those pages only, converts the prices the blocks draw in the browser.
 
 ### Forms: a Jalali date picker for Contact Form 7 and ACF
 
 New module, Forms, with a switch for each plugin (both on by default). It does nothing unless Contact Form 7 or ACF is active. The date picker is [intl-datepicker](https://github.com/eramhq/intl-datepicker) with the Persian calendar: Persian month names and digits, right to left, keyboard support and typed dates in Persian digits.
 
-- Contact Form 7 `[date]` fields get the picker and still submit `Y-m-d`, so CF7's checks, emails and stored entries work as before. Without JavaScript a typed Jalali date is converted. While Date Conversion is on, the date in emails is Jalali; `[_raw_name]` keeps the Gregorian date. `[date name gregorian]` keeps CF7's own input.
+- Contact Form 7 `[date]` fields get the picker and still submit `Y-m-d`, so CF7's checks, emails and stored entries work as before. Without JavaScript a typed Jalali date is converted. While Jalali dates is on, the date in emails is Jalali; `[_raw_name]` keeps the Gregorian date. `[date name gregorian]` keeps CF7's own input.
 - New Contact Form 7 fields: `[mobile_ir]`, `[national_id]`, `[postcode_ir]`, `[card_ir]` and `[iban_ir]` check the value and send it in its standard form, whatever digits and separators were typed.
 - Persian and Arabic digits in Contact Form 7's phone, number and date fields become English digits before CF7 checks them. Before, a phone number typed in Persian digits was "invalid".
-- ACF Date Picker and Date Time Picker fields get the picker on edit screens and in `acf_form()`, in place of ACF's jQuery UI one. Values are stored as before. While Date Conversion is on, `get_field()` returns a Jalali date in the field's return format, except formats code parses such as `Ymd`; the `persian_kit_acf_jalali_value` filter turns it off for a field.
+- ACF Date Picker and Date Time Picker fields get the picker on edit screens and in `acf_form()`, in place of ACF's jQuery UI one. Values are stored as before. While Jalali dates is on, `get_field()` returns a Jalali date in the field's return format, except formats code parses such as `Ymd`; the `persian_kit_acf_jalali_value` filter turns it off for a field.
 - Developers: `persian_kit_date_field_attributes()` turns any input into a Jalali date field that submits a Gregorian date.
 - WooCommerce's admin date fields also accept dates written with slashes or one-digit months, such as `1405/7/10`.
 
@@ -42,7 +50,7 @@ The admin date fields use the Forms module's Jalali date picker, with a calendar
 
 - "Fix letters when content is saved" (was "…when posts are saved") also fixes new comments and their author names, the names and descriptions of categories, tags and other terms (WooCommerce product categories and tags included) and menu item titles. Each hook can be turned off with the `persian_kit_char_normalization` filter (`preprocess_comment`, `pre_term_name`, `pre_term_description`).
 - Search matches numbers typed either way: a search for `۱۴۰۵` finds posts with `1405`, and the reverse. WooCommerce's product search on the shop page goes through the same filter.
-- New option, off by default: "Add half-spaces when posts are saved" puts a half-space (ZWNJ) after می and نمی and before suffixes such as ها and ترین in the title, excerpt and content of public posts. HTML tags, code and character references are left alone. It works with or without fixing letters.
+- New option, off by default: "Add half-spaces on save" puts a half-space (ZWNJ) after می and نمی and before suffixes such as ها and ترین in the title, excerpt and content of public posts. HTML tags, code and character references are left alone. It works with or without fixing letters.
 - Developers: the save filter moved from a closure in `CharNormalizationModule::boot()` to `PersianKit\Modules\CharNormalization\SaveNormalizer`.
 
 ## [1.0.0-beta.4] - 2026-10-01
