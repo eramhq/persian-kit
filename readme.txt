@@ -38,7 +38,7 @@ Persian Kit is a modular WordPress plugin for Persian-language sites. It focuses
 * Works with WPML and Polylang: dates, digits and the Persian writing tools follow each page's language, and admin screens each admin's own
 * A Jalali date picker for Contact Form 7 and ACF date fields, WooCommerce's admin date fields and the post date in the classic editor and Quick Edit, which keep saving Gregorian dates
 * Contact Form 7 fields that check Iranian mobile numbers, national IDs, postcodes, card numbers and IBANs
-* Forminator: a Jalali date picker for Calendar date fields, and Iranian checks for fields with a persian-kit class
+* Forminator: a Jalali date picker for Calendar date fields, and checks for Iranian values such as mobile number and national ID in fields with a persian-kit class
 
 = Bundled software =
 

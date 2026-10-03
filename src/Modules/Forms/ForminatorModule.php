@@ -23,7 +23,7 @@ class ForminatorModule extends AbstractModule
 
     public static function description(): string
     {
-        return __('Jalali date picker for Calendar date fields, and Iranian checks for fields with a persian-kit class.', 'persian-kit');
+        return __('Jalali date picker for Calendar date fields, and checks for Iranian values such as mobile number and national ID in fields with a persian-kit class.', 'persian-kit');
     }
 
     public static function category(): ?string

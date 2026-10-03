@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-10-03T02:13:45+00:00\n"
+"POT-Creation-Date: 2026-10-03T03:04:53+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: persian-kit\n"
@@ -415,7 +415,7 @@ msgid "Forminator"
 msgstr ""
 
 #: src/Modules/Forms/ForminatorModule.php:26
-msgid "Jalali date picker for Calendar date fields, and Iranian checks for fields with a persian-kit class."
+msgid "Jalali date picker for Calendar date fields, and checks for Iranian values such as mobile number and national ID in fields with a persian-kit class."
 msgstr ""
 
 #: src/Modules/Forms/IranianFieldTypes.php:58
