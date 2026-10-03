@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: Persian Kit 1.0.0-beta.5\n"
+"Project-Id-Version: Persian Kit 1.0.0-beta.6\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/persian-kit\n"
 "Last-Translator: Persian Kit contributors\n"
 "Language-Team: Persian (Iran)\n"

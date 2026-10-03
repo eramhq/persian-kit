@@ -5,7 +5,7 @@ defined('ABSPATH') || exit;
 $persian_kit_dir = dirname(__DIR__);
 
 if (!defined('PERSIAN_KIT_VERSION')) {
-    define('PERSIAN_KIT_VERSION', '1.0.0-beta.5');
+    define('PERSIAN_KIT_VERSION', '1.0.0-beta.6');
 }
 
 if (!defined('PERSIAN_KIT_URL')) {

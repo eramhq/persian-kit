@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [1.0.0-beta.6] - 2026-10-03
+
+### Persian translation
+
+- The Persian (fa_IR) translation reads more plainly and uses one word for each thing: پوسته for theme, محصول for product, صفحه پرداخت for checkout, and WooCommerce's own words for its screens and fields.
+
 ### Switching from another plugin
 
 - New on the Tools tab: switch from Parsi Date, Persian WooCommerce or Persian WooCommerce Shipping. Review shows each of the plugin's settings next to Persian Kit's (same, close, not yet or automatic, with the reason), what happens to old links, each kind of data with samples, and what to sort out before deactivating it, all before anything changes. The plugin is deactivated with WordPress's own link; the import then runs in batches, resumes after a reload, and pauses if the plugin is activated again. The report lists what was done, what was not imported and why, and what needs attention, downloads as CSV, and undo puts back what hasn't changed since. It works after the plugin was deleted, from the data it left, and from WP-CLI (`wp persian-kit import`).

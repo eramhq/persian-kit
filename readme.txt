@@ -4,7 +4,7 @@ Tags: persian, farsi, jalali, woocommerce, rtl
 Requires at least: 6.5
 Tested up to: 7.1
 Requires PHP: 8.1
-Stable tag: 1.0.0-beta.5
+Stable tag: 1.0.0-beta.6
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -185,6 +185,19 @@ Payment gateways (Persian Kit has none; keep Persian WooCommerce active for them
 
 == Changelog ==
 
+= 1.0.0-beta.6 =
+* New: a guided switch from Parsi Date, Persian WooCommerce and Persian WooCommerce Shipping on the Tools tab. Review shows what happens to each setting, link and kind of data before anything changes; the import brings over settings, widgets and blocks, ACF dates, Iranian provinces and cities, and the shipping plugin's order statuses, with a report and undo. Also from WP-CLI: `wp persian-kit import`.
+* New: "Call for price" (تماس بگیرید) in place of an empty WooCommerce price, with its own text for the shop and an optional phone number or page to link to.
+* New: a shorter WooCommerce checkout when every item is virtual: name, country, phone and email, and the national ID when it's on.
+* New: a Persian font in WooCommerce emails in Persian, from the fonts already on computers and phones, and block emails that read right to left on RTL sites.
+* Old Jalali post links keep working with Jalali dates off.
+* Persian digits also in the browser tab's title, archive titles, widgets, menus, category and tag lists, and WooCommerce short descriptions.
+* WooCommerce city suggestions are the plugin's own list, work with the keyboard and screen readers, and find a city however it is typed.
+* Multilingual sites: the Jalali calendar, admin month filters and old links follow the current language.
+* Plainer, more consistent Persian translation.
+* Fixed: titles with a dash, quote or `&` showed broken characters with Persian digits on.
+* Fixed: Yoast SEO's JSON-LD and Rank Math's breadcrumbs no longer get Persian digits.
+
 = 1.0.0-beta.5 =
 * Contact Form 7, ACF, WooCommerce, Forminator, Yoast SEO, Rank Math, WPML and Polylang are integrations on their own Integrations tab, each on by itself when its plugin is active. WooCommerce has its own tab.
 * Forminator: a Jalali date picker for Calendar date fields, checks for Iranian mobile numbers, national IDs, postcodes, card numbers and IBANs with a persian-kit class, and English digits in phone and number fields. Emails and the Submissions screen show Jalali dates.
@@ -235,6 +248,9 @@ Payment gateways (Persian Kit has none; keep Persian WooCommerce active for them
 * Added Jalali media library date filters.
 
 == Upgrade Notice ==
+
+= 1.0.0-beta.6 =
+Beta release. A guided switch from Parsi Date, Persian WooCommerce and Persian WooCommerce Shipping, "call for price", a shorter checkout for virtual products and a Persian font in WooCommerce emails. Existing settings are kept.
 
 = 1.0.0-beta.5 =
 Beta release. Integrations for Forminator, Contact Form 7, ACF, WooCommerce, Yoast SEO, Rank Math, WPML and Polylang, a WooCommerce checkout for Iran, and a settings page with tabs. Existing settings are kept: Forms becomes the Contact Form 7 and ACF integrations.
