@@ -315,7 +315,7 @@ msgstr "فونت فارسی برای پیشخوان، وقتی پیشخوان ف
 
 #: src/Modules/CharNormalization/CharNormalizationModule.php:25
 msgid "Search matches Arabic or Persian letters and either kind of digit."
-msgstr "جست‌وجو حروف عربی و فارسی و هر دو نوع رقم را یکی می‌گیرد."
+msgstr "جستجو حروف عربی و فارسی و هر دو نوع رقم را یکسان در نظر می‌گیرد."
 
 #: src/Modules/CharNormalization/NormalizationRestController.php:125
 msgid "Choose at least one public post type."
@@ -398,7 +398,7 @@ msgstr "Forminator"
 
 #: src/Modules/Forms/ForminatorModule.php:26
 msgid "Jalali date picker for Calendar date fields, and checks for Iranian values such as mobile number and national ID in fields with a persian-kit class."
-msgstr "تقویم شمسی برای فیلدهای تاریخ با سبک ⁦Calendar⁩، و بررسی شماره موبایل، کد ملی و مانند آن در فیلدهایی که کلاس ⁦persian-kit⁩ دارند."
+msgstr "تقویم شمسی برای فیلدهای تاریخ از نوع ⁦Calendar⁩، و بررسی شماره موبایل، کد ملی و مانند آن در فیلدهایی که کلاس ⁦persian-kit⁩ دارند."
 
 #: src/Modules/Forms/Cf7IranianFields.php:76
 msgid "Mobile number that the sender entered is invalid"
@@ -559,7 +559,7 @@ msgstr "هزار ریال ایران"
 
 #: src/Modules/WooCommerce/IranianCurrencies.php:89
 msgid "Changing the currency doesn't convert prices, shipping costs or coupons."
-msgstr "تغییر واحد پولی، قیمت‌ها، هزینه‌های ارسال و کوپن‌ها را تبدیل نمی‌کند."
+msgstr "با تغییر واحد پول، قیمت‌ها، هزینه‌های ارسال و کوپن‌ها تبدیل نمی‌شوند."
 
 #: src/Modules/WooCommerce/IranianCurrencies.php:90
 msgid "Before you pick thousand toman or thousand rial, check that your payment gateway supports it."
@@ -688,7 +688,7 @@ msgstr "مثل ⁦/1405/07/09/my-post/⁩. پیوندهای قبلی به پیو
 
 #: views/admin/partials/date-conversion-settings.php:26
 msgid "Only if your theme still shows Gregorian dates. It can confuse SEO, booking and form plugins."
-msgstr "فقط اگر قالب هنوز تاریخ میلادی نشان می‌دهد. ممکن است افزونه‌های سئو، رزرو و فرم را به اشتباه بیندازد."
+msgstr "فقط اگر پوسته هنوز تاریخ میلادی نشان می‌دهد. ممکن است افزونه‌های سئو، رزرو و فرم را به اشتباه بیندازد."
 
 #: views/admin/partials/digit-conversion-settings.php:17
 msgid "Post and comment counts"
@@ -795,7 +795,7 @@ msgstr[0] "%1$s فرم از فیلدهای Persian Kit استفاده می‌ک�
 
 #: views/admin/partials/integration-card.php:190
 msgid "Plugin page on WordPress.org"
-msgstr "صفحه افزونه در وردپرس"
+msgstr "صفحه افزونه در WordPress.org"
 
 #: views/admin/partials/integration-card.php:192
 msgid "Plugin website"
@@ -823,7 +823,7 @@ msgstr "اول بشمارید، بعد اصلاح کنید. پیش از اصلا
 
 #: views/admin/partials/tools.php:41
 msgid "Post types"
-msgstr "نوع‌های نوشته"
+msgstr "انواع نوشته"
 
 #: views/admin/partials/tools.php:57
 msgid "Count posts"
@@ -906,7 +906,7 @@ msgstr "بخش‌های ووکامرس"
 
 #: views/admin/partials/woocommerce-settings.php:25
 msgid "Fix what customers type"
-msgstr "اصلاح نوشته‌های مشتری"
+msgstr "اصلاح آنچه مشتری وارد می‌کند"
 
 #: views/admin/partials/woocommerce-settings.php:26
 msgid "English digits in phone numbers and postcodes, Persian ی and ک in names."
@@ -957,7 +957,7 @@ msgstr "فقط این استان‌ها"
 
 #: views/admin/partials/woocommerce-settings.php:129
 msgid "Pick at least one province. Until then, all provinces are listed."
-msgstr "دست کم یک استان انتخاب کنید. تا آن موقع همه استان‌ها نمایش داده می‌شوند."
+msgstr "دست‌کم یک استان انتخاب کنید. تا آن موقع همه استان‌ها نمایش داده می‌شوند."
 
 #: views/admin/partials/woocommerce-settings.php:133
 msgid "Applies to addresses in Iran. Checkout, the cart and My Account list only these; the shop admin still lists all."
@@ -975,7 +975,7 @@ msgstr "در سفارش و ایمیل‌ها نشان داده می‌شود."
 #: views/admin/partials/woocommerce-settings.php:172
 #, php-format
 msgid "Thousand toman and thousand rial can be picked under %s. Switching doesn't convert saved prices. Search engines get prices in rials."
-msgstr "هزار تومان و هزار ریال را می‌توانید در %s انتخاب کنید. تغییر واحد پولی، قیمت‌های ذخیره‌شده را تبدیل نمی‌کند. موتورهای جستجو قیمت‌ها را به ریال می‌گیرند."
+msgstr "هزار تومان و هزار ریال را می‌توانید در %s انتخاب کنید. با تغییر واحد پول، قیمت‌های ذخیره‌شده تبدیل نمی‌شوند. موتورهای جستجو قیمت‌ها را به ریال می‌گیرند."
 
 #: views/admin/partials/woocommerce-settings.php:176
 msgctxt "WooCommerce menu"
@@ -1050,7 +1050,7 @@ msgstr "ایمیل‌های ووکامرس"
 
 #: views/admin/partials/digit-conversion-settings.php:21
 msgid "Order numbers, prices, quantities and dates. Phone numbers, postcodes and links keep English digits."
-msgstr "شماره سفارش، قیمت، تعداد و تاریخ. تلفن، کد پستی و پیوندها رقم انگلیسی می‌مانند."
+msgstr "شماره سفارش، قیمت، تعداد و تاریخ. تلفن، کد پستی و پیوندها با رقم انگلیسی می‌مانند."
 
 #. translators: %s: link to the setting, such as "Display › Persian digits".
 #: views/admin/partials/woocommerce-settings.php:183
@@ -1092,7 +1092,7 @@ msgstr "افزونه حمل و نقل ووکامرس استان‌ها، شهر�
 #: src/Core/ConflictDetector.php:100
 #: src/Service/Import/Sources/Shipping/PwsSettings.php:41
 msgid "Province and city lists at checkout"
-msgstr "فهرست استان و شهر در پرداخت"
+msgstr "فهرست استان و شهر در صفحه پرداخت"
 
 #: src/Core/ConflictDetector.php:101
 msgid "Shipping methods: courier, Tipax and post"
@@ -1259,13 +1259,13 @@ msgstr "اعداد فارسی در ایمیل‌های ووکامرس"
 #: src/Service/Import/Sources/ParsiDate/ParsiDateSettings.php:255
 #: src/Service/Import/Sources/PersianWooCommerce/PersianWooCommerceSettings.php:72
 msgid "Fix what customers type at checkout"
-msgstr "اصلاح ورودی مشتری در پرداخت"
+msgstr "اصلاح آنچه مشتری در صفحه پرداخت وارد می‌کند"
 
 #: src/Service/Import/ImportReport.php:240
 #: src/Service/Import/Sources/ParsiDate/ParsiDateSettings.php:265
 #: src/Service/Import/Sources/PersianWooCommerce/PersianWooCommerceSettings.php:81
 msgid "Check what customers type at checkout"
-msgstr "بررسی ورودی مشتری در پرداخت"
+msgstr "بررسی آنچه مشتری در صفحه پرداخت وارد می‌کند"
 
 #: src/Service/Import/ImportReport.php:244
 msgid "Jalali dates in the shop admin"
@@ -1302,7 +1302,7 @@ msgstr "فعال"
 
 #: src/Service/Import/ImportReview.php:170
 msgid "Inactive, its data is still here"
-msgstr "غیرفعال، داده‌هایش هنوز هست"
+msgstr "غیرفعال، داده‌هایش هنوز در سایت است"
 
 #. translators: 1: parts imported, 2: all parts.
 #: src/Service/Import/ImportReview.php:173
@@ -1373,7 +1373,7 @@ msgstr "استان %s از فهرست افزونه حمل و نقل حذف شد�
 #: src/Service/Import/Iran/IranAddressResolver.php:159
 #, php-format
 msgid "Province %1$s could be %2$s or %3$s: saved in the shipping plugin's own list or in Tapin's."
-msgstr "استان %1$s می‌تواند %2$s یا %3$s باشد: با فهرست خود افزونه حمل و نقل یا فهرست تاپین ذخیره شده است."
+msgstr "استان %1$s می‌تواند %2$s یا %3$s باشد، بسته به اینکه با فهرست خود افزونه حمل و نقل ذخیره شده یا با فهرست تاپین."
 
 #. translators: 1: city name, 2: province name.
 #: src/Service/Import/Iran/IranAddressResolver.php:198
@@ -1414,11 +1414,11 @@ msgstr "تنظیمات %s"
 
 #: src/Service/Import/Settings/SettingsImporter.php:101
 msgid "It is off, so the settings above take effect only once it is on. Turning it on also converts digits in titles and content."
-msgstr "خاموش است، پس تنظیمات بالا تنها وقتی روشن شود اثر می‌کنند. روشن کردنش اعداد عنوان‌ها و محتوا را هم فارسی می‌کند."
+msgstr "خاموش است، پس تنظیمات بالا فقط وقتی اثر دارند که روشن شود. با روشن کردن آن، اعداد عنوان‌ها و محتوا هم فارسی می‌شوند."
 
 #: src/Service/Import/Settings/SettingsImporter.php:102
 msgid "It is off, so the settings imported into it would do nothing."
-msgstr "خاموش است، پس تنظیمات منتقل شده به آن کاری نمی‌کنند."
+msgstr "خاموش است، پس تنظیمات منتقل‌شده به آن کاری نمی‌کنند."
 
 #. translators: %s: number of provinces.
 #: src/Service/Import/Settings/SettingsImporter.php:265
@@ -1433,11 +1433,11 @@ msgstr "یکسان"
 
 #: src/Service/Import/Settings/SettingStatus.php:28
 msgid "Close"
-msgstr "نزدیک"
+msgstr "مشابه"
 
 #: src/Service/Import/Settings/SettingStatus.php:29
 msgid "Not yet"
-msgstr "فعلا نیست"
+msgstr "هنوز نیست"
 
 #: src/Service/Import/Settings/SettingStatus.php:30
 msgid "Automatic"
@@ -1452,7 +1452,7 @@ msgstr "تاریخ نیست: %s"
 
 #: src/Service/Import/Sources/ParsiDate/AcfDateValue.php:52
 msgid "A date after 2100: Parsi Date probably converted it twice. Tick \"Fix dates saved twice\" to fix these."
-msgstr "تاریخی بعد از ۲۱۰۰: احتمالا پارسی دیت آن را دو بار تبدیل کرده است. برای اصلاح، «اصلاح تاریخ‌های دو بار ذخیره شده» را تیک بزنید."
+msgstr "تاریخی بعد از ۲۱۰۰: احتمالا پارسی دیت آن را دو بار تبدیل کرده است. برای اصلاح، «اصلاح تاریخ‌های دو بار ذخیره‌شده» را تیک بزنید."
 
 #. translators: %s: the saved value.
 #: src/Service/Import/Sources/ParsiDate/AcfDateValue.php:68
@@ -1485,7 +1485,7 @@ msgstr "انتخاب‌گر تاریخ ACF"
 
 #: src/Service/Import/Sources/ParsiDate/AcfFieldTask.php:56
 msgid "Defined in code: to change by hand"
-msgstr "در کد تعریف شده: باید دستی تغییر کند"
+msgstr "در کد تعریف شده: باید دستی تغییرش دهید"
 
 #: src/Service/Import/Sources/ParsiDate/AcfFieldTask.php:87
 msgid "Templates now get dates as 1403/05/12; Parsi Date gave 1403-05-12."
@@ -1516,7 +1516,7 @@ msgstr "مقدارهای تاریخ ACF"
 #, php-format
 msgid "Fix %s date saved twice (after the year 2100)"
 msgid_plural "Fix %s dates saved twice (after the year 2100)"
-msgstr[0] "اصلاح %s تاریخ دو بار ذخیره شده (بعد از سال ۲۱۰۰)"
+msgstr[0] "اصلاح %s تاریخ دو بار ذخیره‌شده (بعد از سال ۲۱۰۰)"
 
 #. translators: %s: post type.
 #: src/Service/Import/Sources/ParsiDate/BlockRewriter.php:45
@@ -1585,7 +1585,7 @@ msgstr "نمایش ي و ك عربی به شکل فارسی"
 
 #: src/Service/Import/Sources/ParsiDate/ParsiDateSettings.php:223
 msgid "Persian Kit fixes search and saving, not what is shown. To fix posts already saved, use \"Fix letters in existing posts\" below."
-msgstr "Persian Kit جستجو و ذخیره را اصلاح می‌کند، نه نمایش را. برای اصلاح نوشته‌های ذخیره شده از «اصلاح حروف نوشته‌های موجود» در پایین استفاده کنید."
+msgstr "Persian Kit جستجو و ذخیره را اصلاح می‌کند، نه نمایش را. برای اصلاح نوشته‌های ذخیره‌شده از «اصلاح حروف نوشته‌های موجود» در پایین استفاده کنید."
 
 #: src/Service/Import/Sources/ParsiDate/ParsiDateSettings.php:230
 msgid "Persian font in the admin"
@@ -1642,7 +1642,7 @@ msgstr "ACF: ذخیره تاریخ به شمسی"
 
 #: src/Service/Import/Sources/ParsiDate/ParsiDateSettings.php:308
 msgid "Persian Kit saves Gregorian dates and shows them in Jalali. The ACF data task converts the dates saved in Jalali."
-msgstr "Persian Kit تاریخ را میلادی ذخیره و شمسی نشان می‌دهد. تبدیل داده‌های ACF تاریخ‌هایی را که شمسی ذخیره شده‌اند تبدیل می‌کند."
+msgstr "Persian Kit تاریخ را میلادی ذخیره و شمسی نشان می‌دهد. بخش «مقدارهای تاریخ ACF» در انتقال، تاریخ‌هایی را که شمسی ذخیره شده‌اند تبدیل می‌کند."
 
 #: src/Service/Import/Sources/ParsiDate/ParsiDateSettings.php:324
 msgid "Multilingual sites"
@@ -1811,7 +1811,7 @@ msgstr "کد و قالب‌های پوسته"
 
 #: src/Service/Import/Sources/ParsiDate/ThemeScanTask.php:57
 msgid "To change by hand"
-msgstr "باید دستی تغییر کند"
+msgstr "باید دستی تغییر دهید"
 
 #. translators: %s: function name.
 #: src/Service/Import/Sources/ParsiDate/ThemeScanTask.php:90
@@ -1929,7 +1929,7 @@ msgstr "Persian Kit واحدهای ریال، تومان، هزار ریال و 
 #: src/Service/Import/Sources/PersianWooCommerce/PersianWooCommerceSettings.php:174
 #: src/Service/Import/Sources/PersianWooCommerce/PersianWooCommerceSource.php:224
 msgid "\"Call for price\" for products without a price"
-msgstr "«تماس بگیرید» برای کالای بدون قیمت"
+msgstr "«تماس بگیرید» برای محصول بدون قیمت"
 
 #: src/Service/Import/Sources/PersianWooCommerce/PersianWooCommerceSettings.php:263
 msgid "Minimum order amount"
@@ -1938,11 +1938,11 @@ msgstr "حداقل مبلغ سفارش"
 #: src/Service/Import/Sources/PersianWooCommerce/PersianWooCommerceSettings.php:92
 #: src/Service/Import/Sources/PersianWooCommerce/PersianWooCommerceSource.php:225
 msgid "Fewer address fields for virtual products"
-msgstr "فیلدهای آدرس کمتر برای کالای مجازی"
+msgstr "فیلدهای آدرس کمتر برای محصول مجازی"
 
 #: src/Service/Import/Sources/PersianWooCommerce/PersianWooCommerceSettings.php:266
 msgid "How variable prices show"
-msgstr "نمایش قیمت کالای متغیر"
+msgstr "نمایش قیمت محصول متغیر"
 
 #: src/Service/Import/Sources/PersianWooCommerce/PersianWooCommerceSettings.php:269
 msgid "Login page template and logo"
@@ -1987,7 +1987,7 @@ msgstr "درگاه‌های پرداختی که از کار می‌افتند"
 
 #: src/Service/Import/Sources/PersianWooCommerce/PersianWooCommerceSource.php:121
 msgid "These gateways are built on Persian WooCommerce and stop when it is deactivated; Persian Kit has none. Set up another gateway first, or keep Persian WooCommerce active for them with the options below turned off."
-msgstr "این درگاه‌ها بر پایه ووکامرس فارسی ساخته شده‌اند و با غیرفعال کردن آن از کار می‌افتند؛ Persian Kit درگاهی ندارد. اول درگاه دیگری راه بیندازید، یا ووکامرس فارسی را برای آنها با گزینه‌های پایین خاموش، فعال نگه دارید."
+msgstr "این درگاه‌ها بر پایه ووکامرس فارسی ساخته شده‌اند و با غیرفعال کردن آن از کار می‌افتند؛ Persian Kit درگاهی ندارد. اول درگاه دیگری راه بیندازید، یا ووکامرس فارسی را برای آنها فعال نگه دارید و گزینه‌های پایین را خاموش کنید."
 
 #: src/Service/Import/Sources/PersianWooCommerce/PersianWooCommerceSource.php:125
 msgid "I have another gateway, or I am keeping Persian WooCommerce for these"
@@ -2091,7 +2091,7 @@ msgstr "منطقه‌های ووکامرس نمی‌توانند شهر را ه�
 
 #: src/Service/Import/Sources/Shipping/PwsSettings.php:69
 msgid "Map at checkout"
-msgstr "نقشه در پرداخت"
+msgstr "نقشه در صفحه پرداخت"
 
 #: src/Service/Import/Sources/Shipping/PwsSettings.php:69
 msgid "Text messages"
@@ -2107,7 +2107,7 @@ msgstr "حمل و نقل ووکامرس"
 
 #: src/Service/Import/Sources/Shipping/PwsSource.php:108
 msgid "Keep using it, or switch?"
-msgstr "همچنان استفاده کنید یا منتقل شوید؟"
+msgstr "همچنان از آن استفاده کنید یا منتقل شوید؟"
 
 #: src/Service/Import/Sources/Shipping/PwsSource.php:110
 msgid "Your shipping zones use its shipping methods, which Persian Kit does not have. Keep it if your rates come from it; Persian Kit then leaves city suggestions and the province list to it."
@@ -2135,7 +2135,7 @@ msgstr "سفارش‌هایی که از وضعیت‌های آن جابجا شد
 
 #: src/Service/Import/Sources/Shipping/PwsSource.php:126
 msgid "WooCommerce Analytics catches up with the moved orders in the background, which can take a while on a big store."
-msgstr "تجزیه و تحلیل ووکامرس سفارش‌های جابجا شده را در پس‌زمینه به‌روز می‌کند که در فروشگاه بزرگ کمی طول می‌کشد."
+msgstr "تجزیه و تحلیل ووکامرس سفارش‌های جابجا شده را در پس‌زمینه به‌روز می‌کند که در فروشگاه‌های بزرگ ممکن است کمی طول بکشد."
 
 #: src/Service/Import/Sources/Shipping/PwsSource.php:127
 msgid "Its shipping methods and per-city prices are gone: check each shipping zone has a WooCommerce method."
@@ -2159,7 +2159,7 @@ msgstr "می‌دانم این روش‌ها کنار می‌روند"
 
 #: src/Service/Import/Sources/Shipping/PwsSource.php:168
 msgid "Zones left with no shipping method"
-msgstr "منطقه‌هایی که بی روش ارسال می‌مانند"
+msgstr "منطقه‌هایی که بدون روش ارسال می‌مانند"
 
 #: src/Service/Import/Sources/Shipping/PwsSource.php:169
 msgid "Add a WooCommerce method, such as flat rate, to each before you deactivate, or customers there can not check out."
@@ -2256,7 +2256,7 @@ msgstr "کپی شد."
 
 #: views/admin/partials/switch-checklist.php:42
 msgid "I have read this and sorted it out"
-msgstr "این را خواندم و مرتبش کردم"
+msgstr "این را خواندم و انجامش دادم"
 
 #: views/admin/partials/switch-plugins.php:30
 msgid "Switch from another plugin"
@@ -2307,7 +2307,7 @@ msgstr "ادامه"
 #: views/admin/partials/switch-steps.php:31
 #: views/admin/partials/switch-steps.php:51
 msgid "Back"
-msgstr "قبلی"
+msgstr "بازگشت"
 
 #: views/admin/partials/switch-steps.php:40
 msgid "Tick the backup box and each item above first."
@@ -2363,7 +2363,7 @@ msgstr "برگرداندن انتقال"
 
 #: views/admin/partials/switch-steps.php:171
 msgid "Forget undo data"
-msgstr "پاک کردن داده‌های برگرداندن"
+msgstr "حذف امکان برگرداندن"
 
 #: views/admin/partials/switch-steps.php:175
 msgid "Put back the values from before the import?"
@@ -2407,14 +2407,14 @@ msgstr[0] "%s یکسان"
 #, js-format
 msgid "%s close"
 msgid_plural "%s close"
-msgstr[0] "%s نزدیک"
+msgstr[0] "%s مشابه"
 
 #. translators: %s: number of settings.
 #: public/js/admin.js:4388
 #, js-format
 msgid "%s not yet"
 msgid_plural "%s not yet"
-msgstr[0] "%s فعلا نیست"
+msgstr[0] "%s هنوز نیست"
 
 #. translators: %s: number of settings.
 #: public/js/admin.js:4390
@@ -2437,7 +2437,7 @@ msgstr "Persian Kit تنها وقتی %s غیرفعال است منتقل می�
 
 #: public/js/admin.js:4409
 msgid "Switch at a quiet time. Until the import ends, shipping zones and addresses may not match, and checkout may offer no shipping."
-msgstr "در زمان خلوت منتقل شوید. تا پایان انتقال ممکن است منطقه‌های حمل و نقل و آدرس‌ها جور نباشند و پرداخت روش ارسالی نشان ندهد."
+msgstr "در زمان خلوت منتقل شوید. تا پایان انتقال ممکن است منطقه‌های حمل و نقل و آدرس‌ها جور نباشند و صفحه پرداخت هیچ روش ارسالی نشان ندهد."
 
 #: public/js/admin.js:4409
 msgid "Switch at a quiet time: between deactivating and the end of the import, the site runs without either plugin's settings."
@@ -2552,11 +2552,11 @@ msgstr "متن در فروشگاه و فهرست‌های دیگر"
 
 #: src/Service/Import/Sources/PersianWooCommerce/PersianWooCommerceSettings.php:166
 msgid "Persian Kit has one text for every list, so its home page and related products texts become the archive text."
-msgstr "پرشین کیت برای همه فهرست‌ها یک متن دارد، پس متن صفحه اصلی و محصولات مرتبط همان متن بایگانی می‌شود."
+msgstr "Persian Kit برای همه فهرست‌ها یک متن دارد، پس متن صفحه اصلی و محصولات مرتبط همان متن بایگانی می‌شود."
 
 #: src/Service/Import/Sources/PersianWooCommerce/PersianWooCommerceSettings.php:169
 msgid "The texts are imported without links or formatting; a phone number or page to link to can be set in Persian Kit."
-msgstr "متن‌ها بدون پیوند و قالب‌بندی وارد می‌شوند؛ شماره تلفن یا صفحه‌ای برای پیوند را می‌توانید در پرشین کیت تنظیم کنید."
+msgstr "متن‌ها بدون پیوند و قالب‌بندی وارد می‌شوند؛ شماره تلفن یا صفحه‌ای برای پیوند را می‌توانید در Persian Kit تنظیم کنید."
 
 #: src/Service/Import/Sources/PersianWooCommerce/PersianWooCommerceSettings.php:184
 msgid "No sale badge without a price"
@@ -2564,7 +2564,7 @@ msgstr "بدون برچسب فروش ویژه برای محصول بدون قی�
 
 #: src/Service/Import/Sources/PersianWooCommerce/PersianWooCommerceSettings.php:188
 msgid "Persian Kit shows no sale badge on a product without a price."
-msgstr "پرشین کیت روی محصول بدون قیمت برچسب فروش ویژه نشان نمی‌دهد."
+msgstr "Persian Kit روی محصول بدون قیمت برچسب فروش ویژه نشان نمی‌دهد."
 
 #: views/admin/partials/woocommerce-settings.php:200
 msgid "Show a text instead of an empty price"
@@ -2602,7 +2602,7 @@ msgstr "کشور و توضیحات سفارش می‌مانند. Persian Kit ص�
 
 #: views/admin/partials/woocommerce-settings.php:38
 msgid "When every item is virtual, customers give their name, country, phone and email, and the national ID when it's on."
-msgstr "وقتی همه کالاها مجازی باشند، مشتری فقط نام، کشور، تلفن، ایمیل و اگر روشن باشد کد ملی را وارد می‌کند."
+msgstr "وقتی همه محصولات مجازی باشند، مشتری فقط نام، کشور، تلفن، ایمیل و اگر روشن باشد کد ملی را وارد می‌کند."
 
 #: src/Modules/WooCommerce/WooCommerceModule.php:88
 msgid "Emails"
