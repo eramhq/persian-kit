@@ -13,10 +13,13 @@
         </testsuite>
     </testsuites>
 
-    <!-- Polylang's tests run on their own: composer test:integration:polylang. -->
+    <!-- Polylang's tests run on their own: composer test:integration:polylang.
+         The tests against Parsi Date, Persian WooCommerce and its shipping
+         plugin too: composer test:integration:sources. -->
     <groups>
         <exclude>
             <group>polylang</group>
+            <group>sources</group>
         </exclude>
     </groups>
 

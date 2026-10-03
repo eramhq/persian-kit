@@ -63,6 +63,10 @@ class DateConversionModule extends AbstractModule
             return new JalaliPermalinks();
         });
 
+        $container->register(LegacyJalaliUrls::class, function (ServiceContainer $container) {
+            return new LegacyJalaliUrls($container->get(JalaliDateArchive::class), $container->get(JalaliPermalinks::class));
+        });
+
         $container->register(JalaliArchiveList::class, function () {
             return new JalaliArchiveList();
         });
@@ -142,6 +146,16 @@ class DateConversionModule extends AbstractModule
                 $container->get(AdminDateScript::class)->register();
             }
         }
+    }
+
+    /**
+     * Jalali post links and archive addresses keep working while the module
+     * is off: links from Parsi Date, WP Jalali or this module redirect to
+     * the Gregorian ones.
+     */
+    public function bootDisabled(ServiceContainer $container): void
+    {
+        $container->get(LegacyJalaliUrls::class)->register();
     }
 
     /**

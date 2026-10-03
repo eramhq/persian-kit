@@ -3,6 +3,8 @@
 namespace PersianKit\Tests\Integration\Multilingual;
 
 use PersianKit\Bootstrap;
+use PersianKit\Core\SettingsManager;
+use PersianKit\Modules\DateConversion\DateConversionModule;
 use PersianKit\Modules\DateConversion\JalaliPermalinks;
 use PersianKit\Tests\Integration\Support\BootsDateConversion;
 use PersianKit\Tests\Integration\Support\UsesPolylang;
@@ -62,6 +64,27 @@ class PolylangPermalinksTest extends WordPressIntegrationTestCase
 
         $this->assertSame($permalink, $this->permalinks()->redirectUrl($jalaliPath));
         $this->assertNull($this->permalinks()->redirectUrl((string) wp_parse_url($permalink, PHP_URL_PATH)));
+    }
+
+    public function test_with_jalali_dates_off_every_jalali_address_redirects_to_the_gregorian_link(): void
+    {
+        remove_filter('pre_post_link', [$this->permalinks(), 'filterStructure']);
+        update_option('persian_kit_settings', [DateConversionModule::key() => ['enabled' => false] + DateConversionModule::defaults()]);
+        $settings = new SettingsManager();
+        $settings->registerDefaults(DateConversionModule::key(), DateConversionModule::defaults());
+        (new DateConversionModule($settings))->bootDisabled(Bootstrap::container());
+
+        foreach (['fa', 'en'] as $language) {
+            $postId = $this->postIn($language, ['post_date' => '2026-10-02 10:00:00', 'post_name' => $language . '-post']);
+            $permalink = get_permalink($postId);
+            $this->assertStringContainsString('/2026/10/02/', $permalink);
+            $jalaliPath = str_replace('/2026/10/02/', '/1405/07/10/', (string) wp_parse_url($permalink, PHP_URL_PATH));
+
+            $this->go_to(home_url($jalaliPath));
+
+            $this->assertTrue(is_single());
+            $this->assertSame($permalink, $this->permalinks()->redirectUrl($jalaliPath));
+        }
     }
 
     private function permalinks(): JalaliPermalinks
