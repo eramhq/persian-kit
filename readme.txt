@@ -34,6 +34,7 @@ Persian Kit is a modular WordPress plugin for Persian-language sites. It focuses
 * WooCommerce checkout for Iran: Persian digits in phone numbers and postcodes are saved as English digits, Iranian phone numbers and postcodes are checked, an optional national ID (کد ملی) field, and optional city suggestions for each province that find a city however it is typed
 * Persian digits in the WooCommerce cart and checkout blocks' prices
 * Persian digits in WooCommerce emails: order numbers, prices, quantities and dates, while phone numbers, postcodes and links keep English digits (off until you turn it on)
+* A Persian font in WooCommerce emails in Persian, from the fonts already on computers and phones, and block emails that read right to left
 * Thousand toman and thousand rial currencies for WooCommerce, with prices in rials in the product data search engines read
 * A shorter WooCommerce checkout when nothing needs shipping: for courses, files and services, customers give their name, country, phone and email
 * "Call for price" (تماس بگیرید) in place of an empty WooCommerce price, with its own text for the shop and an optional phone number or page to link to
@@ -119,6 +120,10 @@ With the WooCommerce module on (WooCommerce tab), what customers type is fixed b
 = Can WooCommerce emails show Persian digits? =
 
 Yes. Turn on Display > Persian digits > WooCommerce emails. Order numbers, prices, quantities and dates in emails in Persian then use Persian digits, in the subject too. Phone numbers, postcodes, coupon codes and links keep English digits, so they can be copied and still work. A customer who pastes an order number in Persian digits into the order tracking form, or an admin who pastes it into the order search, still finds the order. Gmail may not find "123" in a subject that says "۱۲۳"; to keep order numbers in English digits, return false from the `persian_kit_digit_conversion` filter for `woocommerce_email_order_number`.
+
+= Which font do Persian emails use? =
+
+WooCommerce's emails ask for Helvetica or Arial, fonts made for English, so Persian text was shown in whatever font the mail app picked. With "Persian font in emails" on (WooCommerce > Emails, on by default), emails in Persian use Tahoma, then Segoe UI on newer Windows, the iPhone's own Persian font and Noto Sans Arabic on Android. These are installed fonts, so nothing is downloaded and every mail app shows them. A font you picked under WooCommerce > Settings > Emails, or in the block email editor's styles, is kept, as are emails in other languages. On a right-to-left site, block emails read right to left too.
 
 = Can I sell only to some provinces? =
 

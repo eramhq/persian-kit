@@ -469,7 +469,7 @@ On a site with WPML or Polylang and at least one language set up, Persian Kit fo
 | What | Follows |
 | --- | --- |
 | Pages: digits, post and comment dates, `wp_date()` with global conversion, date archive titles (and Yoast's `%%date%%`, Rank Math's `%date%`), the archive list and calendar, the admin bar clock, WooCommerce dates on shop pages and My Account, the ACF date picker and ACF values | The page's language |
-| Emails: WooCommerce email digits and dates | The email's language: a locale switched for it (`switch_to_locale()`, as WooCommerce and Polylang for WooCommerce do), or a language WPML switched to (`wpml_switch_language`, as WooCommerce Multilingual does) |
+| Emails: WooCommerce email digits, dates and font | The email's language: a locale switched for it (`switch_to_locale()`, as WooCommerce and Polylang for WooCommerce do), or a language WPML switched to (`wpml_switch_language`, as WooCommerce Multilingual does) |
 | Contact Form 7 date fields and their mail tags | The form's own language: Contact Form 7 shows a form and sends its mail in the language it was made in, when that language is installed. Otherwise the page's language |
 | Forminator Calendar fields and their emails | The picker follows the page's language; emails follow the language of the page the form was sent from (`page_id`) |
 | Admin screens: date pickers, month filters, media dates, WooCommerce order, product and coupon dates, Forminator's Submissions screen | The admin's own language (Users › Profile › Language), also in the block editor |
@@ -694,6 +694,14 @@ Return `false` to keep the store's own currency in structured data instead of ri
 add_filter('persian_kit_schema_rial_prices', '__return_false');
 ```
 
+### `persian_kit_email_font_family`
+
+The fonts Persian WooCommerce emails use, as a CSS `font-family` value. List fonts installed on readers' devices: mail apps rarely load web fonts. A value with `;`, `{`, `}`, `<` or `>` is ignored. See [Persian font](#persian-font).
+
+```php
+add_filter('persian_kit_email_font_family', fn () => "Vazirmatn, Tahoma, 'Segoe UI', sans-serif");
+```
+
 ### `persian_kit_acf_jalali_value`
 
 Return `false` to keep an ACF date field's template value Gregorian. `$field` is the ACF field array. See [ACF](#acf).
@@ -819,11 +827,22 @@ While the option is off, emails keep English digits, also on a request whose pag
 
 Another plugin that converts digits in emails, such as Persian WooCommerce's Persian prices or wp-parsidate's email option, still does so; converting twice changes nothing.
 
+### Persian font
+
+WooCommerce › Emails › "Persian font in emails" (`email_font`, on by default) gives emails in Persian a font that reads well in Persian while WooCommerce's default font is in use: `Tahoma, 'Segoe UI', -apple-system, BlinkMacSystemFont, 'Noto Sans Arabic', Arial, sans-serif`. Tahoma is on Windows and Mac, Segoe UI on newer Windows, `-apple-system` is the Persian font of iPhones and Macs, and Noto Sans Arabic is Android's. Mail apps rarely load web fonts, so only installed fonts are listed and nothing is downloaded.
+
+- **Classic emails.** WooCommerce's default stack (Helvetica) is swapped for this one in the email's CSS before it is inlined (`woocommerce_email_styles`, priority 20). A font the store picked (WooCommerce › Settings › Emails, with email improvements on), a theme's own `emails/email-styles.php` and CSS other plugins add keep their fonts.
+- **Block emails.** With WooCommerce's block email editor on, the editor's base theme gets this font for text and headings while they are the editor's default, Arial (`woocommerce_email_editor_theme_json`, priority 20). A font synced from the site's theme, and fonts the store sets in the editor's email styles, still win.
+- **Right to left.** Classic emails already follow the site's direction. Block emails are left to right on every site; on an RTL site, Persian block emails are right to left (`woocommerce_email_renderer_styles`, priority 20, after WooCommerce's rules). The classic header alignment is a store setting and is left alone.
+- **Persian emails only**, as for digits: the email's language decides, so an English email on a multilingual store, or a new-order email sent while the admin's language is English, keeps WooCommerce's font.
+
+[`persian_kit_email_font_family`](#persian_kit_email_font_family) changes the stack.
+
 ## Integrations
 
 An integration is a module that works with another plugin: WooCommerce (`woocommerce`), Contact Form 7 (`cf7`), ACF (`acf`), Forminator (`forminator`), Yoast SEO (`yoast`), Rank Math (`rank_math`), WPML (`wpml`) and Polylang (`polylang`). Each turns on by itself when its plugin is active, and does nothing while it is not. The plugin is checked when the page loads, by its classes, functions and constants, so a network-activated plugin counts on every site.
 
-- WooCommerce has its own tab on the settings page, shown only while WooCommerce is active, with a card for each section: Checkout and addresses, Prices and currency, Dates. `?tab=woocommerce#checkout` (`#prices`, `#dates`) links to one. While WooCommerce is inactive, `?tab=woocommerce` opens the first tab. Under Dates, `dates_admin` turns the Jalali date pickers on the order, product and coupon screens, and the month filter on the orders list, on or off; dates on orders and in emails follow the Jalali dates module.
+- WooCommerce has its own tab on the settings page, shown only while WooCommerce is active, with a card for each section: Checkout and addresses, Prices and currency, Emails, Dates. `?tab=woocommerce#checkout` (`#prices`, `#emails`, `#dates`) links to one. While WooCommerce is inactive, `?tab=woocommerce` opens the first tab. Under Dates, `dates_admin` turns the Jalali date pickers on the order, product and coupon screens, and the month filter on the orders list, on or off; dates on orders and in emails follow the Jalali dates module.
 - The Integrations tab has a card for each other integration, grouped as Forms, Store and Compatibility. A plugin that is active but too old, or that needs an add-on (such as a Pro version), has a card that says why, with its switch disabled.
 - Plugins that are not active are listed under "Also works with", each with a link to its WordPress.org page, or to its website when it is not on WordPress.org (WPML). One that was set up on this site before says its settings are kept: stored settings stay until the plugin is active again.
 - A card is marked New until the Integrations or WooCommerce tab is opened once after its plugin was activated. The keys of the integrations that have been seen are stored per site in the `persian_kit_seen_integrations` option.
@@ -987,7 +1006,7 @@ The settings page (the Persian Kit menu) has five tabs: Display and Writing hold
 | `char_normalization` | Writing > Persian ی and ک | `enabled` (on), `normalize_on_save` (off), `teh_marbuta` (off), `half_space_fix` (off) |
 | `zwnj_editor` | Writing > Half-space key | `enabled` (on) |
 | `utilities` | Writing > Persian slugs | `enabled` (on), `persian_slugs` (on) |
-| `woocommerce` | WooCommerce | `enabled` (on), `checkout_normalize` (on), `checkout_validate` (on), `national_id` (`off`), `city_select` (off), `allowed_states` (`[]`, all provinces), `dates_admin` (on) |
+| `woocommerce` | WooCommerce | `enabled` (on), `checkout_normalize` (on), `checkout_validate` (on), `national_id` (`off`), `city_select` (off), `allowed_states` (`[]`, all provinces), `short_checkout` (off), `dates_admin` (on), `call_for_price` (off), `call_for_price_text`, `call_for_price_list_text`, `call_for_price_link` (`''`), `email_font` (on) |
 | `cf7` | Integrations > Forms > Contact Form 7 | `enabled` (on) |
 | `acf` | Integrations > Forms > ACF | `enabled` (on) |
 | `forminator` | Integrations > Forms > Forminator | `enabled` (on) |

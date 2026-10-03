@@ -91,6 +91,7 @@ msgstr "شما اجازه دسترسی به این صفحه را ندارید."
 
 #: src/Core/AdminPage.php:400
 #: views/admin/partials/woocommerce-settings.php:185
+#: views/admin/partials/woocommerce-settings.php:246
 msgid "Display"
 msgstr "نمایش"
 
@@ -102,7 +103,7 @@ msgstr "نگارش"
 #: src/Core/ConflictDetector.php:43
 #: src/Core/ConflictDetector.php:87
 #: src/Modules/WooCommerce/WooCommerceModule.php:21
-#: src/Modules/WooCommerce/WooCommerceModule.php:62
+#: src/Modules/WooCommerce/WooCommerceModule.php:63
 #: src/Service/Import/ImportReport.php:238
 #: views/admin/partials/woocommerce-settings.php:175
 msgid "WooCommerce"
@@ -158,6 +159,7 @@ msgstr "تاریخ شمسی در ووکامرس"
 #: src/Service/Import/ImportReport.php:230
 #: src/Service/Import/Sources/ParsiDate/ParsiDateSettings.php:191
 #: views/admin/partials/woocommerce-settings.php:186
+#: views/admin/partials/woocommerce-settings.php:247
 msgid "Persian digits"
 msgstr "اعداد فارسی"
 
@@ -589,23 +591,23 @@ msgstr "%1$s معتبر نیست. لطفا یکی از موارد زیر را و
 msgid "Jalali dates in the shop admin and emails, checkout fields for Iran, and thousand toman and thousand rial currencies."
 msgstr "تاریخ شمسی در مدیریت فروشگاه و ایمیل‌ها، فیلدهای صفحه پرداخت برای ایران، و واحدهای پولی هزار تومان و هزار ریال."
 
-#: src/Modules/WooCommerce/WooCommerceModule.php:79
+#: src/Modules/WooCommerce/WooCommerceModule.php:80
 msgid "Checkout and addresses"
 msgstr "پرداخت و آدرس"
 
-#: src/Modules/WooCommerce/WooCommerceModule.php:80
+#: src/Modules/WooCommerce/WooCommerceModule.php:81
 msgid "What customers type at checkout, and fields for Iran."
 msgstr "آنچه مشتری در صفحه پرداخت می‌نویسد، و فیلدهای ویژه ایران."
 
-#: src/Modules/WooCommerce/WooCommerceModule.php:83
+#: src/Modules/WooCommerce/WooCommerceModule.php:84
 msgid "Prices and currency"
 msgstr "قیمت‌ها و واحد پول"
 
-#: src/Modules/WooCommerce/WooCommerceModule.php:87
+#: src/Modules/WooCommerce/WooCommerceModule.php:92
 msgid "Dates"
 msgstr "تاریخ‌ها"
 
-#: src/Modules/WooCommerce/WooCommerceModule.php:88
+#: src/Modules/WooCommerce/WooCommerceModule.php:93
 msgid "Dates on orders and in emails follow Jalali dates on the Display tab."
 msgstr "تاریخ سفارش‌ها و ایمیل‌ها از تنظیم «تاریخ شمسی» در زبانه نمایش پیروی می‌کنند."
 
@@ -990,11 +992,11 @@ msgctxt "WooCommerce setting"
 msgid "Currency"
 msgstr "واحد پولی"
 
-#: views/admin/partials/woocommerce-settings.php:247
+#: views/admin/partials/woocommerce-settings.php:274
 msgid "Jalali date picker in the shop admin"
 msgstr "تقویم شمسی در مدیریت فروشگاه"
 
-#: views/admin/partials/woocommerce-settings.php:248
+#: views/admin/partials/woocommerce-settings.php:275
 msgid "Order, product and coupon dates, and the month filter on the orders list."
 msgstr "تاریخ‌های سفارش، محصول و کد تخفیف، و فیلتر ماه در فهرست سفارش‌ها."
 
@@ -1042,6 +1044,7 @@ msgid_plural "%1$s posts of %2$s checked would change."
 msgstr[0] "%1$s نوشته از %2$s نوشته بررسی‌شده تغییر می‌کند."
 
 #: views/admin/partials/digit-conversion-settings.php:20
+#: views/admin/partials/woocommerce-settings.php:248
 msgid "WooCommerce emails"
 msgstr "ایمیل‌های ووکامرس"
 
@@ -2528,7 +2531,7 @@ msgctxt "shown instead of an empty price"
 msgid "Call for price"
 msgstr "تماس بگیرید"
 
-#: src/Modules/WooCommerce/WooCommerceModule.php:143
+#: src/Modules/WooCommerce/WooCommerceModule.php:149
 msgid "Settings saved. The \"Call for price\" link was cleared: type a phone number or a page address, such as /contact/."
 msgstr "تنظیمات ذخیره شد. پیوند «تماس بگیرید» پاک شد: یک شماره تلفن یا نشانی یک صفحه بنویسید، مثل /contact/."
 
@@ -2600,3 +2603,21 @@ msgstr "کشور و توضیحات سفارش می‌مانند. Persian Kit ص�
 #: views/admin/partials/woocommerce-settings.php:38
 msgid "When every item is virtual, customers give their name, country, phone and email, and the national ID when it's on."
 msgstr "وقتی همه کالاها مجازی باشند، مشتری فقط نام، کشور، تلفن، ایمیل و اگر روشن باشد کد ملی را وارد می‌کند."
+
+#: src/Modules/WooCommerce/WooCommerceModule.php:88
+msgid "Emails"
+msgstr "ایمیل‌ها"
+
+#. translators: %s: link to the setting, such as "Display › Persian digits › WooCommerce emails".
+#: views/admin/partials/woocommerce-settings.php:244
+#, php-format
+msgid "Persian digits in emails are set under %s."
+msgstr "اعداد فارسی در ایمیل‌ها در %s تنظیم می‌شود."
+
+#: views/admin/partials/woocommerce-settings.php:258
+msgid "Persian font in emails"
+msgstr "فونت فارسی در ایمیل‌ها"
+
+#: views/admin/partials/woocommerce-settings.php:259
+msgid "For emails in Persian, while WooCommerce's default font is in use: Tahoma, or the phone's own Persian font."
+msgstr "برای ایمیل‌های فارسی، تا وقتی فونت پیش‌فرض ووکامرس به کار می‌رود: تاهوما، یا فونت فارسی خود گوشی."
