@@ -65,6 +65,25 @@ class ParsiDateSource extends AbstractSource implements HasReviewNotes, HasRepor
         return (new ParsiDateSettings())->rows();
     }
 
+    /**
+     * Widgets and blocks first: they show on every page.
+     */
+    public function tasks(): array
+    {
+        return [new WidgetTask(), new BlockTask()];
+    }
+
+    /**
+     * Where its widgets are: WordPress moves them to "Inactive widgets"
+     * once it is inactive and someone opens the Widgets screen.
+     */
+    public function snapshot(): array
+    {
+        $sidebars = get_option('sidebars_widgets', []);
+
+        return ['sidebars_widgets' => is_array($sidebars) ? $sidebars : []];
+    }
+
     public function checklist(array $snapshot): array
     {
         $items = [];
