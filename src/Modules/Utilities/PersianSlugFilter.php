@@ -143,17 +143,22 @@ class PersianSlugFilter
             return null;
         }
 
+        // On multilingual sites, a post in the current language first.
+        $language = ContentLanguage::postsInCurrentLanguage($postTypes);
+        $languageFirst = $language === null ? '' : "({$language}) DESC, ";
+
         // Runs only on a 404; matches raw post_name values that WP_Query would re-sanitize.
-        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+        // phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
         $row = $wpdb->get_row($wpdb->prepare(
             "SELECT ID, post_name, post_type FROM {$wpdb->posts}
              WHERE post_name IN (" . implode(',', array_fill(0, count($candidates), '%s')) . ")
                AND post_type IN (" . implode(',', array_fill(0, count($postTypes), '%s')) . ")
                AND post_status = 'publish'
-             ORDER BY ID ASC
+             ORDER BY {$languageFirst}ID ASC
              LIMIT 1",
             array_merge($candidates, $postTypes)
         ));
+        // phpcs:enable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 
         return is_object($row) ? $row : null;
     }

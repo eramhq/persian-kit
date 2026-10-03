@@ -462,6 +462,8 @@ On a site with WPML or Polylang and at least one language set up, Persian Kit fo
 | Forminator Calendar fields and their emails | The picker follows the page's language; emails follow the language of the page the form was sent from (`page_id`) |
 | Admin screens: date pickers, month filters, media dates, WooCommerce order, product and coupon dates, Forminator's Submissions screen | The admin's own language (Users › Profile › Language), also in the block editor |
 | Jalali post permalinks | Each post's language |
+| Which posts count in the Jalali calendar's days and previous and next months, and in the admin month filters (posts and media) | The page's language; in the admin, the language chosen in Polylang's or WPML's language filter ("All languages" counts every post). Posts of untranslated post types count in every language |
+| Finding a post by its old slug, a cut-off address under a Jalali date, or a Persian slug saved in an older form | A post in the current language first, as above; a match in another language is still found |
 | Writing tools: the ی/ک and half-space fixes on save, Fix letters in existing posts, Persian slugs, the half-space key | The language of what is saved, whoever saves it: an admin with an English profile still gets the fixes on a Persian post |
 
 Persian means `fa` or a locale of it (`fa_IR`, `fa_AF`); [`persian_kit_is_persian_locale`](#persian_kit_is_persian_locale) changes that.
@@ -478,7 +480,6 @@ Unchanged in every language: `persian_kit_date()` and the other functions above,
 
 Limitations:
 
-- Some lookups run their own query without a language condition, so they count posts in every language: the Jalali calendar's days and previous and next months on Persian pages, the admin month filters, and finding a post by its old slug or a cut-off address under a Jalali date. Pages in other languages get WordPress's calendar, which Polylang and WPML filter.
 - Fix letters in existing posts scans posts in every language, so the number it scanned can be higher than the posts it could change.
 - A language changed in the editor counts for the half-space key after the page reloads.
 - If WPML's translation editor saves a translation before WPML has given it a language, the save fixes may apply to it; return `false` from [`persian_kit_should_normalize`](#persian_kit_should_normalize) for those.

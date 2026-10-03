@@ -149,7 +149,12 @@ class JalaliPermalinks
         $startDay = substr($range['start'], 0, 10);
         $endDay = substr($range['end'], 0, 10);
 
-        $cacheKey = 'old_slug:' . md5(implode('|', [$postType, $name, $range['start'], $range['end']])) . ':' . wp_cache_get_last_changed('posts');
+        // On multilingual sites, a post in the current language first; one
+        // in another language still redirects.
+        $language = ContentLanguage::postsInCurrentLanguage([$postType]);
+        $languageFirst = $language === null ? '' : " ORDER BY ({$language}) DESC";
+
+        $cacheKey = 'old_slug:' . md5(implode('|', array_merge([$postType, $name, $range['start'], $range['end']], (array) $language))) . ':' . wp_cache_get_last_changed('posts');
         $cached = wp_cache_get($cacheKey, 'persian_kit');
         if ($cached !== false) {
             return (int) $cached;
@@ -157,12 +162,12 @@ class JalaliPermalinks
 
         // The queries core's _find_post_by_old_slug() and _find_post_by_old_date()
         // run, on a date range; the result is cached above until posts change.
-        // phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery
+        // phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
         $found = (int) $wpdb->get_var($wpdb->prepare(
             "SELECT post_id FROM {$wpdb->postmeta}, {$wpdb->posts}
             WHERE ID = post_id AND post_type = %s
               AND meta_key = '_wp_old_slug' AND meta_value = %s
-              AND post_date >= %s AND post_date <= %s",
+              AND post_date >= %s AND post_date <= %s{$languageFirst}",
             $postType,
             $name,
             $range['start'],
@@ -173,7 +178,7 @@ class JalaliPermalinks
             $found = (int) $wpdb->get_var($wpdb->prepare(
                 "SELECT post_id FROM {$wpdb->postmeta} AS pm_date, {$wpdb->posts}
                 WHERE ID = post_id AND post_type = %s AND post_name = %s
-                  AND meta_key = '_wp_old_date' AND meta_value >= %s AND meta_value <= %s",
+                  AND meta_key = '_wp_old_date' AND meta_value >= %s AND meta_value <= %s{$languageFirst}",
                 $postType,
                 $name,
                 $startDay,
@@ -186,14 +191,14 @@ class JalaliPermalinks
                 "SELECT ID FROM {$wpdb->posts}, {$wpdb->postmeta} AS pm_slug, {$wpdb->postmeta} AS pm_date
                 WHERE ID = pm_slug.post_id AND ID = pm_date.post_id AND post_type = %s
                   AND pm_slug.meta_key = '_wp_old_slug' AND pm_slug.meta_value = %s
-                  AND pm_date.meta_key = '_wp_old_date' AND pm_date.meta_value >= %s AND pm_date.meta_value <= %s",
+                  AND pm_date.meta_key = '_wp_old_date' AND pm_date.meta_value >= %s AND pm_date.meta_value <= %s{$languageFirst}",
                 $postType,
                 $name,
                 $startDay,
                 $endDay
             ));
         }
-        // phpcs:enable WordPress.DB.DirectDatabaseQuery.DirectQuery
+        // phpcs:enable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 
         wp_cache_set($cacheKey, $found, 'persian_kit');
 
@@ -235,16 +240,21 @@ class JalaliPermalinks
         $strict = (bool) apply_filters('strict_redirect_guess_404_permalink', false);
         $namePattern = $wpdb->esc_like($name) . ($strict ? '' : '%');
 
+        // On multilingual sites, a post in the current language first.
+        $language = ContentLanguage::postsInCurrentLanguage($postTypes);
+        $languageFirst = $language === null ? '' : " ORDER BY ({$language}) DESC";
+
         // Core's query, on a date range. Runs only on a 404.
-        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+        // phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
         $postId = (int) $wpdb->get_var($wpdb->prepare(
             "SELECT ID FROM {$wpdb->posts}
             WHERE post_name LIKE %s
               AND post_type IN (" . implode(',', array_fill(0, count($postTypes), '%s')) . ")
               AND post_date >= %s AND post_date <= %s
-              AND post_status IN (" . implode(',', array_fill(0, count($statuses), '%s')) . ")",
+              AND post_status IN (" . implode(',', array_fill(0, count($statuses), '%s')) . "){$languageFirst}",
             array_merge([$namePattern], $postTypes, [$range['start'], $range['end']], $statuses)
         ));
+        // phpcs:enable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 
         if ($postId === 0) {
             return false;

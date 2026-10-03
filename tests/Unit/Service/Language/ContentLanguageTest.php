@@ -364,4 +364,27 @@ class ContentLanguageTest extends TestCase
         $this->assertSame(1, $this->source->registered);
         $this->assertNotFalse(has_action('switch_blog', [ContentLanguage::class, 'forgetSite']));
     }
+
+    public function test_posts_in_the_current_language_come_from_the_source_on_multilingual_sites(): void
+    {
+        $this->source->postsCondition = 'wp_posts.ID IN (1)';
+        ContentLanguage::useSource($this->source);
+
+        $this->assertSame('wp_posts.ID IN (1)', ContentLanguage::postsInCurrentLanguage(['post']));
+        $this->assertSame([['post']], $this->source->postsAskedFor);
+    }
+
+    public function test_posts_are_not_limited_to_a_language_elsewhere(): void
+    {
+        $this->source->postsCondition = 'wp_posts.ID IN (1)';
+        $this->source->languages = [];
+        ContentLanguage::useSource($this->source);
+        $this->assertNull(ContentLanguage::postsInCurrentLanguage(['post']), 'no languages set up');
+
+        ContentLanguage::useSource(null);
+        $this->assertNull(ContentLanguage::postsInCurrentLanguage(['post']), 'no multilingual plugin');
+
+        Filters\expectApplied('persian_kit_multilingual')->andReturn(true);
+        $this->assertNull(ContentLanguage::postsInCurrentLanguage(['post']), 'TranslatePress opt-in');
+    }
 }

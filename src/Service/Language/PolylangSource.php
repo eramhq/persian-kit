@@ -16,6 +16,8 @@ defined('ABSPATH') || exit;
  */
 final class PolylangSource implements LanguageSource
 {
+    use UntranslatedPosts;
+
     /** @var array<string, string>|null Locales by language slug and term ID. */
     private ?array $locales = null;
 
@@ -109,6 +111,33 @@ final class PolylangSource implements LanguageSource
         }
 
         return $slug === null ? null : ($this->locales()[$slug] ?? null);
+    }
+
+    /**
+     * Polylang keeps a post's language as a term in its "language"
+     * taxonomy. Media is translated only when its media setting is on.
+     */
+    public function currentLanguagePosts(array $postTypes): ?string
+    {
+        global $wpdb;
+
+        $translated = array_values(array_filter($postTypes, 'pll_is_translated_post_type'));
+        $slug = pll_current_language('slug');
+        if ($translated === [] || !is_string($slug) || $slug === '') {
+            return null;
+        }
+
+        $language = get_term_by('slug', $slug, 'language');
+        if (!$language instanceof \WP_Term) {
+            return null;
+        }
+
+        $condition = $wpdb->prepare(
+            "{$wpdb->posts}.ID IN (SELECT object_id FROM {$wpdb->term_relationships} WHERE term_taxonomy_id = %d)",
+            $language->term_taxonomy_id
+        );
+
+        return self::orUntranslated($condition, array_values(array_diff($postTypes, $translated)));
     }
 
     /**
