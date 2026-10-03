@@ -6,6 +6,8 @@ use PersianKit\Container\ServiceContainer;
 use PersianKit\Container\ServiceProvider;
 use PersianKit\Contracts\ModuleInterface;
 use PersianKit\Service\Assets\AssetManager;
+use PersianKit\Service\Import\ImportReview;
+use PersianKit\Service\Import\ImportServices;
 use PersianKit\Service\Language\ContentLanguage;
 
 defined('ABSPATH') || exit;
@@ -34,6 +36,9 @@ class CoreServiceProvider implements ServiceProvider
             return new AssetManager();
         });
 
+        // Switching from other Persian plugins, on the Tools tab.
+        ImportServices::register($container);
+
         // Instantiate and register each feature module
         $settings = $container->get(SettingsManager::class);
 
@@ -54,7 +59,8 @@ class CoreServiceProvider implements ServiceProvider
             return new AdminPage(
                 $c->get(SettingsManager::class),
                 $modules,
-                $c->get(ConflictDetector::class)
+                $c->get(ConflictDetector::class),
+                $c->get(ImportReview::class)
             );
         });
     }
@@ -63,6 +69,8 @@ class CoreServiceProvider implements ServiceProvider
     {
         // Conflict detection
         $container->get(ConflictDetector::class)->registerNotice();
+
+        ImportServices::boot($container);
 
         // Sanitizes every write to the settings option, from any context.
         $container->get(SettingsRegistrar::class)->register();

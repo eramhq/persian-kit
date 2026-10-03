@@ -9,6 +9,7 @@ use PersianKit\Bootstrap;
 use PersianKit\Container\ServiceContainer;
 use PersianKit\Modules\CharNormalization\CLI\NormalizeCommand;
 use PersianKit\Modules\CharNormalization\NormalizationJobManager;
+use PersianKit\Service\Import\Cli\ImportCommand;
 use PHPUnit\Framework\TestCase;
 
 class NormalizeCommandTest extends TestCase
@@ -55,7 +56,10 @@ class NormalizeCommandTest extends TestCase
 
         Bootstrap::registerCliCommands();
 
-        $this->assertSame([['persian-kit normalize', NormalizeCommand::class]], \WP_CLI::$commands);
+        $this->assertSame([
+            ['persian-kit normalize', NormalizeCommand::class],
+            ['persian-kit import', ImportCommand::class],
+        ], \WP_CLI::$commands);
     }
 
     public function test_without_arguments_takes_the_job_manager_from_the_container(): void

@@ -6,6 +6,9 @@ use PersianKit\Abstracts\AbstractModule;
 use PersianKit\Components\Icon;
 use PersianKit\Components\View;
 use PersianKit\Contracts\ModuleInterface;
+use PersianKit\Service\Import\ImportJob;
+use PersianKit\Service\Import\ImportReview;
+use PersianKit\Service\Import\ReportDownload;
 use PersianKit\Service\Installation\InstallManager;
 
 defined('ABSPATH') || exit;
@@ -66,6 +69,7 @@ class AdminPage
 
     private SettingsManager $settings;
     private ConflictDetector $conflicts;
+    private ?ImportReview $imports;
 
     /** @var ModuleInterface[] */
     private array $modules;
@@ -74,11 +78,12 @@ class AdminPage
      * @param SettingsManager   $settings
      * @param ModuleInterface[] $modules
      */
-    public function __construct(SettingsManager $settings, array $modules, ConflictDetector $conflicts)
+    public function __construct(SettingsManager $settings, array $modules, ConflictDetector $conflicts, ?ImportReview $imports = null)
     {
         $this->settings = $settings;
         $this->modules = $modules;
         $this->conflicts = $conflicts;
+        $this->imports = $imports;
     }
 
     public function register(): void
@@ -191,12 +196,32 @@ class AdminPage
             'activeTab'            => $activeTab,
             'compatibilityReports' => $reports,
             'seenNonce'            => $unseen ? wp_create_nonce('persian_kit_seen_integrations') : '',
+            'tools'                => $this->toolsData(),
             'showWelcome'          => (bool) get_option(InstallManager::WELCOME_OPTION, false),
             'dismissWelcomeUrl'    => wp_nonce_url(
                 admin_url('admin-post.php?action=persian_kit_dismiss_welcome'),
                 'persian_kit_dismiss_welcome'
             ),
         ]);
+    }
+
+    /**
+     * The Tools tab's switch card: the plugins this site used, and the
+     * switch in progress.
+     *
+     * @return array<string, mixed>
+     */
+    private function toolsData(): array
+    {
+        if ($this->imports === null) {
+            return [];
+        }
+
+        return [
+            'sources' => $this->imports->sources(),
+            'job'     => ImportJob::load()?->toPublic(),
+            'csvUrl'  => ReportDownload::url(),
+        ];
     }
 
     /**
