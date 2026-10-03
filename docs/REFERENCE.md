@@ -788,6 +788,20 @@ Product feeds and accounting exports from other plugins may not accept `IRHT` or
 
 If Persian Kit is deactivated while the store uses `IRHT` or `IRHR`, prices show without a symbol, and saving WooCommerce › Settings › General resets the currency to WooCommerce's default, because WooCommerce only saves a listed currency. Switch the currency back to toman or rial first (and convert the prices).
 
+### Call for price
+
+Prices and currency › "Show a text instead of an empty price" (`call_for_price`, off by default) shows a text where a product with an empty price would show nothing. A price of 0 means free and is left alone. WooCommerce already refuses to sell a product with no price; its button reads "Read more" and goes to the product's page.
+
+- `call_for_price_text`: the text on the product's own page. Empty, the default, is «تماس بگیرید» in Persian and "Call for price" in English, in the page's language.
+- `call_for_price_list_text`: the text everywhere else: the shop, categories, related products and upsells (also on a product page), widgets, the Product Collection and older grid blocks, and the Store API. Empty uses the product page's text.
+- `call_for_price_link`: a phone number (`021 1234 5678`, `+98 21 …`, Persian digits allowed; stored with English digits, linked as `tel:` with digits only) or an `http(s)` address, full or starting with `/`. Anything else is cleared on save, with a notice. With a link, the product page's text links to it and the shop button reads "Call for price" and goes there in place of "Read more" (`woocommerce_product_add_to_cart_text`, `…_url` and `…_description`, so the Store API's `add_to_cart` fields follow). External products keep their button.
+
+Texts are plain text, at most 100 characters, printed in `<span class="persian-kit-call-for-price">`, with an `<a>` inside on the product page when there is a link. The list text is never a link: the classic loop prints the price inside the link to the product, and a link can't hold another; the shop button goes to the link instead. They come from `woocommerce_empty_price_html` (simple, external and variation products) and `woocommerce_variable_empty_price_html` (variable products none of whose variations has a price), so the classic templates, the Product Price block and the Store API's `price_html` get them. The product page's text is used when the product is the page's own (`is_product()` and the queried object); everything else gets the list text. On a multilingual site, a text the store typed is registered for translation (Polylang's strings, WPML's String Translation, group "Persian Kit") and read back in the page's language.
+
+While it is on, a product with no price gets no sale badge (`woocommerce_product_is_on_sale`), and a variable product none of whose variations has a price no longer reads "This product is currently out of stock and unavailable." under the text. For search engines, WooCommerce leaves a product with no price and no reviews out of its structured data, and Rank Math leaves the price out of its schema and Open Graph tags; Rank Math's Slack preview, which gave the price as 0, gets the text.
+
+Not covered: the older React "All Products" block draws prices from the Store API's numbers, not `price_html`, and shows 0 for these products. Use the Product Collection block.
+
 ## WooCommerce Emails
 
 Display › Persian digits › WooCommerce emails (`emails`, off by default) gives WooCommerce emails Persian digits where people read them: order numbers, prices, quantities (also refunded ones, `<del>2</del> <ins>1</ins>`) and dates, Jalali or Gregorian, in the HTML and plain-text body, and the order number and date in the subject and heading. It applies to every email WooCommerce builds from its `emails/…` template parts, whoever sends it: an admin changing an order's status, the classic or block checkout, cron and WP-CLI.
@@ -911,7 +925,7 @@ The switch opens inside the card, in four steps:
 3. **Import** runs once the plugin is inactive, so the two never convert at once: settings first, then the data, in batches of about 8 seconds ([`persian_kit_import_time_budget`](#persian_kit_import_time_budget)) with real progress. It resumes after a reload or another visit, pauses if the plugin is activated again, and only one runs at a time: another tab or WP-CLI gets "running in another tab or in WP-CLI".
 4. **Report** lists what was done, what was not imported and why, and what needs attention, with links; it downloads as CSV (UTF-8 with a byte-order mark). **Undo the import** puts back each setting and value that still holds what the import wrote, newest first, and keeps anything changed since. **Forget undo data** deletes the log.
 
-Settings only ever turn on. A single value (the admin font) is set only while Persian Kit's is its default, and a province list is taken as is while Persian Kit allows every province and merged with Persian Kit's otherwise, so importing two plugins gives the same result in either order.
+Settings only ever turn on. A single value (the admin font, a "call for price" text) is set only while Persian Kit's is its default, and a province list is taken as is while Persian Kit allows every province and merged with Persian Kit's otherwise, so importing two plugins gives the same result in either order.
 
 What each plugin's data becomes:
 

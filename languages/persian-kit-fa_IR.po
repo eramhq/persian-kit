@@ -90,7 +90,7 @@ msgid "You do not have permission to access this page."
 msgstr "شما اجازه دسترسی به این صفحه را ندارید."
 
 #: src/Core/AdminPage.php:400
-#: views/admin/partials/woocommerce-settings.php:180
+#: views/admin/partials/woocommerce-settings.php:181
 msgid "Display"
 msgstr "نمایش"
 
@@ -101,10 +101,10 @@ msgstr "نگارش"
 #: src/Core/AdminPage.php:402
 #: src/Core/ConflictDetector.php:43
 #: src/Core/ConflictDetector.php:87
-#: src/Modules/WooCommerce/WooCommerceModule.php:20
-#: src/Modules/WooCommerce/WooCommerceModule.php:55
+#: src/Modules/WooCommerce/WooCommerceModule.php:21
+#: src/Modules/WooCommerce/WooCommerceModule.php:61
 #: src/Service/Import/ImportReport.php:238
-#: views/admin/partials/woocommerce-settings.php:170
+#: views/admin/partials/woocommerce-settings.php:171
 msgid "WooCommerce"
 msgstr "ووکامرس"
 
@@ -157,7 +157,7 @@ msgstr "تاریخ شمسی در ووکامرس"
 #: src/Modules/DigitConversion/DigitConversionModule.php:22
 #: src/Service/Import/ImportReport.php:230
 #: src/Service/Import/Sources/ParsiDate/ParsiDateSettings.php:191
-#: views/admin/partials/woocommerce-settings.php:181
+#: views/admin/partials/woocommerce-settings.php:182
 msgid "Persian digits"
 msgstr "اعداد فارسی"
 
@@ -176,7 +176,7 @@ msgstr "ی و ک فارسی"
 #: src/Modules/AdminFont/AdminFontModule.php:26
 #: src/Service/Import/ImportReport.php:236
 #: src/Service/Import/ImportReport.php:237
-#: src/Service/Import/Sources/PersianWooCommerce/PersianWooCommerceSource.php:215
+#: src/Service/Import/Sources/PersianWooCommerce/PersianWooCommerceSource.php:225
 msgid "Admin font"
 msgstr "فونت پیشخوان"
 
@@ -381,7 +381,7 @@ msgid "Show ۱۲۳ instead of 123 in your site's content."
 msgstr "نمایش ۱۲۳ به‌جای ⁦123⁩ در محتوای سایت."
 
 #: src/Modules/Forms/AcfModule.php:21
-#: src/Service/Import/ImportReport.php:244
+#: src/Service/Import/ImportReport.php:247
 #: src/Service/Import/Sources/ParsiDate/ParsiDateSettings.php:298
 msgid "ACF"
 msgstr "ACF"
@@ -585,27 +585,27 @@ msgstr "استان"
 msgid "%1$s is not valid. Please enter one of the following: %2$s"
 msgstr "%1$s معتبر نیست. لطفا یکی از موارد زیر را وارد کنید: %2$s"
 
-#: src/Modules/WooCommerce/WooCommerceModule.php:25
+#: src/Modules/WooCommerce/WooCommerceModule.php:26
 msgid "Jalali dates in the shop admin and emails, checkout fields for Iran, and thousand toman and thousand rial currencies."
 msgstr "تاریخ شمسی در مدیریت فروشگاه و ایمیل‌ها، فیلدهای صفحه پرداخت برای ایران، و واحدهای پولی هزار تومان و هزار ریال."
 
-#: src/Modules/WooCommerce/WooCommerceModule.php:72
+#: src/Modules/WooCommerce/WooCommerceModule.php:78
 msgid "Checkout and addresses"
 msgstr "پرداخت و آدرس"
 
-#: src/Modules/WooCommerce/WooCommerceModule.php:73
+#: src/Modules/WooCommerce/WooCommerceModule.php:79
 msgid "What customers type at checkout, and fields for Iran."
 msgstr "آنچه مشتری در صفحه پرداخت می‌نویسد، و فیلدهای ویژه ایران."
 
-#: src/Modules/WooCommerce/WooCommerceModule.php:76
+#: src/Modules/WooCommerce/WooCommerceModule.php:82
 msgid "Prices and currency"
 msgstr "قیمت‌ها و واحد پول"
 
-#: src/Modules/WooCommerce/WooCommerceModule.php:80
+#: src/Modules/WooCommerce/WooCommerceModule.php:86
 msgid "Dates"
 msgstr "تاریخ‌ها"
 
-#: src/Modules/WooCommerce/WooCommerceModule.php:81
+#: src/Modules/WooCommerce/WooCommerceModule.php:87
 msgid "Dates on orders and in emails follow Jalali dates on the Display tab."
 msgstr "تاریخ سفارش‌ها و ایمیل‌ها از تنظیم «تاریخ شمسی» در زبانه نمایش پیروی می‌کنند."
 
@@ -902,99 +902,99 @@ msgstr "متوجه شدم"
 msgid "WooCommerce sections"
 msgstr "بخش‌های ووکامرس"
 
-#: views/admin/partials/woocommerce-settings.php:24
+#: views/admin/partials/woocommerce-settings.php:25
 msgid "Fix what customers type"
 msgstr "اصلاح نوشته‌های مشتری"
 
-#: views/admin/partials/woocommerce-settings.php:25
+#: views/admin/partials/woocommerce-settings.php:26
 msgid "English digits in phone numbers and postcodes, Persian ی and ک in names."
 msgstr "رقم انگلیسی در تلفن و کد پستی، ی و ک فارسی در نام‌ها."
 
-#: views/admin/partials/woocommerce-settings.php:28
+#: views/admin/partials/woocommerce-settings.php:29
 msgid "Check phone numbers and postcodes"
 msgstr "بررسی تلفن و کد پستی"
 
-#: views/admin/partials/woocommerce-settings.php:29
+#: views/admin/partials/woocommerce-settings.php:30
 msgid "For addresses in Iran only."
 msgstr "فقط برای آدرس‌های ایران."
 
-#: views/admin/partials/woocommerce-settings.php:32
+#: views/admin/partials/woocommerce-settings.php:33
 msgid "City list for Iran"
 msgstr "فهرست شهرهای ایران"
 
-#: views/admin/partials/woocommerce-settings.php:33
+#: views/admin/partials/woocommerce-settings.php:34
 msgid "Suggests the province's cities. Customers can still type a village."
 msgstr "شهرهای استان را پیشنهاد می‌دهد. مشتری همچنان می‌تواند نام روستا را بنویسد."
 
-#: src/Service/Import/ImportReport.php:254
+#: src/Service/Import/ImportReport.php:257
 #: src/Service/Import/Settings/SettingsImporter.php:260
-#: views/admin/partials/woocommerce-settings.php:38
+#: views/admin/partials/woocommerce-settings.php:39
 msgid "Off"
 msgstr "خاموش"
 
-#: views/admin/partials/woocommerce-settings.php:39
+#: views/admin/partials/woocommerce-settings.php:40
 msgid "Optional"
 msgstr "اختیاری"
 
-#: views/admin/partials/woocommerce-settings.php:40
+#: views/admin/partials/woocommerce-settings.php:41
 msgid "Required"
 msgstr "الزامی"
 
-#: views/admin/partials/woocommerce-settings.php:92
+#: views/admin/partials/woocommerce-settings.php:93
 msgid "Provinces you deliver to"
 msgstr "استان‌هایی که به آنها ارسال می‌کنید"
 
 #: src/Service/Import/Settings/SettingsImporter.php:263
-#: views/admin/partials/woocommerce-settings.php:96
+#: views/admin/partials/woocommerce-settings.php:97
 msgid "All provinces"
 msgstr "همه استان‌ها"
 
-#: views/admin/partials/woocommerce-settings.php:100
+#: views/admin/partials/woocommerce-settings.php:101
 msgid "Only these provinces"
 msgstr "فقط این استان‌ها"
 
-#: views/admin/partials/woocommerce-settings.php:124
+#: views/admin/partials/woocommerce-settings.php:125
 msgid "Pick at least one province. Until then, all provinces are listed."
 msgstr "دست کم یک استان انتخاب کنید. تا آن موقع همه استان‌ها نمایش داده می‌شوند."
 
-#: views/admin/partials/woocommerce-settings.php:128
+#: views/admin/partials/woocommerce-settings.php:129
 msgid "Applies to addresses in Iran. Checkout, the cart and My Account list only these; the shop admin still lists all."
 msgstr "برای آدرس‌های ایران. صفحه پرداخت، سبد خرید و حساب کاربری فقط همین‌ها را نشان می‌دهند؛ مدیریت فروشگاه همه را نشان می‌دهد."
 
-#: views/admin/partials/woocommerce-settings.php:135
+#: views/admin/partials/woocommerce-settings.php:136
 msgid "National ID at checkout"
 msgstr "کد ملی در صفحه پرداخت"
 
-#: views/admin/partials/woocommerce-settings.php:149
+#: views/admin/partials/woocommerce-settings.php:150
 msgid "Shown on the order and in emails."
 msgstr "در سفارش و ایمیل‌ها نشان داده می‌شود."
 
 #. translators: %s: link to the setting, such as "WooCommerce › Settings › General › Currency".
-#: views/admin/partials/woocommerce-settings.php:167
+#: views/admin/partials/woocommerce-settings.php:168
 #, php-format
 msgid "Thousand toman and thousand rial can be picked under %s. Switching doesn't convert saved prices. Search engines get prices in rials."
 msgstr "هزار تومان و هزار ریال را می‌توانید در %s انتخاب کنید. تغییر واحد پولی، قیمت‌های ذخیره‌شده را تبدیل نمی‌کند. موتورهای جستجو قیمت‌ها را به ریال می‌گیرند."
 
-#: views/admin/partials/woocommerce-settings.php:171
+#: views/admin/partials/woocommerce-settings.php:172
 msgctxt "WooCommerce menu"
 msgid "Settings"
 msgstr "پیکربندی"
 
-#: views/admin/partials/woocommerce-settings.php:172
+#: views/admin/partials/woocommerce-settings.php:173
 msgctxt "WooCommerce settings tab"
 msgid "General"
 msgstr "همگانی"
 
-#: views/admin/partials/woocommerce-settings.php:173
+#: views/admin/partials/woocommerce-settings.php:174
 msgctxt "WooCommerce setting"
 msgid "Currency"
 msgstr "واحد پولی"
 
-#: views/admin/partials/woocommerce-settings.php:197
+#: views/admin/partials/woocommerce-settings.php:243
 msgid "Jalali date picker in the shop admin"
 msgstr "تقویم شمسی در مدیریت فروشگاه"
 
-#: views/admin/partials/woocommerce-settings.php:198
+#: views/admin/partials/woocommerce-settings.php:244
 msgid "Order, product and coupon dates, and the month filter on the orders list."
 msgstr "تاریخ‌های سفارش، محصول و کد تخفیف، و فیلتر ماه در فهرست سفارش‌ها."
 
@@ -1050,7 +1050,7 @@ msgid "Order numbers, prices, quantities and dates. Phone numbers, postcodes and
 msgstr "شماره سفارش، قیمت، تعداد و تاریخ. تلفن، کد پستی و پیوندها رقم انگلیسی می‌مانند."
 
 #. translators: %s: link to the setting, such as "Display › Persian digits".
-#: views/admin/partials/woocommerce-settings.php:178
+#: views/admin/partials/woocommerce-settings.php:179
 #, php-format
 msgid "Persian digits in prices and emails are set under %s."
 msgstr "اعداد فارسی در قیمت‌ها و ایمیل‌ها در %s تنظیم می‌شود."
@@ -1059,7 +1059,7 @@ msgstr "اعداد فارسی در قیمت‌ها و ایمیل‌ها در %s 
 #: src/Modules/WooCommerce/CityField.php:193
 #: src/Service/Import/ImportReport.php:241
 #: src/Service/Import/Sources/ParsiDate/ParsiDateSettings.php:277
-#: src/Service/Import/Sources/PersianWooCommerce/PersianWooCommerceSettings.php:61
+#: src/Service/Import/Sources/PersianWooCommerce/PersianWooCommerceSettings.php:65
 #: src/Service/Import/Sources/Shipping/PwsSettings.php:43
 msgid "City suggestions"
 msgstr "پیشنهاد شهر"
@@ -1097,7 +1097,7 @@ msgstr "روش‌های ارسال: پیک، تیپاکس و پست"
 
 #: src/Core/ConflictDetector.php:105
 #: src/Service/Import/ImportReport.php:242
-#: src/Service/Import/Sources/PersianWooCommerce/PersianWooCommerceSettings.php:50
+#: src/Service/Import/Sources/PersianWooCommerce/PersianWooCommerceSettings.php:54
 msgid "Provinces you ship to"
 msgstr "استان‌هایی که به آنها ارسال می‌کنید"
 
@@ -1153,6 +1153,7 @@ msgid "Reason"
 msgstr "دلیل"
 
 #: src/Service/Import/ImportReport.php:58
+#: views/admin/partials/woocommerce-settings.php:216
 msgid "Link"
 msgstr "پیوند"
 
@@ -1241,8 +1242,8 @@ msgstr "اعداد فارسی در شمارش‌ها و عددها"
 
 #: src/Service/Import/ImportReport.php:233
 #: src/Service/Import/Sources/ParsiDate/ParsiDateSettings.php:251
-#: src/Service/Import/Sources/PersianWooCommerce/PersianWooCommerceSettings.php:40
-#: src/Service/Import/Sources/PersianWooCommerce/PersianWooCommerceSource.php:208
+#: src/Service/Import/Sources/PersianWooCommerce/PersianWooCommerceSettings.php:44
+#: src/Service/Import/Sources/PersianWooCommerce/PersianWooCommerceSource.php:217
 msgid "Persian digits in prices"
 msgstr "اعداد فارسی در قیمت‌ها"
 
@@ -1253,13 +1254,13 @@ msgstr "اعداد فارسی در ایمیل‌های ووکامرس"
 
 #: src/Service/Import/ImportReport.php:239
 #: src/Service/Import/Sources/ParsiDate/ParsiDateSettings.php:255
-#: src/Service/Import/Sources/PersianWooCommerce/PersianWooCommerceSettings.php:68
+#: src/Service/Import/Sources/PersianWooCommerce/PersianWooCommerceSettings.php:72
 msgid "Fix what customers type at checkout"
 msgstr "اصلاح ورودی مشتری در پرداخت"
 
 #: src/Service/Import/ImportReport.php:240
 #: src/Service/Import/Sources/ParsiDate/ParsiDateSettings.php:265
-#: src/Service/Import/Sources/PersianWooCommerce/PersianWooCommerceSettings.php:77
+#: src/Service/Import/Sources/PersianWooCommerce/PersianWooCommerceSettings.php:81
 msgid "Check what customers type at checkout"
 msgstr "بررسی ورودی مشتری در پرداخت"
 
@@ -1267,7 +1268,7 @@ msgstr "بررسی ورودی مشتری در پرداخت"
 msgid "Jalali dates in the shop admin"
 msgstr "تاریخ شمسی در مدیریت فروشگاه"
 
-#: src/Service/Import/ImportReport.php:254
+#: src/Service/Import/ImportReport.php:257
 #: src/Service/Import/Settings/SettingsImporter.php:260
 msgid "On"
 msgstr "روشن"
@@ -1588,9 +1589,9 @@ msgid "Persian font in the admin"
 msgstr "فونت فارسی در پیشخوان"
 
 #: src/Service/Import/Sources/ParsiDate/ParsiDateSettings.php:232
-#: src/Service/Import/Sources/PersianWooCommerce/PersianWooCommerceSettings.php:125
-#: src/Service/Import/Sources/PersianWooCommerce/PersianWooCommerceSettings.php:127
-#: src/Service/Import/Sources/PersianWooCommerce/PersianWooCommerceSettings.php:138
+#: src/Service/Import/Sources/PersianWooCommerce/PersianWooCommerceSettings.php:195
+#: src/Service/Import/Sources/PersianWooCommerce/PersianWooCommerceSettings.php:197
+#: src/Service/Import/Sources/PersianWooCommerce/PersianWooCommerceSettings.php:208
 msgid "Admin font: Vazirmatn"
 msgstr "فونت پیشخوان: وزیرمتن"
 
@@ -1611,7 +1612,7 @@ msgid "WooCommerce: check postcode and phone"
 msgstr "ووکامرس: بررسی کد پستی و تلفن"
 
 #: src/Service/Import/Sources/ParsiDate/ParsiDateSettings.php:267
-#: src/Service/Import/Sources/PersianWooCommerce/PersianWooCommerceSettings.php:79
+#: src/Service/Import/Sources/PersianWooCommerce/PersianWooCommerceSettings.php:83
 msgid "Persian Kit checks both, and the national ID when that field is on."
 msgstr "Persian Kit هر دو را بررسی می‌کند، و کد ملی را وقتی آن فیلد روشن باشد."
 
@@ -1620,7 +1621,7 @@ msgid "WooCommerce: cities as a list"
 msgstr "ووکامرس: شهرها به صورت فهرست"
 
 #: src/Service/Import/Sources/ParsiDate/ParsiDateSettings.php:279
-#: src/Service/Import/Sources/PersianWooCommerce/PersianWooCommerceSettings.php:63
+#: src/Service/Import/Sources/PersianWooCommerce/PersianWooCommerceSettings.php:67
 msgid "Customers get suggestions as they type, from the official list of each province, instead of a dropdown."
 msgstr "مشتری هنگام تایپ از فهرست رسمی شهرهای هر استان پیشنهاد می‌گیرد، به جای فهرست کشویی."
 
@@ -1665,14 +1666,14 @@ msgid "Persian Kit uses the Persian month names."
 msgstr "Persian Kit نام ماه‌های فارسی را به کار می‌برد."
 
 #: src/Service/Import/Sources/ParsiDate/ParsiDateSettings.php:344
-#: src/Service/Import/Sources/PersianWooCommerce/PersianWooCommerceSettings.php:176
+#: src/Service/Import/Sources/PersianWooCommerce/PersianWooCommerceSettings.php:246
 #: src/Service/Import/Sources/Shipping/PwsSettings.php:72
 msgid "Persian Kit has no match yet."
 msgstr "Persian Kit هنوز معادلی ندارد."
 
 #. translators: %s: issue number, such as #14.
 #: src/Service/Import/Sources/ParsiDate/ParsiDateSettings.php:346
-#: src/Service/Import/Sources/PersianWooCommerce/PersianWooCommerceSettings.php:178
+#: src/Service/Import/Sources/PersianWooCommerce/PersianWooCommerceSettings.php:248
 #, php-format
 msgid "Planned for Persian Kit (%s)."
 msgstr "در برنامه Persian Kit است (%s)."
@@ -1708,7 +1709,7 @@ msgid "WooCommerce: %s bank gateway"
 msgstr "ووکامرس: درگاه بانکی %s"
 
 #: src/Service/Import/Sources/ParsiDate/ParsiDateSettings.php:363
-#: src/Service/Import/Sources/PersianWooCommerce/PersianWooCommerceSettings.php:211
+#: src/Service/Import/Sources/PersianWooCommerce/PersianWooCommerceSettings.php:278
 msgid "Persian Kit has no payment gateways. See \"Before you deactivate\"."
 msgstr "Persian Kit درگاه پرداخت ندارد. «پیش از غیرفعال کردن» را ببینید."
 
@@ -1864,159 +1865,160 @@ msgstr "«%s» را فهرست می‌کند: ابزارک‌های بایگان
 msgid "Its colour theme is not kept; the calendar takes the theme's style."
 msgstr "رنگ‌بندی آن نمی‌ماند؛ تقویم ظاهر پوسته را می‌گیرد."
 
-#: src/Service/Import/Sources/PersianWooCommerce/PersianWooCommerceSettings.php:32
-#: src/Service/Import/Sources/PersianWooCommerce/PersianWooCommerceSource.php:207
+#: src/Service/Import/Sources/PersianWooCommerce/PersianWooCommerceSettings.php:36
+#: src/Service/Import/Sources/PersianWooCommerce/PersianWooCommerceSource.php:216
 msgid "Jalali dates and date picker"
 msgstr "تاریخ شمسی و انتخاب‌گر تاریخ"
 
-#: src/Service/Import/Sources/PersianWooCommerce/PersianWooCommerceSettings.php:34
+#: src/Service/Import/Sources/PersianWooCommerce/PersianWooCommerceSettings.php:38
 msgid "Jalali dates, also in the shop admin"
 msgstr "تاریخ شمسی، در مدیریت فروشگاه هم"
 
 #. translators: %s: number of provinces.
-#: src/Service/Import/Sources/PersianWooCommerce/PersianWooCommerceSettings.php:48
+#: src/Service/Import/Sources/PersianWooCommerce/PersianWooCommerceSettings.php:52
 #, php-format
 msgid "Sells to %s province"
 msgid_plural "Sells to %s provinces"
 msgstr[0] "فروش به %s استان"
 
-#: src/Service/Import/Sources/PersianWooCommerce/PersianWooCommerceSettings.php:59
-#: src/Service/Import/Sources/PersianWooCommerce/PersianWooCommerceSource.php:209
+#: src/Service/Import/Sources/PersianWooCommerce/PersianWooCommerceSettings.php:63
+#: src/Service/Import/Sources/PersianWooCommerce/PersianWooCommerceSource.php:218
 msgid "Iranian cities"
 msgstr "شهرهای ایران"
 
-#: src/Service/Import/Sources/PersianWooCommerce/PersianWooCommerceSettings.php:68
+#: src/Service/Import/Sources/PersianWooCommerce/PersianWooCommerceSettings.php:72
 msgid "Accept Persian digits in postcode and phone"
 msgstr "پذیرش اعداد فارسی در کد پستی و تلفن"
 
-#: src/Service/Import/Sources/PersianWooCommerce/PersianWooCommerceSettings.php:75
+#: src/Service/Import/Sources/PersianWooCommerce/PersianWooCommerceSettings.php:79
 msgid "Check postcode and phone"
 msgstr "بررسی کد پستی و تلفن"
 
-#: src/Service/Import/Sources/PersianWooCommerce/PersianWooCommerceSettings.php:125
+#: src/Service/Import/Sources/PersianWooCommerce/PersianWooCommerceSettings.php:195
 msgid "Admin font: Vazirmatn with Persian digits"
 msgstr "فونت پیشخوان: وزیرمتن با اعداد فارسی"
 
-#: src/Service/Import/Sources/PersianWooCommerce/PersianWooCommerceSettings.php:129
+#: src/Service/Import/Sources/PersianWooCommerce/PersianWooCommerceSettings.php:199
 msgid "Digits in the admin stay English."
 msgstr "اعداد پیشخوان انگلیسی می‌مانند."
 
-#: src/Service/Import/Sources/PersianWooCommerce/PersianWooCommerceSettings.php:136
+#: src/Service/Import/Sources/PersianWooCommerce/PersianWooCommerceSettings.php:206
 msgid "Admin font: IRANSans"
 msgstr "فونت پیشخوان: ایران‌سنس"
 
-#: src/Service/Import/Sources/PersianWooCommerce/PersianWooCommerceSettings.php:136
+#: src/Service/Import/Sources/PersianWooCommerce/PersianWooCommerceSettings.php:206
 msgid "Admin font: Yekan Bakh"
 msgstr "فونت پیشخوان: یکان بخ"
 
-#: src/Service/Import/Sources/PersianWooCommerce/PersianWooCommerceSettings.php:140
+#: src/Service/Import/Sources/PersianWooCommerce/PersianWooCommerceSettings.php:210
 msgid "That font is commercial and can not come with Persian Kit; Vazirmatn is the free one it has."
 msgstr "آن فونت تجاری است و نمی‌تواند همراه Persian Kit باشد؛ وزیرمتن فونت رایگانی است که دارد."
 
 #. translators: %s: currency code, such as IRT.
-#: src/Service/Import/Sources/PersianWooCommerce/PersianWooCommerceSettings.php:161
+#: src/Service/Import/Sources/PersianWooCommerce/PersianWooCommerceSettings.php:231
 #, php-format
 msgid "Currency: %s"
 msgstr "واحد پول: %s"
 
-#: src/Service/Import/Sources/PersianWooCommerce/PersianWooCommerceSettings.php:165
+#: src/Service/Import/Sources/PersianWooCommerce/PersianWooCommerceSettings.php:235
 msgid "Persian Kit has the rial, toman, thousand rial and thousand toman currencies, so prices stay as they are."
 msgstr "Persian Kit واحدهای ریال، تومان، هزار ریال و هزار تومان را دارد، پس قیمت‌ها همان می‌مانند."
 
-#: src/Service/Import/Sources/PersianWooCommerce/PersianWooCommerceSettings.php:183
+#: src/Service/Import/Sources/PersianWooCommerce/PersianWooCommerceSettings.php:162
+#: src/Service/Import/Sources/PersianWooCommerce/PersianWooCommerceSource.php:223
 msgid "\"Call for price\" for products without a price"
 msgstr "«تماس بگیرید» برای کالای بدون قیمت"
 
-#: src/Service/Import/Sources/PersianWooCommerce/PersianWooCommerceSettings.php:186
+#: src/Service/Import/Sources/PersianWooCommerce/PersianWooCommerceSettings.php:253
 msgid "Minimum order amount"
 msgstr "حداقل مبلغ سفارش"
 
-#: src/Service/Import/Sources/PersianWooCommerce/PersianWooCommerceSettings.php:189
+#: src/Service/Import/Sources/PersianWooCommerce/PersianWooCommerceSettings.php:256
 msgid "Fewer address fields for virtual products"
 msgstr "فیلدهای آدرس کمتر برای کالای مجازی"
 
-#: src/Service/Import/Sources/PersianWooCommerce/PersianWooCommerceSettings.php:192
+#: src/Service/Import/Sources/PersianWooCommerce/PersianWooCommerceSettings.php:259
 msgid "How variable prices show"
 msgstr "نمایش قیمت کالای متغیر"
 
-#: src/Service/Import/Sources/PersianWooCommerce/PersianWooCommerceSettings.php:195
+#: src/Service/Import/Sources/PersianWooCommerce/PersianWooCommerceSettings.php:262
 msgid "Login page template and logo"
 msgstr "قالب و لوگوی صفحه ورود"
 
-#: src/Service/Import/Sources/PersianWooCommerce/PersianWooCommerceSettings.php:198
+#: src/Service/Import/Sources/PersianWooCommerce/PersianWooCommerceSettings.php:265
 msgid "Super admin speed-ups"
 msgstr "سرعت‌دهی سوپر ادمین"
 
 #. translators: %s: number of translated phrases.
-#: src/Service/Import/Sources/PersianWooCommerce/PersianWooCommerceSettings.php:206
+#: src/Service/Import/Sources/PersianWooCommerce/PersianWooCommerceSettings.php:273
 #, php-format
 msgid "%s replaced phrase"
 msgid_plural "%s replaced phrases"
 msgstr[0] "%s عبارت جایگزین شده"
 
-#: src/Service/Import/Sources/PersianWooCommerce/PersianWooCommerceSettings.php:207
+#: src/Service/Import/Sources/PersianWooCommerce/PersianWooCommerceSettings.php:274
 msgid "Persian Kit does not replace phrases. Install the Persian language pack of WooCommerce under Dashboard > Updates."
 msgstr "Persian Kit عبارت‌ها را جایگزین نمی‌کند. بسته زبان فارسی ووکامرس را از پیشخوان > به‌روزرسانی‌ها نصب کنید."
 
 #. translators: %s: payment gateway id.
-#: src/Service/Import/Sources/PersianWooCommerce/PersianWooCommerceSettings.php:214
+#: src/Service/Import/Sources/PersianWooCommerce/PersianWooCommerceSettings.php:281
 #, php-format
 msgid "Payment gateway: %s"
 msgstr "درگاه پرداخت: %s"
 
-#: src/Service/Import/Sources/PersianWooCommerce/PersianWooCommerceSource.php:60
+#: src/Service/Import/Sources/PersianWooCommerce/PersianWooCommerceSource.php:61
 msgid "Persian WooCommerce"
 msgstr "ووکامرس فارسی"
 
-#: src/Service/Import/Sources/PersianWooCommerce/PersianWooCommerceSource.php:83
+#: src/Service/Import/Sources/PersianWooCommerce/PersianWooCommerceSource.php:84
 msgid "Deactivate Persian WooCommerce first, or turn off its options that Persian Kit takes over to keep it for its payment gateways."
 msgstr "اول ووکامرس فارسی را غیرفعال کنید، یا برای نگه داشتنش به خاطر درگاه‌های پرداخت، گزینه‌هایی از آن را که Persian Kit انجام می‌دهد خاموش کنید."
 
-#: src/Service/Import/Sources/PersianWooCommerce/PersianWooCommerceSource.php:106
+#: src/Service/Import/Sources/PersianWooCommerce/PersianWooCommerceSource.php:107
 msgid "Its phrase replacements are not imported. For WooCommerce in Persian, install its language pack under Dashboard > Updates."
 msgstr "عبارت‌های جایگزین آن منتقل نمی‌شوند. برای ووکامرس فارسی، بسته زبان آن را از پیشخوان > به‌روزرسانی‌ها نصب کنید."
 
-#: src/Service/Import/Sources/PersianWooCommerce/PersianWooCommerceSource.php:118
+#: src/Service/Import/Sources/PersianWooCommerce/PersianWooCommerceSource.php:119
 msgid "Payment gateways that will stop"
 msgstr "درگاه‌های پرداختی که از کار می‌افتند"
 
-#: src/Service/Import/Sources/PersianWooCommerce/PersianWooCommerceSource.php:119
+#: src/Service/Import/Sources/PersianWooCommerce/PersianWooCommerceSource.php:120
 msgid "These gateways are built on Persian WooCommerce and stop when it is deactivated; Persian Kit has none. Set up another gateway first, or keep Persian WooCommerce active for them with the options below turned off."
 msgstr "این درگاه‌ها بر پایه ووکامرس فارسی ساخته شده‌اند و با غیرفعال کردن آن از کار می‌افتند؛ Persian Kit درگاهی ندارد. اول درگاه دیگری راه بیندازید، یا ووکامرس فارسی را برای آنها با گزینه‌های پایین خاموش، فعال نگه دارید."
 
-#: src/Service/Import/Sources/PersianWooCommerce/PersianWooCommerceSource.php:123
+#: src/Service/Import/Sources/PersianWooCommerce/PersianWooCommerceSource.php:124
 msgid "I have another gateway, or I am keeping Persian WooCommerce for these"
 msgstr "درگاه دیگری دارم، یا ووکامرس فارسی را برای اینها نگه می‌دارم"
 
-#: src/Service/Import/Sources/PersianWooCommerce/PersianWooCommerceSource.php:132
+#: src/Service/Import/Sources/PersianWooCommerce/PersianWooCommerceSource.php:133
 msgid "Keeping Persian WooCommerce for its gateways?"
 msgstr "ووکامرس فارسی را برای درگاه‌هایش نگه می‌دارید؟"
 
-#: src/Service/Import/Sources/PersianWooCommerce/PersianWooCommerceSource.php:134
+#: src/Service/Import/Sources/PersianWooCommerce/PersianWooCommerceSource.php:135
 msgid "Its options that Persian Kit takes over are all off, so it can stay active and the import can run."
 msgstr "همه گزینه‌هایی از آن که Persian Kit انجام می‌دهد خاموش‌اند، پس می‌تواند فعال بماند و انتقال انجام شود."
 
-#: src/Service/Import/Sources/PersianWooCommerce/PersianWooCommerceSource.php:135
+#: src/Service/Import/Sources/PersianWooCommerce/PersianWooCommerceSource.php:136
 msgid "Then turn off these options in its settings, so the two plugins never do the same thing. The import runs once they are off."
 msgstr "پس این گزینه‌ها را در تنظیمات آن خاموش کنید تا دو افزونه کار یکسانی نکنند. وقتی خاموش شوند انتقال انجام می‌شود."
 
-#: src/Service/Import/Sources/PersianWooCommerce/PersianWooCommerceSource.php:210
+#: src/Service/Import/Sources/PersianWooCommerce/PersianWooCommerceSource.php:219
 msgid "Persian digits in postcode"
 msgstr "اعداد فارسی در کد پستی"
 
-#: src/Service/Import/Sources/PersianWooCommerce/PersianWooCommerceSource.php:211
+#: src/Service/Import/Sources/PersianWooCommerce/PersianWooCommerceSource.php:220
 msgid "Persian digits in phone"
 msgstr "اعداد فارسی در تلفن"
 
-#: src/Service/Import/Sources/PersianWooCommerce/PersianWooCommerceSource.php:212
+#: src/Service/Import/Sources/PersianWooCommerce/PersianWooCommerceSource.php:221
 msgid "Check postcode"
 msgstr "بررسی کد پستی"
 
-#: src/Service/Import/Sources/PersianWooCommerce/PersianWooCommerceSource.php:213
+#: src/Service/Import/Sources/PersianWooCommerce/PersianWooCommerceSource.php:222
 msgid "Check phone"
 msgstr "بررسی تلفن"
 
-#: src/Service/Import/Sources/PersianWooCommerce/PersianWooCommerceSource.php:214
+#: src/Service/Import/Sources/PersianWooCommerce/PersianWooCommerceSource.php:224
 msgid "Provinces it sells to"
 msgstr "استان‌هایی که به آنها می‌فروشد"
 
@@ -2508,3 +2510,79 @@ msgstr "الان: %s"
 #, js-format
 msgid "%1$s (%2$s orders)"
 msgstr "%1$s (%2$s سفارش)"
+
+#: src/Modules/WooCommerce/CallForPrice.php:110
+msgctxt "shop button"
+msgid "Call for price"
+msgstr "استعلام قیمت"
+
+#. translators: %s: product name.
+#: src/Modules/WooCommerce/CallForPrice.php:125
+#, php-format
+msgid "Call for the price of “%s”"
+msgstr "استعلام قیمت «%s»"
+
+#: src/Modules/WooCommerce/CallForPrice.php:193
+#: views/admin/partials/woocommerce-settings.php:206
+msgctxt "shown instead of an empty price"
+msgid "Call for price"
+msgstr "تماس بگیرید"
+
+#: src/Modules/WooCommerce/WooCommerceModule.php:141
+msgid "Settings saved. The \"Call for price\" link was cleared: type a phone number or a page address, such as /contact/."
+msgstr "تنظیمات ذخیره شد. پیوند «تماس بگیرید» پاک شد: یک شماره تلفن یا نشانی یک صفحه بنویسید، مثل /contact/."
+
+#: src/Service/Import/ImportReport.php:244
+#: src/Service/Import/Sources/PersianWooCommerce/PersianWooCommerceSettings.php:164
+msgid "Text instead of an empty price"
+msgstr "متن به جای قیمت خالی"
+
+#: src/Service/Import/ImportReport.php:245
+#: views/admin/partials/woocommerce-settings.php:205
+msgid "Text on the product page"
+msgstr "متن در صفحه محصول"
+
+#: src/Service/Import/ImportReport.php:246
+#: views/admin/partials/woocommerce-settings.php:210
+msgid "Text in the shop and other lists"
+msgstr "متن در فروشگاه و فهرست‌های دیگر"
+
+#: src/Service/Import/Sources/PersianWooCommerce/PersianWooCommerceSettings.php:154
+msgid "Persian Kit has one text for every list, so its home page and related products texts become the archive text."
+msgstr "پرشین کیت برای همه فهرست‌ها یک متن دارد، پس متن صفحه اصلی و محصولات مرتبط همان متن بایگانی می‌شود."
+
+#: src/Service/Import/Sources/PersianWooCommerce/PersianWooCommerceSettings.php:157
+msgid "The texts are imported without links or formatting; a phone number or page to link to can be set in Persian Kit."
+msgstr "متن‌ها بدون پیوند و قالب‌بندی وارد می‌شوند؛ شماره تلفن یا صفحه‌ای برای پیوند را می‌توانید در پرشین کیت تنظیم کنید."
+
+#: src/Service/Import/Sources/PersianWooCommerce/PersianWooCommerceSettings.php:172
+msgid "No sale badge without a price"
+msgstr "بدون برچسب فروش ویژه برای محصول بدون قیمت"
+
+#: src/Service/Import/Sources/PersianWooCommerce/PersianWooCommerceSettings.php:176
+msgid "Persian Kit shows no sale badge on a product without a price."
+msgstr "پرشین کیت روی محصول بدون قیمت برچسب فروش ویژه نشان نمی‌دهد."
+
+#: views/admin/partials/woocommerce-settings.php:196
+msgid "Show a text instead of an empty price"
+msgstr "نمایش متن به جای قیمت خالی"
+
+#: views/admin/partials/woocommerce-settings.php:197
+msgid "A price of 0 means free; leave the price empty for products sold on request."
+msgstr "قیمت ۰ یعنی رایگان؛ برای محصولاتی که قیمتشان را جداگانه اعلام می‌کنید، قیمت را خالی بگذارید."
+
+#: views/admin/partials/woocommerce-settings.php:211
+msgid "Categories, related products, widgets and product blocks."
+msgstr "دسته‌ها، محصولات مرتبط، ابزارک‌ها و بلوک‌های محصول."
+
+#: views/admin/partials/woocommerce-settings.php:212
+msgid "Same as the product page"
+msgstr "مثل صفحه محصول"
+
+#: views/admin/partials/woocommerce-settings.php:217
+msgid "A phone number or a page address. The text on the product page links to it, and the shop button reads \"Call for price\" and goes there."
+msgstr "یک شماره تلفن یا نشانی یک صفحه. متن صفحه محصول به آن پیوند می‌شود و دکمه فروشگاه «استعلام قیمت» می‌شود و به آن می‌رود."
+
+#: views/admin/partials/woocommerce-settings.php:218
+msgid "021 1234 5678 or /contact/"
+msgstr "021 1234 5678 یا /contact/"
