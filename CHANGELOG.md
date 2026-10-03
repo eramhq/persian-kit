@@ -17,6 +17,11 @@ All notable changes to this project will be documented in this file.
 - WooCommerce › Prices and currency › "Show a text instead of an empty price": a product with an empty price shows «تماس بگیرید» (or the store's text) on its page, and another text in the shop, categories, related products, widgets, product blocks and the Store API. With a phone number or page address, the text on the product page links to it and the shop button reads "Call for price" and goes there in place of "Read more". A variable product with no priced variation no longer reads "out of stock", and products with no price get no sale badge. A price of 0 (free) is left alone. The store's texts can be translated with Polylang or WPML (#11).
 - The switch from Persian WooCommerce imports its "call for price" setting and texts, without their HTML; its home page and related products texts become the archive text. Keeping Persian WooCommerce for its gateways now asks to turn its call for price off.
 
+### Shorter checkout
+
+- WooCommerce › Checkout and addresses › "Shorter checkout when nothing needs shipping": when every item in the cart is virtual, the classic and block checkouts ask for the name, country, phone and email, and the national ID when it's on. Company, street, city, province and postcode go; order notes stay. Carts with an item that ships keep the whole address, and addresses saved in My Account don't change (#31).
+- The switch from Persian WooCommerce imports its «حذف فیلدهای غیرضروری» (remove extra fields) as this option, as Close: Persian Kit keeps the country and order notes, and also shortens the block checkout. Keeping Persian WooCommerce for its gateways now asks to turn that option off.
+
 ### Jalali links
 
 - Old Jalali post links such as `/1403/05/12/my-post/` redirect to the Gregorian link with Jalali dates off, and Jalali archive pages still list their posts. Before, they were "not found" unless Jalali dates were on.

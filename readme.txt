@@ -35,6 +35,7 @@ Persian Kit is a modular WordPress plugin for Persian-language sites. It focuses
 * Persian digits in the WooCommerce cart and checkout blocks' prices
 * Persian digits in WooCommerce emails: order numbers, prices, quantities and dates, while phone numbers, postcodes and links keep English digits (off until you turn it on)
 * Thousand toman and thousand rial currencies for WooCommerce, with prices in rials in the product data search engines read
+* A shorter WooCommerce checkout when nothing needs shipping: for courses, files and services, customers give their name, country, phone and email
 * "Call for price" (تماس بگیرید) in place of an empty WooCommerce price, with its own text for the shop and an optional phone number or page to link to
 * Works with Yoast SEO and Rank Math: prices in rials and Gregorian dates in what they give search engines, and Jalali titles on date archives
 * Works with WPML and Polylang: dates, digits and the Persian writing tools follow each page's language, and admin screens each admin's own
@@ -122,6 +123,10 @@ Yes. Turn on Display > Persian digits > WooCommerce emails. Order numbers, price
 = Can I sell only to some provinces? =
 
 Yes. Under WooCommerce > Checkout and addresses, choose "Only these provinces" and tick the provinces you deliver to. For addresses in Iran, the checkout, the cart and My Account then list only those, and another province is refused. With one province, it is selected for the customer. The shop admin still lists every province, and past orders keep their province's name.
+
+= Can the checkout skip the address for downloads and services? =
+
+Yes. Under WooCommerce > Checkout and addresses, tick "Shorter checkout when nothing needs shipping". When every item in the cart is virtual, the checkout asks for the name, country, phone and email, and the national ID when it's on; order notes stay. It works in the classic and the block checkout. As soon as the cart has an item that ships, the whole address is asked for again. Addresses customers saved in My Account don't change.
 
 = Can my store price in thousand toman? =
 
