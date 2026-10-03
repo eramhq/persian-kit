@@ -12,6 +12,9 @@ final class TapinCities
 {
     public const DATA_FILE = 'public/data/pws-tapin.json';
 
+    /** The source the build copies from, for a checkout that hasn't been built. */
+    private const SOURCE_FILE = 'resources/data/pws-tapin.json';
+
     /** @var array<int, array<int, string>> City names by city id, by province id. */
     private array $cities;
 
@@ -33,7 +36,12 @@ final class TapinCities
 
     public static function load(?string $file = null): self
     {
-        $file ??= PERSIAN_KIT_DIR . self::DATA_FILE;
+        if ($file === null) {
+            $file = PERSIAN_KIT_DIR . self::DATA_FILE;
+            if (!is_readable($file)) {
+                $file = PERSIAN_KIT_DIR . self::SOURCE_FILE;
+            }
+        }
         // phpcs:ignore WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents -- A local file shipped with the plugin.
         $json = is_readable($file) ? file_get_contents($file) : false;
         $data = is_string($json) ? json_decode($json, true) : null;
