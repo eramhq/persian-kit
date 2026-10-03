@@ -5,8 +5,8 @@ namespace PersianKit\Components;
 defined('ABSPATH') || exit;
 
 /**
- * The settings page's icons and the Persian Kit mark. The markup here is
- * fixed, so templates print it as is.
+ * The settings page's icons and the Persian Kit mark. Templates print them
+ * with print(), which passes the markup through wp_kses().
  */
 class Icon
 {
@@ -44,6 +44,30 @@ class Icon
     ];
 
     /**
+     * The tags and attributes PATHS, GLYPHS and render() use, for wp_kses().
+     * kses matches and prints attribute names in lowercase, so viewBox is
+     * listed and printed as viewbox; the HTML parser reads an inline SVG's
+     * viewbox as viewBox.
+     */
+    private const ALLOWED_HTML = [
+        'svg'    => [
+            'class'           => true,
+            'viewbox'         => true,
+            'fill'            => true,
+            'stroke'          => true,
+            'stroke-width'    => true,
+            'stroke-linecap'  => true,
+            'stroke-linejoin' => true,
+            'aria-hidden'     => true,
+            'focusable'       => true,
+        ],
+        'path'   => ['d' => true, 'fill' => true, 'stroke' => true],
+        'rect'   => ['x' => true, 'y' => true, 'width' => true, 'height' => true, 'rx' => true],
+        'circle' => ['cx' => true, 'cy' => true, 'r' => true],
+        'span'   => ['class' => true, 'lang' => true, 'aria-hidden' => true],
+    ];
+
+    /**
      * The پ tile in one colour, with the letter cut out. WordPress repaints
      * the fill to match the admin colour scheme. resources/images/logo.svg
      * is the same mark in the brand colours.
@@ -73,6 +97,12 @@ class Icon
         return '<svg class="persian-kit-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"'
             . ' stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">'
             . self::PATHS[$name] . '</svg>';
+    }
+
+    /** Prints an icon or glyph by name, through wp_kses(). */
+    public static function print(string $name): void
+    {
+        echo wp_kses(self::render($name), self::ALLOWED_HTML);
     }
 
     /** The admin menu icon, as add_menu_page() takes it. */

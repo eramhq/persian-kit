@@ -181,7 +181,8 @@ class PostTypeMonthFilter
         }
 
         // Same query core's months drop-down runs; the result is cached above until posts change.
-        // phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+        // $inLanguage is built with prepare() in ContentLanguage.
+        // phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter
         $results = $postStatus === 'trash'
             ? $wpdb->get_col($wpdb->prepare(
                 "SELECT DISTINCT DATE(post_date) AS post_day
@@ -199,7 +200,7 @@ class PostTypeMonthFilter
                 ORDER BY post_date DESC",
                 $postType
             ));
-        // phpcs:enable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+        // phpcs:enable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter
 
         $days = array_values(array_filter(array_map('strval', (array) $results)));
         wp_cache_set($cacheKey, $days, 'persian_kit');

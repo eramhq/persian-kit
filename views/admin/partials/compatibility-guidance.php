@@ -20,7 +20,7 @@ $compatibilityReports = $args['compatibilityReports'] ?? [];
             <details class="persian-kit-compatibility__card">
                 <summary class="persian-kit-compatibility__card-header">
                     <span class="persian-kit-compatibility__icon">
-                        <?php echo \PersianKit\Components\Icon::render('alert'); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- fixed SVG markup. ?>
+                        <?php \PersianKit\Components\Icon::print('alert'); ?>
                     </span>
                     <h3 class="persian-kit-compatibility__title">
                         <?php echo esc_html($report['name'] ?? ''); ?>

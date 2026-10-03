@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### WordPress.org review
+
+- The output is escaped where it's printed, and the database queries use `%i` for table names. There is no change users can see.
+
 ## [1.0.0-beta.6] - 2026-10-03
 
 ### Persian translation

@@ -136,9 +136,11 @@ class CallForPrice
             return $data;
         }
 
-        // Rank Math's own label, to find its row.
-        $label = __('Price', 'seo-by-rank-math'); // phpcs:ignore WordPress.WP.I18n.TextDomainMismatch
-        if (isset($data[$label])) {
+        // Rank Math's product rows are always Price then Availability
+        // (get_woo_product_data() in its class-slack.php), with keys in the
+        // site's language, so the price is the first row.
+        $label = array_key_first($data);
+        if ($label !== null) {
             $data[$label] = $this->isOwnPage($product) ? $this->productText() : $this->listText();
         }
 

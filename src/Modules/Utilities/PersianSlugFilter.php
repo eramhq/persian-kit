@@ -148,7 +148,8 @@ class PersianSlugFilter
         $languageFirst = $language === null ? '' : "({$language}) DESC, ";
 
         // Runs only on a 404; matches raw post_name values that WP_Query would re-sanitize.
-        // phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+        // $languageFirst is built with prepare() in ContentLanguage.
+        // phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter
         $row = $wpdb->get_row($wpdb->prepare(
             "SELECT ID, post_name, post_type FROM {$wpdb->posts}
              WHERE post_name IN (" . implode(',', array_fill(0, count($candidates), '%s')) . ")
@@ -158,7 +159,7 @@ class PersianSlugFilter
              LIMIT 1",
             array_merge($candidates, $postTypes)
         ));
-        // phpcs:enable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+        // phpcs:enable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter
 
         return is_object($row) ? $row : null;
     }

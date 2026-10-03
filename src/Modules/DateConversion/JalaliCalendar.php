@@ -239,7 +239,8 @@ class JalaliCalendar
 
         // The same three queries core's get_calendar() runs, on the Jalali
         // month's Gregorian range; the result is cached above until posts change.
-        // phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+        // $inLanguage is built with prepare() in ContentLanguage.
+        // phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter
         $postDays = $wpdb->get_col($wpdb->prepare(
             "SELECT DISTINCT DATE(post_date)
             FROM {$wpdb->posts}
@@ -271,7 +272,7 @@ class JalaliCalendar
             $range['end'],
             $postType
         ));
-        // phpcs:enable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+        // phpcs:enable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter
 
         $days = [];
         foreach ((array) $postDays as $postDay) {

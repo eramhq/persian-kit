@@ -22,7 +22,7 @@ $newTab = __('(opens in a new tab)', 'persian-kit');
 ?>
 <footer class="persian-kit-footer">
     <div class="persian-kit-footer__rule" aria-hidden="true">
-        <?php echo Icon::render('khatam'); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- fixed SVG markup. ?>
+        <?php Icon::print('khatam'); ?>
     </div>
 
     <div class="persian-kit-footer__brand">

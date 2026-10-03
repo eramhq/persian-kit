@@ -66,7 +66,7 @@ $newTab = __('(opens in a new tab)', 'persian-kit');
             <?php // Once the integration is switched off, the advice is followed. ?>
             <?php echo $state === 'available' && !$automatic ? 'x-show="enabled"' : ''; ?>
         >
-            <?php echo Icon::render('alert'); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- fixed SVG markup. ?>
+            <?php Icon::print('alert'); ?>
             <span>
                 <?php echo esc_html($report['summary']); ?>
                 <a href="#persian-kit-compatibility"><?php esc_html_e('Review recommended settings', 'persian-kit'); ?></a>
@@ -76,7 +76,7 @@ $newTab = __('(opens in a new tab)', 'persian-kit');
 
     <div class="persian-kit-integration__head">
         <span class="persian-kit-module__icon">
-            <?php echo $card['icon'] !== '' ? Icon::render($card['icon']) : ''; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- fixed SVG markup. ?>
+            <?php Icon::print($card['icon']); ?>
         </span>
 
         <div class="persian-kit-integration__title">
@@ -97,7 +97,7 @@ $newTab = __('(opens in a new tab)', 'persian-kit');
 
         <?php if ($automatic && $state === 'available') : ?>
             <span class="persian-kit-module__status">
-                <?php echo Icon::render('check'); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- fixed SVG markup. ?>
+                <?php Icon::print('check'); ?>
                 <?php esc_html_e('Active automatically', 'persian-kit'); ?>
             </span>
         <?php elseif ($hasToggle) : ?>
@@ -157,7 +157,7 @@ $newTab = __('(opens in a new tab)', 'persian-kit');
         }
         ?>
         <div class="persian-kit-module__warning" id="<?php echo esc_attr($warningId); ?>" x-show="!enabled"<?php echo $isEnabled ? ' x-cloak' : ''; ?>>
-            <?php echo Icon::render('alert'); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- fixed SVG markup. ?>
+            <?php Icon::print('alert'); ?>
             <p>
                 <?php
                 echo wp_kses(

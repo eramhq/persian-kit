@@ -43,7 +43,7 @@ $links = [
             <nav class="persian-kit-links" aria-label="<?php esc_attr_e('Persian Kit help', 'persian-kit'); ?>">
                 <?php foreach ($links as [$url, $icon, $label]) : ?>
                     <a href="<?php echo esc_url($url); ?>" target="_blank" rel="noopener noreferrer">
-                        <?php echo Icon::render($icon); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- fixed SVG markup. ?>
+                        <?php Icon::print($icon); ?>
                         <?php echo esc_html($label); ?>
                         <span class="screen-reader-text"><?php esc_html_e('(opens in a new tab)', 'persian-kit'); ?></span>
                     </a>
@@ -65,7 +65,7 @@ $links = [
                     aria-selected="<?php echo $tab === $activeTab ? 'true' : 'false'; ?>"
                     aria-controls="persian-kit-panel-<?php echo esc_attr($tab); ?>"
                     data-tab="<?php echo esc_attr($tab); ?>"
-                ><?php echo Icon::render($tab); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- fixed SVG markup. ?><span><?php echo esc_html($tabLabel); ?></span></a>
+                ><?php Icon::print($tab); ?><span><?php echo esc_html($tabLabel); ?></span></a>
             <?php endforeach; ?>
         </nav>
     </div>

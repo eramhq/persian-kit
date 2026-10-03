@@ -23,7 +23,7 @@ $isEnabled = !empty($module['settings']['enabled']);
         <?php // Once the module is switched off, the advice is followed. ?>
         <div class="persian-kit-advice" x-show="enabled">
             <span class="persian-kit-advice__icon">
-                <?php echo Icon::render('alert'); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- fixed SVG markup. ?>
+                <?php Icon::print('alert'); ?>
             </span>
             <p>
                 <?php
