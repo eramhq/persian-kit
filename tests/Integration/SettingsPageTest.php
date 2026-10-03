@@ -79,6 +79,11 @@ class SettingsPageTest extends WordPressIntegrationTestCase
             ['persian_kit_settings[woocommerce][city_select]', 'hidden', '0', false],
             ['persian_kit_settings[woocommerce][city_select]', 'checkbox', '1', false],
             ['persian_kit_settings[woocommerce][national_id]', 'select', 'off', false],
+            ['persian_kit_settings[woocommerce][call_for_price]', 'hidden', '0', false],
+            ['persian_kit_settings[woocommerce][call_for_price]', 'checkbox', '1', false],
+            ['persian_kit_settings[woocommerce][call_for_price_text]', 'text', '', false],
+            ['persian_kit_settings[woocommerce][call_for_price_list_text]', 'text', '', false],
+            ['persian_kit_settings[woocommerce][call_for_price_link]', 'text', '', false],
             ['persian_kit_settings[woocommerce][dates_admin]', 'hidden', '0', false],
             ['persian_kit_settings[woocommerce][dates_admin]', 'checkbox', '1', true],
         ],
@@ -286,6 +291,26 @@ class SettingsPageTest extends WordPressIntegrationTestCase
 
         $this->assertSame('all', $xpath->query('//input[@type="radio"][@checked]')->item(0)?->getAttribute('value'));
         $this->assertSame(1, $xpath->query('//ul[contains(@class, "persian-kit-provinces")][@x-cloak][@x-show="scope === \'only\'"]')->length);
+    }
+
+    public function test_the_call_for_price_fields_show_while_their_box_is_ticked(): void
+    {
+        update_option('persian_kit_settings', ['woocommerce' => ['enabled' => true, 'call_for_price_link' => '021 1234 5678']]);
+        $xpath = $this->render(['woocommerce' => $this->withPlugin(WooCommerceModule::class, true)]);
+        $prices = '//section[@id="prices"]';
+
+        $this->assertSame(1, $xpath->query($prices . '//ul[@x-data="{ callForPrice: false }"]//input[@type="checkbox"][@name="persian_kit_settings[woocommerce][call_for_price]"][@x-model="callForPrice"]')->length);
+        $this->assertSame(3, $xpath->query($prices . '//li[@x-show="callForPrice"][@x-cloak]//input[@type="text"]')->length);
+        $link = $xpath->query($prices . '//input[@name="persian_kit_settings[woocommerce][call_for_price_link]"]')->item(0);
+        $this->assertInstanceOf(DOMElement::class, $link);
+        $this->assertSame(['021 1234 5678', 'ltr'], [$link->getAttribute('value'), $link->getAttribute('dir')]);
+        $this->assertSame(1, $xpath->query('//*[@id="' . $link->getAttribute('aria-describedby') . '"]')->length);
+
+        update_option('persian_kit_settings', ['woocommerce' => ['enabled' => true, 'call_for_price' => true]]);
+        $xpath = $this->render(['woocommerce' => $this->withPlugin(WooCommerceModule::class, true)]);
+        $this->assertSame(0, $xpath->query($prices . '//li[@x-cloak]')->length, 'the fields show');
+        // The partial's other checkboxes get no x-model.
+        $this->assertSame(0, $xpath->query('//section[@id="checkout" or @id="dates"]//input[@type="checkbox"][@x-model]')->length);
     }
 
     public function test_the_woocommerce_tab_repeats_the_advice_of_an_overlapping_plugin(): void

@@ -4,6 +4,7 @@ namespace PersianKit\Modules\WooCommerce;
 
 use PersianKit\Abstracts\AbstractModule;
 use PersianKit\Container\ServiceContainer;
+use PersianKit\Core\SettingsManager;
 use PersianKit\Service\Language\ContentLanguage;
 
 defined('ABSPATH') || exit;
@@ -36,13 +37,18 @@ class WooCommerceModule extends AbstractModule
     public static function defaults(): array
     {
         return [
-            'enabled'            => true,
-            'checkout_normalize' => true,
-            'checkout_validate'  => true,
-            'national_id'        => NationalIdField::OFF,
-            'city_select'        => false,
-            'allowed_states'     => [],
-            'dates_admin'        => true,
+            'enabled'                  => true,
+            'checkout_normalize'       => true,
+            'checkout_validate'        => true,
+            'national_id'              => NationalIdField::OFF,
+            'city_select'              => false,
+            'allowed_states'           => [],
+            'dates_admin'              => true,
+            // Empty texts stay empty, so each language gets its own default.
+            'call_for_price'           => false,
+            'call_for_price_text'      => '',
+            'call_for_price_list_text' => '',
+            'call_for_price_link'      => '',
         ];
     }
 
@@ -100,14 +106,44 @@ class WooCommerceModule extends AbstractModule
         $nationalId = $values['national_id'] ?? NationalIdField::OFF;
 
         return [
-            'enabled'            => !empty($values['enabled']),
-            'checkout_normalize' => !empty($values['checkout_normalize']),
-            'checkout_validate'  => !empty($values['checkout_validate']),
-            'national_id'        => in_array($nationalId, NationalIdField::MODES, true) ? $nationalId : NationalIdField::OFF,
-            'city_select'        => !empty($values['city_select']),
-            'allowed_states'     => ProvinceLimit::sanitizeCodes($values['allowed_states'] ?? [], self::provinces()),
-            'dates_admin'        => !empty($values['dates_admin']),
+            'enabled'                  => !empty($values['enabled']),
+            'checkout_normalize'       => !empty($values['checkout_normalize']),
+            'checkout_validate'        => !empty($values['checkout_validate']),
+            'national_id'              => in_array($nationalId, NationalIdField::MODES, true) ? $nationalId : NationalIdField::OFF,
+            'city_select'              => !empty($values['city_select']),
+            'allowed_states'           => ProvinceLimit::sanitizeCodes($values['allowed_states'] ?? [], self::provinces()),
+            'dates_admin'              => !empty($values['dates_admin']),
+            'call_for_price'           => !empty($values['call_for_price']),
+            'call_for_price_text'      => CallForPrice::sanitizeText($values['call_for_price_text'] ?? ''),
+            'call_for_price_list_text' => CallForPrice::sanitizeText($values['call_for_price_list_text'] ?? ''),
+            'call_for_price_link'      => self::sanitizeCallForPriceLink($values['call_for_price_link'] ?? ''),
         ];
+    }
+
+    /**
+     * The link, or '' with a notice on the settings page when what was
+     * typed is neither a phone number nor an address.
+     */
+    private static function sanitizeCallForPriceLink(mixed $value): string
+    {
+        $link = CallForPrice::sanitizeLink($value);
+        if ($link !== '' || !is_string($value) || trim($value) === '' || !function_exists('add_settings_error')) {
+            return $link;
+        }
+
+        // Once: core sanitizes twice when the option is first added. Any
+        // notice takes the place of core's "Settings saved.", so it says so.
+        $code = 'persian-kit-call-for-price-link';
+        if (!in_array($code, array_column(get_settings_errors(SettingsManager::OPTION_KEY), 'code'), true)) {
+            add_settings_error(
+                SettingsManager::OPTION_KEY,
+                $code,
+                __('Settings saved. The "Call for price" link was cleared: type a phone number or a page address, such as /contact/.', 'persian-kit'),
+                'warning'
+            );
+        }
+
+        return $link;
     }
 
     public function register(ServiceContainer $container): void
@@ -148,6 +184,13 @@ class WooCommerceModule extends AbstractModule
         $container->register(SchemaPrices::class, function () {
             return new SchemaPrices();
         });
+        $container->register(CallForPrice::class, function () {
+            return new CallForPrice(
+                (string) $this->setting('call_for_price_text'),
+                (string) $this->setting('call_for_price_list_text'),
+                (string) $this->setting('call_for_price_link')
+            );
+        });
 
         // Now, not at boot: WooCommerce keeps its currency list for the rest
         // of the request the first time it is read, which can be before
@@ -181,6 +224,11 @@ class WooCommerceModule extends AbstractModule
 
         if ($this->allowedStates() !== []) {
             $container->get(ProvinceLimit::class)->register();
+        }
+
+        // Also in the admin: the Store API, admin-ajax and the products list.
+        if ($this->setting('call_for_price')) {
+            $container->get(CallForPrice::class)->register();
         }
 
         // Order screens, product and coupon edit screens, and the variations

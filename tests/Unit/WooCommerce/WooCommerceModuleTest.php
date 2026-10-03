@@ -7,6 +7,7 @@ use Brain\Monkey\Functions;
 use Mockery;
 use PersianKit\Container\ServiceContainer;
 use PersianKit\Core\SettingsManager;
+use PersianKit\Modules\WooCommerce\CallForPrice;
 use PersianKit\Modules\WooCommerce\CheckoutInputNormalizer;
 use PersianKit\Modules\WooCommerce\CheckoutValidator;
 use PersianKit\Modules\WooCommerce\CityField;
@@ -157,13 +158,17 @@ class WooCommerceModuleTest extends TestCase
         $module = $this->makeModule();
 
         $this->assertSame([
-            'enabled'            => true,
-            'checkout_normalize' => false,
-            'checkout_validate'  => true,
-            'national_id'        => 'required',
-            'city_select'        => false,
-            'allowed_states'     => [],
-            'dates_admin'        => true,
+            'enabled'                  => true,
+            'checkout_normalize'       => false,
+            'checkout_validate'        => true,
+            'national_id'              => 'required',
+            'city_select'              => false,
+            'allowed_states'           => [],
+            'dates_admin'              => true,
+            'call_for_price'           => false,
+            'call_for_price_text'      => '',
+            'call_for_price_list_text' => '',
+            'call_for_price_link'      => '',
         ], $module->sanitizeSettings(['enabled' => '1', 'checkout_normalize' => '0', 'checkout_validate' => '1', 'national_id' => 'required', 'dates_admin' => '1']));
 
         $this->assertSame('off', $module->sanitizeSettings(['national_id' => 'always'])['national_id']);
@@ -172,13 +177,17 @@ class WooCommerceModuleTest extends TestCase
     public function test_new_checkout_settings_default_to_fixing_and_checking_only(): void
     {
         $this->assertSame([
-            'enabled'            => true,
-            'checkout_normalize' => true,
-            'checkout_validate'  => true,
-            'national_id'        => 'off',
-            'city_select'        => false,
-            'allowed_states'     => [],
-            'dates_admin'        => true,
+            'enabled'                  => true,
+            'checkout_normalize'       => true,
+            'checkout_validate'        => true,
+            'national_id'              => 'off',
+            'city_select'              => false,
+            'allowed_states'           => [],
+            'dates_admin'              => true,
+            'call_for_price'           => false,
+            'call_for_price_text'      => '',
+            'call_for_price_list_text' => '',
+            'call_for_price_link'      => '',
         ], WooCommerceModule::defaults());
     }
 
@@ -198,6 +207,35 @@ class WooCommerceModuleTest extends TestCase
 
         $this->assertNotContains(ProvinceLimit::class, $this->bootAndListFetched());
         $this->assertContains(ProvinceLimit::class, $this->bootAndListFetched(['allowed_states' => ['THR']]));
+    }
+
+    public function test_call_for_price_has_its_own_option(): void
+    {
+        Functions\when('is_admin')->justReturn(false);
+
+        $this->assertNotContains(CallForPrice::class, $this->bootAndListFetched());
+        $this->assertContains(CallForPrice::class, $this->bootAndListFetched(['call_for_price' => true]));
+        $this->assertNotContains(CallForPrice::class, $this->bootAndListFetched(['call_for_price' => true], 'bootDisabled'));
+    }
+
+    public function test_sanitize_settings_cleans_the_call_for_price_texts_and_link(): void
+    {
+        Functions\when('sanitize_text_field')->alias(static fn (string $text): string => trim(strip_tags($text)));
+        Functions\when('wp_strip_all_tags')->alias('strip_tags');
+        Functions\when('esc_url_raw')->returnArg();
+
+        $values = $this->makeModule()->sanitizeSettings([
+            'call_for_price'           => '1',
+            'call_for_price_text'      => '<strong>تماس بگیرید</strong>',
+            'call_for_price_list_text' => '',
+            'call_for_price_link'      => '۰۲۱ ۱۲۳۴ ۵۶۷۸',
+        ]);
+
+        $this->assertTrue($values['call_for_price']);
+        $this->assertSame('تماس بگیرید', $values['call_for_price_text']);
+        $this->assertSame('', $values['call_for_price_list_text']);
+        $this->assertSame('021 1234 5678', $values['call_for_price_link']);
+        $this->assertSame('', $this->makeModule()->sanitizeSettings(['call_for_price_link' => 'javascript:alert(1)'])['call_for_price_link']);
     }
 
     /**

@@ -8,6 +8,7 @@
 
 use PersianKit\Components\View;
 use PersianKit\Core\AdminPage;
+use PersianKit\Modules\WooCommerce\CallForPrice;
 use PersianKit\Modules\WooCommerce\NationalIdField;
 use PersianKit\Modules\WooCommerce\WooCommerceModule;
 
@@ -184,7 +185,52 @@ $sectionStart('prices', wp_kses(
     ]),
     ['a' => ['href' => true]]
 ));
+$callForPrice = !empty($moduleSettings['call_for_price']);
 ?>
+    <div class="persian-kit-section__body">
+        <ul class="persian-kit-options" x-data="{ callForPrice: <?php echo $callForPrice ? 'true' : 'false'; ?> }">
+            <?php
+            View::load('admin/partials/checkbox-option', [
+                'moduleKey'  => 'woocommerce',
+                'settingKey' => 'call_for_price',
+                'label'      => __('Show a text instead of an empty price', 'persian-kit'),
+                'help'       => __('A price of 0 means free; leave the price empty for products sold on request.', 'persian-kit'),
+                'checked'    => $callForPrice,
+                'model'      => 'callForPrice',
+            ]);
+
+            // Shown while the box is ticked; their values are kept while it isn't.
+            $callForPriceFields = [
+                'call_for_price_text'      => [
+                    'label'       => __('Text on the product page', 'persian-kit'),
+                    'placeholder' => _x('Call for price', 'shown instead of an empty price', 'persian-kit'),
+                    'maxlength'   => CallForPrice::MAX_LENGTH,
+                ],
+                'call_for_price_list_text' => [
+                    'label'       => __('Text in the shop and other lists', 'persian-kit'),
+                    'help'        => __('Categories, related products, widgets and product blocks.', 'persian-kit'),
+                    'placeholder' => __('Same as the product page', 'persian-kit'),
+                    'maxlength'   => CallForPrice::MAX_LENGTH,
+                ],
+                'call_for_price_link'      => [
+                    'label'       => __('Link', 'persian-kit'),
+                    'help'        => __('A phone number or a page address. The text on the product page links to it, and the shop button reads "Call for price" and goes there.', 'persian-kit'),
+                    'placeholder' => __('021 1234 5678 or /contact/', 'persian-kit'),
+                    'ltr'         => true,
+                ],
+            ];
+            foreach ($callForPriceFields as $settingKey => $field) {
+                View::load('admin/partials/text-option', $field + [
+                    'moduleKey'  => 'woocommerce',
+                    'settingKey' => $settingKey,
+                    'value'      => (string) ($moduleSettings[$settingKey] ?? ''),
+                    'show'       => 'callForPrice',
+                    'hidden'     => !$callForPrice,
+                ]);
+            }
+            ?>
+        </ul>
+    </div>
 </section>
 
 <?php $sectionStart('dates'); ?>
