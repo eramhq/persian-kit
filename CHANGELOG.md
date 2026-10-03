@@ -61,6 +61,19 @@ On a site with WPML or Polylang, Persian Kit converted everything to Jalali date
 
 Known limitations, in the docs: the Jalali calendar, the admin month filters and old-slug lookups count posts in every language; Weglot can't be detected.
 
+### Forminator
+
+Forminator forms get the same Persian support as Contact Form 7 (#8), in a new integration (`forminator`, on by default, Forminator 1.50 or newer):
+
+- Date fields in the Calendar style get the Jalali date picker, in all nine of Forminator's date formats. They still submit and save the Gregorian date in the field's own format, so Forminator's checks, conditions, entries and exports are unchanged. A Jalali date typed without JavaScript is converted. Dropdowns and Number boxes stay Gregorian; the `persian-kit-gregorian` class keeps Forminator's calendar on a field.
+- While Jalali dates is on, `{date-1}` and `{all_fields}` in emails, and the Submissions screen for admins who read Persian, show the Jalali date. CSV exports, integrations and webhooks keep the Gregorian date.
+- Iranian checks with a class in a field's "Additional CSS Classes": `persian-kit-mobile`, `persian-kit-national-id`, `persian-kit-postcode`, `persian-kit-card` and `persian-kit-iban`, on Text, Phone and Number fields. Invalid values are rejected beside the field; valid ones are saved in their standard form (`09121234567`, also from a Phone field's `+98` country code).
+- Persian and Arabic digits become English in Phone, Number and Currency fields, Calendar dates and marked fields, as people type and on the server. Other text keeps its digits.
+- Works in forms loaded over AJAX, on later steps of multi-step forms and in repeated Group rows, each row with its own picker and checks. Fields hidden by a condition are not checked.
+- Turned off, the fields are plain Forminator fields again, and the card names the forms that use the classes.
+- Limitations, in the docs: disabled weekdays and dates, and limits taken from another date field, are checked by Forminator on submit but not greyed out in the Jalali picker; a Number field without a thousands separator is an `<input type="number">`, which some browsers clear when a Persian digit is typed.
+- The date picker reads and writes day-month-year formats in any order (`d/m/Y`, `m.d.Y`), and a repeated row copied with its picker starts from the field's default value.
+
 ### WooCommerce emails in Persian digits
 
 - New option, Display › Persian digits › WooCommerce emails (off by default): order numbers, prices, quantities and dates in WooCommerce emails, and the order number and date in the subject and heading, use Persian digits. Phone numbers, postcodes, links, coupon codes and the order's structured data for Gmail keep English digits. It covers every order email, also those sent when an admin changes an order's status and those from the block checkout, and only emails in Persian, so an English email on a bilingual store keeps English digits. The `persian_kit_digit_conversion` filter turns it off with `woocommerce_emails`, or for order numbers only with `woocommerce_email_order_number`.

@@ -22,7 +22,7 @@ if (file_exists($wpTestsDir . '/includes/functions.php')) {
     require_once $wpTestsDir . '/includes/functions.php';
 
     // Plugins the integration tests cover: WooCommerce, Contact Form 7, ACF,
-    // Yoast SEO, Rank Math and Polylang. Each loads from
+    // Forminator, Yoast SEO, Rank Math and Polylang. Each loads from
     // PERSIAN_KIT_TESTS_<NAME>_DIR (as in CI), or when installed next to the
     // plugin. Their tests are skipped without them; set
     // PERSIAN_KIT_TESTS_WITHOUT_<NAME>=1 to run the suite without one.
@@ -30,6 +30,7 @@ if (file_exists($wpTestsDir . '/includes/functions.php')) {
         'WOOCOMMERCE' => 'woocommerce/woocommerce.php',
         'CF7'         => 'contact-form-7/wp-contact-form-7.php',
         'ACF'         => 'advanced-custom-fields/acf.php',
+        'FORMINATOR'  => 'forminator/forminator.php',
         'YOAST'       => 'wordpress-seo/wp-seo.php',
         'RANK_MATH'   => 'seo-by-rank-math/rank-math.php',
     ];
@@ -96,6 +97,13 @@ if (file_exists($wpTestsDir . '/includes/functions.php')) {
             $GLOBALS['wp_roles'] = null;
             wp_roles();
         });
+    }
+
+    if (isset($pluginFiles['FORMINATOR'])) {
+        // Forminator's entry tables, as on activation, once it has loaded.
+        tests_add_filter('init', static function () {
+            \Forminator_Database_Tables::install_database_tables();
+        }, 99);
     }
 
     if (isset($pluginFiles['RANK_MATH'])) {
