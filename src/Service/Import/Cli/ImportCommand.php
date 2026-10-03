@@ -63,6 +63,9 @@ class ImportCommand
      * [--no-district-line]
      * : Don't put the district into the empty second address line.
      *
+     * [--fix-double-dates]
+     * : Fix ACF dates after 2100, which Parsi Date converted twice.
+     *
      * [--yes]
      * : Don't ask for confirmation.
      *
@@ -190,6 +193,9 @@ class ImportCommand
         // WP-CLI passes --no-district-line as is, or as district-line=false.
         if (\WP_CLI\Utils\get_flag_value($assocArgs, 'no-district-line', false) || \WP_CLI\Utils\get_flag_value($assocArgs, 'district-line', true) === false) {
             $options['district_line'] = false;
+        }
+        if (\WP_CLI\Utils\get_flag_value($assocArgs, 'fix-double-dates', false)) {
+            $options['fix_double_dates'] = true;
         }
         if ($options !== []) {
             $choices['options'] = $options;

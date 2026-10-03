@@ -66,11 +66,12 @@ class ParsiDateSource extends AbstractSource implements HasReviewNotes, HasRepor
     }
 
     /**
-     * Widgets and blocks first: they show on every page.
+     * Widgets and blocks first: they show on every page. ACF values before
+     * the fields, which are found by their type.
      */
     public function tasks(): array
     {
-        return [new WidgetTask(), new BlockTask()];
+        return [new WidgetTask(), new BlockTask(), new AcfValueTask(), new AcfFieldTask()];
     }
 
     /**

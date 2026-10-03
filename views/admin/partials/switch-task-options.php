@@ -33,6 +33,12 @@ defined('ABSPATH') || exit;
         <span x-text="task.options.label"></span>
     </label>
 </template>
+<template x-if="task.options && task.options.type === 'fix_double_dates'">
+    <label class="persian-kit-switch__option">
+        <input type="checkbox" x-model="options.fix_double_dates">
+        <span x-text="task.options.label"></span>
+    </label>
+</template>
 <template x-if="task.options && task.options.notice">
     <p class="persian-kit-warning" x-text="task.options.notice"></p>
 </template>
