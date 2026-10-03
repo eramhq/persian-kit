@@ -2,7 +2,13 @@
 
 namespace PersianKit\Service\Import\Sources\ParsiDate;
 
+use PersianKit\Core\SettingsManager;
+use PersianKit\Modules\DateConversion\JalaliPeriod;
 use PersianKit\Service\Import\AbstractSource;
+use PersianKit\Service\Import\ChecklistItem;
+use PersianKit\Service\Import\HasReportTips;
+use PersianKit\Service\Import\HasReviewNotes;
+use PersianKit\Service\Import\Woo\PaymentGateways;
 
 defined('ABSPATH') || exit;
 
@@ -10,7 +16,7 @@ defined('ABSPATH') || exit;
  * Parsi Date (wp-parsidate): 6.x keeps its settings in wp_parsidate and
  * wp_parsidate_{woocommerce,acf,edd}; 5.x kept them all in wpp_settings.
  */
-class ParsiDateSource extends AbstractSource
+class ParsiDateSource extends AbstractSource implements HasReviewNotes, HasReportTips
 {
     public const KEY = 'wp-parsidate';
 
@@ -52,6 +58,105 @@ class ParsiDateSource extends AbstractSource
         }
 
         return false;
+    }
+
+    public function settingRows(SettingsManager $settings): array
+    {
+        return (new ParsiDateSettings())->rows();
+    }
+
+    public function checklist(array $snapshot): array
+    {
+        $items = [];
+        $gateways = (new ParsiDateSettings())->gateways();
+
+        if ($gateways !== []) {
+            $items[] = new ChecklistItem(
+                'gateways',
+                __('Bank gateways that will stop', 'persian-kit'),
+                __('Parsi Date\'s bank gateways stop when it is deactivated; Persian Kit has none. Set up another gateway first.', 'persian-kit'),
+                PaymentGateways::entries(array_combine($gateways, array_map('ucfirst', $gateways))),
+                false,
+                true,
+                ['acknowledge_label' => __('I have another gateway for these payments', 'persian-kit')]
+            );
+        }
+
+        return $items;
+    }
+
+    public function reportTips(array $job): array
+    {
+        $tips = [__('Clear your page cache, if the site has one: widgets and blocks changed.', 'persian-kit')];
+
+        if ((new ParsiDateSettings())->on('core', 'conv_arabic')) {
+            $tips[] = __('Parsi Date showed Arabic ي and ك as Persian without changing them. To fix the posts themselves, use "Fix letters in existing posts" on this tab.', 'persian-kit');
+        }
+
+        return $tips;
+    }
+
+    /**
+     * What happens to old post links.
+     */
+    public function reviewNotes(array $snapshot): array
+    {
+        $structure = (string) get_option('permalink_structure');
+        $hasDate = str_contains($structure, '%year%') || str_contains($structure, '%monthnum%') || str_contains($structure, '%day%');
+
+        if (!$hasDate) {
+            return [[
+                'key'   => 'links',
+                'title' => __('Links', 'persian-kit'),
+                'text'  => __('Post links have no date in them, so there are no date links to keep.', 'persian-kit'),
+            ]];
+        }
+
+        $count = (int) wp_count_posts('post')->publish;
+        $note = [
+            'key'   => 'links',
+            'title' => __('Links', 'persian-kit'),
+            'text'  => sprintf(
+                /* translators: %s: number of posts. */
+                _n(
+                    '%s post with a Jalali link keeps it working, and Jalali archive links too. Links in the other calendar redirect to them.',
+                    '%s posts with Jalali links keep them working, and Jalali archive links too. Links in the other calendar redirect to them.',
+                    $count,
+                    'persian-kit'
+                ),
+                number_format_i18n($count)
+            ),
+        ];
+
+        $latest = get_posts(['post_type' => 'post', 'post_status' => 'publish', 'numberposts' => 1, 'suppress_filters' => true]);
+        if ($latest !== []) {
+            $jalali = self::jalaliPath($latest[0], $structure);
+            if ($jalali !== null) {
+                $note['example'] = ['before' => $jalali, 'after' => $jalali];
+            }
+        }
+
+        return [$note];
+    }
+
+    /**
+     * The path Parsi Date gave a post: the structure with the Jalali date
+     * of its local post_date.
+     */
+    private static function jalaliPath(\WP_Post $post, string $structure): ?string
+    {
+        if (!preg_match('/^(?!0000)\d{4}-\d{2}-\d{2}/', $post->post_date)) {
+            return null;
+        }
+
+        $jalali = JalaliPeriod::fromGregorian(new \DateTimeImmutable(substr($post->post_date, 0, 10) . ' 12:00:00', wp_timezone()));
+        $path = str_replace(
+            ['%year%', '%monthnum%', '%day%', '%postname%', '%post_id%'],
+            [(string) $jalali['jy'], sprintf('%02d', $jalali['jm']), sprintf('%02d', $jalali['jd']), rawurldecode($post->post_name), (string) $post->ID],
+            $structure
+        );
+
+        return preg_match('/%[a-z_]+%/', $path) ? null : $path;
     }
 
     protected function isLoaded(): bool

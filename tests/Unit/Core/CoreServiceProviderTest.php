@@ -12,6 +12,7 @@ use PersianKit\Core\ConflictDetector;
 use PersianKit\Core\CoreServiceProvider;
 use PersianKit\Core\SettingsRegistrar;
 use PersianKit\Service\Assets\AssetManager;
+use PersianKit\Service\Import\PluginsScreenNotice;
 use PersianKit\Service\Import\ReportDownload;
 use PHPUnit\Framework\TestCase;
 
@@ -41,7 +42,7 @@ class CoreServiceProviderTest extends TestCase
         Functions\when('is_admin')->justReturn(true);
 
         $this->assertSame(
-            [ConflictDetector::class, ReportDownload::class, SettingsRegistrar::class, AssetManager::class, AdminPage::class],
+            [ConflictDetector::class, ReportDownload::class, PluginsScreenNotice::class, SettingsRegistrar::class, AssetManager::class, AdminPage::class],
             $this->bootAndListFetched()
         );
     }
@@ -100,6 +101,7 @@ class CoreServiceProviderTest extends TestCase
                 AdminPage::class        => Mockery::mock(AdminPage::class)->shouldReceive('register')->once()->getMock(),
                 AssetManager::class     => Mockery::mock(AssetManager::class),
                 ReportDownload::class   => Mockery::mock(ReportDownload::class)->shouldReceive('register')->once()->getMock(),
+                PluginsScreenNotice::class => Mockery::mock(PluginsScreenNotice::class)->shouldReceive('register')->once()->getMock(),
             };
         });
 
