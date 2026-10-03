@@ -166,18 +166,33 @@ export default function importJob(config = {}) {
         },
 
         get deactivateLabel() {
-            /* translators: %s: plugin name. */
-            return this.current ? sprintf(__('Deactivate %s', 'persian-kit'), this.current.name) : '';
+            return this.current
+                ? sprintf(
+                    /* translators: %s: plugin name. */
+                    __('Deactivate %s', 'persian-kit'),
+                    this.current.name
+                )
+                : '';
         },
 
         get inactiveText() {
-            /* translators: %s: plugin name. */
-            return this.current ? sprintf(__('%s is inactive. Its settings and data can be imported now.', 'persian-kit'), this.current.name) : '';
+            return this.current
+                ? sprintf(
+                    /* translators: %s: plugin name. */
+                    __('%s is inactive. Its settings and data can be imported now.', 'persian-kit'),
+                    this.current.name
+                )
+                : '';
         },
 
         get finishedText() {
-            /* translators: %s: plugin name. */
-            return this.current ? sprintf(__('The switch from %s is finished.', 'persian-kit'), this.current.name) : '';
+            return this.current
+                ? sprintf(
+                    /* translators: %s: plugin name. */
+                    __('The switch from %s is finished.', 'persian-kit'),
+                    this.current.name
+                )
+                : '';
         },
 
         get progressText() {
@@ -187,8 +202,11 @@ export default function importJob(config = {}) {
 
             const { processed, total, percent } = this.job.progress;
             if (this.job.status === 'paused') {
-                /* translators: %s: percentage done. */
-                return sprintf(__('Paused at %s%%.', 'persian-kit'), formatNumber(percent));
+                return sprintf(
+                    /* translators: %s: percentage done. */
+                    __('Paused at %s%%.', 'persian-kit'),
+                    formatNumber(percent)
+                );
             }
 
             return sprintf(
@@ -237,10 +255,16 @@ export default function importJob(config = {}) {
         },
 
         get pageText() {
-            return this.report
+            if (!this.report) {
+                return '';
+            }
+
+            return sprintf(
                 /* translators: 1: page number, 2: number of pages. */
-                ? sprintf(__('Page %1$s of %2$s', 'persian-kit'), formatNumber(this.reportPage), formatNumber(this.report.pages))
-                : '';
+                __('Page %1$s of %2$s', 'persian-kit'),
+                formatNumber(this.reportPage),
+                formatNumber(this.report.pages)
+            );
         },
 
         get csvUrl() {
@@ -273,18 +297,32 @@ export default function importJob(config = {}) {
         },
 
         countText(count) {
-            /* translators: %s: number of items. */
-            return sprintf(_n('%s item', '%s items', count, 'persian-kit'), formatNumber(count));
+            return sprintf(
+                /* translators: %s: number of items. */
+                _n('%s item', '%s items', count, 'persian-kit'),
+                formatNumber(count)
+            );
         },
 
         rowCurrent(row) {
-            /* translators: %s: Persian Kit's current value of a setting. */
-            return row.no_change ? __('Already set: no change', 'persian-kit') : sprintf(__('Now: %s', 'persian-kit'), row.current);
+            if (row.no_change) {
+                return __('Already set: no change', 'persian-kit');
+            }
+
+            return sprintf(
+                /* translators: %s: Persian Kit's current value of a setting. */
+                __('Now: %s', 'persian-kit'),
+                row.current
+            );
         },
 
         statusLabel(status) {
-            /* translators: 1: order status, 2: number of orders. */
-            return sprintf(__('%1$s (%2$s orders)', 'persian-kit'), status.label, formatNumber(status.count));
+            return sprintf(
+                /* translators: 1: order status, 2: number of orders. */
+                __('%1$s (%2$s orders)', 'persian-kit'),
+                status.label,
+                formatNumber(status.count)
+            );
         },
 
         async open(key) {

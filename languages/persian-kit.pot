@@ -9,19 +9,21 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-10-03T05:09:54+00:00\n"
+"POT-Creation-Date: 2026-10-03T08:06:22+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: persian-kit\n"
 
 #. Plugin Name of the plugin
 #: persian-kit.php
-#: src/Core/AdminPage.php:114
-#: src/Core/AdminPage.php:115
-#: src/Core/ConflictDetector.php:144
+#: src/Core/AdminPage.php:119
+#: src/Core/AdminPage.php:120
+#: src/Core/ConflictDetector.php:177
 #: src/Service/Assets/AssetManager.php:45
+#: src/Service/Import/PluginsScreenNotice.php:56
 #: views/admin/partials/footer.php:30
 #: views/admin/partials/header.php:35
+#: views/admin/partials/switch-review.php:61
 msgid "Persian Kit"
 msgstr ""
 
@@ -63,228 +65,285 @@ msgstr ""
 msgid "Needs %1$s %2$s or newer (this site has %3$s)."
 msgstr ""
 
-#: src/Core/AdminPage.php:106
+#: src/Core/AdminPage.php:111
+#: views/admin/partials/switch-review.php:54
+#: public/js/admin.js:4456
 msgid "Settings"
 msgstr ""
 
-#: src/Core/AdminPage.php:269
+#: src/Core/AdminPage.php:294
 msgid "Forms"
 msgstr ""
 
-#: src/Core/AdminPage.php:270
+#: src/Core/AdminPage.php:295
 msgid "Store"
 msgstr ""
 
-#: src/Core/AdminPage.php:271
+#: src/Core/AdminPage.php:296
 #: views/admin/partials/compatibility-guidance.php:16
 msgid "Compatibility"
 msgstr ""
 
-#: src/Core/AdminPage.php:356
+#: src/Core/AdminPage.php:381
+#: src/Service/Import/ReportDownload.php:39
 msgid "You do not have permission to access this page."
 msgstr ""
 
-#: src/Core/AdminPage.php:375
+#: src/Core/AdminPage.php:400
 #: views/admin/partials/woocommerce-settings.php:180
 msgid "Display"
 msgstr ""
 
-#: src/Core/AdminPage.php:376
+#: src/Core/AdminPage.php:401
 msgid "Writing"
 msgstr ""
 
-#: src/Core/AdminPage.php:377
-#: src/Core/ConflictDetector.php:40
-#: src/Core/ConflictDetector.php:82
+#: src/Core/AdminPage.php:402
+#: src/Core/ConflictDetector.php:43
+#: src/Core/ConflictDetector.php:87
 #: src/Modules/WooCommerce/WooCommerceModule.php:20
 #: src/Modules/WooCommerce/WooCommerceModule.php:55
+#: src/Service/Import/ImportReport.php:238
 #: views/admin/partials/woocommerce-settings.php:170
 msgid "WooCommerce"
 msgstr ""
 
-#: src/Core/AdminPage.php:378
+#: src/Core/AdminPage.php:403
 msgid "Integrations"
 msgstr ""
 
-#: src/Core/AdminPage.php:379
+#: src/Core/AdminPage.php:404
 msgid "Tools"
 msgstr ""
 
-#: src/Core/ConflictDetector.php:27
+#: src/Core/ConflictDetector.php:30
 msgid "WP-Parsidate is already handling some Persian date and text features."
 msgstr ""
 
-#: src/Core/ConflictDetector.php:29
-#: src/Core/ConflictDetector.php:36
-#: src/Core/ConflictDetector.php:50
-#: src/Core/ConflictDetector.php:57
-#: src/Core/ConflictDetector.php:76
+#: src/Core/ConflictDetector.php:32
+#: src/Core/ConflictDetector.php:39
+#: src/Core/ConflictDetector.php:55
+#: src/Core/ConflictDetector.php:62
+#: src/Core/ConflictDetector.php:81
 #: src/Modules/DateConversion/DateConversionModule.php:20
+#: src/Service/Import/ImportReport.php:227
+#: src/Service/Import/Sources/ParsiDate/ParsiDateSettings.php:151
+#: src/Service/Import/Sources/ParsiDate/ParsiDateSettings.php:153
 #: views/admin/partials/digit-conversion-settings.php:16
 msgid "Jalali dates"
 msgstr ""
 
-#: src/Core/ConflictDetector.php:30
-#: src/Core/ConflictDetector.php:51
+#: src/Core/ConflictDetector.php:33
+#: src/Core/ConflictDetector.php:56
 msgid "Digit conversion in content"
 msgstr ""
 
-#: src/Core/ConflictDetector.php:31
-#: src/Core/ConflictDetector.php:52
+#: src/Core/ConflictDetector.php:34
+#: src/Core/ConflictDetector.php:57
 msgid "Arabic-to-Persian text normalization"
 msgstr ""
 
-#: src/Core/ConflictDetector.php:32
+#: src/Core/ConflictDetector.php:35
 msgid "Admin and editor font styling"
 msgstr ""
 
-#: src/Core/ConflictDetector.php:33
+#: src/Core/ConflictDetector.php:36
 msgid "WooCommerce Jalali dates"
 msgstr ""
 
-#: src/Core/ConflictDetector.php:37
-#: src/Core/ConflictDetector.php:58
-#: src/Core/ConflictDetector.php:78
+#: src/Core/ConflictDetector.php:40
+#: src/Core/ConflictDetector.php:63
+#: src/Core/ConflictDetector.php:83
 #: src/Modules/DigitConversion/DigitConversionModule.php:22
+#: src/Service/Import/ImportReport.php:230
+#: src/Service/Import/Sources/ParsiDate/ParsiDateSettings.php:191
 #: views/admin/partials/woocommerce-settings.php:181
 msgid "Persian digits"
 msgstr ""
 
-#: src/Core/ConflictDetector.php:38
-#: src/Core/ConflictDetector.php:59
-#: src/Core/ConflictDetector.php:79
+#: src/Core/ConflictDetector.php:41
+#: src/Core/ConflictDetector.php:64
+#: src/Core/ConflictDetector.php:84
 #: src/Modules/CharNormalization/CharNormalizationModule.php:20
+#: src/Service/Import/ImportReport.php:235
+#: src/Service/Import/Sources/ParsiDate/ParsiDateSettings.php:221
 msgid "Persian ی and ک"
 msgstr ""
 
-#: src/Core/ConflictDetector.php:39
-#: src/Core/ConflictDetector.php:60
-#: src/Core/ConflictDetector.php:80
+#: src/Core/ConflictDetector.php:42
+#: src/Core/ConflictDetector.php:65
+#: src/Core/ConflictDetector.php:85
 #: src/Modules/AdminFont/AdminFontModule.php:26
+#: src/Service/Import/ImportReport.php:236
+#: src/Service/Import/ImportReport.php:237
+#: src/Service/Import/Sources/PersianWooCommerce/PersianWooCommerceSource.php:215
 msgid "Admin font"
 msgstr ""
 
-#: src/Core/ConflictDetector.php:41
-#: src/Core/ConflictDetector.php:61
-#: src/Core/ConflictDetector.php:81
+#: src/Core/ConflictDetector.php:44
+#: src/Core/ConflictDetector.php:66
+#: src/Core/ConflictDetector.php:86
 #: src/Modules/ZWNJEditor/ZWNJEditorModule.php:20
 msgid "Half-space key"
 msgstr ""
 
-#: src/Core/ConflictDetector.php:42
-#: src/Core/ConflictDetector.php:62
-#: src/Core/ConflictDetector.php:83
+#: src/Core/ConflictDetector.php:45
+#: src/Core/ConflictDetector.php:67
+#: src/Core/ConflictDetector.php:88
 #: src/Modules/Utilities/UtilitiesModule.php:19
 msgid "Persian slugs"
 msgstr ""
 
-#: src/Core/ConflictDetector.php:48
-msgid "WP Jalali is already handling some Persian date and text features."
+#: src/Core/ConflictDetector.php:47
+msgid "Old Jalali post links keep working while Jalali dates are off. Switching to Persian Kit? The switch on the Tools tab brings over its settings, widgets, blocks and ACF dates."
 msgstr ""
 
 #: src/Core/ConflictDetector.php:53
+msgid "WP Jalali is already handling some Persian date and text features."
+msgstr ""
+
+#: src/Core/ConflictDetector.php:58
 msgid "Some admin and editor styling"
 msgstr ""
 
-#: src/Core/ConflictDetector.php:54
+#: src/Core/ConflictDetector.php:59
 msgid "Jalali archive and permalink behavior"
 msgstr ""
 
-#: src/Core/ConflictDetector.php:64
+#: src/Core/ConflictDetector.php:69
 msgid "Persian Kit also serves Jalali archive pages such as /1405/07/, and can put Jalali dates in post links, as WP Jalali does: turn on \"Jalali dates in post links\" under Jalali dates."
 msgstr ""
 
-#: src/Core/ConflictDetector.php:69
+#: src/Core/ConflictDetector.php:74
 msgid "Persian WooCommerce is already handling WooCommerce-specific Persian date features."
 msgstr ""
 
-#: src/Core/ConflictDetector.php:71
+#: src/Core/ConflictDetector.php:76
 msgid "WooCommerce Jalali date inputs"
 msgstr ""
 
-#: src/Core/ConflictDetector.php:72
+#: src/Core/ConflictDetector.php:77
 msgid "Order, product, and coupon date editing"
 msgstr ""
 
-#: src/Core/ConflictDetector.php:73
+#: src/Core/ConflictDetector.php:78
 msgid "Some WooCommerce date display and email formatting"
 msgstr ""
 
-#: src/Core/ConflictDetector.php:77
+#: src/Core/ConflictDetector.php:82
+#: src/Service/Import/ImportReport.php:228
+#: src/Service/Import/Sources/ParsiDate/ParsiDateSettings.php:162
 #: views/admin/partials/date-conversion-settings.php:25
 msgid "Convert every date (advanced)"
 msgstr ""
 
-#: src/Core/ConflictDetector.php:85
+#: src/Core/ConflictDetector.php:90
 msgid "Let Persian WooCommerce handle Woo-specific dates. Persian Kit can still handle normal WordPress dates."
 msgstr ""
 
-#: src/Core/ConflictDetector.php:145
+#: src/Core/ConflictDetector.php:98
+msgid "Persian WooCommerce Shipping is handling provinces, cities and shipping rates for Iran."
+msgstr ""
+
+#: src/Core/ConflictDetector.php:100
+#: src/Service/Import/Sources/Shipping/PwsSettings.php:41
+msgid "Province and city lists at checkout"
+msgstr ""
+
+#: src/Core/ConflictDetector.php:101
+msgid "Shipping methods: courier, Tipax and post"
+msgstr ""
+
+#: src/Core/ConflictDetector.php:104
+#: src/Modules/WooCommerce/CityField.php:193
+#: src/Service/Import/ImportReport.php:241
+#: src/Service/Import/Sources/ParsiDate/ParsiDateSettings.php:277
+#: src/Service/Import/Sources/PersianWooCommerce/PersianWooCommerceSettings.php:61
+#: src/Service/Import/Sources/Shipping/PwsSettings.php:43
+msgid "City suggestions"
+msgstr ""
+
+#: src/Core/ConflictDetector.php:105
+#: src/Service/Import/ImportReport.php:242
+#: src/Service/Import/Sources/PersianWooCommerce/PersianWooCommerceSettings.php:50
+msgid "Provinces you ship to"
+msgstr ""
+
+#: src/Core/ConflictDetector.php:107
+msgid "Its province and city fields replace WooCommerce's, so Persian Kit's city suggestions and province list stay off while it is active."
+msgstr ""
+
+#: src/Core/ConflictDetector.php:178
 #: views/admin/partials/compatibility-guidance.php:41
 msgid "Another Persian plugin does some of the same things. Use one plugin for each feature."
 msgstr ""
 
-#: src/Core/ConflictDetector.php:154
+#: src/Core/ConflictDetector.php:187
 #: views/admin/partials/compatibility-guidance.php:36
 #: views/admin/partials/integration-card.php:72
 #: views/admin/partials/woocommerce-tab.php:37
 msgid "Review recommended settings"
 msgstr ""
 
-#: src/Core/ConflictDetector.php:199
+#: src/Core/ConflictDetector.php:192
+#: src/Service/Import/Sources/Shipping/PwsSource.php:116
+msgid "Switch to Persian Kit"
+msgstr ""
+
+#: src/Core/ConflictDetector.php:238
 msgid "Unknown plugin"
 msgstr ""
 
 #. translators: %s: name of another plugin.
-#: src/Core/ConflictDetector.php:229
+#: src/Core/ConflictDetector.php:268
 #, php-format
 msgid "%s is already handling some of the same features."
 msgstr ""
 
-#: src/Core/ConflictDetector.php:280
+#: src/Core/ConflictDetector.php:323
 msgid "Currently on"
 msgstr ""
 
-#: src/Core/ConflictDetector.php:281
+#: src/Core/ConflictDetector.php:324
 msgid "Currently off"
 msgstr ""
 
-#: src/Core/ConflictDetector.php:315
+#: src/Core/ConflictDetector.php:368
 msgid "Turn off"
 msgstr ""
 
-#: src/Core/ConflictDetector.php:316
+#: src/Core/ConflictDetector.php:369
 msgid "Keep on"
 msgstr ""
 
-#: src/Core/ConflictDetector.php:317
+#: src/Core/ConflictDetector.php:370
 msgid "Leave off"
 msgstr ""
 
-#: src/Core/ConflictDetector.php:318
+#: src/Core/ConflictDetector.php:371
 msgid "No change needed"
 msgstr ""
 
 #. translators: %s: Persian Kit module name.
-#: src/Core/ConflictDetector.php:326
+#: src/Core/ConflictDetector.php:379
 #, php-format
 msgid "Turn off %s in Persian Kit."
 msgstr ""
 
 #. translators: %s: Persian Kit module name.
-#: src/Core/ConflictDetector.php:328
+#: src/Core/ConflictDetector.php:381
 #, php-format
 msgid "Keep %s enabled in Persian Kit."
 msgstr ""
 
 #. translators: %s: Persian Kit module name.
-#: src/Core/ConflictDetector.php:330
+#: src/Core/ConflictDetector.php:383
 #, php-format
 msgid "Leave %s off in Persian Kit."
 msgstr ""
 
 #. translators: %s: Persian Kit module name.
-#: src/Core/ConflictDetector.php:332
+#: src/Core/ConflictDetector.php:385
 #, php-format
 msgid "No change needed for %s."
 msgstr ""
@@ -363,6 +422,8 @@ msgid "Show ۱۲۳ instead of 123 in your site's content."
 msgstr ""
 
 #: src/Modules/Forms/AcfModule.php:21
+#: src/Service/Import/ImportReport.php:244
+#: src/Service/Import/Sources/ParsiDate/ParsiDateSettings.php:298
 msgid "ACF"
 msgstr ""
 
@@ -527,10 +588,6 @@ msgstr ""
 msgid "Billing postcode"
 msgstr ""
 
-#: src/Modules/WooCommerce/CityField.php:193
-msgid "City suggestions"
-msgstr ""
-
 #: src/Modules/WooCommerce/CityField.php:194
 msgid "1 city suggested."
 msgstr ""
@@ -623,6 +680,1148 @@ msgstr ""
 msgid "The generated admin assets are missing. Build the plugin before packaging or using it from source."
 msgstr ""
 
+#. translators: %s: plugin name, such as Parsi Date.
+#: src/Service/Import/AbstractSource.php:44
+#, php-format
+msgid "Deactivate %s first."
+msgstr ""
+
+#. translators: %s: error message.
+#: src/Service/Import/AbstractTask.php:48
+#, php-format
+msgid "Could not convert: %s"
+msgstr ""
+
+#: src/Service/Import/ImportReport.php:51
+#: views/admin/partials/switch-steps.php:129
+msgid "Outcome"
+msgstr ""
+
+#: src/Service/Import/ImportReport.php:52
+msgid "Part"
+msgstr ""
+
+#: src/Service/Import/ImportReport.php:53
+#: views/admin/partials/switch-steps.php:127
+msgid "Item"
+msgstr ""
+
+#: src/Service/Import/ImportReport.php:54
+msgid "Field"
+msgstr ""
+
+#: src/Service/Import/ImportReport.php:55
+msgid "Before"
+msgstr ""
+
+#: src/Service/Import/ImportReport.php:56
+msgid "After"
+msgstr ""
+
+#: src/Service/Import/ImportReport.php:57
+msgid "Reason"
+msgstr ""
+
+#: src/Service/Import/ImportReport.php:58
+msgid "Link"
+msgstr ""
+
+#: src/Service/Import/ImportReport.php:59
+msgid "Date"
+msgstr ""
+
+#: src/Service/Import/ImportReport.php:123
+#: public/js/admin.js:4476
+msgid "Done"
+msgstr ""
+
+#: src/Service/Import/ImportReport.php:124
+msgid "Already right"
+msgstr ""
+
+#: src/Service/Import/ImportReport.php:125
+#: public/js/admin.js:4478
+msgid "Needs attention"
+msgstr ""
+
+#: src/Service/Import/ImportReport.php:126
+#: public/js/admin.js:4477
+msgid "Not imported"
+msgstr ""
+
+#: src/Service/Import/ImportReport.php:127
+msgid "Put back"
+msgstr ""
+
+#: src/Service/Import/ImportReport.php:128
+msgid "Kept: changed since the import"
+msgstr ""
+
+#: src/Service/Import/ImportReport.php:129
+msgid "Undone"
+msgstr ""
+
+#. translators: %d: user ID.
+#: src/Service/Import/ImportReport.php:161
+#, php-format
+msgid "User %d"
+msgstr ""
+
+#. translators: %d: order number.
+#: src/Service/Import/ImportReport.php:166
+#, php-format
+msgid "Order #%d"
+msgstr ""
+
+#. translators: %d: post ID.
+#: src/Service/Import/ImportReport.php:171
+#, php-format
+msgid "Post %d"
+msgstr ""
+
+#. translators: %d: shipping zone ID.
+#: src/Service/Import/ImportReport.php:176
+#, php-format
+msgid "Shipping zone %d"
+msgstr ""
+
+#: src/Service/Import/ImportReport.php:178
+msgid "Widget"
+msgstr ""
+
+#: src/Service/Import/ImportReport.php:202
+#: src/Service/Import/Sources/ParsiDate/BlockTask.php:57
+msgid "Parsi Date blocks"
+msgstr ""
+
+#: src/Service/Import/ImportReport.php:202
+#: src/Service/Import/Sources/ParsiDate/BlockTask.php:58
+msgid "WordPress's Archives and Calendar blocks"
+msgstr ""
+
+#: src/Service/Import/ImportReport.php:229
+#: src/Service/Import/Sources/ParsiDate/ParsiDateSettings.php:173
+#: src/Service/Import/Sources/ParsiDate/ParsiDateSettings.php:175
+#: views/admin/partials/date-conversion-settings.php:21
+msgid "Jalali dates in post links"
+msgstr ""
+
+#: src/Service/Import/ImportReport.php:231
+#: src/Service/Import/Sources/ParsiDate/ParsiDateSettings.php:201
+msgid "Persian digits in dates"
+msgstr ""
+
+#: src/Service/Import/ImportReport.php:232
+#: src/Service/Import/Sources/ParsiDate/ParsiDateSettings.php:209
+msgid "Persian digits in counts and numbers"
+msgstr ""
+
+#: src/Service/Import/ImportReport.php:233
+#: src/Service/Import/Sources/ParsiDate/ParsiDateSettings.php:251
+#: src/Service/Import/Sources/PersianWooCommerce/PersianWooCommerceSettings.php:40
+#: src/Service/Import/Sources/PersianWooCommerce/PersianWooCommerceSource.php:208
+msgid "Persian digits in prices"
+msgstr ""
+
+#: src/Service/Import/ImportReport.php:234
+#: src/Service/Import/Sources/ParsiDate/ParsiDateSettings.php:284
+msgid "Persian digits in WooCommerce emails"
+msgstr ""
+
+#: src/Service/Import/ImportReport.php:239
+#: src/Service/Import/Sources/ParsiDate/ParsiDateSettings.php:255
+#: src/Service/Import/Sources/PersianWooCommerce/PersianWooCommerceSettings.php:68
+msgid "Fix what customers type at checkout"
+msgstr ""
+
+#: src/Service/Import/ImportReport.php:240
+#: src/Service/Import/Sources/ParsiDate/ParsiDateSettings.php:265
+#: src/Service/Import/Sources/PersianWooCommerce/PersianWooCommerceSettings.php:77
+msgid "Check what customers type at checkout"
+msgstr ""
+
+#: src/Service/Import/ImportReport.php:243
+msgid "Jalali dates in the shop admin"
+msgstr ""
+
+#: src/Service/Import/ImportReport.php:254
+#: src/Service/Import/Settings/SettingsImporter.php:260
+msgid "On"
+msgstr ""
+
+#: src/Service/Import/ImportReport.php:254
+#: src/Service/Import/Settings/SettingsImporter.php:260
+#: views/admin/partials/woocommerce-settings.php:38
+msgid "Off"
+msgstr ""
+
+#: src/Service/Import/ImportRestController.php:134
+msgid "Paused."
+msgstr ""
+
+#: src/Service/Import/ImportRestController.php:161
+msgid "Finish or cancel the switch first."
+msgstr ""
+
+#: src/Service/Import/ImportReview.php:126
+msgid "No such data to convert."
+msgstr ""
+
+#: src/Service/Import/ImportReview.php:156
+msgid "It is active for the whole network. Ask your network admin to deactivate it."
+msgstr ""
+
+#: src/Service/Import/ImportReview.php:157
+msgid "You can not deactivate plugins on this site. Ask an administrator."
+msgstr ""
+
+#: src/Service/Import/ImportReview.php:169
+msgid "Active"
+msgstr ""
+
+#: src/Service/Import/ImportReview.php:170
+msgid "Inactive, its data is still here"
+msgstr ""
+
+#. translators: 1: parts imported, 2: all parts.
+#: src/Service/Import/ImportReview.php:173
+#, php-format
+msgid "Partly imported (%1$s of %2$s parts)"
+msgstr ""
+
+#. translators: %s: date of the import.
+#: src/Service/Import/ImportReview.php:178
+#, php-format
+msgid "Imported on %s"
+msgstr ""
+
+#: src/Service/Import/ImportReview.php:179
+msgid "No data"
+msgstr ""
+
+#: src/Service/Import/ImportRunner.php:47
+#: src/Service/Import/ReportDownload.php:47
+msgid "No such plugin to switch from."
+msgstr ""
+
+#: src/Service/Import/ImportRunner.php:111
+msgid "There is no switch in progress."
+msgstr ""
+
+#: src/Service/Import/ImportRunner.php:122
+#: src/Service/Import/ImportRunner.php:184
+msgid "The switch is running in another tab or in WP-CLI. Try again in a minute."
+msgstr ""
+
+#: src/Service/Import/ImportRunner.php:213
+msgid "Changed since the import; kept."
+msgstr ""
+
+#. translators: %s: error message.
+#: src/Service/Import/ImportRunner.php:395
+#, php-format
+msgid "Stopped with an error: %s"
+msgstr ""
+
+#. translators: %s: plugin name, such as Parsi Date.
+#: src/Service/Import/ImportRunner.php:467
+#, php-format
+msgid "Finish or cancel the switch from %s first."
+msgstr ""
+
+#. translators: %s: province as saved.
+#: src/Service/Import/Iran/IranAddressResolver.php:129
+#: src/Service/Import/Sources/Shipping/DefaultCountryTask.php:59
+#, php-format
+msgid "Unknown province: %s"
+msgstr ""
+
+#. translators: %s: term id.
+#: src/Service/Import/Iran/IranAddressResolver.php:145
+#, php-format
+msgid "Province %s is a city or district, not a province."
+msgstr ""
+
+#. translators: %s: term id.
+#: src/Service/Import/Iran/IranAddressResolver.php:147
+#, php-format
+msgid "Province %s was deleted from the shipping plugin's list."
+msgstr ""
+
+#. translators: 1: province number, 2: province name, 3: another province name.
+#: src/Service/Import/Iran/IranAddressResolver.php:159
+#, php-format
+msgid "Province %1$s could be %2$s or %3$s: saved in the shipping plugin's own list or in Tapin's."
+msgstr ""
+
+#. translators: 1: city name, 2: province name.
+#: src/Service/Import/Iran/IranAddressResolver.php:198
+#: src/Service/Import/Iran/IranAddressResolver.php:212
+#, php-format
+msgid "%1$s is not in %2$s."
+msgstr ""
+
+#. translators: %s: city id.
+#: src/Service/Import/Iran/IranAddressResolver.php:219
+#, php-format
+msgid "City %s was deleted from the shipping plugin's list."
+msgstr ""
+
+#. translators: %s: plugin name, such as Parsi Date.
+#: src/Service/Import/PluginsScreenNotice.php:50
+#, php-format
+msgid "%s is inactive. Continue the switch to Persian Kit to import its settings and data."
+msgstr ""
+
+#. translators: %s: plugin name, such as Parsi Date.
+#: src/Service/Import/PluginsScreenNotice.php:52
+#, php-format
+msgid "The switch from %s to Persian Kit is waiting."
+msgstr ""
+
+#. translators: %s: plugin name, such as Parsi Date.
+#: src/Service/Import/PluginsScreenNotice.php:61
+#, php-format
+msgid "Continue the switch from %s"
+msgstr ""
+
+#. translators: %s: Persian Kit module name, such as WooCommerce.
+#: src/Service/Import/Settings/SettingsImporter.php:96
+#, php-format
+msgid "Settings under %s"
+msgstr ""
+
+#: src/Service/Import/Settings/SettingsImporter.php:101
+msgid "It is off, so the settings above take effect only once it is on. Turning it on also converts digits in titles and content."
+msgstr ""
+
+#: src/Service/Import/Settings/SettingsImporter.php:102
+msgid "It is off, so the settings imported into it would do nothing."
+msgstr ""
+
+#: src/Service/Import/Settings/SettingsImporter.php:263
+#: views/admin/partials/woocommerce-settings.php:96
+msgid "All provinces"
+msgstr ""
+
+#. translators: %s: number of provinces.
+#: src/Service/Import/Settings/SettingsImporter.php:265
+#, php-format
+msgid "%s province"
+msgid_plural "%s provinces"
+msgstr[0] ""
+msgstr[1] ""
+
+#: src/Service/Import/Settings/SettingStatus.php:27
+msgid "Same"
+msgstr ""
+
+#: src/Service/Import/Settings/SettingStatus.php:28
+msgid "Close"
+msgstr ""
+
+#: src/Service/Import/Settings/SettingStatus.php:29
+msgid "Not yet"
+msgstr ""
+
+#: src/Service/Import/Settings/SettingStatus.php:30
+msgid "Automatic"
+msgstr ""
+
+#. translators: %s: the saved value.
+#: src/Service/Import/Sources/ParsiDate/AcfDateValue.php:44
+#: src/Service/Import/Sources/ParsiDate/AcfDateValue.php:60
+#, php-format
+msgid "Not a date: %s"
+msgstr ""
+
+#: src/Service/Import/Sources/ParsiDate/AcfDateValue.php:52
+msgid "A date after 2100: Parsi Date probably converted it twice. Tick \"Fix dates saved twice\" to fix these."
+msgstr ""
+
+#. translators: %s: the saved value.
+#: src/Service/Import/Sources/ParsiDate/AcfDateValue.php:68
+#, php-format
+msgid "Neither a Jalali nor a Gregorian year: %s"
+msgstr ""
+
+#. translators: %s: the saved value.
+#: src/Service/Import/Sources/ParsiDate/AcfDateValue.php:74
+#, php-format
+msgid "Not a valid date: %s"
+msgstr ""
+
+#: src/Service/Import/Sources/ParsiDate/AcfFieldTask.php:38
+msgid "ACF date fields"
+msgstr ""
+
+#: src/Service/Import/Sources/ParsiDate/AcfFieldTask.php:43
+#: src/Service/Import/Sources/ParsiDate/AcfValueTask.php:45
+msgid "Activate ACF to convert these dates."
+msgstr ""
+
+#: src/Service/Import/Sources/ParsiDate/AcfFieldTask.php:55
+msgid "Parsi Date date field"
+msgstr ""
+
+#: src/Service/Import/Sources/ParsiDate/AcfFieldTask.php:56
+msgid "ACF date picker"
+msgstr ""
+
+#: src/Service/Import/Sources/ParsiDate/AcfFieldTask.php:56
+msgid "Defined in code: to change by hand"
+msgstr ""
+
+#: src/Service/Import/Sources/ParsiDate/AcfFieldTask.php:87
+msgid "Templates now get dates as 1403/05/12; Parsi Date gave 1403-05-12."
+msgstr ""
+
+#. translators: %s: file path.
+#: src/Service/Import/Sources/ParsiDate/AcfFieldTask.php:144
+#, php-format
+msgid "Its local JSON file was rewritten: %s"
+msgstr ""
+
+#: src/Service/Import/Sources/ParsiDate/AcfFieldTask.php:156
+msgid "PHP code (acf_add_local_field_group)"
+msgstr ""
+
+#. translators: 1: field label, 2: field group title, 3: file or "PHP code".
+#: src/Service/Import/Sources/ParsiDate/AcfFieldTask.php:160
+#, php-format
+msgid "\"%1$s\" in \"%2$s\" is defined in %3$s. Its values were converted; change the field there to 'type' => 'date_picker', 'display_format' => 'd/m/Y', 'return_format' => 'Y/m/d'."
+msgstr ""
+
+#: src/Service/Import/Sources/ParsiDate/AcfValueTask.php:40
+msgid "ACF date values"
+msgstr ""
+
+#. translators: %s: number of values.
+#: src/Service/Import/Sources/ParsiDate/AcfValueTask.php:80
+#, php-format
+msgid "Fix %s date saved twice (after the year 2100)"
+msgid_plural "Fix %s dates saved twice (after the year 2100)"
+msgstr[0] ""
+msgstr[1] ""
+
+#. translators: %s: post type.
+#: src/Service/Import/Sources/ParsiDate/BlockRewriter.php:45
+#, php-format
+msgid "A Parsi Date block for \"%s\" was left as it is: WordPress's archive and calendar blocks list posts only."
+msgstr ""
+
+#: src/Service/Import/Sources/ParsiDate/BlockTask.php:38
+msgid "Archive and calendar blocks"
+msgstr ""
+
+#: src/Service/Import/Sources/ParsiDate/BlockTask.php:73
+#: src/Service/Import/Sources/ParsiDate/BlockTask.php:132
+msgid "Archive"
+msgstr ""
+
+#: src/Service/Import/Sources/ParsiDate/BlockTask.php:73
+#: src/Service/Import/Sources/ParsiDate/BlockTask.php:132
+#: src/Service/Import/Sources/ParsiDate/WidgetTask.php:60
+msgid "Calendar"
+msgstr ""
+
+#: src/Service/Import/Sources/ParsiDate/ParsiDateSettings.php:146
+msgid "Parsi Date did not apply on this site: it converts only on Persian sites."
+msgstr ""
+
+#: src/Service/Import/Sources/ParsiDate/ParsiDateSettings.php:160
+msgid "Jalali dates in every date WordPress prints"
+msgstr ""
+
+#: src/Service/Import/Sources/ParsiDate/ParsiDateSettings.php:164
+msgid "Parsi Date converted date_i18n() and wp_date() everywhere, as this does."
+msgstr ""
+
+#: src/Service/Import/Sources/ParsiDate/ParsiDateSettings.php:178
+msgid "Persian Kit gives Jalali links to Persian posts only. The old Jalali links of posts in other languages redirect to their Gregorian links."
+msgstr ""
+
+#: src/Service/Import/Sources/ParsiDate/ParsiDateSettings.php:179
+msgid "Every post keeps the link it has, byte for byte."
+msgstr ""
+
+#: src/Service/Import/Sources/ParsiDate/ParsiDateSettings.php:189
+msgid "Persian digits in titles, content, excerpts, comments and categories"
+msgstr ""
+
+#: src/Service/Import/Sources/ParsiDate/ParsiDateSettings.php:194
+msgid "One switch covers them all."
+msgstr ""
+
+#: src/Service/Import/Sources/ParsiDate/ParsiDateSettings.php:195
+msgid "One switch covers them all, so it also converts the places Parsi Date left alone."
+msgstr ""
+
+#: src/Service/Import/Sources/ParsiDate/ParsiDateSettings.php:207
+msgid "Persian digits in numbers and comment counts"
+msgstr ""
+
+#: src/Service/Import/Sources/ParsiDate/ParsiDateSettings.php:211
+msgid "Covers every number WordPress formats, comment counts included."
+msgstr ""
+
+#: src/Service/Import/Sources/ParsiDate/ParsiDateSettings.php:219
+msgid "Arabic ي and ك shown as Persian"
+msgstr ""
+
+#: src/Service/Import/Sources/ParsiDate/ParsiDateSettings.php:223
+msgid "Persian Kit fixes search and saving, not what is shown. To fix posts already saved, use \"Fix letters in existing posts\" below."
+msgstr ""
+
+#: src/Service/Import/Sources/ParsiDate/ParsiDateSettings.php:230
+msgid "Persian font in the admin"
+msgstr ""
+
+#: src/Service/Import/Sources/ParsiDate/ParsiDateSettings.php:232
+#: src/Service/Import/Sources/PersianWooCommerce/PersianWooCommerceSettings.php:125
+#: src/Service/Import/Sources/PersianWooCommerce/PersianWooCommerceSettings.php:127
+#: src/Service/Import/Sources/PersianWooCommerce/PersianWooCommerceSettings.php:138
+msgid "Admin font: Vazirmatn"
+msgstr ""
+
+#: src/Service/Import/Sources/ParsiDate/ParsiDateSettings.php:234
+msgid "Persian Kit's admin font is Vazirmatn, a similar typeface."
+msgstr ""
+
+#: src/Service/Import/Sources/ParsiDate/ParsiDateSettings.php:251
+msgid "WooCommerce: Persian digits in prices"
+msgstr ""
+
+#: src/Service/Import/Sources/ParsiDate/ParsiDateSettings.php:255
+msgid "WooCommerce: accept Persian digits in postcode and phone"
+msgstr ""
+
+#: src/Service/Import/Sources/ParsiDate/ParsiDateSettings.php:263
+msgid "WooCommerce: check postcode and phone"
+msgstr ""
+
+#: src/Service/Import/Sources/ParsiDate/ParsiDateSettings.php:267
+#: src/Service/Import/Sources/PersianWooCommerce/PersianWooCommerceSettings.php:79
+msgid "Persian Kit checks both, and the national ID when that field is on."
+msgstr ""
+
+#: src/Service/Import/Sources/ParsiDate/ParsiDateSettings.php:275
+msgid "WooCommerce: cities as a list"
+msgstr ""
+
+#: src/Service/Import/Sources/ParsiDate/ParsiDateSettings.php:279
+#: src/Service/Import/Sources/PersianWooCommerce/PersianWooCommerceSettings.php:63
+msgid "Customers get suggestions as they type, from the official list of each province, instead of a dropdown."
+msgstr ""
+
+#: src/Service/Import/Sources/ParsiDate/ParsiDateSettings.php:284
+msgid "WooCommerce: Persian digits in emails"
+msgstr ""
+
+#: src/Service/Import/Sources/ParsiDate/ParsiDateSettings.php:298
+msgid "ACF: Jalali date fields"
+msgstr ""
+
+#: src/Service/Import/Sources/ParsiDate/ParsiDateSettings.php:304
+msgid "ACF: save dates in Jalali"
+msgstr ""
+
+#: src/Service/Import/Sources/ParsiDate/ParsiDateSettings.php:308
+msgid "Persian Kit saves Gregorian dates and shows them in Jalali. The ACF data task converts the dates saved in Jalali."
+msgstr ""
+
+#: src/Service/Import/Sources/ParsiDate/ParsiDateSettings.php:324
+msgid "Multilingual sites"
+msgstr ""
+
+#: src/Service/Import/Sources/ParsiDate/ParsiDateSettings.php:324
+msgid "Persian Kit follows each page's language on WPML and Polylang sites."
+msgstr ""
+
+#: src/Service/Import/Sources/ParsiDate/ParsiDateSettings.php:327
+msgid "Jalali date in the admin bar"
+msgstr ""
+
+#: src/Service/Import/Sources/ParsiDate/ParsiDateSettings.php:327
+msgid "Dates in the admin are Jalali while Jalali dates are on."
+msgstr ""
+
+#: src/Service/Import/Sources/ParsiDate/ParsiDateSettings.php:330
+msgid "Persian month names"
+msgstr ""
+
+#: src/Service/Import/Sources/ParsiDate/ParsiDateSettings.php:330
+msgid "Persian Kit uses the Persian month names."
+msgstr ""
+
+#: src/Service/Import/Sources/ParsiDate/ParsiDateSettings.php:344
+#: src/Service/Import/Sources/PersianWooCommerce/PersianWooCommerceSettings.php:176
+#: src/Service/Import/Sources/Shipping/PwsSettings.php:72
+msgid "Persian Kit has no match yet."
+msgstr ""
+
+#. translators: %s: issue number, such as #14.
+#: src/Service/Import/Sources/ParsiDate/ParsiDateSettings.php:346
+#: src/Service/Import/Sources/PersianWooCommerce/PersianWooCommerceSettings.php:178
+#, php-format
+msgid "Planned for Persian Kit (%s)."
+msgstr ""
+
+#: src/Service/Import/Sources/ParsiDate/ParsiDateSettings.php:349
+msgid "Dates in both calendars"
+msgstr ""
+
+#: src/Service/Import/Sources/ParsiDate/ParsiDateSettings.php:352
+msgid "Dari, Kurdish or Pashto month names"
+msgstr ""
+
+#: src/Service/Import/Sources/ParsiDate/ParsiDateSettings.php:355
+msgid "Classic widgets screen"
+msgstr ""
+
+#: src/Service/Import/Sources/ParsiDate/ParsiDateSettings.php:355
+msgid "Use the Classic Widgets plugin for this."
+msgstr ""
+
+#: src/Service/Import/Sources/ParsiDate/ParsiDateSettings.php:358
+msgid "Hooks turned off by name"
+msgstr ""
+
+#: src/Service/Import/Sources/ParsiDate/ParsiDateSettings.php:361
+msgid "WooCommerce: Jalali dates in Analytics"
+msgstr ""
+
+#: src/Service/Import/Sources/ParsiDate/ParsiDateSettings.php:363
+#: src/Service/Import/Sources/PersianWooCommerce/PersianWooCommerceSettings.php:211
+msgid "Persian Kit has no payment gateways. See \"Before you deactivate\"."
+msgstr ""
+
+#. translators: %s: bank name, such as mellat.
+#: src/Service/Import/Sources/ParsiDate/ParsiDateSettings.php:366
+#, php-format
+msgid "WooCommerce: %s bank gateway"
+msgstr ""
+
+#: src/Service/Import/Sources/ParsiDate/ParsiDateSettings.php:370
+msgid "Easy Digital Downloads"
+msgstr ""
+
+#: src/Service/Import/Sources/ParsiDate/ParsiDateSource.php:40
+msgid "Parsi Date"
+msgstr ""
+
+#: src/Service/Import/Sources/ParsiDate/ParsiDateSource.php:96
+msgid "Bank gateways that will stop"
+msgstr ""
+
+#: src/Service/Import/Sources/ParsiDate/ParsiDateSource.php:97
+msgid "Parsi Date's bank gateways stop when it is deactivated; Persian Kit has none. Set up another gateway first."
+msgstr ""
+
+#: src/Service/Import/Sources/ParsiDate/ParsiDateSource.php:101
+msgid "I have another gateway for these payments"
+msgstr ""
+
+#: src/Service/Import/Sources/ParsiDate/ParsiDateSource.php:110
+msgid "Parsi Date blocks in your theme's template files"
+msgstr ""
+
+#: src/Service/Import/Sources/ParsiDate/ParsiDateSource.php:111
+msgid "Blocks in the theme's own files can't be rewritten. After the switch, open each template in the Site Editor, replace them with the Archives or Calendar block and save."
+msgstr ""
+
+#: src/Service/Import/Sources/ParsiDate/ParsiDateSource.php:122
+msgid "Parsi Date widgets in Elementor pages"
+msgstr ""
+
+#: src/Service/Import/Sources/ParsiDate/ParsiDateSource.php:123
+msgid "Replace them with WordPress's Archives or Calendar widget in Elementor."
+msgstr ""
+
+#: src/Service/Import/Sources/ParsiDate/ParsiDateSource.php:135
+msgid "Clear your page cache, if the site has one: widgets and blocks changed."
+msgstr ""
+
+#: src/Service/Import/Sources/ParsiDate/ParsiDateSource.php:138
+msgid "Parsi Date showed Arabic ي and ك as Persian without changing them. To fix the posts themselves, use \"Fix letters in existing posts\" on this tab."
+msgstr ""
+
+#: src/Service/Import/Sources/ParsiDate/ParsiDateSource.php:155
+#: src/Service/Import/Sources/ParsiDate/ParsiDateSource.php:163
+msgid "Links"
+msgstr ""
+
+#: src/Service/Import/Sources/ParsiDate/ParsiDateSource.php:156
+msgid "Post links have no date in them, so there are no date links to keep."
+msgstr ""
+
+#. translators: %s: number of posts.
+#: src/Service/Import/Sources/ParsiDate/ParsiDateSource.php:166
+#, php-format
+msgid "%s post with a Jalali link keeps it working, and Jalali archive links too. Links in the other calendar redirect to them."
+msgid_plural "%s posts with Jalali links keep them working, and Jalali archive links too. Links in the other calendar redirect to them."
+msgstr[0] ""
+msgstr[1] ""
+
+#. translators: %s: plugin name.
+#: src/Service/Import/Sources/ParsiDate/ThemeCalls.php:36
+#, php-format
+msgid "Your theme or must-use plugins call functions of %s"
+msgstr ""
+
+#: src/Service/Import/Sources/ParsiDate/ThemeCalls.php:40
+msgid "These calls stop the page with an error once it is inactive. Copy the code below into your theme's functions.php, or change the calls."
+msgstr ""
+
+#: src/Service/Import/Sources/ParsiDate/ThemeCalls.php:41
+msgid "These calls are inside a function_exists() check: once it is inactive they print nothing."
+msgstr ""
+
+#: src/Service/Import/Sources/ParsiDate/ThemeCalls.php:44
+msgid "prints nothing"
+msgstr ""
+
+#: src/Service/Import/Sources/ParsiDate/ThemeCalls.php:44
+msgid "stops the page"
+msgstr ""
+
+#: src/Service/Import/Sources/ParsiDate/ThemeCalls.php:50
+msgid "Defines each function with Persian Kit's, only while nothing else defines it."
+msgstr ""
+
+#: src/Service/Import/Sources/ParsiDate/ThemeCalls.php:51
+msgid "I have added the code or changed these calls"
+msgstr ""
+
+#: src/Service/Import/Sources/ParsiDate/ThemeScanTask.php:42
+msgid "Theme code and templates"
+msgstr ""
+
+#: src/Service/Import/Sources/ParsiDate/ThemeScanTask.php:57
+msgid "To change by hand"
+msgstr ""
+
+#. translators: %s: function name.
+#: src/Service/Import/Sources/ParsiDate/ThemeScanTask.php:90
+#, php-format
+msgid "%s() prints nothing now. Use the code from \"Before you deactivate\", or change the call."
+msgstr ""
+
+#. translators: %s: function name.
+#: src/Service/Import/Sources/ParsiDate/ThemeScanTask.php:90
+#, php-format
+msgid "%s() stops the page with an error. Use the code from \"Before you deactivate\", or change the call."
+msgstr ""
+
+#: src/Service/Import/Sources/ParsiDate/ThemeScanTask.php:102
+msgid "Parsi Date blocks in a theme file can't be rewritten. Open the template in the Site Editor, replace them with the Archives or Calendar block and save."
+msgstr ""
+
+#: src/Service/Import/Sources/ParsiDate/ThemeScanTask.php:110
+msgid "Built with Elementor and holds a Parsi Date widget. Replace it with WordPress's Archives or Calendar widget in Elementor."
+msgstr ""
+
+#: src/Service/Import/Sources/ParsiDate/WidgetTask.php:45
+msgid "Archive and calendar widgets"
+msgstr ""
+
+#: src/Service/Import/Sources/ParsiDate/WidgetTask.php:58
+msgid "Inactive widgets"
+msgstr ""
+
+#: src/Service/Import/Sources/ParsiDate/WidgetTask.php:59
+msgid "Parsi Date archive"
+msgstr ""
+
+#: src/Service/Import/Sources/ParsiDate/WidgetTask.php:59
+msgid "Parsi Date calendar"
+msgstr ""
+
+#: src/Service/Import/Sources/ParsiDate/WidgetTask.php:60
+msgid "Archives"
+msgstr ""
+
+#: src/Service/Import/Sources/ParsiDate/WidgetTask.php:158
+msgid "WordPress moved it to \"Inactive widgets\" before the switch, and there is no record of where it was. Add WordPress's Archives or Calendar widget where you want it."
+msgstr ""
+
+#. translators: %s: post type.
+#: src/Service/Import/Sources/ParsiDate/WidgetTask.php:167
+#, php-format
+msgid "It lists \"%s\": WordPress's archive and calendar widgets list posts only. Left as it is."
+msgstr ""
+
+#: src/Service/Import/Sources/ParsiDate/WidgetTask.php:215
+msgid "Its colour theme is not kept; the calendar takes the theme's style."
+msgstr ""
+
+#: src/Service/Import/Sources/PersianWooCommerce/PersianWooCommerceSettings.php:32
+#: src/Service/Import/Sources/PersianWooCommerce/PersianWooCommerceSource.php:207
+msgid "Jalali dates and date picker"
+msgstr ""
+
+#: src/Service/Import/Sources/PersianWooCommerce/PersianWooCommerceSettings.php:34
+msgid "Jalali dates, also in the shop admin"
+msgstr ""
+
+#. translators: %s: number of provinces.
+#: src/Service/Import/Sources/PersianWooCommerce/PersianWooCommerceSettings.php:48
+#, php-format
+msgid "Sells to %s province"
+msgid_plural "Sells to %s provinces"
+msgstr[0] ""
+msgstr[1] ""
+
+#: src/Service/Import/Sources/PersianWooCommerce/PersianWooCommerceSettings.php:59
+#: src/Service/Import/Sources/PersianWooCommerce/PersianWooCommerceSource.php:209
+msgid "Iranian cities"
+msgstr ""
+
+#: src/Service/Import/Sources/PersianWooCommerce/PersianWooCommerceSettings.php:68
+msgid "Accept Persian digits in postcode and phone"
+msgstr ""
+
+#: src/Service/Import/Sources/PersianWooCommerce/PersianWooCommerceSettings.php:75
+msgid "Check postcode and phone"
+msgstr ""
+
+#: src/Service/Import/Sources/PersianWooCommerce/PersianWooCommerceSettings.php:125
+msgid "Admin font: Vazirmatn with Persian digits"
+msgstr ""
+
+#: src/Service/Import/Sources/PersianWooCommerce/PersianWooCommerceSettings.php:129
+msgid "Digits in the admin stay English."
+msgstr ""
+
+#: src/Service/Import/Sources/PersianWooCommerce/PersianWooCommerceSettings.php:136
+msgid "Admin font: IRANSans"
+msgstr ""
+
+#: src/Service/Import/Sources/PersianWooCommerce/PersianWooCommerceSettings.php:136
+msgid "Admin font: Yekan Bakh"
+msgstr ""
+
+#: src/Service/Import/Sources/PersianWooCommerce/PersianWooCommerceSettings.php:140
+msgid "That font is commercial and can not come with Persian Kit; Vazirmatn is the free one it has."
+msgstr ""
+
+#. translators: %s: currency code, such as IRT.
+#: src/Service/Import/Sources/PersianWooCommerce/PersianWooCommerceSettings.php:161
+#, php-format
+msgid "Currency: %s"
+msgstr ""
+
+#: src/Service/Import/Sources/PersianWooCommerce/PersianWooCommerceSettings.php:165
+msgid "Persian Kit has the rial, toman, thousand rial and thousand toman currencies, so prices stay as they are."
+msgstr ""
+
+#: src/Service/Import/Sources/PersianWooCommerce/PersianWooCommerceSettings.php:183
+msgid "\"Call for price\" for products without a price"
+msgstr ""
+
+#: src/Service/Import/Sources/PersianWooCommerce/PersianWooCommerceSettings.php:186
+msgid "Minimum order amount"
+msgstr ""
+
+#: src/Service/Import/Sources/PersianWooCommerce/PersianWooCommerceSettings.php:189
+msgid "Fewer address fields for virtual products"
+msgstr ""
+
+#: src/Service/Import/Sources/PersianWooCommerce/PersianWooCommerceSettings.php:192
+msgid "How variable prices show"
+msgstr ""
+
+#: src/Service/Import/Sources/PersianWooCommerce/PersianWooCommerceSettings.php:195
+msgid "Login page template and logo"
+msgstr ""
+
+#: src/Service/Import/Sources/PersianWooCommerce/PersianWooCommerceSettings.php:198
+msgid "Super admin speed-ups"
+msgstr ""
+
+#. translators: %s: number of translated phrases.
+#: src/Service/Import/Sources/PersianWooCommerce/PersianWooCommerceSettings.php:206
+#, php-format
+msgid "%s replaced phrase"
+msgid_plural "%s replaced phrases"
+msgstr[0] ""
+msgstr[1] ""
+
+#: src/Service/Import/Sources/PersianWooCommerce/PersianWooCommerceSettings.php:207
+msgid "Persian Kit does not replace phrases. Install the Persian language pack of WooCommerce under Dashboard > Updates."
+msgstr ""
+
+#. translators: %s: payment gateway id.
+#: src/Service/Import/Sources/PersianWooCommerce/PersianWooCommerceSettings.php:214
+#, php-format
+msgid "Payment gateway: %s"
+msgstr ""
+
+#: src/Service/Import/Sources/PersianWooCommerce/PersianWooCommerceSource.php:60
+msgid "Persian WooCommerce"
+msgstr ""
+
+#: src/Service/Import/Sources/PersianWooCommerce/PersianWooCommerceSource.php:83
+msgid "Deactivate Persian WooCommerce first, or turn off its options that Persian Kit takes over to keep it for its payment gateways."
+msgstr ""
+
+#: src/Service/Import/Sources/PersianWooCommerce/PersianWooCommerceSource.php:106
+msgid "Its phrase replacements are not imported. For WooCommerce in Persian, install its language pack under Dashboard > Updates."
+msgstr ""
+
+#: src/Service/Import/Sources/PersianWooCommerce/PersianWooCommerceSource.php:118
+msgid "Payment gateways that will stop"
+msgstr ""
+
+#: src/Service/Import/Sources/PersianWooCommerce/PersianWooCommerceSource.php:119
+msgid "These gateways are built on Persian WooCommerce and stop when it is deactivated; Persian Kit has none. Set up another gateway first, or keep Persian WooCommerce active for them with the options below turned off."
+msgstr ""
+
+#: src/Service/Import/Sources/PersianWooCommerce/PersianWooCommerceSource.php:123
+msgid "I have another gateway, or I am keeping Persian WooCommerce for these"
+msgstr ""
+
+#: src/Service/Import/Sources/PersianWooCommerce/PersianWooCommerceSource.php:132
+msgid "Keeping Persian WooCommerce for its gateways?"
+msgstr ""
+
+#: src/Service/Import/Sources/PersianWooCommerce/PersianWooCommerceSource.php:134
+msgid "Its options that Persian Kit takes over are all off, so it can stay active and the import can run."
+msgstr ""
+
+#: src/Service/Import/Sources/PersianWooCommerce/PersianWooCommerceSource.php:135
+msgid "Then turn off these options in its settings, so the two plugins never do the same thing. The import runs once they are off."
+msgstr ""
+
+#: src/Service/Import/Sources/PersianWooCommerce/PersianWooCommerceSource.php:210
+msgid "Persian digits in postcode"
+msgstr ""
+
+#: src/Service/Import/Sources/PersianWooCommerce/PersianWooCommerceSource.php:211
+msgid "Persian digits in phone"
+msgstr ""
+
+#: src/Service/Import/Sources/PersianWooCommerce/PersianWooCommerceSource.php:212
+msgid "Check postcode"
+msgstr ""
+
+#: src/Service/Import/Sources/PersianWooCommerce/PersianWooCommerceSource.php:213
+msgid "Check phone"
+msgstr ""
+
+#: src/Service/Import/Sources/PersianWooCommerce/PersianWooCommerceSource.php:214
+msgid "Provinces it sells to"
+msgstr ""
+
+#: src/Service/Import/Sources/Shipping/DefaultCountryTask.php:30
+#: src/Service/Import/Sources/Shipping/DefaultCountryTask.php:44
+msgid "Store address"
+msgstr ""
+
+#: src/Service/Import/Sources/Shipping/DefaultCountryTask.php:46
+msgid "Unknown province"
+msgstr ""
+
+#: src/Service/Import/Sources/Shipping/OrderStatusTask.php:49
+msgid "Order statuses"
+msgstr ""
+
+#: src/Service/Import/Sources/Shipping/OrderStatusTask.php:54
+msgid "Activate WooCommerce to move these orders."
+msgstr ""
+
+#. translators: %s: number of orders.
+#: src/Service/Import/Sources/Shipping/OrderStatusTask.php:70
+#, php-format
+msgid "%s order"
+msgid_plural "%s orders"
+msgstr[0] ""
+msgstr[1] ""
+
+#. translators: 1: order status, 2: its slug.
+#: src/Service/Import/Sources/Shipping/OrderStatusTask.php:113
+#, php-format
+msgid "Status moved from %1$s (%2$s) when switching to Persian Kit."
+msgstr ""
+
+#. translators: %s: order status slug.
+#: src/Service/Import/Sources/Shipping/OrderStatusTask.php:158
+#, php-format
+msgid "Status put back to %s: the switch to Persian Kit was undone."
+msgstr ""
+
+#: src/Service/Import/Sources/Shipping/PwsSettings.php:45
+msgid "Customers pick the province from WooCommerce's list and get suggestions for the city as they type, from the official list. Districts are not listed."
+msgstr ""
+
+#: src/Service/Import/Sources/Shipping/PwsSettings.php:52
+msgid "Tapin"
+msgstr ""
+
+#: src/Service/Import/Sources/Shipping/PwsSettings.php:56
+msgid "Addresses saved with Tapin's numbers are read with its list."
+msgstr ""
+
+#: src/Service/Import/Sources/Shipping/PwsSettings.php:62
+msgid "Shipping methods: courier, Tipax, post and Tapin"
+msgstr ""
+
+#: src/Service/Import/Sources/Shipping/PwsSettings.php:62
+msgid "Persian Kit has no shipping methods. See \"Before you deactivate\"."
+msgstr ""
+
+#: src/Service/Import/Sources/Shipping/PwsSettings.php:66
+msgid "Shipping prices per city"
+msgstr ""
+
+#: src/Service/Import/Sources/Shipping/PwsSettings.php:66
+msgid "WooCommerce zones can not target cities; use postcodes in a zone instead."
+msgstr ""
+
+#: src/Service/Import/Sources/Shipping/PwsSettings.php:69
+msgid "Map at checkout"
+msgstr ""
+
+#: src/Service/Import/Sources/Shipping/PwsSettings.php:69
+msgid "Text messages"
+msgstr ""
+
+#: src/Service/Import/Sources/Shipping/PwsSettings.php:111
+msgid "Locations not covered by your other zones"
+msgstr ""
+
+#: src/Service/Import/Sources/Shipping/PwsSource.php:37
+msgid "Persian WooCommerce Shipping"
+msgstr ""
+
+#: src/Service/Import/Sources/Shipping/PwsSource.php:108
+msgid "Keep using it, or switch?"
+msgstr ""
+
+#: src/Service/Import/Sources/Shipping/PwsSource.php:110
+msgid "Your shipping zones use its shipping methods, which Persian Kit does not have. Keep it if your rates come from it; Persian Kit then leaves city suggestions and the province list to it."
+msgstr ""
+
+#: src/Service/Import/Sources/Shipping/PwsSource.php:111
+msgid "None of your shipping zones use its shipping methods, so Persian Kit can take over its province and city fields."
+msgstr ""
+
+#: src/Service/Import/Sources/Shipping/PwsSource.php:115
+msgid "Keep using it"
+msgstr ""
+
+#: src/Service/Import/Sources/Shipping/PwsSource.php:115
+msgid "Nothing is imported. The two plugins work side by side."
+msgstr ""
+
+#: src/Service/Import/Sources/Shipping/PwsSource.php:116
+msgid "Addresses, zones and order statuses are converted to WooCommerce's own, and its shipping methods go."
+msgstr ""
+
+#: src/Service/Import/Sources/Shipping/PwsSource.php:125
+msgid "Orders moved out of its statuses got a note. No email went to customers and stock did not change. Moving an order to Processing or Completed may give customers access to its downloads."
+msgstr ""
+
+#: src/Service/Import/Sources/Shipping/PwsSource.php:126
+msgid "WooCommerce Analytics catches up with the moved orders in the background, which can take a while on a big store."
+msgstr ""
+
+#: src/Service/Import/Sources/Shipping/PwsSource.php:127
+msgid "Its shipping methods and per-city prices are gone: check each shipping zone has a WooCommerce method."
+msgstr ""
+
+#: src/Service/Import/Sources/Shipping/PwsSource.php:140
+msgid "Orders moved out of its statuses go back to them, and drop out of the order lists again until it is active."
+msgstr ""
+
+#: src/Service/Import/Sources/Shipping/PwsSource.php:151
+msgid "Shipping methods that will go"
+msgstr ""
+
+#: src/Service/Import/Sources/Shipping/PwsSource.php:152
+msgid "These zones use its courier, Tipax, post or Tapin methods, and its per-city prices. WooCommerce will not offer them once it is inactive."
+msgstr ""
+
+#: src/Service/Import/Sources/Shipping/PwsSource.php:160
+msgid "I know these methods will go"
+msgstr ""
+
+#: src/Service/Import/Sources/Shipping/PwsSource.php:168
+msgid "Zones left with no shipping method"
+msgstr ""
+
+#: src/Service/Import/Sources/Shipping/PwsSource.php:169
+msgid "Add a WooCommerce method, such as flat rate, to each before you deactivate, or customers there can not check out."
+msgstr ""
+
+#: src/Service/Import/Sources/Shipping/PwsSource.php:176
+msgid "I have added methods to these zones, or no one orders there"
+msgstr ""
+
+#: src/Service/Import/Sources/Shipping/ShippingZoneTask.php:34
+msgid "Shipping zones"
+msgstr ""
+
+#: src/Service/Import/Sources/Shipping/ShippingZoneTask.php:39
+msgid "Activate WooCommerce to convert shipping zones."
+msgstr ""
+
+#. translators: %s: city or district name.
+#: src/Service/Import/Sources/Shipping/ShippingZoneTask.php:154
+#, php-format
+msgid "The zone targets %s, a city or district. WooCommerce zones can not target cities; rebuild it with postcodes."
+msgstr ""
+
+#. translators: %s: location code.
+#: src/Service/Import/Sources/Shipping/ShippingZoneTask.php:163
+#, php-format
+msgid "Unknown province in the zone: %s"
+msgstr ""
+
+#: src/Service/Import/Tasks/AbstractAddressTask.php:35
+msgid "Activate WooCommerce to convert these addresses."
+msgstr ""
+
+#. translators: %s: district name.
+#: src/Service/Import/Tasks/AbstractAddressTask.php:83
+#, php-format
+msgid "District %s is not in the address; address line 2 already holds something else."
+msgstr ""
+
+#: src/Service/Import/Tasks/CustomerAddressTask.php:30
+msgid "Customer addresses"
+msgstr ""
+
+#: src/Service/Import/Tasks/CustomerAddressTask.php:50
+msgid "Put the district in address line 2 when that line is empty, for customers and orders"
+msgstr ""
+
+#: src/Service/Import/Tasks/CustomerAddressTask.php:52
+msgid "Only this site's customers are converted. Users are shared by every site of the network, so their addresses change on the other sites too."
+msgstr ""
+
+#: src/Service/Import/Tasks/OrderAddressTask.php:29
+msgid "Order addresses"
+msgstr ""
+
+#. translators: %s: order number.
+#: src/Service/Import/Tasks/OrderAddressTask.php:47
+#, php-format
+msgid "Order #%s"
+msgstr ""
+
+#. translators: %s: number of orders.
+#: src/Service/Import/Woo/PaymentGateways.php:61
+#, php-format
+msgid "%s order still waiting for payment through it"
+msgid_plural "%s orders still waiting for payment through it"
+msgstr[0] ""
+msgstr[1] ""
+
+#: src/Service/Import/Woo/PaymentGateways.php:62
+msgid "No orders waiting for payment through it"
+msgstr ""
+
 #: views/admin/partials/admin-font-settings.php:22
 msgid "Font"
 msgstr ""
@@ -663,16 +1862,18 @@ msgstr ""
 msgid "Recommended Persian Kit settings"
 msgstr ""
 
+#. translators: %s: name of another plugin.
+#: views/admin/partials/compatibility-guidance.php:90
+#, php-format
+msgid "Switch from %s"
+msgstr ""
+
 #: views/admin/partials/date-conversion-settings.php:17
 msgid "Jalali archives and calendar"
 msgstr ""
 
 #: views/admin/partials/date-conversion-settings.php:18
 msgid "Archive lists, the calendar and pages such as /1405/07/."
-msgstr ""
-
-#: views/admin/partials/date-conversion-settings.php:21
-msgid "Jalali dates in post links"
 msgstr ""
 
 #: views/admin/partials/date-conversion-settings.php:22
@@ -816,63 +2017,209 @@ msgstr ""
 msgid "Activate one and Persian Kit works with it by itself."
 msgstr ""
 
-#: views/admin/partials/tools.php:28
-msgid "Fix letters in existing posts"
+#: views/admin/partials/switch-checklist.php:10
+msgid "Before you deactivate"
 msgstr ""
 
-#: views/admin/partials/tools.php:30
-msgid "Count first, then fix. Back up your database before fixing."
+#: views/admin/partials/switch-checklist.php:33
+msgid "Copy"
 msgstr ""
 
-#: views/admin/partials/tools.php:36
-msgid "Post types"
+#: views/admin/partials/switch-checklist.php:34
+msgid "Scan again"
 msgstr ""
 
-#: views/admin/partials/tools.php:52
-msgid "Count posts"
+#: views/admin/partials/switch-checklist.php:35
+msgid "Copied."
 msgstr ""
 
-#: views/admin/partials/tools.php:61
-msgid "Resume fixing posts…"
+#: views/admin/partials/switch-checklist.php:42
+msgid "I have read this and sorted it out"
 msgstr ""
 
-#: views/admin/partials/tools.php:62
-msgid "Fix posts…"
+#: views/admin/partials/switch-plugins.php:30
+msgid "Switch from another plugin"
 msgstr ""
 
-#: views/admin/partials/tools.php:71
-msgid "Start over"
+#: views/admin/partials/switch-plugins.php:32
+msgid "Bring the settings and data of a plugin you used before into Persian Kit, without broken links or addresses."
 msgstr ""
 
-#: views/admin/partials/tools.php:76
-msgid "Save your settings first. The fix uses the saved settings."
+#: views/admin/partials/switch-plugins.php:41
+msgid "No other Persian plugin left settings or data on this site."
 msgstr ""
 
-#: views/admin/partials/tools.php:82
-msgid "This changes your posts, without revisions, and cannot be undone."
+#: views/admin/partials/switch-plugins.php:62
+msgid "All plugins"
 msgstr ""
 
-#: views/admin/partials/tools.php:87
-msgid "I have a recent database backup"
+#: views/admin/partials/switch-plugins.php:82
+msgid "Loading…"
 msgstr ""
 
-#: views/admin/partials/tools.php:92
-msgid "Fix posts now"
+#: views/admin/partials/switch-plugins.php:88
+msgid "The REST API of this site did not answer, often because a security plugin blocks it. Run the switch from WP-CLI instead:"
 msgstr ""
 
-#: views/admin/partials/tools.php:95
+#: views/admin/partials/switch-review.php:59
+#: public/js/admin.js:4353
+msgid "Import"
+msgstr ""
+
+#: views/admin/partials/switch-review.php:62
+msgid "Match"
+msgstr ""
+
+#: views/admin/partials/switch-review.php:79
+msgid "Not in Persian Kit"
+msgstr ""
+
+#: views/admin/partials/switch-review.php:95
+msgid "Data"
+msgstr ""
+
+#: views/admin/partials/switch-review.php:128
+#: views/admin/partials/switch-steps.php:180
+#: views/admin/partials/tools.php:100
 msgid "Cancel"
 msgstr ""
 
-#: views/admin/partials/tools.php:103
+#: views/admin/partials/switch-review.php:131
+#: public/js/admin.js:4513
+msgid "Continue"
+msgstr ""
+
+#: views/admin/partials/switch-steps.php:24
+#: views/admin/partials/tools.php:92
+msgid "I have a recent database backup"
+msgstr ""
+
+#: views/admin/partials/switch-steps.php:31
+#: views/admin/partials/switch-steps.php:51
+msgid "Back"
+msgstr ""
+
+#: views/admin/partials/switch-steps.php:40
+msgid "Tick the backup box and each item above first."
+msgstr ""
+
+#: views/admin/partials/switch-steps.php:41
+msgid "This is WordPress’s own Deactivate link, on the Plugins screen. Come back here afterwards; a link there brings you back."
+msgstr ""
+
+#: views/admin/partials/switch-steps.php:53
+msgid "Import now"
+msgstr ""
+
+#: views/admin/partials/switch-steps.php:82
+msgid "Cancel the switch"
+msgstr ""
+
+#: views/admin/partials/switch-steps.php:84
+msgid "Pause"
+msgstr ""
+
+#: views/admin/partials/switch-steps.php:85
+msgid "Resume"
+msgstr ""
+
+#: views/admin/partials/switch-steps.php:108
+msgid "Show"
+msgstr ""
+
+#: views/admin/partials/switch-steps.php:121
+msgid "Nothing here."
+msgstr ""
+
+#: views/admin/partials/switch-steps.php:128
+msgid "Change"
+msgstr ""
+
+#: views/admin/partials/switch-steps.php:160
+msgid "Previous"
+msgstr ""
+
+#: views/admin/partials/switch-steps.php:162
+msgid "Next"
+msgstr ""
+
+#: views/admin/partials/switch-steps.php:168
+msgid "Download the report (CSV)"
+msgstr ""
+
+#: views/admin/partials/switch-steps.php:170
+msgid "Undo the import"
+msgstr ""
+
+#: views/admin/partials/switch-steps.php:171
+msgid "Forget undo data"
+msgstr ""
+
+#: views/admin/partials/switch-steps.php:175
+msgid "Put back the values from before the import?"
+msgstr ""
+
+#: views/admin/partials/switch-steps.php:176
+msgid "Settings and data are put back only where they still hold what the import wrote; anything changed since is kept."
+msgstr ""
+
+#: views/admin/partials/switch-steps.php:179
+msgid "Undo now"
+msgstr ""
+
+#: views/admin/partials/switch-task-options.php:11
+msgid "Where each order status goes"
+msgstr ""
+
+#: views/admin/partials/tools.php:33
+msgid "Fix letters in existing posts"
+msgstr ""
+
+#: views/admin/partials/tools.php:35
+msgid "Count first, then fix. Back up your database before fixing."
+msgstr ""
+
+#: views/admin/partials/tools.php:41
+msgid "Post types"
+msgstr ""
+
+#: views/admin/partials/tools.php:57
+msgid "Count posts"
+msgstr ""
+
+#: views/admin/partials/tools.php:66
+msgid "Resume fixing posts…"
+msgstr ""
+
+#: views/admin/partials/tools.php:67
+msgid "Fix posts…"
+msgstr ""
+
+#: views/admin/partials/tools.php:76
+msgid "Start over"
+msgstr ""
+
+#: views/admin/partials/tools.php:81
+msgid "Save your settings first. The fix uses the saved settings."
+msgstr ""
+
+#: views/admin/partials/tools.php:87
+msgid "This changes your posts, without revisions, and cannot be undone."
+msgstr ""
+
+#: views/admin/partials/tools.php:97
+msgid "Fix posts now"
+msgstr ""
+
+#: views/admin/partials/tools.php:108
 msgid "Posts that would change, by post type"
 msgstr ""
 
-#: views/admin/partials/tools.php:106
+#: views/admin/partials/tools.php:111
 msgid "Post type"
 msgstr ""
 
-#: views/admin/partials/tools.php:107
+#: views/admin/partials/tools.php:112
 msgid "Posts to fix"
 msgstr ""
 
@@ -928,10 +2275,6 @@ msgstr ""
 msgid "Suggests the province's cities. Customers can still type a village."
 msgstr ""
 
-#: views/admin/partials/woocommerce-settings.php:38
-msgid "Off"
-msgstr ""
-
 #: views/admin/partials/woocommerce-settings.php:39
 msgid "Optional"
 msgstr ""
@@ -942,10 +2285,6 @@ msgstr ""
 
 #: views/admin/partials/woocommerce-settings.php:92
 msgid "Provinces you deliver to"
-msgstr ""
-
-#: views/admin/partials/woocommerce-settings.php:96
-msgid "All provinces"
 msgstr ""
 
 #: views/admin/partials/woocommerce-settings.php:100
@@ -1017,30 +2356,168 @@ msgstr ""
 msgid "Unsaved changes"
 msgstr ""
 
+#: public/js/admin.js:4351
+#: public/js/admin.js:4511
+msgid "Review"
+msgstr ""
+
+#: public/js/admin.js:4352
+msgid "Deactivate"
+msgstr ""
+
+#: public/js/admin.js:4354
+#: public/js/admin.js:4513
+msgid "Report"
+msgstr ""
+
+#. translators: %s: number of settings.
+#: public/js/admin.js:4384
+#, js-format
+msgid "%s the same"
+msgid_plural "%s the same"
+msgstr[0] ""
+msgstr[1] ""
+
+#. translators: %s: number of settings.
+#: public/js/admin.js:4386
+#, js-format
+msgid "%s close"
+msgid_plural "%s close"
+msgstr[0] ""
+msgstr[1] ""
+
+#. translators: %s: number of settings.
+#: public/js/admin.js:4388
+#, js-format
+msgid "%s not yet"
+msgid_plural "%s not yet"
+msgstr[0] ""
+msgstr[1] ""
+
+#. translators: %s: number of settings.
+#: public/js/admin.js:4390
+#, js-format
+msgid "%s automatic"
+msgid_plural "%s automatic"
+msgstr[0] ""
+msgstr[1] ""
+
+#. translators: %s: plugin name, such as Parsi Date.
+#: public/js/admin.js:4397
+#, js-format
+msgid "Before anything changes, this shows what Persian Kit does with the settings and data of %s. Nothing has changed yet."
+msgstr ""
+
+#. translators: %s: plugin name.
+#: public/js/admin.js:4404
+#, js-format
+msgid "Persian Kit imports only once %s is inactive, so the two never convert dates and digits at the same time. WordPress does not let one plugin turn another off: deactivate it on the Plugins screen, then come back here."
+msgstr ""
+
+#: public/js/admin.js:4409
+msgid "Switch at a quiet time. Until the import ends, shipping zones and addresses may not match, and checkout may offer no shipping."
+msgstr ""
+
+#: public/js/admin.js:4409
+msgid "Switch at a quiet time: between deactivating and the end of the import, the site runs without either plugin's settings."
+msgstr ""
+
+#. translators: %s: plugin name.
+#: public/js/admin.js:4414
+#, js-format
+msgid "Deactivate %s"
+msgstr ""
+
+#. translators: %s: plugin name.
+#: public/js/admin.js:4421
+#, js-format
+msgid "%s is inactive. Its settings and data can be imported now."
+msgstr ""
+
+#. translators: %s: plugin name.
+#: public/js/admin.js:4428
+#, js-format
+msgid "The switch from %s is finished."
+msgstr ""
+
+#. translators: %s: percentage done.
+#: public/js/admin.js:4440
+#, js-format
+msgid "Paused at %s%%."
+msgstr ""
+
+#. translators: 1: items converted, 2: all items, 3: percentage.
+#: public/js/admin.js:4446
+#, js-format
+msgid "%1$s of %2$s items (%3$s%%)"
+msgstr ""
+
+#. translators: 1: items done, 2: all items.
+#: public/js/admin.js:4466
+#, js-format
+msgid "%1$s of %2$s"
+msgstr ""
+
+#. translators: 1: page number, 2: number of pages.
+#: public/js/admin.js:4487
+#, js-format
+msgid "Page %1$s of %2$s"
+msgstr ""
+
+#. translators: 1: values put back, 2: values kept because they changed after the import.
+#: public/js/admin.js:4504
+#, js-format
+msgid "Undone: %1$s put back, %2$s kept because they changed after the import."
+msgstr ""
+
+#. translators: %s: number of items.
+#: public/js/admin.js:4518
+#, js-format
+msgid "%s item"
+msgid_plural "%s items"
+msgstr[0] ""
+msgstr[1] ""
+
+#: public/js/admin.js:4524
+msgid "Already set: no change"
+msgstr ""
+
+#. translators: %s: Persian Kit's current value of a setting.
+#: public/js/admin.js:4528
+#, js-format
+msgid "Now: %s"
+msgstr ""
+
+#. translators: 1: order status, 2: number of orders.
+#: public/js/admin.js:4535
+#, js-format
+msgid "%1$s (%2$s orders)"
+msgstr ""
+
 #. translators: 1: number of posts checked, 2: number of posts fixed.
-#: public/js/admin.js:4329
+#: public/js/admin.js:4921
 #, js-format
 msgid "%1$s posts checked, %2$s fixed…"
 msgstr ""
 
 #. translators: 1: number of posts checked, 2: number of posts fixed.
-#: public/js/admin.js:4339
+#: public/js/admin.js:4931
 #, js-format
 msgid "Done. %1$s posts checked, %2$s fixed."
 msgstr ""
 
 #. translators: %s: number of posts checked so far.
-#: public/js/admin.js:4375
+#: public/js/admin.js:4967
 #, js-format
 msgid "Checked %s posts…"
 msgstr ""
 
-#: public/js/admin.js:4391
+#: public/js/admin.js:4983
 msgid "No posts need fixing."
 msgstr ""
 
 #. translators: 1: number of posts that would change, 2: number of posts checked.
-#: public/js/admin.js:4393
+#: public/js/admin.js:4985
 #, js-format
 msgid "%1$s post of %2$s checked would change."
 msgid_plural "%1$s posts of %2$s checked would change."
