@@ -5,7 +5,9 @@ namespace PersianKit\Service\Import\Sources\Shipping;
 use PersianKit\Core\SettingsManager;
 use PersianKit\Service\Import\AbstractSource;
 use PersianKit\Service\Import\ChecklistItem;
+use PersianKit\Service\Import\HasReportTips;
 use PersianKit\Service\Import\HasReviewNotes;
+use PersianKit\Service\Import\HasUndoWarning;
 use PersianKit\Service\Import\Iran\PwsTermMap;
 use PersianKit\Service\Import\Tasks\CustomerAddressTask;
 use PersianKit\Service\Import\Tasks\OrderAddressTask;
@@ -17,7 +19,7 @@ defined('ABSPATH') || exit;
  * districts are terms of its state_city taxonomy, and addresses hold their
  * term IDs, or Tapin's own IDs while its Tapin mode is on (pws_tapin).
  */
-class PwsSource extends AbstractSource implements HasReviewNotes
+class PwsSource extends AbstractSource implements HasReviewNotes, HasReportTips, HasUndoWarning
 {
     public const KEY = 'persian-woocommerce-shipping';
 
@@ -65,6 +67,7 @@ class PwsSource extends AbstractSource implements HasReviewNotes
             new ShippingZoneTask(),
             new DefaultCountryTask(),
             new CustomerAddressTask(),
+            new OrderStatusTask(),
             new OrderAddressTask(),
         ];
     }
@@ -74,9 +77,18 @@ class PwsSource extends AbstractSource implements HasReviewNotes
      */
     public function snapshot(): array
     {
+        $labels = [];
+        $statuses = ['PWS_Status', 'get_statues'];
+        if (is_callable($statuses)) {
+            foreach ((array) call_user_func($statuses) as $slug => $label) {
+                $labels[(string) $slug] = wp_strip_all_tags((string) $label);
+            }
+        }
+
         return [
-            'term_map' => PwsTermMap::load()->toSnapshot(),
-            'tapin'    => PwsSettings::tapinEnabled(),
+            'term_map'      => PwsTermMap::load()->toSnapshot(),
+            'tapin'         => PwsSettings::tapinEnabled(),
+            'status_labels' => $labels,
         ];
     }
 
@@ -102,6 +114,27 @@ class PwsSource extends AbstractSource implements HasReviewNotes
                 ],
             ],
         ]];
+    }
+
+    public function reportTips(array $job): array
+    {
+        $tips = [
+            __('Orders moved out of its statuses got a note. No email went to customers and stock did not change. Moving an order to Processing or Completed may give customers access to its downloads.', 'persian-kit'),
+            __('WooCommerce Analytics catches up with the moved orders in the background, which can take a while on a big store.', 'persian-kit'),
+            __('Its shipping methods and per-city prices are gone: check each shipping zone has a WooCommerce method.', 'persian-kit'),
+        ];
+
+        return $tips;
+    }
+
+    /**
+     * Undoing the status moves while it is inactive hides those orders again.
+     */
+    public function undoWarning(): string
+    {
+        return $this->isActive()
+            ? ''
+            : __('Orders moved out of its statuses go back to them, and drop out of the order lists again until it is active.', 'persian-kit');
     }
 
     public function checklist(array $snapshot): array

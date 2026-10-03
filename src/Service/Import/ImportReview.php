@@ -108,7 +108,8 @@ class ImportReview
             'rows'      => $this->importer->review($this->runner->settingRows($source)),
             'notes'     => $source instanceof HasReviewNotes ? $source->reviewNotes($snapshot) : [],
             'tasks'     => $tasks,
-            'checklist' => array_map(static fn (ChecklistItem $item): array => $item->toArray(), $source->checklist($snapshot)),
+            'checklist'    => array_map(static fn (ChecklistItem $item): array => $item->toArray(), $source->checklist($snapshot)),
+            'undo_warning' => $source instanceof HasUndoWarning ? $source->undoWarning() : '',
         ];
     }
 
