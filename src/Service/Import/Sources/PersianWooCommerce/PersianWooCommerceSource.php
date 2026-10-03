@@ -49,6 +49,7 @@ class PersianWooCommerceSource extends AbstractSource implements HasReportTips
         'postcode_validation',
         'phone_validation',
         'enable_call_for_price',
+        'remove_extra_field_physical',
     ];
 
     public function key(): string
@@ -221,6 +222,7 @@ class PersianWooCommerceSource extends AbstractSource implements HasReportTips
             'postcode_validation'         => __('Check postcode', 'persian-kit'),
             'phone_validation'            => __('Check phone', 'persian-kit'),
             'enable_call_for_price'       => __('"Call for price" for products without a price', 'persian-kit'),
+            'remove_extra_field_physical' => __('Fewer address fields for virtual products', 'persian-kit'),
             'allowed_states'              => __('Provinces it sells to', 'persian-kit'),
             'admin_font_family'           => __('Admin font', 'persian-kit'),
         ];

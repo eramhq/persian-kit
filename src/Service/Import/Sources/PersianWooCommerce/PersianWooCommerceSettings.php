@@ -85,6 +85,18 @@ class PersianWooCommerceSettings
             );
         }
 
+        // It also turns off order notes, and covers only the classic checkout.
+        if ($on('remove_extra_field_physical')) {
+            $rows[] = new SettingRow(
+                'remove_extra_field_physical',
+                __('Fewer address fields for virtual products', 'persian-kit'),
+                SettingStatus::Close,
+                __('Shorter checkout when nothing needs shipping', 'persian-kit'),
+                ['woocommerce.short_checkout' => true],
+                __('The country and order notes stay. Persian Kit also shortens the block checkout.', 'persian-kit')
+            );
+        }
+
         if ($on('enable_call_for_price')) {
             $rows = array_merge($rows, $this->callForPriceRows($on));
         }
@@ -244,16 +256,11 @@ class PersianWooCommerceSettings
     {
         $rows = [];
         $notYet = static fn (string $id, string $label, string $reason = ''): SettingRow => new SettingRow($id, $label, SettingStatus::NotYet, '', [], $reason !== '' ? $reason : __('Persian Kit has no match yet.', 'persian-kit'));
-        /* translators: %s: issue number, such as #14. */
-        $planned = static fn (string $issue): string => sprintf(__('Planned for Persian Kit (%s).', 'persian-kit'), $issue);
         $options = get_option('PW_Options', []);
         $options = is_array($options) ? $options : [];
 
         if ((float) ($options['minimum_order_amount'] ?? 0) > 0) {
             $rows[] = $notYet('minimum_order_amount', __('Minimum order amount', 'persian-kit'));
-        }
-        if ($on('remove_extra_field_physical')) {
-            $rows[] = $notYet('remove_extra_field_physical', __('Fewer address fields for virtual products', 'persian-kit'), $planned('#31'));
         }
         if (isset($options['variable_price']) && $options['variable_price'] !== 'range') {
             $rows[] = $notYet('variable_price', __('How variable prices show', 'persian-kit'));

@@ -97,7 +97,7 @@ class ImportSettingsTest extends WordPressIntegrationTestCase
 
     public function test_persian_woocommerce_rows_read_its_defaults(): void
     {
-        update_option('PW_Options', ['persian_price' => 'yes', 'allowed_states' => 'specific', 'specific_allowed_states' => ['TE', 'ESF', 'nope'], 'admin_font_family' => 'iransans', 'enable_call_for_price' => 'yes']);
+        update_option('PW_Options', ['persian_price' => 'yes', 'allowed_states' => 'specific', 'specific_allowed_states' => ['TE', 'ESF', 'nope'], 'admin_font_family' => 'iransans', 'enable_call_for_price' => 'yes', 'remove_extra_field_physical' => 'yes']);
 
         $rows = $this->byId((new PersianWooCommerceSource())->settingRows(Bootstrap::get(SettingsManager::class)));
 
@@ -111,6 +111,11 @@ class ImportSettingsTest extends WordPressIntegrationTestCase
         // Its default text is Persian Kit's too, so it stays empty.
         $this->assertSame('same', $rows['enable_call_for_price']->status->value);
         $this->assertSame(['woocommerce.call_for_price' => true], $rows['enable_call_for_price']->changes);
+        // It also turned off order notes, which stay.
+        $this->assertSame('close', $rows['remove_extra_field_physical']->status->value);
+        $this->assertTrue($rows['remove_extra_field_physical']->ticked);
+        $this->assertSame(['woocommerce.short_checkout' => true], $rows['remove_extra_field_physical']->changes);
+        $this->assertStringContainsString('order notes stay', $rows['remove_extra_field_physical']->reason);
     }
 
     public function test_call_for_price_texts_are_imported_without_their_markup(): void
@@ -167,11 +172,16 @@ class ImportSettingsTest extends WordPressIntegrationTestCase
         $this->assertSame(['woocommerce.call_for_price' => true, 'woocommerce.call_for_price_text' => 'تماس با فروشگاه'], $row->changes);
     }
 
-    public function test_keeping_persian_woocommerce_asks_to_turn_its_call_for_price_off(): void
+    public function test_keeping_persian_woocommerce_asks_to_turn_its_call_for_price_and_short_checkout_off(): void
     {
         update_option('PW_Options', ['enable_jalali_datepicker' => 'no', 'enable_iran_cities' => 'no', 'fix_postcode_persian_number' => 'no', 'fix_phone_persian_number' => 'no', 'phone_validation' => 'no', 'enable_call_for_price' => 'yes']);
 
         $this->assertContains('enable_call_for_price', PersianWooCommerceSource::overlappingOn());
+        $this->assertNotContains('remove_extra_field_physical', PersianWooCommerceSource::overlappingOn());
+
+        update_option('PW_Options', ['enable_jalali_datepicker' => 'no', 'enable_iran_cities' => 'no', 'fix_postcode_persian_number' => 'no', 'fix_phone_persian_number' => 'no', 'phone_validation' => 'no', 'remove_extra_field_physical' => 'yes']);
+
+        $this->assertContains('remove_extra_field_physical', PersianWooCommerceSource::overlappingOn());
     }
 
     public function test_city_list_of_persian_woocommerce_is_left_to_the_shipping_plugin(): void
@@ -272,7 +282,7 @@ class ImportSettingsTest extends WordPressIntegrationTestCase
 
     public function test_the_report_downloads_as_csv_with_a_byte_order_mark(): void
     {
-        update_option('PW_Options', ['persian_price' => 'yes', 'enable_call_for_price' => 'yes', 'remove_extra_field_physical' => 'yes']);
+        update_option('PW_Options', ['persian_price' => 'yes', 'enable_call_for_price' => 'yes', 'remove_extra_field_physical' => 'yes', 'minimum_order_amount' => '1000']);
         $source = new PersianWooCommerceSource();
         $this->runner()->start($source);
         $this->runner()->run('test', 30.0);
@@ -284,6 +294,8 @@ class ImportSettingsTest extends WordPressIntegrationTestCase
         $this->assertStringNotContainsString('"digit_conversion.prices"', $csv);
         $this->assertStringContainsString('"woocommerce.city_select","Off","On"', $csv);
         $this->assertStringContainsString('"Text instead of an empty price","woocommerce.call_for_price","Off","On"', $csv);
+        $this->assertStringContainsString('"Shorter checkout when nothing needs shipping","woocommerce.short_checkout","Off","On"', $csv);
+        // The minimum order amount has no match.
         $this->assertStringContainsString('"Not imported"', $csv);
         // A value a spreadsheet would run as a formula is quoted.
         $this->assertSame("\"'=1+1\",\"a\"\"b\"\r\n", ImportReport::csvLine(['=1+1', 'a"b']));
