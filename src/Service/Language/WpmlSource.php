@@ -20,6 +20,8 @@ defined('ABSPATH') || exit;
  */
 final class WpmlSource implements LanguageSource
 {
+    use UntranslatedPosts;
+
     /** @var array<string, string>|null Locales by language code. */
     private ?array $locales = null;
 
@@ -140,6 +142,28 @@ final class WpmlSource implements LanguageSource
         }
 
         return null;
+    }
+
+    /**
+     * WPML keeps a post's language in its icl_translations table, by
+     * element type (post_page, post_attachment).
+     */
+    public function currentLanguagePosts(array $postTypes): ?string
+    {
+        global $wpdb;
+
+        $translated = array_values(array_filter($postTypes, static fn (string $type): bool => (bool) apply_filters('wpml_is_translated_post_type', false, $type)));
+        $code = $this->currentCode();
+        if ($translated === [] || $code === null) {
+            return null;
+        }
+
+        $condition = $wpdb->prepare(
+            "{$wpdb->posts}.ID IN (SELECT element_id FROM {$wpdb->prefix}icl_translations WHERE language_code = %s AND element_type = CONCAT('post_', {$wpdb->posts}.post_type))",
+            $code
+        );
+
+        return self::orUntranslated($condition, array_values(array_diff($postTypes, $translated)));
     }
 
     /**

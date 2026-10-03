@@ -5,6 +5,7 @@ namespace PersianKit\Modules\DateConversion;
 use PersianKit\Dependencies\Eram\Daynum\CivilDateTime;
 use PersianKit\Dependencies\Eram\Abzar\Digits\DigitConverter;
 use PersianKit\Modules\WooCommerce\WooDateHelper;
+use PersianKit\Service\Language\ContentLanguage;
 
 defined('ABSPATH') || exit;
 
@@ -162,12 +163,17 @@ class PostTypeMonthFilter
         global $wpdb;
 
         $postStatus = $this->requestedStatus($postType);
+
+        // On multilingual sites, the language chosen in the language filter, as the list.
+        $language = ContentLanguage::postsInCurrentLanguage([$postType]);
+        $inLanguage = $language === null ? '' : " AND {$language}";
+
         $cacheKey = sprintf(
             'post_days:%s:%s:%s',
             $postType,
             $postStatus === 'trash' ? 'trash' : 'any',
             wp_cache_get_last_changed('posts')
-        );
+        ) . ($language === null ? '' : ':' . md5($language));
 
         $cached = wp_cache_get($cacheKey, 'persian_kit');
         if (is_array($cached)) {
@@ -175,13 +181,13 @@ class PostTypeMonthFilter
         }
 
         // Same query core's months drop-down runs; the result is cached above until posts change.
-        // phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery
+        // phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
         $results = $postStatus === 'trash'
             ? $wpdb->get_col($wpdb->prepare(
                 "SELECT DISTINCT DATE(post_date) AS post_day
                 FROM {$wpdb->posts}
                 WHERE post_type = %s
-                  AND post_status = 'trash'
+                  AND post_status = 'trash'{$inLanguage}
                 ORDER BY post_date DESC",
                 $postType
             ))
@@ -189,11 +195,11 @@ class PostTypeMonthFilter
                 "SELECT DISTINCT DATE(post_date) AS post_day
                 FROM {$wpdb->posts}
                 WHERE post_type = %s
-                  AND post_status NOT IN ('auto-draft', 'trash')
+                  AND post_status NOT IN ('auto-draft', 'trash'){$inLanguage}
                 ORDER BY post_date DESC",
                 $postType
             ));
-        // phpcs:enable WordPress.DB.DirectDatabaseQuery.DirectQuery
+        // phpcs:enable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 
         $days = array_values(array_filter(array_map('strval', (array) $results)));
         wp_cache_set($cacheKey, $days, 'persian_kit');

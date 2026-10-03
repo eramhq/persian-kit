@@ -6,6 +6,7 @@ use Brain\Monkey;
 use Brain\Monkey\Filters;
 use Brain\Monkey\Functions;
 use PersianKit\Service\Language\WpmlSource;
+use PersianKit\Tests\Unit\Support\PreparingWpdb;
 use PHPUnit\Framework\TestCase;
 
 class WpmlSourceTest extends TestCase
@@ -38,7 +39,7 @@ class WpmlSourceTest extends TestCase
     {
         $_POST = [];
         $_GET = [];
-        unset($GLOBALS['pagenow']);
+        unset($GLOBALS['pagenow'], $GLOBALS['wpdb']);
         Monkey\tearDown();
         parent::tearDown();
     }
@@ -157,5 +158,20 @@ class WpmlSourceTest extends TestCase
         $this->assertSame('ar', $this->source->requestedLocale('term', 3));
         $this->assertNull($this->source->requestedLocale('term', 4));
         $this->assertNull($this->source->requestedLocale('post', 0));
+    }
+
+    public function test_posts_in_the_current_language(): void
+    {
+        $GLOBALS['wpdb'] = new PreparingWpdb();
+        Filters\expectApplied('wpml_is_translated_post_type')->andReturnUsing(static fn (bool $translated, string $type): bool => $type !== 'attachment');
+
+        $inFarsi = "wp_posts.ID IN (SELECT element_id FROM wp_icl_translations WHERE language_code = 'fa' AND element_type = CONCAT('post_', wp_posts.post_type))";
+
+        $this->assertSame($inFarsi, $this->source->currentLanguagePosts(['post']));
+        $this->assertSame("(wp_posts.post_type IN ('attachment') OR {$inFarsi})", $this->source->currentLanguagePosts(['post', 'attachment']), 'untranslated media is in every language');
+        $this->assertNull($this->source->currentLanguagePosts(['attachment']));
+
+        $this->current = 'all';
+        $this->assertNull($this->source->currentLanguagePosts(['post']), '"All languages" in the admin');
     }
 }

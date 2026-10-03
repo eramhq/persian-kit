@@ -43,6 +43,17 @@ interface LanguageSource
      */
     public function requestedLocale(string $objectType, int $objectId): ?string;
 
+    /**
+     * An SQL condition on $wpdb->posts that is true for posts in the current
+     * content language: the page's, or in the admin the one chosen in the
+     * plugin's language filter. Posts of untranslated types count as in
+     * every language. Null under "All languages", and when none of the post
+     * types is translated.
+     *
+     * @param list<string> $postTypes
+     */
+    public function currentLanguagePosts(array $postTypes): ?string;
+
     /** Hooks the source needs to follow the language during the request. */
     public function register(): void;
 }

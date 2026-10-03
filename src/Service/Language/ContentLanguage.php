@@ -176,6 +176,20 @@ final class ContentLanguage
     }
 
     /**
+     * An SQL condition on $wpdb->posts that is true for posts in the
+     * current content language, for lookups that run their own queries: the
+     * page's language, or in the admin the one chosen in the language
+     * filter. Already prepared. Null on single-language sites, under "All
+     * languages", and when none of the post types is translated.
+     *
+     * @param list<string> $postTypes
+     */
+    public static function postsInCurrentLanguage(array $postTypes): ?string
+    {
+        return self::isMultilingual() ? self::source()?->currentLanguagePosts($postTypes) : null;
+    }
+
+    /**
      * Admin screens, and admin-ajax called from them. admin-ajax called from
      * the front end (infinite scroll, load-more) is not.
      */

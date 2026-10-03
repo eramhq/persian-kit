@@ -4,6 +4,13 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Multilingual sites
+
+- The Jalali calendar on a Persian page links only days, and previous and next months, with posts in the page's language. Before, a day or month with only English posts was linked, and its archive was empty.
+- The admin month filters on the posts list and media library list only months with posts in the language chosen in Polylang's or WPML's language filter. "All languages" lists every month, as before.
+- An old slug, a cut-off address under a Jalali date, or a Persian slug saved in an older form now leads to the post in the current language when posts in several languages match. A match in another language still redirects.
+- Single-language sites run the same queries as before.
+
 ## [1.0.0-beta.5] - 2026-10-03
 
 ### Integrations

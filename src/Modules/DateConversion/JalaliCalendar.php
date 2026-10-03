@@ -225,7 +225,13 @@ class JalaliCalendar
             return null;
         }
 
-        $cacheKey = sprintf('calendar:%s:%04d%02d:%s', $postType, $jy, $jm, wp_cache_get_last_changed('posts'));
+        // On multilingual sites, only posts in the page's language, as the
+        // archives the links lead to.
+        $language = ContentLanguage::postsInCurrentLanguage([$postType]);
+        $inLanguage = $language === null ? '' : " AND {$language}";
+
+        $cacheKey = sprintf('calendar:%s:%04d%02d:%s', $postType, $jy, $jm, wp_cache_get_last_changed('posts'))
+            . ($language === null ? '' : ':' . md5($language));
         $cached = wp_cache_get($cacheKey, 'persian_kit');
         if (is_array($cached)) {
             return $cached;
@@ -233,12 +239,12 @@ class JalaliCalendar
 
         // The same three queries core's get_calendar() runs, on the Jalali
         // month's Gregorian range; the result is cached above until posts change.
-        // phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery
+        // phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
         $postDays = $wpdb->get_col($wpdb->prepare(
             "SELECT DISTINCT DATE(post_date)
             FROM {$wpdb->posts}
             WHERE post_type = %s AND post_status = 'publish'
-              AND post_date >= %s AND post_date <= %s",
+              AND post_date >= %s AND post_date <= %s{$inLanguage}",
             $postType,
             $range['start'],
             $range['end']
@@ -248,7 +254,7 @@ class JalaliCalendar
             "SELECT post_date
             FROM {$wpdb->posts}
             WHERE post_date < %s
-              AND post_type = %s AND post_status = 'publish'
+              AND post_type = %s AND post_status = 'publish'{$inLanguage}
             ORDER BY post_date DESC
             LIMIT 1",
             $range['start'],
@@ -259,13 +265,13 @@ class JalaliCalendar
             "SELECT post_date
             FROM {$wpdb->posts}
             WHERE post_date > %s
-              AND post_type = %s AND post_status = 'publish'
+              AND post_type = %s AND post_status = 'publish'{$inLanguage}
             ORDER BY post_date ASC
             LIMIT 1",
             $range['end'],
             $postType
         ));
-        // phpcs:enable WordPress.DB.DirectDatabaseQuery.DirectQuery
+        // phpcs:enable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 
         $days = [];
         foreach ((array) $postDays as $postDay) {

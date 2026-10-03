@@ -27,6 +27,12 @@ final class FakeLanguageSource implements LanguageSource
     /** @var array<string, string> Locales by "type:id", as requestedLocale() receives them. */
     public array $requested = [];
 
+    /** The condition currentLanguagePosts() returns. */
+    public ?string $postsCondition = null;
+
+    /** @var list<list<string>> Post types currentLanguagePosts() was asked for. */
+    public array $postsAskedFor = [];
+
     public int $registered = 0;
 
     public function languages(): array
@@ -62,6 +68,13 @@ final class FakeLanguageSource implements LanguageSource
     public function requestedLocale(string $objectType, int $objectId): ?string
     {
         return $this->requested["{$objectType}:{$objectId}"] ?? null;
+    }
+
+    public function currentLanguagePosts(array $postTypes): ?string
+    {
+        $this->postsAskedFor[] = $postTypes;
+
+        return $this->postsCondition;
     }
 
     public function register(): void

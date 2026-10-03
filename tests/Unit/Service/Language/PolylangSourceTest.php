@@ -5,6 +5,7 @@ namespace PersianKit\Tests\Unit\Service\Language;
 use Brain\Monkey;
 use Brain\Monkey\Functions;
 use PersianKit\Service\Language\PolylangSource;
+use PersianKit\Tests\Unit\Support\PreparingWpdb;
 use PHPUnit\Framework\TestCase;
 
 class PolylangSourceTest extends TestCase
@@ -33,7 +34,7 @@ class PolylangSourceTest extends TestCase
         $_POST = [];
         $_GET = [];
         $_REQUEST = [];
-        unset($GLOBALS['pagenow']);
+        unset($GLOBALS['pagenow'], $GLOBALS['wpdb']);
         Monkey\tearDown();
         parent::tearDown();
     }
@@ -166,5 +167,27 @@ class PolylangSourceTest extends TestCase
 
         $this->source->forgetLanguages();
         $this->assertSame([], $this->source->languages());
+    }
+
+    public function test_posts_in_the_current_language(): void
+    {
+        $GLOBALS['wpdb'] = new PreparingWpdb();
+        $language = \Mockery::mock(\WP_Term::class);
+        $language->term_taxonomy_id = 20;
+        $current = 'fa';
+        Functions\when('pll_current_language')->alias(static function (string $field) use (&$current) {
+            return $field === 'slug' ? $current : false;
+        });
+        Functions\when('pll_is_translated_post_type')->alias(static fn (string $type): bool => $type !== 'attachment');
+        Functions\expect('get_term_by')->with('slug', 'fa', 'language')->andReturn($language);
+
+        $inFarsi = 'wp_posts.ID IN (SELECT object_id FROM wp_term_relationships WHERE term_taxonomy_id = 20)';
+
+        $this->assertSame($inFarsi, $this->source->currentLanguagePosts(['post']));
+        $this->assertSame("(wp_posts.post_type IN ('attachment') OR {$inFarsi})", $this->source->currentLanguagePosts(['post', 'attachment']), 'untranslated media is in every language');
+        $this->assertNull($this->source->currentLanguagePosts(['attachment']));
+
+        $current = false;
+        $this->assertNull($this->source->currentLanguagePosts(['post']), 'not set yet, or "All languages"');
     }
 }
