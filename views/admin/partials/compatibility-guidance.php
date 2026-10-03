@@ -81,6 +81,17 @@ $compatibilityReports = $args['compatibilityReports'] ?? [];
                     <?php if (!empty($report['note']) && is_string($report['note'])) : ?>
                         <p class="persian-kit-compatibility__note"><?php echo esc_html($report['note']); ?></p>
                     <?php endif; ?>
+
+                    <?php if (!empty($report['import_url'])) : ?>
+                        <p class="persian-kit-compatibility__switch">
+                            <a class="button" href="<?php echo esc_url($report['import_url']); ?>">
+                                <?php
+                                /* translators: %s: name of another plugin. */
+                                echo esc_html(sprintf(__('Switch from %s', 'persian-kit'), $report['name'] ?? ''));
+                                ?>
+                            </a>
+                        </p>
+                    <?php endif; ?>
                 </div>
             </details>
         <?php endforeach; ?>

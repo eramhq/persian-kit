@@ -1,3 +1,5 @@
+import { restFetch } from './rest-client.js';
+
 /**
  * Alpine component for the batch normalization panel on the settings page.
  * Batches run only while this page drives them; a reload pauses the job.
@@ -59,41 +61,8 @@ export default function normalizeJob(config = {}) {
             this.checkStatus(true);
         },
 
-        async fetchApi(endpoint, method = 'GET', params = {}) {
-            const settings = window.persianKitSettings;
-            let url = settings.restUrl + endpoint;
-            const options = {
-                method,
-                headers: {
-                    'X-WP-Nonce': settings.nonce,
-                },
-            };
-
-            if (method === 'GET') {
-                const query = new URLSearchParams();
-                for (const [key, value] of Object.entries(params)) {
-                    if (Array.isArray(value)) {
-                        value.forEach((item) => query.append(`${key}[]`, item));
-                    } else {
-                        query.append(key, value);
-                    }
-                }
-                const queryString = query.toString();
-                if (queryString !== '') {
-                    // Plain permalinks put the route in ?rest_route=.
-                    url += (url.includes('?') ? '&' : '?') + queryString;
-                }
-            } else {
-                options.headers['Content-Type'] = 'application/json';
-                options.body = JSON.stringify(params);
-            }
-
-            const response = await fetch(url, options);
-            if (!response.ok) {
-                const body = await response.json().catch(() => null);
-                throw new Error((body && body.message) || response.statusText);
-            }
-            return response.json();
+        fetchApi(endpoint, method = 'GET', params = {}) {
+            return restFetch(endpoint, method, params);
         },
 
         applyStatus(data) {

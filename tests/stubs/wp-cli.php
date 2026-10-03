@@ -8,6 +8,11 @@ namespace {
     {
         public static function log(string $message): void {}
         public static function success(string $message): void {}
+        public static function warning(string $message): void {}
+        /** @return never */
+        public static function error(string $message, bool $exit = true): void { exit(1); }
+        /** @param array<string, mixed> $assoc_args */
+        public static function confirm(string $question, array $assoc_args = []): void {}
         /** @param callable|object|string $callable */
         public static function add_command(string $name, $callable, array $args = []): bool { return true; }
     }

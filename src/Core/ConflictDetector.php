@@ -2,6 +2,9 @@
 
 namespace PersianKit\Core;
 
+use PersianKit\Service\Import\ImportJob;
+use PersianKit\Service\Import\Sources\PersianWooCommerce\PersianWooCommerceSource;
+
 defined('ABSPATH') || exit;
 
 class ConflictDetector
@@ -41,6 +44,8 @@ class ConflictDetector
                     ['key' => 'zwnj_editor', 'label' => __('Half-space key', 'persian-kit'), 'action' => 'keep_on'],
                     ['key' => 'utilities', 'label' => __('Persian slugs', 'persian-kit'), 'action' => 'keep_on'],
                 ],
+                'note'    => __('Old Jalali post links keep working while Jalali dates are off. Switching to Persian Kit? The switch on the Tools tab brings over its settings, widgets, blocks and ACF dates.', 'persian-kit'),
+                'import'  => 'wp-parsidate',
             ],
             'wp-jalali/wp-jalali.php' => [
                 'name'    => 'WP Jalali',
@@ -83,6 +88,24 @@ class ConflictDetector
                     ['key' => 'utilities', 'label' => __('Persian slugs', 'persian-kit'), 'action' => 'keep_on'],
                 ],
                 'note' => __('Let Persian WooCommerce handle Woo-specific dates. Persian Kit can still handle normal WordPress dates.', 'persian-kit'),
+                'import' => 'persian-woocommerce',
+                // Kept only for its payment gateways, it does nothing Persian Kit does.
+                'active_when' => [PersianWooCommerceSource::class, 'overlapsPersianKit'],
+            ],
+            'persian-woocommerce-shipping/woocommerce-shipping.php' => [
+                'name'    => 'Persian WooCommerce Shipping',
+                'type'    => 'supplementary',
+                'summary' => __('Persian WooCommerce Shipping is handling provinces, cities and shipping rates for Iran.', 'persian-kit'),
+                'handles' => [
+                    __('Province and city lists at checkout', 'persian-kit'),
+                    __('Shipping methods: courier, Tipax and post', 'persian-kit'),
+                ],
+                'recommendations' => [
+                    ['key' => 'woocommerce.city_select', 'label' => __('City suggestions', 'persian-kit'), 'action' => 'leave_off'],
+                    ['key' => 'woocommerce.allowed_states', 'label' => __('Provinces you ship to', 'persian-kit'), 'action' => 'leave_off'],
+                ],
+                'note'    => __('Its province and city fields replace WooCommerce\'s, so Persian Kit\'s city suggestions and province list stay off while it is active.', 'persian-kit'),
+                'import'  => 'persian-woocommerce-shipping',
             ],
         ];
     }
@@ -97,6 +120,10 @@ class ConflictDetector
 
         foreach ($this->policies() as $slug => $policy) {
             if (!$this->isPluginCurrentlyActive($slug)) {
+                continue;
+            }
+
+            if ($policy['active_when'] !== null && !($policy['active_when'])()) {
                 continue;
             }
 
@@ -133,6 +160,12 @@ class ConflictDetector
                 static fn (array $report): bool => self::hasPendingRecommendation($report)
             ));
 
+        // A switch waiting on the Plugins screen has its own line there.
+        $job = class_exists(ImportJob::class) ? ImportJob::load() : null;
+        if ($job !== null && !$job->isFinished()) {
+            $reports = array_values(array_filter($reports, static fn (array $report): bool => $report['import'] !== $job->source));
+        }
+
         if ($reports === []) {
             return;
         }
@@ -153,6 +186,12 @@ class ConflictDetector
                         <a href="<?php echo esc_url($reviewUrl); ?>">
                             <?php echo esc_html__('Review recommended settings', 'persian-kit'); ?>
                         </a>
+                        <?php if ($report['import_url'] !== '') : ?>
+                            |
+                            <a href="<?php echo esc_url($report['import_url']); ?>">
+                                <?php echo esc_html__('Switch to Persian Kit', 'persian-kit'); ?>
+                            </a>
+                        <?php endif; ?>
                     </li>
                 <?php endforeach; ?>
             </ul>
@@ -230,6 +269,10 @@ class ConflictDetector
             'handles'         => array_values(array_filter($handles, static fn ($handle) => is_string($handle) && $handle !== '')),
             'recommendations' => $normalizedRecommendations,
             'note'            => is_string($policy['note'] ?? null) && $policy['note'] !== '' ? $policy['note'] : '',
+            // The source key on the Tools tab's switch, when Persian Kit can import from it.
+            'import'          => is_string($policy['import'] ?? null) ? $policy['import'] : '',
+            // Whether the policy applies while the plugin is active; null means always.
+            'active_when'     => is_callable($policy['active_when'] ?? null) ? $policy['active_when'] : null,
         ];
     }
 
@@ -290,7 +333,17 @@ class ConflictDetector
             'handles'         => $policy['handles'],
             'recommendations' => $recommendations,
             'note'            => $policy['note'],
+            'import'          => $policy['import'],
+            'import_url'      => $policy['import'] !== '' ? self::switchUrl() : '',
         ];
+    }
+
+    /**
+     * The switch card on the Tools tab.
+     */
+    public static function switchUrl(): string
+    {
+        return admin_url('admin.php?page=' . AdminPage::MENU_SLUG . '&tab=tools#persian-kit-switch');
     }
 
     /**

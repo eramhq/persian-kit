@@ -120,7 +120,7 @@ $panelAttributes = static function (string $tab) use ($activeTab): string {
 
         <?php // Outside the settings form: the fix tool's inputs are not settings. ?>
         <div <?php echo $panelAttributes('tools'); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped in $panelAttributes. ?>>
-            <?php \PersianKit\Components\View::load('admin/partials/tools'); ?>
+            <?php \PersianKit\Components\View::load('admin/partials/tools', $args['tools'] ?? []); ?>
         </div>
 
         <?php \PersianKit\Components\View::load('admin/partials/footer'); ?>

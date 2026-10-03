@@ -1,9 +1,14 @@
 <?php
 /**
- * Tools tab: fixes the letters of posts that are already saved.
+ * Tools tab: switching from another plugin, and fixing the letters of posts
+ * that are already saved.
+ *
+ * @var array<string, mixed> $args The switch card's data (AdminPage::toolsData()).
  */
 
 defined('ABSPATH') || exit;
+
+\PersianKit\Components\View::load('admin/partials/switch-plugins', $args);
 
 // Variables here are local to View::load(), not globals.
 // phpcs:disable WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound
