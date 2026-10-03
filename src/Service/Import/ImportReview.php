@@ -81,7 +81,7 @@ class ImportReview
     /**
      * @return array<string, mixed>
      */
-    public function review(Source $source): array
+    public function review(Source $source, bool $rescan = false): array
     {
         $job = ImportJob::load();
         $job = $job !== null && $job->source === $source->key() ? $job : null;
@@ -108,7 +108,7 @@ class ImportReview
             'rows'      => $this->importer->review($this->runner->settingRows($source)),
             'notes'     => $source instanceof HasReviewNotes ? $source->reviewNotes($snapshot) : [],
             'tasks'     => $tasks,
-            'checklist'    => array_map(static fn (ChecklistItem $item): array => $item->toArray(), $source->checklist($snapshot)),
+            'checklist'    => array_map(static fn (ChecklistItem $item): array => $item->toArray(), $source->checklist($snapshot + ['rescan' => $rescan])),
             'undo_warning' => $source instanceof HasUndoWarning ? $source->undoWarning() : '',
         ];
     }

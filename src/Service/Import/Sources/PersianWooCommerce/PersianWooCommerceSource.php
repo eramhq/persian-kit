@@ -7,6 +7,8 @@ use PersianKit\Service\Import\AbstractSource;
 use PersianKit\Service\Import\ChecklistItem;
 use PersianKit\Service\Import\HasReportTips;
 use PersianKit\Service\Import\ImportJob;
+use PersianKit\Service\Import\Sources\ParsiDate\ThemeCalls;
+use PersianKit\Service\Import\Sources\ParsiDate\ThemeScanTask;
 use PersianKit\Service\Import\Tasks\CustomerAddressTask;
 use PersianKit\Service\Import\Tasks\OrderAddressTask;
 use PersianKit\Service\Import\Woo\PaymentGateways;
@@ -96,7 +98,7 @@ class PersianWooCommerceSource extends AbstractSource implements HasReportTips
      */
     public function tasks(): array
     {
-        return [new CustomerAddressTask(true), new OrderAddressTask(true)];
+        return [new CustomerAddressTask(true), new OrderAddressTask(true), new ThemeScanTask(['pw'], false)];
     }
 
     public function reportTips(array $job): array
@@ -106,7 +108,8 @@ class PersianWooCommerceSource extends AbstractSource implements HasReportTips
 
     public function checklist(array $snapshot): array
     {
-        $items = [];
+        // Invoice templates often call PW().
+        $items = ThemeCalls::items($this->name(), ['pw'], $snapshot, false);
         $gateways = self::gateways($snapshot);
 
         if ($gateways !== []) {

@@ -24,6 +24,7 @@ use PersianKit\Dependencies\Eram\Abzar\Validation\PhoneNumber;
 use PersianKit\Dependencies\Eram\Abzar\Validation\PlateNumber;
 use PersianKit\Dependencies\Eram\Abzar\Validation\PostalCode;
 use PersianKit\Dependencies\Eram\Abzar\Validation\ValidationResult;
+use PersianKit\Modules\DateConversion\DateInputParser;
 use PersianKit\Modules\DateConversion\DatePicker;
 use PersianKit\Modules\DateConversion\JalaliFormatter;
 
@@ -127,6 +128,35 @@ function persian_kit_date(string $format, int|string $timestamp = '', ?\DateTime
 function persian_kit_gregorian_date(string $format, int|string $timestamp = '', ?\DateTimeZone $timezone = null): string
 {
     return JalaliFormatter::gregorianFormat($format, $timestamp, $timezone);
+}
+
+/**
+ * A date typed in Jalali (or Gregorian) as a Gregorian date: 1403/05/12
+ * gives 2024-08-02. Persian or Arabic digits, - / or . between the parts,
+ * and a time after the date are read; the time is site time. Null when it
+ * is not a valid date.
+ *
+ *     persian_kit_jalali_to_gregorian('۱۴۰۳/۰۵/۱۲ ۱۸:۳۰', 'Y-m-d H:i'); // 2024-08-02 18:30
+ */
+function persian_kit_jalali_to_gregorian(string $date, string $format = 'Y-m-d'): ?string
+{
+    $date = trim(DigitConverter::toEnglish($date));
+    $time = '00:00:00';
+    if (preg_match('/^(\S+)[\sT]+(\d{1,2}:\d{2}(?::\d{2})?)$/', $date, $matches)) {
+        $date = $matches[1];
+        $time = $matches[2];
+    }
+
+    $gregorian = DateInputParser::toGregorian($date);
+    if ($gregorian === null) {
+        return null;
+    }
+
+    try {
+        return (new \DateTimeImmutable($gregorian . ' ' . $time, wp_timezone()))->format($format);
+    } catch (\Exception) {
+        return null;
+    }
 }
 
 /**

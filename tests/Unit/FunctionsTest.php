@@ -40,6 +40,20 @@ class FunctionsTest extends TestCase
         $this->assertSame('١٢', persian_kit_to_arabic_digits('12'));
     }
 
+    public function test_jalali_to_gregorian(): void
+    {
+        Monkey\Functions\when('wp_timezone')->justReturn(new \DateTimeZone('Asia/Tehran'));
+
+        $this->assertSame('2024-08-02', persian_kit_jalali_to_gregorian('1403/05/12'));
+        $this->assertSame('2024-08-02 18:30', persian_kit_jalali_to_gregorian('۱۴۰۳-۰۵-۱۲ ۱۸:۳۰', 'Y-m-d H:i'));
+        // A Gregorian date stays Gregorian.
+        $this->assertSame('02/08/2024', persian_kit_jalali_to_gregorian('2024-08-02', 'd/m/Y'));
+        // Local time: midnight in Tehran, not UTC.
+        $this->assertSame('1722544200', persian_kit_jalali_to_gregorian('1403/05/12', 'U'));
+        $this->assertNull(persian_kit_jalali_to_gregorian('1403/12/31'));
+        $this->assertNull(persian_kit_jalali_to_gregorian('soon'));
+    }
+
     public function test_text_helpers(): void
     {
         $this->assertSame('کتاب', persian_kit_normalize_persian('كتاب'));

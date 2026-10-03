@@ -384,13 +384,13 @@ export default function importJob(config = {}) {
             }
         },
 
-        async refresh() {
+        async refresh(rescan = false) {
             if (!this.current) {
                 return;
             }
 
             try {
-                const review = await restFetch(`import/${this.current.key}/review`);
+                const review = await restFetch(`import/${this.current.key}/review`, 'GET', rescan ? { rescan: 1 } : {});
                 this.review = review;
                 this.current = review.source;
                 this.job = review.source.job || this.job;
@@ -401,7 +401,7 @@ export default function importJob(config = {}) {
 
         async rescan() {
             this.busy = true;
-            await this.refresh();
+            await this.refresh(true);
             this.busy = false;
         },
 

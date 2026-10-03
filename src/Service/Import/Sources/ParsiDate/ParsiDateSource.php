@@ -71,7 +71,7 @@ class ParsiDateSource extends AbstractSource implements HasReviewNotes, HasRepor
      */
     public function tasks(): array
     {
-        return [new WidgetTask(), new BlockTask(), new AcfValueTask(), new AcfFieldTask()];
+        return [new WidgetTask(), new BlockTask(), new AcfValueTask(), new AcfFieldTask(), new ThemeScanTask(ThemeScanner::PARSI_DATE, true)];
     }
 
     /**
@@ -87,7 +87,7 @@ class ParsiDateSource extends AbstractSource implements HasReviewNotes, HasRepor
 
     public function checklist(array $snapshot): array
     {
-        $items = [];
+        $items = ThemeCalls::items($this->name(), ThemeScanner::PARSI_DATE, $snapshot, true);
         $gateways = (new ParsiDateSettings())->gateways();
 
         if ($gateways !== []) {
@@ -99,6 +99,31 @@ class ParsiDateSource extends AbstractSource implements HasReviewNotes, HasRepor
                 false,
                 true,
                 ['acknowledge_label' => __('I have another gateway for these payments', 'persian-kit')]
+            );
+        }
+
+        $scanner = new ThemeScanner();
+        $templates = $scanner->blockTemplates();
+        if ($templates !== []) {
+            $items[] = new ChecklistItem(
+                'block_templates',
+                __('Parsi Date blocks in your theme\'s template files', 'persian-kit'),
+                __('Blocks in the theme\'s own files can\'t be rewritten. After the switch, open each template in the Site Editor, replace them with the Archives or Calendar block and save.', 'persian-kit'),
+                array_map(static fn (string $file): array => ['label' => $file], $templates),
+                false,
+                true
+            );
+        }
+
+        $pages = ThemeScanner::elementorPages();
+        if ($pages !== []) {
+            $items[] = new ChecklistItem(
+                'elementor',
+                __('Parsi Date widgets in Elementor pages', 'persian-kit'),
+                __('Replace them with WordPress\'s Archives or Calendar widget in Elementor.', 'persian-kit'),
+                array_map(static fn (int $id): array => ['label' => get_the_title($id), 'url' => (string) get_edit_post_link($id, 'raw')], $pages),
+                false,
+                true
             );
         }
 

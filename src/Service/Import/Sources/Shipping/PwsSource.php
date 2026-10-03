@@ -9,6 +9,8 @@ use PersianKit\Service\Import\HasReportTips;
 use PersianKit\Service\Import\HasReviewNotes;
 use PersianKit\Service\Import\HasUndoWarning;
 use PersianKit\Service\Import\Iran\PwsTermMap;
+use PersianKit\Service\Import\Sources\ParsiDate\ThemeCalls;
+use PersianKit\Service\Import\Sources\ParsiDate\ThemeScanTask;
 use PersianKit\Service\Import\Tasks\CustomerAddressTask;
 use PersianKit\Service\Import\Tasks\OrderAddressTask;
 
@@ -69,6 +71,7 @@ class PwsSource extends AbstractSource implements HasReviewNotes, HasReportTips,
             new CustomerAddressTask(),
             new OrderStatusTask(),
             new OrderAddressTask(),
+            new ThemeScanTask(['pws'], false),
         ];
     }
 
@@ -139,7 +142,7 @@ class PwsSource extends AbstractSource implements HasReviewNotes, HasReportTips,
 
     public function checklist(array $snapshot): array
     {
-        $items = [];
+        $items = ThemeCalls::items($this->name(), ['pws'], $snapshot, false);
         $zones = PwsSettings::methodsByZone();
 
         if ($zones !== []) {
