@@ -18,7 +18,8 @@ Persian Kit is a modular WordPress plugin for Persian-language sites. It focuses
 
 * Jalali date conversion at the display layer
 * Jalali archive pages (/1405/07/ lists the posts of Mehr 1405), and a Jalali archive list and calendar in the Archives and Calendar widgets and blocks
-* Optional Jalali dates in post permalinks (/1405/07/09/my-post/), with old links redirected
+* Optional Jalali dates in post permalinks (/1405/07/09/my-post/), with old links redirected, and old Jalali links kept working with Jalali dates off
+* A guided switch from Parsi Date, Persian WooCommerce and Persian WooCommerce Shipping: their settings, links, widgets, blocks, ACF dates, Iranian addresses and order statuses, with a review first, a report and undo
 * REST API Jalali companion fields
 * Persian digits in content, titles, the browser tab, widgets, menus, category and tag lists, dates, counts and WooCommerce prices (off until you turn it on)
 * Search that finds words typed with either Arabic (ي ك) or Persian (ی ک) letters, and numbers typed with either Persian (۱۴۰۵) or English (1405) digits
@@ -52,6 +53,7 @@ Persian Kit ships and credits the following third-party components:
 * [IBM Plex Sans Arabic](https://github.com/IBM/plex) — font by IBM, licensed under the SIL Open Font License 1.1.
 * [intl-datepicker](https://github.com/eramhq/intl-datepicker) — MIT-licensed date picker Web Component, bundled into `public/js/datepicker.js`.
 * [@internationalized/date](https://github.com/adobe/react-spectrum/tree/main/packages/@internationalized/date) — Adobe's calendar library, licensed under the Apache License 2.0, bundled into `public/js/datepicker.js`.
+* Tapin's list of provinces and cities, from [Persian WooCommerce Shipping](https://wordpress.org/plugins/persian-woocommerce-shipping/) by Mahdi Yousefi (GPLv3), in `public/data/pws-tapin.json`, to read addresses that plugin saved with Tapin's ids.
 
 All bundled components are GPL-compatible. Their license texts ship with the plugin: `packages/eram/*/LICENSE`, `public/fonts/vazirmatn/OFL.txt`, `public/fonts/noto-sans-arabic/OFL.txt`, `public/fonts/ibm-plex-sans-arabic/OFL.txt`, `public/licenses/` and the header of `public/js/admin.js`.
 
@@ -102,7 +104,7 @@ Gregorian archives such as `/2025/03/` keep working. Every Gregorian month spans
 
 Yes, if your permalink structure has the date, such as "Day and name". Turn on "Jalali dates in post links" under Display > Jalali dates, and posts link to `/1405/07/09/my-post/` instead of `/2026/10/01/my-post/`. Old Gregorian links redirect to the new ones, and turning the option off again redirects the Jalali links back.
 
-The Jalali links only work while Persian Kit is active. If you deactivate it, they return "not found", so turn the option off first; the Gregorian links then work, and the Jalali ones redirect to them until you deactivate.
+Jalali links keep working while Jalali dates are off, whichever plugin made them (Persian Kit, Parsi Date or WP Jalali): they redirect to the Gregorian links. They only work while Persian Kit is active. If you deactivate it, they return "not found", so turn the option off first; the Gregorian links then work.
 
 = Do I need WooCommerce? =
 
@@ -157,6 +159,14 @@ Yes. It ignores spaces and half-spaces and the letters people type differently, 
 = Where does the list of cities come from? =
 
 From the Statistical Centre of Iran's country-divisions list for 1403 (amar.org.ir): the 1,454 cities of its 31 provinces.
+
+= I use Parsi Date, Persian WooCommerce or Persian WooCommerce Shipping. Can I switch? =
+
+Yes. Persian Kit > Tools > Switch from another plugin shows what Persian Kit does with each of the plugin's settings and data before anything changes. Then deactivate the plugin with WordPress's own link (Persian Kit never deactivates another plugin) and import: settings, widgets and blocks, ACF dates, Iranian provinces and cities in customers, orders, zones and the store address, and the shipping plugin's order statuses. Old Jalali post links keep working. The report lists what could not be imported, and undo puts back what hasn't changed since. It works after the plugin was deleted too, from the data it left, and from WP-CLI: `wp persian-kit import list`.
+
+= What can't the switch bring over? =
+
+Payment gateways (Persian Kit has none; keep Persian WooCommerce active for them with its overlapping options off), the shipping plugin's shipping methods, per-city prices, map and text messages, and settings Persian Kit has no match for yet, which the report lists. Theme code that calls Parsi Date's functions needs the code the switch gives you, in your theme's functions.php.
 
 == Changelog ==
 

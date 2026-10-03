@@ -4,6 +4,18 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Switching from another plugin
+
+- New on the Tools tab: switch from Parsi Date, Persian WooCommerce or Persian WooCommerce Shipping. Review shows each of the plugin's settings next to Persian Kit's (same, close, not yet or automatic, with the reason), what happens to old links, each kind of data with samples, and what to sort out before deactivating it, all before anything changes. The plugin is deactivated with WordPress's own link; the import then runs in batches, resumes after a reload, and pauses if the plugin is activated again. The report lists what was done, what was not imported and why, and what needs attention, downloads as CSV, and undo puts back what hasn't changed since. It works after the plugin was deleted, from the data it left, and from WP-CLI (`wp persian-kit import`).
+- Parsi Date: its settings (6.x and 5.x), widgets and blocks become WordPress's Archives and Calendar, which Persian Kit shows in Jalali, and its ACF date fields and values become ACF's date picker. Theme code calling `parsidate()` or `per_number()` is found, with code to copy into the theme. New helper `persian_kit_jalali_to_gregorian()`.
+- Persian WooCommerce Shipping: provinces and cities saved as its ids (or Tapin's) in customers, orders, shipping zones and the store address become WooCommerce's codes and city names, and orders in its statuses move to WooCommerce's with a note, no email and stock unchanged. Its shipping methods have no match, so Review offers to keep it.
+- Persian WooCommerce: its settings and old two-letter province codes. Kept only for its payment gateways, with its overlapping options off, it no longer gets compatibility advice.
+- The compatibility cards of these plugins link to the switch, and the shipping plugin has its own card.
+
+### Jalali links
+
+- Old Jalali post links such as `/1403/05/12/my-post/` redirect to the Gregorian link with Jalali dates off, and Jalali archive pages still list their posts. Before, they were "not found" unless Jalali dates were on.
+
 ### Persian digits
 
 - Persian digits now reach the browser tab's title (also when Yoast SEO or Rank Math writes it), archive, category and tag titles and descriptions, widget titles, block widgets and Custom HTML widgets, category lists and dropdowns, tag clouds, navigation and page-list blocks, comment excerpts and WooCommerce short descriptions. With the numbers option on, also the post counts in archive lists and tag clouds, and the term-count and query-total blocks.

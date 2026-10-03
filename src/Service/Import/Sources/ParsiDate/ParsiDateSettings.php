@@ -360,9 +360,11 @@ class ParsiDateSettings
         if ($this->on('woocommerce', 'analytics_shamsi_date')) {
             $rows[] = $notYet('analytics_shamsi_date', __('WooCommerce: Jalali dates in Analytics', 'persian-kit'), $planned('#29'));
         }
+        $noGateways = __('Persian Kit has no payment gateways. See "Before you deactivate".', 'persian-kit');
         foreach ($this->gateways() as $gateway) {
             /* translators: %s: bank name, such as mellat. */
-            $rows[] = $notYet('gateway_' . $gateway, sprintf(__('WooCommerce: %s bank gateway', 'persian-kit'), $gateway), __('Persian Kit has no payment gateways. See "Before you deactivate".', 'persian-kit'));
+            $label = sprintf(__('WooCommerce: %s bank gateway', 'persian-kit'), $gateway);
+            $rows[] = $notYet('gateway_' . $gateway, $label, $noGateways);
         }
         if (array_filter($this->options['edd'] ?? [], [AbstractSource::class, 'truthy']) !== []) {
             $rows[] = $notYet('edd', __('Easy Digital Downloads', 'persian-kit'), $planned('#35'));

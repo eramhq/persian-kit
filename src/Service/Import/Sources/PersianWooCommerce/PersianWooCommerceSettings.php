@@ -174,7 +174,7 @@ class PersianWooCommerceSettings
     {
         $rows = [];
         $notYet = static fn (string $id, string $label, string $reason = ''): SettingRow => new SettingRow($id, $label, SettingStatus::NotYet, '', [], $reason !== '' ? $reason : __('Persian Kit has no match yet.', 'persian-kit'));
-        /* translators: %s: issue number, such as #11. */
+        /* translators: %s: issue number, such as #14. */
         $planned = static fn (string $issue): string => sprintf(__('Planned for Persian Kit (%s).', 'persian-kit'), $issue);
         $options = get_option('PW_Options', []);
         $options = is_array($options) ? $options : [];
@@ -208,9 +208,11 @@ class PersianWooCommerceSettings
             );
         }
 
+        $noGateways = __('Persian Kit has no payment gateways. See "Before you deactivate".', 'persian-kit');
         foreach (PersianWooCommerceSource::gatewayIds() as $gateway) {
             /* translators: %s: payment gateway id. */
-            $rows[] = $notYet('gateway_' . $gateway, sprintf(__('Payment gateway: %s', 'persian-kit'), $gateway), __('Persian Kit has no payment gateways. See "Before you deactivate".', 'persian-kit'));
+            $label = sprintf(__('Payment gateway: %s', 'persian-kit'), $gateway);
+            $rows[] = $notYet('gateway_' . $gateway, $label, $noGateways);
         }
 
         return $rows;

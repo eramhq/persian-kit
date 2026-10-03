@@ -69,6 +69,16 @@ Formats a timestamp as a Gregorian date, bypassing Jalali conversion even when g
 
 Use it for machine-oriented or interoperable output.
 
+#### `persian_kit_jalali_to_gregorian(string $date, string $format = 'Y-m-d'): ?string`
+
+Reads a date typed in Jalali, or Gregorian, and returns it as a Gregorian date in `$format`. Persian, Arabic or English digits, `-`, `/` or `.` between the parts, and a time after the date (site time) are read. Years from 1200 to 1600 are Jalali and from 1700 on Gregorian. Returns `null` when the value is not a valid date.
+
+```php
+persian_kit_jalali_to_gregorian('1403/05/12');                    // '2024-08-02'
+persian_kit_jalali_to_gregorian('۱۴۰۳-۰۵-۱۲ ۱۸:۳۰', 'Y-m-d H:i');  // '2024-08-02 18:30'
+persian_kit_jalali_to_gregorian('1403/12/31');                    // null: 1403 has 30 days in Esfand
+```
+
 #### `persian_kit_date_field_attributes(array $options = []): string`
 
 Turns an `<input>` into a Jalali date field: returns its attributes, escaped, and loads the date picker on the page. The field still submits a Gregorian date, so whatever reads the form needs no change. Without JavaScript the input stays as it is.
@@ -446,6 +456,8 @@ With the module's **Jalali dates in post links** option on (`jalali_permalinks`,
 
 On [multilingual sites](#multilingual-sites), only posts in Persian get Jalali links; the others keep Gregorian ones, and their Jalali addresses redirect to them.
 
+Jalali addresses keep working while the Jalali dates module is off too, whether Persian Kit, Parsi Date or WP Jalali gave them: `/1405/07/09/my-post/` (with `/feed/`, `/2/`, `/embed/` or an attachment after it) redirects (301) to the post's Gregorian link, Jalali archive pages such as `/1405/07/` and `?m=140507` still list their posts, and old slugs and cut-off addresses under a Jalali date are found. Nothing is rewritten: the site's own links stay Gregorian. A year below 1700 is never a Gregorian date WordPress serves, so these requests would otherwise be "not found", and answering them changes no other page.
+
 The Jalali addresses only work while Persian Kit is active. If it is deactivated, WordPress reads `/1405/07/09/my-post/` as the year 1405 and returns "not found"; the Gregorian addresses work again.
 
 To keep post permalinks Gregorian in code, use the [`persian_kit_jalali_permalinks`](#persian_kit_jalali_permalinks) filter. Redirects between the calendars stay on either way.
@@ -694,7 +706,38 @@ add_filter('persian_kit_acf_jalali_value', function (bool $jalali, array $field)
 
 ### `persian_kit_conflict_policies`
 
-Filters the built-in compatibility guidance for other Persian plugins.
+Filters the built-in compatibility guidance for other Persian plugins, by plugin file. Besides `name`, `type` (`overlap` or `supplementary`), `summary`, `handles`, `recommendations` and `note`, a policy can have:
+
+- `import`: the key of a [switch source](#switching-from-another-plugin), such as `wp-parsidate`. The compatibility card and the Plugins screen notice then link to the switch.
+- `active_when`: a callable; the guidance shows only while it returns true. Persian WooCommerce's uses it, so a store keeping it only for its payment gateways, with every option Persian Kit takes over turned off, gets no advice.
+
+```php
+add_filter('persian_kit_conflict_policies', function (array $policies): array {
+    unset($policies['persian-woocommerce-shipping/woocommerce-shipping.php']);
+
+    return $policies;
+});
+```
+
+### `persian_kit_import_sources`
+
+Filters the plugins a site can [switch from](#switching-from-another-plugin): a list of objects implementing `PersianKit\Service\Import\Source` (extend `AbstractSource`). Each key must be lower-case letters, digits and dashes.
+
+```php
+add_filter('persian_kit_import_sources', function (array $sources): array {
+    $sources[] = new My_Plugin_Source();
+
+    return $sources;
+});
+```
+
+### `persian_kit_import_time_budget`
+
+Seconds each request of the switch works for before answering (default `8`, at least `1`). Lower it on hosts that end requests early; WP-CLI uses the same budget per batch and keeps going.
+
+```php
+add_filter('persian_kit_import_time_budget', fn () => 4);
+```
 
 ## WooCommerce Checkout
 
@@ -857,7 +900,53 @@ The classes count on Text, Phone and Number fields and are ignored on others; us
 
 The card's list of forms with Iranian classes comes from a scan of the forms' fields, cached and cleared when a form is saved, cloned, imported, trashed or deleted. Polls and quizzes are not changed.
 
+## Switching from Another Plugin
+
+Tools > **Switch from another plugin** brings a site over from Parsi Date (wp-parsidate, 6.x and 5.x), Persian WooCommerce (persian-woocommerce) and Persian WooCommerce Shipping (persian-woocommerce-shipping). A plugin is listed while it is active or has left settings or data behind, so it shows up after it was deactivated or deleted: none of the three removes its data. Each row says whether it is active, inactive with its data still there, partly imported (some parts could not run, such as ACF dates without ACF) or imported, and when.
+
+The switch opens inside the card, in four steps:
+
+1. **Review** changes nothing and works while the plugin is active. Each of its settings that is on is shown next to the Persian Kit setting it maps to, as Same, Close (the reason says how it differs), Not yet (no match yet; nothing imported) or Automatic (Persian Kit does it without a setting), with Persian Kit's current value. Rows that would turn on more than the plugin did start unticked, and a row turns on a Persian Kit module the imported settings need. Then: what happens to old links, each kind of data with its count and a few before-and-after samples, and **Before you deactivate**: theme code that calls the plugin's functions (with file and line, code to copy and a Scan again button), payment gateways that will stop with the orders still waiting for payment through them, shipping zones that use its methods or would be left with none, and Parsi Date blocks in theme files or Elementor pages. For the shipping plugin, Review first asks whether to keep using it (the default while zones use its shipping methods; nothing is imported) or switch.
+2. **Deactivate** shows WordPress's own Deactivate link (the network one for a network-active plugin, to users who can manage network plugins). It opens once the recent-backup box and each item above are ticked. Persian Kit never deactivates a plugin. While the switch waits, the Plugins screen has a link back to it. Persian WooCommerce can stay active for its payment gateways once its options that Persian Kit takes over are off; the step lists those still on.
+3. **Import** runs once the plugin is inactive, so the two never convert at once: settings first, then the data, in batches of about 8 seconds ([`persian_kit_import_time_budget`](#persian_kit_import_time_budget)) with real progress. It resumes after a reload or another visit, pauses if the plugin is activated again, and only one runs at a time: another tab or WP-CLI gets "running in another tab or in WP-CLI".
+4. **Report** lists what was done, what was not imported and why, and what needs attention, with links; it downloads as CSV (UTF-8 with a byte-order mark). **Undo the import** puts back each setting and value that still holds what the import wrote, newest first, and keeps anything changed since. **Forget undo data** deletes the log.
+
+Settings only ever turn on. A single value (the admin font) is set only while Persian Kit's is its default, and a province list is taken as is while Persian Kit allows every province and merged with Persian Kit's otherwise, so importing two plugins gives the same result in either order.
+
+What each plugin's data becomes:
+
+| Plugin | Data | Becomes |
+| --- | --- | --- |
+| Parsi Date | Jalali post links | Kept: Jalali links stay on, and old Jalali addresses work even with Jalali dates off (see [Post permalinks](#post-permalinks)) |
+| Parsi Date | Archive and calendar widgets (6.4, 6.0–6.3 and 5.x) | WordPress's Archives (monthly) or a block widget with a heading and the Archives block (yearly, daily), and Calendar, in the same place; one WordPress moved to "Inactive widgets" goes back where it was |
+| Parsi Date | Archive and calendar blocks in posts, templates, template parts, patterns, navigation and block widgets | A heading and `core/archives` (`displayAsDropdown`, `showPostCounts`, `type`) or `core/calendar`; saved without revisions |
+| Parsi Date | ACF `jalali_datepicker` fields and their values in post, term and user meta and options, groups and repeaters included | ACF date pickers (shown `d/m/Y`, returned `Y/m/d`; templates get `1403/05/12` where Parsi Date gave `1403-05-12`) with Gregorian `Ymd` values; fields defined in local JSON or PHP are reported with the change to make |
+| Shipping plugin | Province and city ids (or Tapin's) in customers, orders, shipping zones and the store address | WooCommerce's province codes and city names; the district goes into an empty address line 2 (a Review option) |
+| Shipping plugin | Orders in its statuses (`wc-pws-*`) | The WooCommerce status chosen per status in Review (Processing by default), with an order note, no email and stock unchanged |
+| Persian WooCommerce | Its old two-letter province codes (`TE`) in customers and orders | WooCommerce's codes |
+
+Until the shipping plugin's addresses are converted, and for any left on the attention list, formatted addresses show its ids as names. Its shipping methods, per-city prices, map and text messages have no match; zones can't target cities, so zones with city locations are reported ("use postcodes").
+
+Not covered: WP Jalali, Persian-digit date addresses (`/۱۴۰۳/…`, which Parsi Date never made), addresses kept by multiple-address plugins, and other sites of a network that also used the shipping plugin (on a network, only this site's customers are converted; users are shared, so their addresses change on every site).
+
+Each import keeps a log in the `{prefix}persian_kit_import_log` table, created on the first switch: every changed field with its first original value, and everything not imported or needing attention. The switch in progress is the `persian_kit_import_job` option; when each plugin was imported is `persian_kit_imports`. Uninstalling Persian Kit drops the table and both options on every site.
+
+If the site's REST API is blocked, as some security plugins do, the card shows the WP-CLI command that does the same switch.
+
 ## WP-CLI
+
+The switch from another plugin runs from WP-CLI too, sharing the job, lock and log with the Tools tab, so either one can resume a switch the other started:
+
+```bash
+wp persian-kit import list
+wp persian-kit import <source> [--dry-run] [--tasks=<tasks>] [--skip-settings] [--status-map=<map>] [--no-district-line] [--fix-double-dates] [--yes] [--undo] [--report=<file>]
+```
+
+- `<source>` is `wp-parsidate`, `persian-woocommerce` or `persian-woocommerce-shipping`; `list` shows the plugins this site used and their state.
+- `--dry-run` prints Review: the settings, each kind of data with its count, and the checklist.
+- `--tasks` takes comma-separated keys: `widgets`, `blocks`, `acf_values`, `acf_fields`, `theme_scan` (Parsi Date), `shipping_zones`, `default_country`, `customers`, `order_statuses`, `order_addresses` (the shipping plugin; Persian WooCommerce has `customers` and `order_addresses`).
+- `--status-map` sets where the shipping plugin's statuses go: `wc-pws-packaged:processing,wc-pws-courier:completed`.
+- The plugin must be inactive; the command stops with the reason otherwise.
 
 Character normalization has a CLI command. It is available even when the Persian ی and ک module (`char_normalization`) is off, and uses that module's saved settings:
 
@@ -873,7 +962,7 @@ wp persian-kit normalize [--dry-run] [--post-type=post,page] [--batch-size=100] 
 
 Settings are stored in the `persian_kit_settings` option, per module under these keys. Stored values are read on top of each module's defaults, so a key added in an update takes its default until the settings are saved.
 
-The settings page (the Persian Kit menu) has five tabs: Display and Writing hold the core modules, WooCommerce (only while WooCommerce is active) and Integrations hold the [integrations](#integrations), and Tools holds the batch tool that fixes letters in existing posts. One form spans the module tabs, so Save sends every module's settings; `AdminPage::GROUPS` maps each core module key to its tab, and `?tab=` opens one. A tab that is not shown, or a module whose plugin is not active, sends nothing, so its stored settings are kept.
+The settings page (the Persian Kit menu) has five tabs: Display and Writing hold the core modules, WooCommerce (only while WooCommerce is active) and Integrations hold the [integrations](#integrations), and Tools holds the [switch from another plugin](#switching-from-another-plugin) and the batch tool that fixes letters in existing posts. One form spans the module tabs, so Save sends every module's settings; `AdminPage::GROUPS` maps each core module key to its tab, and `?tab=` opens one. A tab that is not shown, or a module whose plugin is not active, sends nothing, so its stored settings are kept.
 
 | Module key | On the settings page | Settings (new-install default) |
 | --- | --- | --- |

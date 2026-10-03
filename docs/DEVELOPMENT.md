@@ -24,6 +24,7 @@ composer test
 composer test:integration:setup   # once: test database, wordpress-develop checkout, PHPUnit 9.6
 composer test:integration
 composer test:integration:polylang   # the multilingual tests, with Polylang
+composer test:integration:sources    # against Parsi Date, Persian WooCommerce and its shipping plugin
 ```
 
 Integration tests run on WordPress's PHPUnit 9.6 runner with `phpunit-integration.xml.dist`; unit tests use PHPUnit 10 and `phpunit.xml.dist`. The setup script reads the database settings from the site's `wp-config.php` and, on Local, finds the site's MySQL socket. The site's database must be running. Override any setting with `WP_TEST_DB_HOST`, `WP_TEST_DB_USER`, `WP_TEST_DB_PASSWORD`, `WP_CORE_DIR` or `WP_VERSION`.
@@ -31,6 +32,8 @@ Integration tests run on WordPress's PHPUnit 9.6 runner with `phpunit-integratio
 When WooCommerce is installed next to the plugin (`wp-content/plugins/woocommerce`), or in the directory `PERSIAN_KIT_TESTS_WOOCOMMERCE_DIR` names, the integration tests load it and create its tables, and the WooCommerce checkout and My Account tests run; otherwise those tests are skipped. Contact Form 7 (`contact-form-7`, `PERSIAN_KIT_TESTS_CF7_DIR`), ACF (`advanced-custom-fields`, `PERSIAN_KIT_TESTS_ACF_DIR`) and Forminator (`forminator`, `PERSIAN_KIT_TESTS_FORMINATOR_DIR`) load the same way for the form tests. CI downloads the releases pinned in `.github/workflows/ci.yml`. Set `PERSIAN_KIT_TESTS_WITHOUT_WOOCOMMERCE=1`, `PERSIAN_KIT_TESTS_WITHOUT_CF7=1`, `PERSIAN_KIT_TESTS_WITHOUT_ACF=1` or `PERSIAN_KIT_TESTS_WITHOUT_FORMINATOR=1` to run the suite without one.
 
 Polylang filters every query by language once it has languages, so it loads only in its own run: `composer test:integration:polylang` sets `PERSIAN_KIT_TESTS_MULTILINGUAL=1` and runs the `polylang` group, which the main run leaves out. Polylang loads from `wp-content/plugins/polylang` or `PERSIAN_KIT_TESTS_POLYLANG_DIR`; without it those tests are skipped. WPML is commercial and has no automated integration tests.
+
+The plugins a site can switch from load only in their own run too, since Parsi Date converts every date once active: `composer test:integration:sources` sets `PERSIAN_KIT_TESTS_SOURCES=1` and runs the `sources` group (Jalali post links byte for byte against Parsi Date's, the two calendars agreeing on every day from 1921 to 2094, its widget and block storage). They load from `wp-content/plugins/wp-parsidate`, `persian-woocommerce` and `persian-woocommerce-shipping`, or `PERSIAN_KIT_TESTS_PARSIDATE_DIR`, `PERSIAN_KIT_TESTS_PERSIAN_WOOCOMMERCE_DIR` and `PERSIAN_KIT_TESTS_PWS_DIR`; without them those tests are skipped. The other switch tests run in the main suite against fixtures. CI downloads Parsi Date 6.4 and the latest Persian WooCommerce and shipping plugin (WordPress.org keeps no zip of their current versions).
 
 ### Run JavaScript tests
 
@@ -77,7 +80,7 @@ npm run dist
 
 1. Update the version in `persian-kit.php` (`Version`), `src/constants.php` (`PERSIAN_KIT_VERSION`), `readme.txt` (`Stable tag`) and `package.json`.
 2. Add the release to `CHANGELOG.md` and the `readme.txt` changelog.
-3. Run `composer test`, `composer test:integration`, `composer test:integration:polylang`, `composer phpstan` and `composer phpcs`.
+3. Run `composer test`, `composer test:integration`, `composer test:integration:polylang`, `composer test:integration:sources`, `composer phpstan` and `composer phpcs`.
 4. Run `npm run dist`.
 5. Run Plugin Check on `dist/persian-kit/`, then install the zip in a clean WordPress site and verify activation.
 
