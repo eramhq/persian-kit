@@ -78,11 +78,12 @@ class ImportRunner
             throw new ImportException(ImportException::OTHER_JOB, $this->otherJobMessage($job), 409);
         }
 
-        if ($job === null || $job->source !== $source->key() || $job->isFinished()) {
+        $isNew = $job === null || $job->source !== $source->key() || $job->isFinished();
+        if ($isNew) {
             $job = new ImportJob(ImportJob::newRunId(), $source->key(), startedAt: time());
         }
 
-        $this->applyChoices($job, $source, $choices);
+        $this->applyChoices($job, $source, $choices, $isNew);
 
         // Taken while the source runs: WordPress and the plugin lose some of
         // this once it is inactive. Later snapshots only add to it.
@@ -267,9 +268,11 @@ class ImportRunner
     }
 
     /**
+     * Choices left out keep what the job has; a new job gets Review's defaults.
+     *
      * @param array{rows?: list<string>, tasks?: list<string>, options?: array<string, mixed>, backup?: bool, acknowledged?: list<string>} $choices
      */
-    private function applyChoices(ImportJob $job, Source $source, array $choices): void
+    private function applyChoices(ImportJob $job, Source $source, array $choices, bool $isNew): void
     {
         if (isset($choices['rows'])) {
             $ids = array_map(static fn (SettingRow $row): string => $row->id, array_filter(
@@ -277,7 +280,7 @@ class ImportRunner
                 static fn (SettingRow $row): bool => $row->imports()
             ));
             $job->rows = array_values(array_intersect($choices['rows'], $ids));
-        } elseif ($job->rows === [] && $job->startedAt === $job->updatedAt) {
+        } elseif ($isNew) {
             // Nothing chosen yet: the rows Review ticks by default.
             $job->rows = array_map(static fn (SettingRow $row): string => $row->id, array_values(array_filter(
                 $this->settingRows($source),
@@ -288,7 +291,7 @@ class ImportRunner
         $taskKeys = array_keys($this->tasksByKey($source));
         if (isset($choices['tasks'])) {
             $job->taskKeys = array_values(array_intersect($taskKeys, $choices['tasks']));
-        } elseif ($job->taskKeys === []) {
+        } elseif ($isNew) {
             $job->taskKeys = $taskKeys;
         }
 

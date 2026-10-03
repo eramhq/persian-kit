@@ -22,18 +22,22 @@ class ImportReport
     }
 
     /**
-     * @return array{rows: list<array<string, mixed>>, total: int, counts: array<string, int>, pages: int}
+     * @return array{rows: list<array<string, mixed>>, total: int, counts: array<string, int>, pages: int, tips: list<string>}
      */
     public function page(Source $source, ?string $outcome, int $page, int $perPage = self::PER_PAGE): array
     {
         $runIds = $this->runIds($source);
         $result = $this->log->report($runIds, $outcome, $page, $perPage);
 
+        $job = ImportJob::load();
+        $job = $job !== null && $job->source === $source->key() ? $job->toPublic() : [];
+
         return [
             'rows'   => array_map([$this, 'describe'], $result['rows']),
             'total'  => $result['total'],
             'counts' => $this->log->counts($runIds),
             'pages'  => (int) ceil($result['total'] / max(1, $perPage)),
+            'tips'   => $source instanceof HasReportTips ? $source->reportTips($job) : [],
         ];
     }
 

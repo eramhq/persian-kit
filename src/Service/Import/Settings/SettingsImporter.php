@@ -27,6 +27,9 @@ class SettingsImporter
 {
     public const TASK = 'settings';
 
+    /** Modules that do more than the imported settings ask once turned on. */
+    private const MORE_WHEN_ENABLED = ['digit_conversion' => true];
+
     private SettingsManager $settings;
 
     public function __construct(SettingsManager $settings)
@@ -35,17 +38,15 @@ class SettingsImporter
     }
 
     /**
-     * Review's rows: each with Persian Kit's current value, "no change"
-     * when it is already set, and a row to turn on each module the ticked
-     * rows need.
+     * Review's rows: each with Persian Kit's current value, and "no change"
+     * when it is already set.
      *
-     * @param list<SettingRow> $rows
+     * @param list<SettingRow> $rows The source's rows with their module rows (ImportRunner::settingRows()).
      * @return list<array<string, mixed>>
      */
     public function review(array $rows): array
     {
         $current = $this->settings->all();
-        $rows = array_merge($rows, $this->moduleRows($rows, $current));
 
         return array_map(function (SettingRow $row) use ($current): array {
             $planned = self::mergeAll($current, $this->defaults(), $row->changes);
@@ -68,13 +69,17 @@ class SettingsImporter
     public function moduleRows(array $rows, array $current): array
     {
         $needed = [];
+        $controlled = [];
         foreach ($rows as $row) {
-            if (!$row->imports() || !$row->ticked) {
+            if (!$row->imports()) {
                 continue;
             }
             foreach (array_keys($row->changes) as $path) {
                 [$module, $key] = self::split($path);
-                if ($key !== 'enabled' && empty($current[$module]['enabled']) && !isset($row->changes[$module . '.enabled'])) {
+                if ($key === 'enabled') {
+                    // The source has its own row for the module itself.
+                    $controlled[$module] = true;
+                } elseif ($row->ticked && empty($current[$module]['enabled'])) {
                     $needed[$module] = true;
                 }
             }
@@ -82,8 +87,9 @@ class SettingsImporter
 
         $labels = self::moduleLabels();
         $moduleRows = [];
-        foreach (array_keys($needed) as $module) {
+        foreach (array_keys(array_diff_key($needed, $controlled)) as $module) {
             $label = $labels[$module] ?? $module;
+            $more = self::MORE_WHEN_ENABLED[$module] ?? null;
             $moduleRows[] = new SettingRow(
                 'module:' . $module,
                 /* translators: %s: Persian Kit module name, such as WooCommerce. */
@@ -91,7 +97,10 @@ class SettingsImporter
                 SettingStatus::Automatic,
                 $label,
                 [$module . '.enabled' => true],
-                __('It is off, so the settings imported into it would do nothing.', 'persian-kit')
+                $more !== null
+                    ? __('It is off, so the settings above take effect only once it is on. Turning it on also converts digits in titles and content.', 'persian-kit')
+                    : __('It is off, so the settings imported into it would do nothing.', 'persian-kit'),
+                $more === null
             );
         }
 

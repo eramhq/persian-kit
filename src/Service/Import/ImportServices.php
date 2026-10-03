@@ -56,6 +56,10 @@ final class ImportServices
             $c->get(ImportReport::class)
         ));
 
+        $container->register(PluginsScreenNotice::class, static fn (ServiceContainer $c): PluginsScreenNotice => new PluginsScreenNotice(
+            $c->get(SourceRegistry::class)
+        ));
+
         $container->register(ImportRestController::class, static fn (ServiceContainer $c): ImportRestController => new ImportRestController(
             $c->get(ImportRunner::class),
             $c->get(ImportReview::class),
@@ -71,6 +75,7 @@ final class ImportServices
 
         if (is_admin()) {
             $container->get(ReportDownload::class)->register();
+            $container->get(PluginsScreenNotice::class)->register();
         }
     }
 }

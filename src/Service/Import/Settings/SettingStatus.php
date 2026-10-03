@@ -31,9 +31,12 @@ enum SettingStatus: string
         };
     }
 
-    /** Whether rows with this status change Persian Kit's settings. */
+    /**
+     * Whether rows with this status can change Persian Kit's settings. An
+     * automatic row does when it turns on a module the others need.
+     */
     public function imports(): bool
     {
-        return $this === self::Same || $this === self::Close;
+        return $this !== self::NotYet;
     }
 }
