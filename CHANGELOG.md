@@ -12,6 +12,13 @@ All notable changes to this project will be documented in this file.
 - The site name keeps the digits it was typed with in the browser tab's title.
 - Gregorian dates, text typed into block theme template parts and product names in the WooCommerce cart keep their digits.
 
+### WooCommerce city list
+
+- The city suggestions are now the plugin's own list instead of the browser's, so they work the same in every browser and screen readers announce them. The list opens as the customer types, or with the down arrow on an empty field, and never on focus or autofill. Arrow keys, Enter, Escape, Tab, a click or a tap pick or close it.
+- A city is found however it is typed: spaces and half-spaces, Arabic ي and ك, ئ, گ, hamza and Persian or Arabic digits make no difference, so قائمشهر finds قایم شهر, شاهینشهر finds شاهین شهر and مشکین finds مشگین شهر. A word inside a name matches too (صدرا finds شهر صدرا).
+- When an Iranian address is saved in the block or classic checkout or My Account, a city typed another way is saved under its listed name. A place that isn't listed is still saved as typed.
+- `persian_kit_woocommerce_cities` now also applies when an address is saved; docs/REFERENCE.md has examples for adding, renaming and removing a city.
+
 ### Multilingual sites
 
 - The Jalali calendar on a Persian page links only days, and previous and next months, with posts in the page's language. Before, a day or month with only English posts was linked, and its archive was empty.

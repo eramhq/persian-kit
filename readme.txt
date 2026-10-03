@@ -30,7 +30,7 @@ Persian Kit is a modular WordPress plugin for Persian-language sites. It focuses
 * Persian slugs that keep Persian letters readable (can be turned off)
 * PHP validation and formatting helpers for common Iranian data
 * WooCommerce Jalali date support for supported screens (HPOS-compatible)
-* WooCommerce checkout for Iran: Persian digits in phone numbers and postcodes are saved as English digits, Iranian phone numbers and postcodes are checked, an optional national ID (کد ملی) field, and optional city suggestions for each province
+* WooCommerce checkout for Iran: Persian digits in phone numbers and postcodes are saved as English digits, Iranian phone numbers and postcodes are checked, an optional national ID (کد ملی) field, and optional city suggestions for each province that find a city however it is typed
 * Persian digits in the WooCommerce cart and checkout blocks' prices
 * Persian digits in WooCommerce emails: order numbers, prices, quantities and dates, while phone numbers, postcodes and links keep English digits (off until you turn it on)
 * Thousand toman and thousand rial currencies for WooCommerce, with prices in rials in the product data search engines read
@@ -149,6 +149,10 @@ They keep working. While the Contact Form 7 integration is off, its Iranian fiel
 = Can customers enter a village? =
 
 Yes. With the city list on, the city field suggests the province's cities, but customers can still type a village or any place that isn't listed.
+
+= Does the city list find a city typed another way? =
+
+Yes. It ignores spaces and half-spaces and the letters people type differently, such as Arabic ي and ك, ئ and گ: قائمشهر finds قایم شهر and مشکین finds مشگین شهر. When the order or address is saved, a city typed another way is saved under its listed name, so orders use one spelling. A place that isn't listed is saved as typed. To add villages, rename or remove a city, use the persian_kit_woocommerce_cities filter.
 
 = Where does the list of cities come from? =
 

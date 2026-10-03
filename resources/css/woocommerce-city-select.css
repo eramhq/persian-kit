@@ -1,0 +1,54 @@
+/* City suggestions for Iranian addresses (resources/js/woocommerce-city-select.js).
+   The script places the list under the field and copies the field's font and
+   colours; themes can override any of this. */
+
+.persian-kit-city-list {
+    position: fixed;
+    /* Above selectWoo's open dropdown (1051) and sticky headers. */
+    z-index: 100000;
+    box-sizing: border-box;
+    max-height: min(18em, 50vh);
+    margin: 2px 0;
+    padding: 4px 0;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    list-style: none;
+    background: Canvas;
+    color: CanvasText;
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    border-radius: 4px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    text-align: start;
+}
+
+.persian-kit-city-list[hidden] {
+    display: none;
+}
+
+.persian-kit-city-option {
+    margin: 0;
+    padding: 0.5em 0.75em;
+    line-height: 1.4;
+    cursor: pointer;
+}
+
+.persian-kit-city-option:hover {
+    background: rgba(127, 127, 127, 0.12);
+}
+
+.persian-kit-city-option[aria-selected="true"] {
+    background: Highlight;
+    color: HighlightText;
+}
+
+.persian-kit-city-status {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    padding: 0;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}

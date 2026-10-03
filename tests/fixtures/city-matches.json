@@ -1,0 +1,19 @@
+{
+    "_comment": "Cities typed another way, matched against resources/data/ir-cities.json by CityNames::officialName() (CityNamesTest) and by the suggestion list's exact match (tests/js/woocommerce-city-select.test.mjs). official is null when the city is saved as typed.",
+    "cases": [
+        { "state": "MZN", "typed": "قائمشهر", "official": "قایم شهر" },
+        { "state": "ADL", "typed": "مشکین شهر", "official": "مشگین شهر" },
+        { "state": "ESF", "typed": "شاهینشهر", "official": "شاهین شهر" },
+        { "state": "KRH", "typed": "اسلام اباد غرب", "official": "اسلام‌آبادغرب" },
+        { "state": "SKH", "typed": "قاین", "official": "قائن" },
+        { "state": "WAZ", "typed": "قره ضیاالدین", "official": "قره ضیاءالدین" },
+        { "state": "THR", "typed": "اسلام شهر", "official": "اسلامشهر" },
+        { "state": "THR", "typed": "تهران", "official": "تهران" },
+        { "state": "QHM", "typed": "قم", "official": "قم" },
+        { "state": "KHZ", "typed": "اهواز", "official": "اهواز" },
+        { "state": "THR", "typed": "شهريار", "official": "شهریار" },
+        { "state": "THR", "typed": "روستای من", "official": null },
+        { "state": "FRS", "typed": "صدرا", "official": null },
+        { "state": "MZN", "typed": "تهران", "official": null }
+    ]
+}

@@ -83,10 +83,14 @@ const copies = [
         src: 'resources/js/woocommerce-date-fields.js',
         dest: 'public/js/woocommerce-date-fields.js',
     },
-    // WooCommerce classic checkout city dropdown
+    // WooCommerce city suggestions (checkout, cart calculator, My Account)
     {
         src: 'resources/js/woocommerce-city-select.js',
         dest: 'public/js/woocommerce-city-select.js',
+    },
+    {
+        src: 'resources/css/woocommerce-city-select.css',
+        dest: 'public/css/woocommerce-city-select.css',
     },
     // WooCommerce block cart and checkout Persian price digits
     {

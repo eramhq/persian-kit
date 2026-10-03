@@ -3,6 +3,7 @@
 namespace PersianKit\Tests\Integration;
 
 use PersianKit\Bootstrap;
+use PersianKit\Modules\WooCommerce\CityField;
 use PersianKit\Modules\WooCommerce\NationalIdField;
 use PersianKit\Tests\Integration\Support\WordPressIntegrationTestCase;
 
@@ -158,6 +159,73 @@ class WooCommerceCheckoutTest extends WordPressIntegrationTestCase
 
         $this->assertSame(400, $response->get_status());
         $this->assertStringContainsString('Billing phone', (string) wp_json_encode($response->get_data(), JSON_UNESCAPED_UNICODE));
+    }
+
+    public function test_classic_checkout_saves_a_city_under_its_listed_name(): void
+    {
+        $this->cityField()->register();
+
+        $data = $this->postCheckout(['billing_state' => 'MZN', 'billing_city' => 'قائمشهر']);
+        $this->assertSame('قایم شهر', $data['billing_city']);
+
+        $order = wc_get_order(WC()->checkout()->create_order($data));
+        $this->assertSame('قایم شهر', $order->get_billing_city());
+
+        $data = $this->postCheckout(['billing_state' => 'QHM', 'billing_city' => 'روستای من']);
+        $this->assertSame('روستای من', $data['billing_city'], 'a place not on the list is kept');
+    }
+
+    public function test_block_checkout_saves_a_city_under_its_listed_name(): void
+    {
+        $this->cityField()->register();
+        add_filter('woocommerce_store_api_disable_nonce_check', '__return_true');
+
+        // Free and virtual: no payment or shipping method needed.
+        $product = new \WC_Product_Simple();
+        $product->set_name('Ebook');
+        $product->set_regular_price('0');
+        $product->set_virtual(true);
+        WC()->cart->add_to_cart($product->save());
+
+        $response = $this->placeBlockOrder(['state' => 'MZN', 'city' => 'قائمشهر']);
+
+        $this->assertSame(200, $response->get_status(), (string) wp_json_encode($response->get_data(), JSON_UNESCAPED_UNICODE));
+        $order = wc_get_order($response->get_data()['order_id']);
+        $this->assertSame('قایم شهر', $order->get_billing_city());
+        $this->assertSame('قایم شهر', WC()->customer->get_billing_city());
+
+        WC()->cart->add_to_cart($product->get_id());
+        $response = $this->placeBlockOrder(['state' => 'QHM', 'city' => 'روستای من']);
+
+        $this->assertSame(200, $response->get_status(), (string) wp_json_encode($response->get_data(), JSON_UNESCAPED_UNICODE));
+        $this->assertSame('روستای من', wc_get_order($response->get_data()['order_id'])->get_billing_city());
+    }
+
+    /**
+     * @param array<string, string> $address
+     */
+    private function placeBlockOrder(array $address): \WP_REST_Response
+    {
+        $request = new \WP_REST_Request('POST', '/wc/store/v1/checkout');
+        $request->set_header('Content-Type', 'application/json');
+        $request->set_body((string) wp_json_encode([
+            'billing_address' => array_replace([
+                'first_name' => 'Ali',
+                'last_name'  => 'Karimi',
+                'address_1'  => 'خیابان آزادی',
+                'country'    => 'IR',
+                'postcode'   => '1234567891',
+                'phone'      => '09123456789',
+                'email'      => 'ali@example.org',
+            ], $address),
+        ]));
+
+        return rest_do_request($request);
+    }
+
+    private function cityField(): CityField
+    {
+        return new CityField(dirname(__DIR__, 2) . '/resources/data/ir-cities.json');
     }
 
     /**
