@@ -9,6 +9,9 @@ use PersianKit\Abstracts\AbstractModule;
 use PersianKit\Container\ServiceContainer;
 use PersianKit\Core\SettingsManager;
 use PersianKit\Modules\Forms\ForminatorDateField;
+use PersianKit\Modules\Forms\ForminatorFieldUsage;
+use PersianKit\Modules\Forms\ForminatorInputNormalizer;
+use PersianKit\Modules\Forms\ForminatorIranianFields;
 use PersianKit\Modules\Forms\ForminatorModule;
 use PHPUnit\Framework\TestCase;
 
@@ -39,11 +42,21 @@ class ForminatorModuleTest extends TestCase
         $this->assertSame(['enabled' => true], ForminatorModule::defaults());
     }
 
-    public function test_boot_registers_the_date_picker(): void
+    public function test_boot_registers_the_date_picker_the_fields_and_the_usage_cache(): void
     {
         $this->assertSame([
             ForminatorDateField::class . '::register',
+            ForminatorInputNormalizer::class . '::register',
+            ForminatorIranianFields::class . '::register',
+            ForminatorFieldUsage::class . '::register',
         ], $this->listCalls(fn (ForminatorModule $module, ServiceContainer $container) => $module->boot($container)));
+    }
+
+    public function test_turned_off_it_only_keeps_the_usage_list_current(): void
+    {
+        $this->assertSame([
+            ForminatorFieldUsage::class . '::register',
+        ], $this->listCalls(fn (ForminatorModule $module, ServiceContainer $container) => $module->bootDisabled($container)));
     }
 
     public function test_it_needs_forminator_1_50_or_newer(): void
@@ -64,6 +77,18 @@ class ForminatorModuleTest extends TestCase
 
         $this->assertFalse($without->isAvailable());
         $this->assertSame(AbstractModule::REASON_INACTIVE, $without->unavailableReason()['code'] ?? null);
+        $this->assertSame([], $without->formsUsingFields());
+    }
+
+    public function test_forms_using_the_fields_link_to_their_edit_screens(): void
+    {
+        Functions\when('get_transient')->justReturn([['id' => 12, 'title' => 'Contact']]);
+        Functions\when('admin_url')->alias(fn (string $path) => 'https://example.org/wp-admin/' . $path);
+
+        $this->assertSame(
+            [['title' => 'Contact', 'url' => 'https://example.org/wp-admin/admin.php?page=forminator-cform-wizard&id=12']],
+            $this->makeModule()->formsUsingFields()
+        );
     }
 
     public function test_emails_and_submissions_show_jalali_dates_while_date_conversion_is_on(): void
