@@ -45,11 +45,7 @@ $config = [
                     <li class="persian-kit-switch__source">
                         <span class="persian-kit-switch__name" x-text="source.name"></span>
                         <span class="persian-kit-chip" :class="'persian-kit-chip--state-' + source.state" x-text="source.state_label"></span>
-                        <button type="button" class="button" @click="open(source.key)" :disabled="loading">
-                            <span x-show="!source.job"><?php esc_html_e('Review', 'persian-kit'); ?></span>
-                            <span x-show="source.job && source.job.step !== 'report'"><?php esc_html_e('Continue', 'persian-kit'); ?></span>
-                            <span x-show="source.job && source.job.step === 'report'"><?php esc_html_e('Report', 'persian-kit'); ?></span>
-                        </button>
+                        <button type="button" class="button" @click="open(source.key)" :disabled="loading" x-text="openLabel(source)"></button>
                     </li>
                 </template>
             </ul>

@@ -68,8 +68,9 @@ export default function importJob(config = {}) {
         tab: tabId(),
 
         init() {
-            // A switch in progress opens where it was left.
-            if (this.job && this.job.source) {
+            // A switch in progress opens where it was left; a finished one
+            // waits in the list, under its Report button.
+            if (this.job && this.job.source && this.job.step !== 'report') {
                 this.open(this.job.source);
             }
 
@@ -156,6 +157,12 @@ export default function importJob(config = {}) {
                     this.current.name
                 )
                 : '';
+        },
+
+        get quietNote() {
+            return this.current && this.current.key === 'persian-woocommerce-shipping'
+                ? __('Switch at a quiet time. Until the import ends, shipping zones and addresses may not match, and checkout may offer no shipping.', 'persian-kit')
+                : __('Switch at a quiet time: between deactivating and the end of the import, the site runs without either plugin\'s settings.', 'persian-kit');
         },
 
         get deactivateLabel() {
@@ -255,6 +262,14 @@ export default function importJob(config = {}) {
                 formatNumber(this.undoResult.restored),
                 formatNumber(this.undoResult.kept)
             );
+        },
+
+        openLabel(source) {
+            if (!source.job) {
+                return __('Review', 'persian-kit');
+            }
+
+            return source.job.step === 'report' ? __('Report', 'persian-kit') : __('Continue', 'persian-kit');
         },
 
         countText(count) {

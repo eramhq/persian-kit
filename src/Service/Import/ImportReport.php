@@ -106,13 +106,14 @@ class ImportReport
     public function describe(LogRow $row): array
     {
         [$object, $url] = $this->objectLabel($row);
+        [$before, $after] = self::change($row);
 
         return $row->toArray() + [
             'outcome_label' => self::outcomeLabel($row->outcome),
             'object'        => $object,
             'url'           => $url,
-            'before'        => self::text($row->oldValue),
-            'after'         => self::text($row->newValue),
+            'before'        => $before,
+            'after'         => $after,
         ];
     }
 
@@ -169,13 +170,79 @@ class ImportReport
                 /* translators: %d: post ID. */
                 return [$title !== '' ? $title : sprintf(__('Post %d', 'persian-kit'), $id), (string) get_edit_post_link($id, 'raw')];
             case 'zone':
+                $name = class_exists('WC_Shipping_Zone') ? (new \WC_Shipping_Zone($id))->get_zone_name() : '';
+
                 /* translators: %d: shipping zone ID. */
-                return [sprintf(__('Shipping zone %d', 'persian-kit'), $id), admin_url('admin.php?page=wc-settings&tab=shipping&zone_id=' . $id)];
-            case 'setting':
+                return [$name !== '' ? $name : sprintf(__('Shipping zone %d', 'persian-kit'), $id), admin_url('admin.php?page=wc-settings&tab=shipping&zone_id=' . $id)];
+            case 'widget':
+                return [__('Widget', 'persian-kit'), admin_url('widgets.php')];
+            case 'option':
                 return [$row->field, ''];
+            case 'setting':
+                return [self::settingLabels()[$row->field] ?? $row->field, ''];
             default:
                 return [$id > 0 ? $row->objectType . ' ' . $id : $row->objectType, ''];
         }
+    }
+
+    /**
+     * Before and after, short enough to read: widgets by id, content as
+     * what it holds rather than its markup.
+     *
+     * @return array{0: string, 1: string}
+     */
+    private static function change(LogRow $row): array
+    {
+        if ($row->task === 'widgets' && is_array($row->oldValue) && is_array($row->newValue)) {
+            return [(string) ($row->oldValue['id'] ?? ''), (string) ($row->newValue['id'] ?? '')];
+        }
+
+        if ($row->task === 'blocks') {
+            return $row->outcome === ImportLog::CHANGED
+                ? [__('Parsi Date blocks', 'persian-kit'), __('WordPress\'s Archives and Calendar blocks', 'persian-kit')]
+                : ['', ''];
+        }
+
+        if ($row->task === 'shipping_zones' && is_array($row->oldValue) && is_array($row->newValue)) {
+            $codes = static fn (array $locations): string => implode('، ', array_map(static fn ($location): string => is_array($location) ? (string) ($location['code'] ?? '') : '', $locations));
+
+            return [$codes($row->oldValue), $codes($row->newValue)];
+        }
+
+        if ($row->task === 'acf_fields' && is_array($row->oldValue) && is_array($row->newValue)) {
+            return [(string) ($row->oldValue['type'] ?? ''), (string) ($row->newValue['type'] ?? '')];
+        }
+
+        return [self::text($row->oldValue), self::text($row->newValue)];
+    }
+
+    /**
+     * Persian Kit's settings by path, as the settings page names them.
+     *
+     * @return array<string, string>
+     */
+    private static function settingLabels(): array
+    {
+        return [
+            'date_conversion.enabled'           => __('Jalali dates', 'persian-kit'),
+            'date_conversion.global_conversion' => __('Convert every date (advanced)', 'persian-kit'),
+            'date_conversion.jalali_permalinks' => __('Jalali dates in post links', 'persian-kit'),
+            'digit_conversion.enabled'          => __('Persian digits', 'persian-kit'),
+            'digit_conversion.dates'            => __('Persian digits in dates', 'persian-kit'),
+            'digit_conversion.numbers'          => __('Persian digits in counts and numbers', 'persian-kit'),
+            'digit_conversion.prices'           => __('Persian digits in prices', 'persian-kit'),
+            'digit_conversion.emails'           => __('Persian digits in WooCommerce emails', 'persian-kit'),
+            'char_normalization.enabled'        => __('Persian ی and ک', 'persian-kit'),
+            'admin_font.enabled'                => __('Admin font', 'persian-kit'),
+            'admin_font.font'                   => __('Admin font', 'persian-kit'),
+            'woocommerce.enabled'               => __('WooCommerce', 'persian-kit'),
+            'woocommerce.checkout_normalize'    => __('Fix what customers type at checkout', 'persian-kit'),
+            'woocommerce.checkout_validate'     => __('Check what customers type at checkout', 'persian-kit'),
+            'woocommerce.city_select'           => __('City suggestions', 'persian-kit'),
+            'woocommerce.allowed_states'        => __('Provinces you ship to', 'persian-kit'),
+            'woocommerce.dates_admin'           => __('Jalali dates in the shop admin', 'persian-kit'),
+            'acf.enabled'                       => __('ACF', 'persian-kit'),
+        ];
     }
 
     private static function text(mixed $value): string

@@ -1327,12 +1327,8 @@ a.persian-kit-version:focus {
 }
 
 .persian-kit-switch__body:focus {
+    /* Focus moves here so screen readers read the new step; nothing to click. */
     outline: none;
-}
-
-.persian-kit-switch__body:focus-visible {
-    outline: 2px solid var(--pk-brand);
-    outline-offset: 4px;
 }
 
 .persian-kit-switch__summary {
@@ -1375,7 +1371,7 @@ a.persian-kit-version:focus {
     vertical-align: top;
 }
 
-.persian-kit-switch__table td:first-child {
+.persian-kit-switch__table--settings td:first-child {
     width: 1%;
 }
 

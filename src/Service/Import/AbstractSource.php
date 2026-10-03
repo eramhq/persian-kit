@@ -58,14 +58,26 @@ abstract class AbstractSource implements Source
                 return null;
             }
 
-            return wp_nonce_url(network_admin_url('plugins.php?action=deactivate&plugin=' . rawurlencode($file)), 'deactivate-plugin_' . $file);
+            return self::deactivateLink(network_admin_url('plugins.php'), $file);
         }
 
         if (!current_user_can('deactivate_plugin', $file)) {
             return null;
         }
 
-        return wp_nonce_url(admin_url('plugins.php?action=deactivate&plugin=' . rawurlencode($file)), 'deactivate-plugin_' . $file);
+        return self::deactivateLink(admin_url('plugins.php'), $file);
+    }
+
+    /**
+     * The link with its nonce, unescaped: wp_nonce_url() gives &amp;, for HTML.
+     */
+    private static function deactivateLink(string $base, string $file): string
+    {
+        return add_query_arg([
+            'action'   => 'deactivate',
+            'plugin'   => rawurlencode($file),
+            '_wpnonce' => wp_create_nonce('deactivate-plugin_' . $file),
+        ], $base);
     }
 
     public function settingRows(SettingsManager $settings): array

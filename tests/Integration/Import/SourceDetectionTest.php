@@ -69,6 +69,27 @@ class SourceDetectionTest extends WordPressIntegrationTestCase
         $this->assertSame(['run-1', 'run-2'], $state->get($source->key())['run_ids']);
     }
 
+    public function test_the_deactivate_link_is_wordpress_own_and_unescaped(): void
+    {
+        wp_set_current_user(self::factory()->user->create(['role' => 'administrator']));
+        if (is_multisite()) {
+            grant_super_admin(get_current_user_id());
+        }
+
+        $url = (new ParsiDateSource())->deactivateUrl();
+
+        $this->assertIsString($url);
+        $this->assertStringNotContainsString('&amp;', $url);
+        parse_str((string) wp_parse_url($url, PHP_URL_QUERY), $query);
+        $this->assertSame('deactivate', $query['action']);
+        $this->assertSame('wp-parsidate/wp-parsidate.php', $query['plugin']);
+        $this->assertSame(1, wp_verify_nonce($query['_wpnonce'], 'deactivate-plugin_wp-parsidate/wp-parsidate.php'));
+
+        // An editor can't deactivate plugins.
+        wp_set_current_user(self::factory()->user->create(['role' => 'editor']));
+        $this->assertNull((new ParsiDateSource())->deactivateUrl());
+    }
+
     /**
      * @return list<string>
      */
