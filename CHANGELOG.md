@@ -4,6 +4,8 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [1.0.0-beta.5] - 2026-10-03
+
 ### Integrations
 
 Contact Form 7, ACF and WooCommerce are now integrations: each turns on by itself when its plugin is active.

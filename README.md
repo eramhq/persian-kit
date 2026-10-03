@@ -2,7 +2,7 @@
 
 Persian Kit is a modular WordPress plugin for Persian-language sites. It focuses on safe Jalali date display, digit conversion, character normalization, Persian editor tooling, admin typography, and developer-facing PHP utilities.
 
-Current release: `1.0.0-beta.4` (beta)
+Current release: `1.0.0-beta.5` (beta)
 
 ## What It Includes
 
@@ -17,8 +17,10 @@ Current release: `1.0.0-beta.4` (beta)
 - ZWNJ editor shortcuts for Classic Editor and Gutenberg
 - Persian slug generation
 - PHP validation and formatting helpers for common Iranian data
-- WooCommerce Jalali date support for supported screens
-- A Jalali date picker for Contact Form 7 and ACF date fields, WooCommerce's admin date fields and the post date in the classic editor and Quick Edit, and Contact Form 7 fields for Iranian numbers
+- WooCommerce: Jalali dates, a checkout for Iran (fixed digits, checked phone numbers and postcodes, national ID, cities, provinces you deliver to), thousand toman and thousand rial, and Persian digits in emails
+- A Jalali date picker for Contact Form 7, ACF and Forminator date fields, WooCommerce's admin date fields and the post date in the classic editor and Quick Edit
+- Iranian field checks (mobile, national ID, postcode, card, IBAN) for Contact Form 7 and Forminator
+- Compatibility with Yoast SEO, Rank Math, WPML and Polylang
 
 ## Requirements
 

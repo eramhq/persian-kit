@@ -4,7 +4,7 @@ Tags: persian, farsi, jalali, woocommerce, rtl
 Requires at least: 6.5
 Tested up to: 7.1
 Requires PHP: 8.1
-Stable tag: 1.0.0-beta.4
+Stable tag: 1.0.0-beta.5
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -156,6 +156,21 @@ From the Statistical Centre of Iran's country-divisions list for 1403 (amar.org.
 
 == Changelog ==
 
+= 1.0.0-beta.5 =
+* Contact Form 7, ACF, WooCommerce, Forminator, Yoast SEO, Rank Math, WPML and Polylang are integrations on their own Integrations tab, each on by itself when its plugin is active. WooCommerce has its own tab.
+* Forminator: a Jalali date picker for Calendar date fields, checks for Iranian mobile numbers, national IDs, postcodes, card numbers and IBANs with a persian-kit class, and English digits in phone and number fields. Emails and the Submissions screen show Jalali dates.
+* Contact Form 7: a Jalali date picker for [date] fields, and [mobile_ir], [national_id], [postcode_ir], [card_ir] and [iban_ir] fields with buttons in the form editor. ACF: a Jalali date picker for Date Picker and Date Time Picker fields.
+* WooCommerce checkout for Iran: digits and letters fixed as customers type, checked phone numbers and postcodes, an optional national ID field, a city list per province, and a choice of the provinces you deliver to.
+* WooCommerce: thousand toman and thousand rial currencies, prices in rials for search engines, Persian digits in order emails (optional), and the Jalali date picker on order, product and coupon dates.
+* Yoast SEO and Rank Math: prices in rials in their schema, and Jalali month names in date archive titles.
+* Multilingual sites (WPML, Polylang): dates, digits and the Persian writing tools follow each page's and each post's language.
+* The post date in the classic editor and Quick Edit uses the Jalali date picker.
+* Fixing letters on save also covers comments, terms and menu items; an optional half-space fix on save; search matches numbers typed in either digits.
+* The admin font can be Noto Sans Arabic or IBM Plex Sans Arabic as well as Vazirmatn.
+* The settings page has tabs, a short line for each option in English and Persian, and a new look.
+* Fixed: with Persian slugs, a post reached by its ID could redirect to a broken address.
+* Fixed: a cut-off post address under a Jalali date now redirects to the post, as WordPress does for Gregorian dates.
+
 = 1.0.0-beta.4 =
 * First WordPress.org release.
 * Jalali date archive pages: /1405/07/ lists the posts of Mehr 1405, /1405/ those of the Jalali year and /1405/07/09/ those of one day. Gregorian archive addresses keep working.
@@ -191,6 +206,9 @@ From the Statistical Centre of Iran's country-divisions list for 1403 (amar.org.
 * Added Jalali media library date filters.
 
 == Upgrade Notice ==
+
+= 1.0.0-beta.5 =
+Beta release. Integrations for Forminator, Contact Form 7, ACF, WooCommerce, Yoast SEO, Rank Math, WPML and Polylang, a WooCommerce checkout for Iran, and a settings page with tabs. Existing settings are kept: Forms becomes the Contact Form 7 and ACF integrations.
 
 = 1.0.0-beta.4 =
 Beta release. Jalali date archives, archive list and calendar, optional Jalali post permalinks, a Persian admin interface, search that finds both spellings of ی and ک, and safer defaults for new installs; existing sites keep their settings.
