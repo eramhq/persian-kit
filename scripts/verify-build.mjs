@@ -14,6 +14,7 @@ const requiredOutputs = [
     'public/js/classic-date-fields.js',
     'public/js/date-field.js',
     'public/js/datepicker.js',
+    'public/js/forminator-digits.js',
     'public/js/gutenberg-jalali-date.js',
     'public/js/gutenberg-zwnj.js',
     'public/js/jalali.js',

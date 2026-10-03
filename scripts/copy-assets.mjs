@@ -107,6 +107,11 @@ const copies = [
         src: 'resources/css/date-field.css',
         dest: 'public/css/date-field.css',
     },
+    // English digits in Forminator's phone and number fields
+    {
+        src: 'resources/js/forminator-digits.js',
+        dest: 'public/js/forminator-digits.js',
+    },
     // Licences of the libraries bundled into public/js/datepicker.js
     {
         src: 'node_modules/intl-datepicker/LICENSE',
