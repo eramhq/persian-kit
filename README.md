@@ -27,7 +27,8 @@ Current release: `1.0.0-beta.6` (beta)
 ## Requirements
 
 - PHP `8.1+`
-- WordPress `6.5+`
+- WordPress `6.8+`
+- WooCommerce `9.9+`, for the WooCommerce features
 
 ## Installation
 

@@ -30,6 +30,7 @@ class WooCommerceEmailEditorTagsTest extends WordPressIntegrationTestCase
         if (!class_exists('WooCommerce') || !class_exists(Personalizer::class) || !class_exists(PersonalizationTagManager::class)) {
             $this->markTestSkipped('WooCommerce with its block email editor is not installed next to the plugin.');
         }
+        $this->requireWooCommerce('10.4');
 
         update_option('woocommerce_currency', 'IRT');
         update_option('date_format', 'F j, Y');

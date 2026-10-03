@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Requirements
+
+- Persian Kit now needs WordPress 6.8 and WooCommerce 9.9 or newer, and is tested on both and on the latest releases. With an older WooCommerce, its WooCommerce features are off and the Integrations tab says why.
+- WooCommerce 11.1's block email editor uses Inter by default; Persian emails get the Persian font in its place, as they did in place of Arial.
+
 ### WordPress.org review
 
 - The output is escaped where it's printed, and the database queries use `%i` for table names. There is no change users can see.

@@ -21,7 +21,7 @@ class JalaliCalendar
     /**
      * @param mixed $args get_calendar() arguments: initial, display, post_type.
      */
-    public function filterCalendar(mixed $output, mixed $args = []): mixed
+    public function filterCalendar(mixed $output, mixed $args): mixed
     {
         // Core caches '' when there are no posts at all. Pages not in
         // Persian keep core's Gregorian month.

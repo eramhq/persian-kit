@@ -149,7 +149,6 @@ class AdminDateScriptTest extends TestCase
                     'wp-date',
                     'wp-i18n',
                     'wp-editor',
-                    'wp-edit-post',
                     'persian-kit-jalali',
                 ],
                 PERSIAN_KIT_VERSION,

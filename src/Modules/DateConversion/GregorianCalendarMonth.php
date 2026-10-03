@@ -11,8 +11,6 @@ defined('ABSPATH') || exit;
  * prefers over $m, hold the Gregorian month that overlaps the Jalali one
  * most: the one its last day falls in (Mehr 1405, 23 September to
  * 22 October, shows October 2026).
- *
- * Uses get_calendar_args, so it needs WordPress 6.8 or later.
  */
 class GregorianCalendarMonth
 {

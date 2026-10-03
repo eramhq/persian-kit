@@ -44,11 +44,7 @@ class PolylangWooEmailTest extends WordPressIntegrationTestCase
         add_filter('woocommerce_email_setup_locale', '__return_false');
         add_filter('woocommerce_email_restore_locale', '__return_false');
 
-        // WooCommerce adds its email hooks when the mailer is first made, and
-        // the test case removes hooks added during a test: make a new one.
-        $instance = new \ReflectionProperty(\WC_Emails::class, 'instance');
-        $instance->setValue(null, null);
-        WC()->mailer();
+        self::newMailer();
 
         add_filter('pre_wp_mail', function ($return, array $atts) {
             $this->sent[] = $atts;

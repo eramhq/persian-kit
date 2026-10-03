@@ -54,6 +54,7 @@ class OrderNumberInput
             return $orderIds;
         }
 
-        return array_values(array_unique(array_merge($orderIds, wc_order_search($english))));
+        // WooCommerce 9.9 passes the IDs it found as strings.
+        return array_values(array_unique(array_map('intval', array_merge($orderIds, wc_order_search($english)))));
     }
 }

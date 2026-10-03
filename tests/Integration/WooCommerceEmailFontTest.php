@@ -20,6 +20,9 @@ class WooCommerceEmailFontTest extends WordPressIntegrationTestCase
 {
     private const HELVETICA = "'Helvetica Neue', Helvetica, Roboto, Arial, sans-serif";
 
+    /** The block email editor's default font: Inter from WooCommerce 11.1, Arial before. */
+    private const BLOCK_DEFAULT = '/^(Inter|Arial),/';
+
     /** @var list<array<string, mixed>> */
     private array $sent = [];
 
@@ -35,11 +38,7 @@ class WooCommerceEmailFontTest extends WordPressIntegrationTestCase
 
         $this->direction = $GLOBALS['wp_locale']->text_direction;
 
-        // WooCommerce adds its email hooks when the mailer is first made, and
-        // the test case removes hooks added during a test: make a new one.
-        $instance = new \ReflectionProperty(\WC_Emails::class, 'instance');
-        $instance->setValue(null, null);
-        WC()->mailer();
+        self::newMailer();
 
         $this->sent = [];
         add_filter('pre_wp_mail', function ($return, array $atts) {
@@ -147,13 +146,14 @@ class WooCommerceEmailFontTest extends WordPressIntegrationTestCase
         $this->inPersian();
         $persian = (new Theme_Controller())->get_styles();
 
-        $this->assertStringStartsWith('Arial', $english['typography']['fontFamily']);
+        $this->assertMatchesRegularExpression(self::BLOCK_DEFAULT, $english['typography']['fontFamily']);
         $this->assertSame(PersianEmailFont::STACK, $persian['typography']['fontFamily']);
-        $this->assertSame(PersianEmailFont::STACK, $persian['elements']['heading']['typography']['fontFamily']);
+        // WooCommerce 11.1 and later give headings no font of their own.
+        $this->assertSame(PersianEmailFont::STACK, $persian['elements']['heading']['typography']['fontFamily'] ?? PersianEmailFont::STACK);
         $this->assertSame('40px', $persian['elements']['h1']['typography']['fontSize'], 'other styles stay');
 
         $this->turnOff();
-        $this->assertStringStartsWith('Arial', (new Theme_Controller())->get_styles()['typography']['fontFamily']);
+        $this->assertMatchesRegularExpression(self::BLOCK_DEFAULT, (new Theme_Controller())->get_styles()['typography']['fontFamily']);
     }
 
     public function test_the_stores_own_block_email_styles_win(): void
@@ -175,7 +175,7 @@ class WooCommerceEmailFontTest extends WordPressIntegrationTestCase
         wp_delete_post($styles, true);
 
         $this->assertStringStartsWith('Georgia', $theme['typography']['fontFamily']);
-        $this->assertSame(PersianEmailFont::STACK, $theme['elements']['heading']['typography']['fontFamily'], 'headings the store left alone');
+        $this->assertSame(PersianEmailFont::STACK, $theme['elements']['heading']['typography']['fontFamily'] ?? PersianEmailFont::STACK, 'headings the store left alone');
     }
 
     public function test_block_emails_read_right_to_left_on_rtl_sites_only(): void
@@ -204,7 +204,8 @@ class WooCommerceEmailFontTest extends WordPressIntegrationTestCase
         $html = $this->renderBlockEmail();
 
         $this->assertMatchesRegularExpression('/<body[^>]*font-family: ?Tahoma,/', $html);
-        $this->assertMatchesRegularExpression('/<h2[^>]*font-family: ?Tahoma,/', $html);
+        // WooCommerce 11.1 and later print no font on headings: they take the body's.
+        $this->assertDoesNotMatchRegularExpression('/<h2[^>]*font-family:(?! ?Tahoma,)/', $html);
         $this->assertMatchesRegularExpression('/class="email_content_wrapper"[^>]*direction: rtl; text-align: right/', $html);
         $this->assertStringNotContainsString('direction: ltr', $html);
     }
@@ -213,9 +214,9 @@ class WooCommerceEmailFontTest extends WordPressIntegrationTestCase
     {
         $this->requireEmailEditor();
 
-        $html = $this->renderBlockEmail();
+        $html = $this->renderBlockEmail('en');
 
-        $this->assertMatchesRegularExpression('/<h2[^>]*font-family: ?Arial,/', $html);
+        $this->assertMatchesRegularExpression('/<body[^>]*font-family: ?(Inter|Arial),/', $html);
         $this->assertMatchesRegularExpression('/class="email_content_wrapper"[^>]*direction: ltr/', $html);
         $this->assertStringNotContainsString('Tahoma', $html);
     }
@@ -235,6 +236,7 @@ class WooCommerceEmailFontTest extends WordPressIntegrationTestCase
 
     private function requireEmailEditor(): void
     {
+        $this->requireWooCommerce('10.4');
         if (!class_exists(Email_Editor_Container::class) || !class_exists(Theme_Controller::class)) {
             $this->markTestSkipped('WooCommerce\'s block email editor is not installed next to the plugin.');
         }
@@ -244,7 +246,7 @@ class WooCommerceEmailFontTest extends WordPressIntegrationTestCase
      * A heading and a paragraph through the editor's own renderer, with its
      * general template, as WooCommerce renders a block email.
      */
-    private function renderBlockEmail(): string
+    private function renderBlockEmail(string $language = 'fa'): string
     {
         $container = Email_Editor_Container::container();
         $container->get(Templates::class)->initialize(['post']);
@@ -253,7 +255,7 @@ class WooCommerceEmailFontTest extends WordPressIntegrationTestCase
                 . "<!-- wp:paragraph -->\n<p>سپاس از خرید شما.</p>\n<!-- /wp:paragraph -->",
         ]);
 
-        return (string) $container->get(Renderer::class)->render($post, 'Subject', '', 'fa')['html'];
+        return (string) $container->get(Renderer::class)->render($post, 'Subject', '', $language)['html'];
     }
 
     private function order(): \WC_Order

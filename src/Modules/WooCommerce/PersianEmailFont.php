@@ -31,8 +31,11 @@ class PersianEmailFont
     /** The same, as older WooCommerce versions printed it. */
     private const CLASSIC_DEFAULT_OLD = '"Helvetica Neue", Helvetica, Roboto, Arial, sans-serif';
 
-    /** The block email editor's default, in its theme.json. */
-    private const BLOCK_DEFAULT = "Arial, 'Helvetica Neue', Helvetica, sans-serif";
+    /** The block email editor's default, in its theme.json: Inter from WooCommerce 11.1, Arial before. */
+    private const BLOCK_DEFAULTS = [
+        "Inter, 'Helvetica Neue', Arial, sans-serif",
+        "Arial, 'Helvetica Neue', Helvetica, sans-serif",
+    ];
 
     private const EMAIL_FONT_CLASS = 'Automattic\\WooCommerce\\Internal\\Email\\EmailFont';
 
@@ -127,6 +130,6 @@ class PersianEmailFont
 
     private static function isBlockDefault(mixed $font): bool
     {
-        return is_string($font) && strcasecmp(trim($font), self::BLOCK_DEFAULT) === 0;
+        return is_string($font) && in_array(strtolower(trim($font)), array_map('strtolower', self::BLOCK_DEFAULTS), true);
     }
 }

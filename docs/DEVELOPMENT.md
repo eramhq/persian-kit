@@ -35,6 +35,18 @@ Polylang filters every query by language once it has languages, so it loads only
 
 The plugins a site can switch from load only in their own run too, since Parsi Date converts every date once active: `composer test:integration:sources` sets `PERSIAN_KIT_TESTS_SOURCES=1` and runs the `sources` group (Jalali post links byte for byte against Parsi Date's, the two calendars agreeing on every day from 1921 to 2094, its widget and block storage). They load from `wp-content/plugins/wp-parsidate`, `persian-woocommerce` and `persian-woocommerce-shipping`, or `PERSIAN_KIT_TESTS_PARSIDATE_DIR`, `PERSIAN_KIT_TESTS_PERSIAN_WOOCOMMERCE_DIR` and `PERSIAN_KIT_TESTS_PWS_DIR`; without them those tests are skipped. The other switch tests run in the main suite against fixtures. CI downloads Parsi Date 6.4 and the latest Persian WooCommerce and shipping plugin (WordPress.org keeps no zip of their current versions).
 
+To run the tests on the oldest versions the plugin supports (WordPress 6.8 and WooCommerce 9.9, as CI's second integration row does), unpack WordPress 6.8.10 into a scratch directory with WooCommerce 9.9.7 and the other plugins in its `wp-content/plugins`, then use a separate tests root and database, since the setup script reuses an existing checkout and the composer scripts point at `.wordpress-tests`:
+
+```bash
+export WP_CORE_DIR=/path/to/wp-6.8 WP_VERSION=6.8.10 WP_TESTS_ROOT=/path/to/wp-6.8-tests WP_TEST_DB_NAME=persian_kit_tests_min
+export WP_TESTS_DIR=$WP_TESTS_ROOT/wordpress-develop/tests/phpunit
+export PERSIAN_KIT_TESTS_WOOCOMMERCE_DIR=$WP_CORE_DIR/wp-content/plugins/woocommerce   # and the other PERSIAN_KIT_TESTS_*_DIR
+bash tests/bin/setup-integration-tests.sh
+php $WP_TESTS_ROOT/bin/phpunit-9.6.23.phar -c phpunit-integration.xml.dist --testsuite integration
+```
+
+Set `WP_TEST_DB_HOST` (on Local, `localhost:` and the site's MySQL socket), `WP_TEST_DB_USER` and `WP_TEST_DB_PASSWORD` too: the scratch directory has no `wp-config.php`. Every plugin must load from the scratch directory, or WordPress loads a second copy from the site's. A test of a WooCommerce feature newer than 9.9, such as the block email editor, calls `requireWooCommerce('10.4')` and is skipped there.
+
 ### Run JavaScript tests
 
 ```bash
@@ -72,7 +84,7 @@ npm run dist
 `.github/workflows/ci.yml` runs on every push to `main` and on pull requests:
 
 - unit tests, PHPStan and PHPCS on PHP 8.1 and 8.4
-- integration tests against WordPress 7.1, with WooCommerce, Contact Form 7 and ACF, on PHP 8.1 and 8.4
+- integration tests with WooCommerce, Contact Form 7, ACF and the other integrations: on the latest WordPress and WooCommerce (PHP 8.4), and on the oldest the plugin supports, WordPress 6.8 and WooCommerce 9.9 (PHP 8.1)
 - JavaScript tests on Node 22
 - `npm run dist` and Plugin Check on the built plugin
 
