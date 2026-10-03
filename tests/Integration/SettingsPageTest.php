@@ -86,6 +86,8 @@ class SettingsPageTest extends WordPressIntegrationTestCase
             ['persian_kit_settings[woocommerce][call_for_price_text]', 'text', '', false],
             ['persian_kit_settings[woocommerce][call_for_price_list_text]', 'text', '', false],
             ['persian_kit_settings[woocommerce][call_for_price_link]', 'text', '', false],
+            ['persian_kit_settings[woocommerce][email_font]', 'hidden', '0', false],
+            ['persian_kit_settings[woocommerce][email_font]', 'checkbox', '1', true],
             ['persian_kit_settings[woocommerce][dates_admin]', 'hidden', '0', false],
             ['persian_kit_settings[woocommerce][dates_admin]', 'checkbox', '1', true],
         ],
@@ -250,18 +252,18 @@ class SettingsPageTest extends WordPressIntegrationTestCase
         $panel = '//*[@id="persian-kit-panel-woocommerce"]';
 
         $this->assertSame(1, $xpath->query($panel . '//input[@type="checkbox"][@name="persian_kit_settings[woocommerce][enabled]"]')->length);
-        $this->assertSame(['checkout', 'prices', 'dates'], array_map(
+        $this->assertSame(['checkout', 'prices', 'emails', 'dates'], array_map(
             static fn (DOMElement $section): string => $section->getAttribute('id'),
             iterator_to_array($xpath->query($panel . '//section[contains(@class, "persian-kit-section")]'))
         ));
         // Each section has a real heading and a link from the module's card.
-        $this->assertSame(3, $xpath->query($panel . '//section//h2')->length);
-        $this->assertSame(['#checkout', '#prices', '#dates'], array_map(
+        $this->assertSame(4, $xpath->query($panel . '//section//h2')->length);
+        $this->assertSame(['#checkout', '#prices', '#emails', '#dates'], array_map(
             static fn (DOMElement $link): string => $link->getAttribute('href'),
             iterator_to_array($xpath->query($panel . '//nav[contains(@class, "persian-kit-jump")]/a'))
         ));
         // The sections hide while the module is off.
-        $this->assertSame(3, $xpath->query($panel . '//section[@x-show="enabled"]')->length);
+        $this->assertSame(4, $xpath->query($panel . '//section[@x-show="enabled"]')->length);
     }
 
     public function test_the_province_grid_shows_the_saved_provinces(): void
@@ -313,6 +315,27 @@ class SettingsPageTest extends WordPressIntegrationTestCase
         $this->assertSame(0, $xpath->query($prices . '//li[@x-cloak]')->length, 'the fields show');
         // The partial's other checkboxes get no x-model.
         $this->assertSame(0, $xpath->query('//section[@id="checkout" or @id="dates"]//input[@type="checkbox"][@x-model]')->length);
+    }
+
+    public function test_the_emails_section_has_the_font_option_and_links_to_the_digits(): void
+    {
+        $xpath = $this->render(['woocommerce' => $this->withPlugin(WooCommerceModule::class, true)]);
+        $emails = '//section[@id="emails"]';
+
+        $box = $xpath->query($emails . '//input[@type="checkbox"][@name="persian_kit_settings[woocommerce][email_font]"]')->item(0);
+        $this->assertInstanceOf(DOMElement::class, $box);
+        $this->assertTrue($box->hasAttribute('checked'), 'on by default');
+        $this->assertStringContainsString('Persian font in emails', (string) $box->parentNode?->textContent);
+        $this->assertStringContainsString('Tahoma', $xpath->evaluate('string(//*[@id="' . $box->getAttribute('aria-describedby') . '"])'));
+
+        $link = $xpath->query($emails . '//p[contains(@class, "persian-kit-section__description")]/a')->item(0);
+        $this->assertInstanceOf(DOMElement::class, $link);
+        $this->assertStringEndsWith('&tab=display', $link->getAttribute('href'));
+        $this->assertSame('Display › Persian digits › WooCommerce emails', $link->textContent);
+
+        update_option('persian_kit_settings', ['woocommerce' => ['enabled' => true, 'email_font' => false]]);
+        $xpath = $this->render(['woocommerce' => $this->withPlugin(WooCommerceModule::class, true)]);
+        $this->assertSame(0, $xpath->query($emails . '//input[@type="checkbox"][@checked]')->length);
     }
 
     public function test_the_woocommerce_tab_repeats_the_advice_of_an_overlapping_plugin(): void

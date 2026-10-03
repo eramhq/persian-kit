@@ -50,6 +50,10 @@ class ContentLanguageTest extends TestCase
         $this->assertTrue(ContentLanguage::writesPersian('post', 5));
         $this->assertTrue(ContentLanguage::writesPersian('term'));
         $this->assertSame('en_US', ContentLanguage::currentLocale());
+        $this->assertFalse(ContentLanguage::currentIsPersian(), 'what people read is still English');
+
+        Functions\when('determine_locale')->justReturn('fa_IR');
+        $this->assertTrue(ContentLanguage::currentIsPersian());
     }
 
     public function test_a_plugin_with_no_languages_set_up_changes_nothing(): void

@@ -123,6 +123,15 @@ final class ContentLanguage
     }
 
     /**
+     * Whether people read this request in Persian, on any site: the page's,
+     * the email's or the admin's language is Persian.
+     */
+    public static function currentIsPersian(): bool
+    {
+        return self::isPersianLocale(self::currentLocale());
+    }
+
+    /**
      * Whether dates and digits are converted in this request.
      */
     public static function displaysPersian(): bool

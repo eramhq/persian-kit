@@ -237,6 +237,33 @@ $callForPrice = !empty($moduleSettings['call_for_price']);
     </div>
 </section>
 
+<?php
+// Emails: the digits live on the Display tab.
+$sectionStart('emails', sprintf(
+    /* translators: %s: link to the setting, such as "Display › Persian digits › WooCommerce emails". */
+    esc_html__('Persian digits in emails are set under %s.', 'persian-kit'),
+    $sectionLink(admin_url('admin.php?page=' . AdminPage::MENU_SLUG . '&tab=display'), [
+        __('Display', 'persian-kit'),
+        __('Persian digits', 'persian-kit'),
+        __('WooCommerce emails', 'persian-kit'),
+    ])
+));
+?>
+    <div class="persian-kit-section__body">
+        <ul class="persian-kit-options">
+            <?php
+            View::load('admin/partials/checkbox-option', [
+                'moduleKey'  => 'woocommerce',
+                'settingKey' => 'email_font',
+                'label'      => __('Persian font in emails', 'persian-kit'),
+                'help'       => __('For emails in Persian, while WooCommerce\'s default font is in use: Tahoma, or the phone\'s own Persian font.', 'persian-kit'),
+                'checked'    => !empty($moduleSettings['email_font']),
+            ]);
+            ?>
+        </ul>
+    </div>
+</section>
+
 <?php $sectionStart('dates'); ?>
     <div class="persian-kit-section__body">
         <ul class="persian-kit-options">
