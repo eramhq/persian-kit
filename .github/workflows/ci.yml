@@ -42,13 +42,17 @@ jobs:
         run: composer phpcs
 
   integration:
-    name: Integration (PHP ${{ matrix.php }}, WP ${{ matrix.wp }})
+    name: Integration (PHP ${{ matrix.php }}, WP ${{ matrix.wp }}, WC ${{ matrix.woocommerce }})
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
-        php: ['8.1', '8.4']
-        wp: ['7.1.2']
+        # The latest releases, and the oldest the plugin claims to support
+        # (Requires at least / WC requires at least in persian-kit.php) on
+        # the oldest PHP. Yoast 28.3 and later need WordPress 6.9.
+        include:
+          - { php: '8.4', wp: '7.1.2', woocommerce: '11.1.2', yoast: '28.6' }
+          - { php: '8.1', wp: '6.8.10', woocommerce: '9.9.7', yoast: '28.2' }
     services:
       mysql:
         image: mysql:8.0
@@ -62,7 +66,7 @@ jobs:
       WP_CORE_DIR: /tmp/wordpress
       WP_VERSION: ${{ matrix.wp }}
       # The checkout, form, SEO and multilingual integration tests run against these releases.
-      WOOCOMMERCE_VERSION: '10.6.2'
+      WOOCOMMERCE_VERSION: ${{ matrix.woocommerce }}
       PERSIAN_KIT_TESTS_WOOCOMMERCE_DIR: /tmp/wordpress/wp-content/plugins/woocommerce
       CF7_VERSION: '6.1.7'
       PERSIAN_KIT_TESTS_CF7_DIR: /tmp/wordpress/wp-content/plugins/contact-form-7
@@ -70,7 +74,7 @@ jobs:
       PERSIAN_KIT_TESTS_ACF_DIR: /tmp/wordpress/wp-content/plugins/advanced-custom-fields
       FORMINATOR_VERSION: '1.57.3'
       PERSIAN_KIT_TESTS_FORMINATOR_DIR: /tmp/wordpress/wp-content/plugins/forminator
-      WORDPRESS_SEO_VERSION: '28.6'
+      WORDPRESS_SEO_VERSION: ${{ matrix.yoast }}
       PERSIAN_KIT_TESTS_YOAST_DIR: /tmp/wordpress/wp-content/plugins/wordpress-seo
       RANK_MATH_VERSION: '1.0.279'
       PERSIAN_KIT_TESTS_RANK_MATH_DIR: /tmp/wordpress/wp-content/plugins/seo-by-rank-math

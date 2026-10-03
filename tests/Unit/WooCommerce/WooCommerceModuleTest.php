@@ -5,6 +5,7 @@ namespace PersianKit\Tests\Unit\WooCommerce;
 use Brain\Monkey;
 use Brain\Monkey\Functions;
 use Mockery;
+use PersianKit\Abstracts\AbstractModule;
 use PersianKit\Container\ServiceContainer;
 use PersianKit\Core\SettingsManager;
 use PersianKit\Modules\WooCommerce\CallForPrice;
@@ -160,6 +161,19 @@ class WooCommerceModuleTest extends TestCase
         $this->assertFalse($withoutWooCommerce->isAvailable());
     }
 
+    public function test_woocommerce_older_than_9_9_turns_the_module_off(): void
+    {
+        Functions\when('__')->returnArg();
+
+        $this->assertSame('9.9', $this->withWooCommerceVersion('9.9.0')->requiredPlugins()[0]['minVersion'] ?? null);
+        $this->assertTrue($this->withWooCommerceVersion('9.9.0')->isAvailable());
+
+        $this->assertSame(
+            ['code' => AbstractModule::REASON_OUTDATED, 'message' => 'Needs WooCommerce 9.9 or newer (this site has 9.8.5).'],
+            $this->withWooCommerceVersion('9.8.5')->unavailableReason()
+        );
+    }
+
     public function test_sanitize_settings_keeps_known_national_id_modes_only(): void
     {
         $module = $this->makeModule();
@@ -272,6 +286,24 @@ class WooCommerceModuleTest extends TestCase
         $this->assertSame('', $values['call_for_price_list_text']);
         $this->assertSame('021 1234 5678', $values['call_for_price_link']);
         $this->assertSame('', $this->makeModule()->sanitizeSettings(['call_for_price_link' => 'javascript:alert(1)'])['call_for_price_link']);
+    }
+
+    /**
+     * The module with WooCommerce's version read as $version instead of WC_VERSION.
+     */
+    private function withWooCommerceVersion(string $version): WooCommerceModule
+    {
+        return new class (Mockery::mock(SettingsManager::class), $version) extends WooCommerceModule {
+            public function __construct(SettingsManager $settings, private string $version)
+            {
+                parent::__construct($settings);
+            }
+
+            public function requiredPlugins(): array
+            {
+                return array_map(fn (array $plugin): array => ['version' => fn (): string => $this->version] + $plugin, parent::requiredPlugins());
+            }
+        };
     }
 
     /**

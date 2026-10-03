@@ -81,10 +81,6 @@ class NationalIdField
 
     public function registerBlockField(): void
     {
-        if (!function_exists('woocommerce_register_additional_checkout_field')) {
-            return;
-        }
-
         woocommerce_register_additional_checkout_field([
             'id'                => self::BLOCK_FIELD_ID,
             'label'             => __('National ID', 'persian-kit'),

@@ -60,10 +60,11 @@ class WooCommerceModule extends AbstractModule
     public function requiredPlugins(): array
     {
         return [[
-            'name'    => __('WooCommerce', 'persian-kit'),
-            'slug'    => 'woocommerce',
-            'check'   => fn (): bool => $this->supportsWooCommerce(),
-            'version' => static fn (): ?string => defined('WC_VERSION') ? (string) WC_VERSION : null,
+            'name'       => __('WooCommerce', 'persian-kit'),
+            'slug'       => 'woocommerce',
+            'check'      => fn (): bool => $this->supportsWooCommerce(),
+            'version'    => static fn (): ?string => defined('WC_VERSION') ? (string) WC_VERSION : null,
+            'minVersion' => '9.9',
         ]];
     }
 

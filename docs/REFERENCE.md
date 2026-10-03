@@ -442,7 +442,7 @@ With the same option on, `get_calendar()`, and with it the Calendar widget and b
 
 To keep the list and calendar Gregorian in code, use the [`persian_kit_jalali_archives`](#persian_kit_jalali_archives) filter.
 
-With the option off, the list and calendar are WordPress's own. On a Jalali archive page, the calendar then shows the Gregorian month that overlaps the Jalali month most, the one its last day falls in (`/1405/07/` shows October 2026). This needs WordPress 6.8 or later; on earlier versions the calendar reads the Jalali year as Gregorian and shows an empty month.
+With the option off, the list and calendar are WordPress's own. On a Jalali archive page, the calendar then shows the Gregorian month that overlaps the Jalali month most, the one its last day falls in (`/1405/07/` shows October 2026).
 
 ### Post permalinks
 
@@ -832,7 +832,7 @@ Another plugin that converts digits in emails, such as Persian WooCommerce's Per
 WooCommerce › Emails › "Persian font in emails" (`email_font`, on by default) gives emails in Persian a font that reads well in Persian while WooCommerce's default font is in use: `Tahoma, 'Segoe UI', -apple-system, BlinkMacSystemFont, 'Noto Sans Arabic', Arial, sans-serif`. Tahoma is on Windows and Mac, Segoe UI on newer Windows, `-apple-system` is the Persian font of iPhones and Macs, and Noto Sans Arabic is Android's. Mail apps rarely load web fonts, so only installed fonts are listed and nothing is downloaded.
 
 - **Classic emails.** WooCommerce's default stack (Helvetica) is swapped for this one in the email's CSS before it is inlined (`woocommerce_email_styles`, priority 20). A font the store picked (WooCommerce › Settings › Emails, with email improvements on), a theme's own `emails/email-styles.php` and CSS other plugins add keep their fonts.
-- **Block emails.** With WooCommerce's block email editor on, the editor's base theme gets this font for text and headings while they are the editor's default, Arial (`woocommerce_email_editor_theme_json`, priority 20). A font synced from the site's theme, and fonts the store sets in the editor's email styles, still win.
+- **Block emails.** With WooCommerce's block email editor on, the editor's base theme gets this font for text and headings while they are the editor's default, Inter (WooCommerce 11.1 and later) or Arial (`woocommerce_email_editor_theme_json`, priority 20). A font synced from the site's theme, and fonts the store sets in the editor's email styles, still win.
 - **Right to left.** Classic emails already follow the site's direction. Block emails are left to right on every site; on an RTL site, Persian block emails are right to left (`woocommerce_email_renderer_styles`, priority 20, after WooCommerce's rules). The classic header alignment is a store setting and is left alone.
 - **Persian emails only**, as for digits: the email's language decides, so an English email on a multilingual store, or a new-order email sent while the admin's language is English, keeps WooCommerce's font.
 

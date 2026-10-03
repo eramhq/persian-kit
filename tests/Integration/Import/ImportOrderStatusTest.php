@@ -43,10 +43,7 @@ class ImportOrderStatusTest extends WordPressIntegrationTestCase
 
         $this->setUpImportLog();
 
-        // WooCommerce adds its email hooks when the mailer is first made.
-        $instance = new \ReflectionProperty(\WC_Emails::class, 'instance');
-        $instance->setValue(null, null);
-        WC()->mailer();
+        self::newMailer();
         add_filter('pre_wp_mail', function ($short, array $mail) {
             $this->mails[] = $mail;
 

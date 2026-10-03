@@ -372,6 +372,10 @@ class WooCommerceShortCheckoutTest extends WordPressIntegrationTestCase
         $request->set_header('Content-Type', 'application/json');
         $request->set_body((string) wp_json_encode(['billing_address' => $address]));
 
+        // WooCommerce 11.1's checkout route keeps the last request's order,
+        // which an earlier test rolled back: start with new routes.
+        $GLOBALS['wp_rest_server'] = null;
+
         return rest_do_request($request);
     }
 

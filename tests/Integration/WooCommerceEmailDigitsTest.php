@@ -37,11 +37,7 @@ class WooCommerceEmailDigitsTest extends WordPressIntegrationTestCase
         // A site title with digits keeps them in subjects.
         update_option('blogname', 'Shop 24');
 
-        // WooCommerce adds its email hooks when the mailer is first made, and
-        // the test case removes hooks added during a test: make a new one.
-        $instance = new \ReflectionProperty(\WC_Emails::class, 'instance');
-        $instance->setValue(null, null);
-        WC()->mailer();
+        self::newMailer();
 
         $this->sent = [];
         add_filter('pre_wp_mail', function ($return, array $atts) {

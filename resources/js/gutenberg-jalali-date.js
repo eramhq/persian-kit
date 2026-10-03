@@ -12,7 +12,7 @@
  * never parsed with Date, so the browser's timezone plays no part.
  *
  * Depends on: wp-plugins, wp-element, wp-components, wp-data, wp-date,
- * wp-i18n, wp-editor, wp-edit-post, PersianKitJalali
+ * wp-i18n, wp-editor, PersianKitJalali
  */
 (function (wp, Jalali) {
     'use strict';
@@ -21,9 +21,8 @@
         return;
     }
 
-    // WordPress 6.5 has the slots in wp.editPost only; 6.6+ moved them to wp.editor.
     function slot(name) {
-        return (wp.editor && wp.editor[name]) || (wp.editPost && wp.editPost[name]);
+        return wp.editor && wp.editor[name];
     }
 
     var PluginPostStatusInfo = slot('PluginPostStatusInfo');

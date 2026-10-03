@@ -69,7 +69,6 @@ class AdminDateScript
                 'wp-date',
                 'wp-i18n',
                 'wp-editor',
-                'wp-edit-post',
                 JalaliScript::HANDLE,
             ],
             PERSIAN_KIT_VERSION,

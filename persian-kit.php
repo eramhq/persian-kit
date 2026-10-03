@@ -8,11 +8,11 @@
  * Author URI: https://flavor.dev
  * Text Domain: persian-kit
  * Domain Path: /languages
- * Requires at least: 6.5
+ * Requires at least: 6.8
  * Tested up to: 7.1
  * Requires PHP: 8.1
- * WC requires at least: 8.0
- * WC tested up to: 10.6.2
+ * WC requires at least: 9.9
+ * WC tested up to: 11.1.2
  * License: GPL v2 or later
  * License URI: https://www.gnu.org/licenses/gpl-2.0.html
  */
