@@ -25,8 +25,7 @@ class ProvinceLimit
     /** @var array<string, string> Every province by code, before trimming. */
     private array $allNames = [];
 
-    /** The request doesn't change, so it is looked at once. */
-    private ?bool $storefront = null;
+    private StorefrontRequest $request;
 
     /**
      * @param list<string> $allowed Province codes, such as THR.
@@ -34,6 +33,7 @@ class ProvinceLimit
     public function __construct(array $allowed)
     {
         $this->allowed = $allowed;
+        $this->request = new StorefrontRequest();
     }
 
     public function register(): void
@@ -195,43 +195,7 @@ class ProvinceLimit
      */
     public function isStorefrontRequest(): bool
     {
-        if ($this->storefront !== null) {
-            return $this->storefront;
-        }
-
-        if (is_admin() || wp_doing_cron() || (defined('WP_CLI') && WP_CLI)) {
-            return $this->storefront = false;
-        }
-
-        $route = $this->restRoute();
-
-        return $this->storefront = $route === null || $route === 'wc/store' || str_starts_with($route, 'wc/store/');
-    }
-
-    /**
-     * The REST route this request asks for, without slashes at the ends, or
-     * null when it isn't a REST request. Read from the URL, since REST_REQUEST
-     * is defined only after WooCommerce may have cached the province list.
-     */
-    private function restRoute(): ?string
-    {
-        // phpcs:disable WordPress.Security.NonceVerification.Recommended, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- only compared, never stored or printed.
-        if (isset($_GET['rest_route']) && is_string($_GET['rest_route'])) {
-            return trim(wp_unslash($_GET['rest_route']), '/');
-        }
-
-        $uri = isset($_SERVER['REQUEST_URI']) && is_string($_SERVER['REQUEST_URI']) ? wp_unslash($_SERVER['REQUEST_URI']) : '';
-        // phpcs:enable
-
-        $path = (string) wp_parse_url($uri, PHP_URL_PATH);
-        $prefix = '/' . trim(rest_get_url_prefix(), '/') . '/';
-        $position = strpos($path . '/', $prefix);
-
-        if ($position === false) {
-            return defined('REST_REQUEST') && REST_REQUEST ? '' : null;
-        }
-
-        return trim(substr($path . '/', $position + strlen($prefix)), '/');
+        return $this->request->isStorefront();
     }
 
     /**
