@@ -51,7 +51,7 @@ export default function importJob(config = {}) {
         rows: {},
         tasks: {},
         acknowledged: {},
-        options: { status_map: {}, district_line: true, keep_source: false },
+        options: { status_map: {}, district_line: true, keep_source: false, fix_double_dates: false },
         backup: false,
         loading: false,
         busy: false,
@@ -315,7 +315,7 @@ export default function importJob(config = {}) {
             });
             this.tasks = tasks;
 
-            const options = { status_map: {}, district_line: true, keep_source: false };
+            const options = { status_map: {}, district_line: true, keep_source: false, fix_double_dates: false };
             review.notes.forEach((note) => {
                 if (note.choice) {
                     options.keep_source = !!note.choice.keep;
