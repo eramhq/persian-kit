@@ -78,6 +78,8 @@ class SettingsPageTest extends WordPressIntegrationTestCase
             ['persian_kit_settings[woocommerce][checkout_validate]', 'checkbox', '1', true],
             ['persian_kit_settings[woocommerce][city_select]', 'hidden', '0', false],
             ['persian_kit_settings[woocommerce][city_select]', 'checkbox', '1', false],
+            ['persian_kit_settings[woocommerce][short_checkout]', 'hidden', '0', false],
+            ['persian_kit_settings[woocommerce][short_checkout]', 'checkbox', '1', false],
             ['persian_kit_settings[woocommerce][national_id]', 'select', 'off', false],
             ['persian_kit_settings[woocommerce][call_for_price]', 'hidden', '0', false],
             ['persian_kit_settings[woocommerce][call_for_price]', 'checkbox', '1', false],

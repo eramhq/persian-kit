@@ -132,8 +132,8 @@ class SettingsDefaultsTest extends WordPressIntegrationTestCase
 
         $this->assertSame(
             [
-                'enabled' => true, 'checkout_normalize' => true, 'checkout_validate' => false, 'national_id' => 'required', 'city_select' => false, 'allowed_states' => [], 'dates_admin' => true,
-                'call_for_price' => false, 'call_for_price_text' => '', 'call_for_price_list_text' => '', 'call_for_price_link' => '',
+                'enabled' => true, 'checkout_normalize' => true, 'checkout_validate' => false, 'national_id' => 'required', 'city_select' => false, 'allowed_states' => [], 'short_checkout' => false,
+                'dates_admin' => true, 'call_for_price' => false, 'call_for_price_text' => '', 'call_for_price_list_text' => '', 'call_for_price_link' => '',
             ],
             get_option('persian_kit_settings')['woocommerce']
         );

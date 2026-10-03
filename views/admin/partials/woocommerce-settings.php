@@ -33,6 +33,10 @@ $checkoutOptions = [
         'label' => __('City list for Iran', 'persian-kit'),
         'help'  => __('Suggests the province\'s cities. Customers can still type a village.', 'persian-kit'),
     ],
+    'short_checkout'     => [
+        'label' => __('Shorter checkout when nothing needs shipping', 'persian-kit'),
+        'help'  => __('When every item is virtual, customers give their name, country, phone and email, and the national ID when it\'s on.', 'persian-kit'),
+    ],
 ];
 
 $nationalIdModes = [

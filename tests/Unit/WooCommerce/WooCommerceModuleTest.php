@@ -16,6 +16,7 @@ use PersianKit\Modules\WooCommerce\NationalIdField;
 use PersianKit\Modules\WooCommerce\OrderNumberInput;
 use PersianKit\Modules\WooCommerce\ProvinceLimit;
 use PersianKit\Modules\WooCommerce\SchemaPrices;
+use PersianKit\Modules\WooCommerce\ShortCheckout;
 use PersianKit\Modules\WooCommerce\WooAdminDateFields;
 use PersianKit\Modules\WooCommerce\WooCommerceModule;
 use PersianKit\Modules\WooCommerce\WooDateDisplayFilter;
@@ -164,6 +165,7 @@ class WooCommerceModuleTest extends TestCase
             'national_id'              => 'required',
             'city_select'              => false,
             'allowed_states'           => [],
+            'short_checkout'           => false,
             'dates_admin'              => true,
             'call_for_price'           => false,
             'call_for_price_text'      => '',
@@ -183,6 +185,7 @@ class WooCommerceModuleTest extends TestCase
             'national_id'              => 'off',
             'city_select'              => false,
             'allowed_states'           => [],
+            'short_checkout'           => false,
             'dates_admin'              => true,
             'call_for_price'           => false,
             'call_for_price_text'      => '',
@@ -207,6 +210,17 @@ class WooCommerceModuleTest extends TestCase
 
         $this->assertNotContains(ProvinceLimit::class, $this->bootAndListFetched());
         $this->assertContains(ProvinceLimit::class, $this->bootAndListFetched(['allowed_states' => ['THR']]));
+    }
+
+    public function test_the_shorter_checkout_has_its_own_option(): void
+    {
+        Functions\when('is_admin')->justReturn(false);
+
+        $this->assertNotContains(ShortCheckout::class, $this->bootAndListFetched());
+        $this->assertContains(ShortCheckout::class, $this->bootAndListFetched(['short_checkout' => true]));
+        $this->assertNotContains(ShortCheckout::class, $this->bootAndListFetched(['short_checkout' => true], 'bootDisabled'));
+        $this->assertTrue($this->makeModule()->sanitizeSettings(['short_checkout' => '1'])['short_checkout']);
+        $this->assertFalse($this->makeModule()->sanitizeSettings(['short_checkout' => '0'])['short_checkout']);
     }
 
     public function test_call_for_price_has_its_own_option(): void

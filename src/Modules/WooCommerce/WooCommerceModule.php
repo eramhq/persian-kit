@@ -43,6 +43,7 @@ class WooCommerceModule extends AbstractModule
             'national_id'              => NationalIdField::OFF,
             'city_select'              => false,
             'allowed_states'           => [],
+            'short_checkout'           => false,
             'dates_admin'              => true,
             // Empty texts stay empty, so each language gets its own default.
             'call_for_price'           => false,
@@ -112,6 +113,7 @@ class WooCommerceModule extends AbstractModule
             'national_id'              => in_array($nationalId, NationalIdField::MODES, true) ? $nationalId : NationalIdField::OFF,
             'city_select'              => !empty($values['city_select']),
             'allowed_states'           => ProvinceLimit::sanitizeCodes($values['allowed_states'] ?? [], self::provinces()),
+            'short_checkout'           => !empty($values['short_checkout']),
             'dates_admin'              => !empty($values['dates_admin']),
             'call_for_price'           => !empty($values['call_for_price']),
             'call_for_price_text'      => CallForPrice::sanitizeText($values['call_for_price_text'] ?? ''),
@@ -178,6 +180,9 @@ class WooCommerceModule extends AbstractModule
         $container->register(ProvinceLimit::class, function () {
             return new ProvinceLimit($this->allowedStates());
         });
+        $container->register(ShortCheckout::class, function () {
+            return new ShortCheckout();
+        });
         $container->register(IranianCurrencies::class, function () {
             return new IranianCurrencies();
         });
@@ -224,6 +229,10 @@ class WooCommerceModule extends AbstractModule
 
         if ($this->allowedStates() !== []) {
             $container->get(ProvinceLimit::class)->register();
+        }
+
+        if ($this->setting('short_checkout')) {
+            $container->get(ShortCheckout::class)->register();
         }
 
         // Also in the admin: the Store API, admin-ajax and the products list.
