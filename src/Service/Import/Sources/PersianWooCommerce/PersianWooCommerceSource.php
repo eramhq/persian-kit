@@ -7,6 +7,8 @@ use PersianKit\Service\Import\AbstractSource;
 use PersianKit\Service\Import\ChecklistItem;
 use PersianKit\Service\Import\HasReportTips;
 use PersianKit\Service\Import\ImportJob;
+use PersianKit\Service\Import\Tasks\CustomerAddressTask;
+use PersianKit\Service\Import\Tasks\OrderAddressTask;
 use PersianKit\Service\Import\Woo\PaymentGateways;
 
 defined('ABSPATH') || exit;
@@ -87,6 +89,14 @@ class PersianWooCommerceSource extends AbstractSource implements HasReportTips
     public function snapshot(): array
     {
         return ['gateways' => self::liveGateways()];
+    }
+
+    /**
+     * Addresses saved with its old two-letter province codes.
+     */
+    public function tasks(): array
+    {
+        return [new CustomerAddressTask(true), new OrderAddressTask(true)];
     }
 
     public function reportTips(array $job): array

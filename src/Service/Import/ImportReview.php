@@ -99,6 +99,7 @@ class ImportReview
                 'requires_inactive' => $task->requiresInactive(),
                 'count'             => $reason === null ? $task->count($context) : 0,
                 'samples'           => $reason === null ? $task->preview($context, self::SAMPLES) : [],
+                'options'           => $reason === null && $task instanceof HasReviewOptions ? $task->reviewOptions($context) : null,
             ];
         }
 

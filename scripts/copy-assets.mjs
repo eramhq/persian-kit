@@ -102,6 +102,11 @@ const copies = [
         src: 'resources/data/ir-cities.json',
         dest: 'public/data/ir-cities.json',
     },
+    // Tapin's provinces and cities, for addresses the shipping plugin saved
+    {
+        src: 'resources/data/pws-tapin.json',
+        dest: 'public/data/pws-tapin.json',
+    },
     // Jalali date picker adapter for form fields
     {
         src: 'resources/js/date-field.js',

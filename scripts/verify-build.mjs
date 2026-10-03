@@ -26,6 +26,7 @@ const requiredOutputs = [
     'public/js/woocommerce-city-select.js',
     'public/js/woocommerce-date-fields.js',
     'public/data/ir-cities.json',
+    'public/data/pws-tapin.json',
     'public/images/logo.svg',
     'public/fonts/vazirmatn/OFL.txt',
     'public/fonts/noto-sans-arabic/OFL.txt',
