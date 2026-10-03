@@ -8,6 +8,7 @@ use PersianKit\Modules\DateConversion\DateConversionModule;
 use PersianKit\Modules\DigitConversion\DigitConversionModule;
 use PersianKit\Modules\Forms\AcfModule;
 use PersianKit\Modules\Forms\Cf7Module;
+use PersianKit\Modules\Forms\ForminatorModule;
 use PersianKit\Modules\Multilingual\PolylangModule;
 use PersianKit\Modules\Multilingual\WpmlModule;
 use PersianKit\Modules\Seo\RankMathModule;
@@ -34,6 +35,7 @@ final class ModuleRegistry
         WooCommerceModule::class,
         Cf7Module::class,
         AcfModule::class,
+        ForminatorModule::class,
         YoastModule::class,
         RankMathModule::class,
         WpmlModule::class,

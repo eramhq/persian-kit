@@ -304,3 +304,100 @@ test('hint="off" marks the picker to hide its typing hint', async () => {
     assert.ok(!b.classList.contains('persian-kit-date-picker--no-hint'));
     assert.ok(a.hasAttribute('allow-input'));
 });
+
+test('day-month-year formats are written and read in the field\'s order', async () => {
+    const window = await page(`
+        <form>
+            <input name="a" data-persian-kit-date data-persian-kit-date-format="d/m/Y">
+            <input name="b" data-persian-kit-date data-persian-kit-date-format="m/d/Y">
+            <input name="c" data-persian-kit-date data-persian-kit-date-format="Y.m.d">
+        </form>`);
+    const { document } = window;
+    const pickers = [...document.querySelectorAll('intl-datepicker')];
+
+    pickers.forEach((picker) => picker.setValue('2026-10-02'));
+
+    assert.deepEqual(submitted(document.querySelector('form')), { a: '02/10/2026', b: '10/02/2026', c: '2026.10.02' });
+    assert.equal(window.PersianKitDateField.serialize('2026-10-02', '', 'd-m-Y'), '02-10-2026');
+});
+
+test('a value in a day-month-year format is shown: a default date, a draft, a prefill', async () => {
+    const window = await page(`
+        <form>
+            <input name="a" data-persian-kit-date data-persian-kit-date-format="d/m/Y" value="02/10/2026">
+            <input name="b" data-persian-kit-date data-persian-kit-date-format="m/d/Y" value="10/02/2026">
+            <input name="c" data-persian-kit-date data-persian-kit-date-format="Y.m.d" value="2026.10.02">
+            <input name="d" data-persian-kit-date data-persian-kit-date-format="d/m/Y" value="۱۰/۰۷/۱۴۰۵">
+            <input name="e" data-persian-kit-date data-persian-kit-date-format="m/d/Y" value="1405/7/10">
+            <input name="f" data-persian-kit-date data-persian-kit-date-format="d/m/Y" value="31/02/2026">
+        </form>`);
+    const { document } = window;
+
+    assert.deepEqual(
+        [...document.querySelectorAll('intl-datepicker')].map((picker) => picker.value),
+        ['2026-10-02', '2026-10-02', '2026-10-02', '2026-10-02', '2026-10-02', '']
+    );
+    assert.equal(window.PersianKitDateField.parse('2/9/2026', 'd/m/Y').date, '2026-09-02');
+    assert.equal(window.PersianKitDateField.parse('02/10/26', 'd/m/Y'), null);
+});
+
+test('formats the field does not know fall back to Y-m-d', async () => {
+    const window = await page('<form><input name="a" data-persian-kit-date data-persian-kit-date-format="d/d/Y" value="2026-10-02"></form>');
+    const { document } = window;
+
+    document.querySelector('intl-datepicker').setValue('2026-10-03');
+    assert.equal(document.querySelector('input[name="a"]').value, '2026-10-03');
+});
+
+test('a form reset restores a day-month-year value', async () => {
+    const window = await page('<form><input name="a" data-persian-kit-date data-persian-kit-date-format="d/m/Y" value="02/10/2026"></form>');
+    const { document } = window;
+    const picker = document.querySelector('intl-datepicker');
+
+    picker.setValue('2026-10-05');
+    document.querySelector('form').reset();
+    await tick(window);
+
+    assert.equal(document.querySelector('input[name="a"]').value, '02/10/2026');
+    assert.equal(picker.value, '2026-10-02');
+});
+
+test('a Forminator group row copied as HTML gets its own picker, value and label', async () => {
+    const window = await page(`
+        <form>
+            <div class="group">
+                <div class="row">
+                    <label for="forminator-field-date-1-picker">Visit</label>
+                    <input type="text" id="forminator-field-date-1-picker" name="date-1" class="forminator-datepicker" data-persian-kit-date data-persian-kit-date-format="d/m/Y" value="02/10/2026">
+                </div>
+            </div>
+        </form>`);
+    const { document } = window;
+    const first = document.querySelector('.row');
+    first.querySelector('intl-datepicker').setValue('2026-10-05');
+    assert.equal(document.querySelector('input[name="date-1"]').value, '05/10/2026');
+
+    // As Forminator adds a row: the row's HTML, with a suffix on every id,
+    // name and for.
+    const copy = document.createElement('div');
+    copy.className = 'row';
+    copy.innerHTML = first.innerHTML.replace(/(id=|name=|for=)"([^"]+?)"/g, '$1"$2-x7"');
+    document.querySelector('.group').appendChild(copy);
+    await tick(window);
+
+    const input = copy.querySelector('input[name="date-1-x7"]');
+    const pickers = copy.querySelectorAll('intl-datepicker');
+    assert.equal(pickers.length, 1);
+    assert.equal(input.type, 'hidden');
+
+    // The copy starts from the value the field was rendered with.
+    assert.equal(input.value, '02/10/2026');
+    assert.equal(pickers[0].value, '2026-10-02');
+    assert.equal(pickers[0].id, 'forminator-field-date-1-picker-x7-picker');
+    assert.equal(copy.querySelector('label').htmlFor, pickers[0].id);
+    assert.equal(first.querySelector('label').htmlFor, 'forminator-field-date-1-picker-picker');
+
+    pickers[0].setValue('2026-10-09');
+    assert.equal(input.value, '09/10/2026');
+    assert.equal(document.querySelector('input[name="date-1"]').value, '05/10/2026');
+});

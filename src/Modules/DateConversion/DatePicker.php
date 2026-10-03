@@ -18,7 +18,10 @@ final class DatePicker
     public const SCRIPT = 'persian-kit-datepicker';
     public const FIELD = 'persian-kit-date-field';
 
-    /** Value formats the field script reads and writes. */
+    /**
+     * Value formats the field script reads and writes, besides day, month
+     * and year in any order with -, / or . between them (isFormat()).
+     */
     public const FORMATS = ['Y-m-d', 'Ymd', 'Y-m-d H:i:s'];
 
     /** Picker types; types other than 'date' submit the picker's own value. */
@@ -77,7 +80,7 @@ final class DatePicker
      * The attributes that turn an <input> into a Jalali date field.
      *
      * @param array{format?: string, type?: string, min?: string, max?: string, disable_past?: bool, disable_future?: bool, locale?: string} $options
-     *        min and max are Gregorian Y-m-d dates.
+     *        format is one isFormat() accepts; min and max are Gregorian Y-m-d dates.
      * @return array<string, string>
      */
     public static function attributes(array $options = []): array
@@ -85,7 +88,7 @@ final class DatePicker
         $attributes = ['data-persian-kit-date' => ''];
 
         $format = $options['format'] ?? 'Y-m-d';
-        if ($format !== 'Y-m-d' && in_array($format, self::FORMATS, true)) {
+        if ($format !== 'Y-m-d' && self::isFormat($format)) {
             $attributes['data-persian-kit-date-format'] = $format;
         }
 
@@ -112,6 +115,17 @@ final class DatePicker
         }
 
         return $attributes;
+    }
+
+    /**
+     * Whether the field script reads and writes this format: one of FORMATS,
+     * or day, month and year in any order with -, / or . between them, such
+     * as d/m/Y or m.d.Y.
+     */
+    public static function isFormat(string $format): bool
+    {
+        return in_array($format, self::FORMATS, true)
+            || preg_match('/^([dmY])([-\/.])(?!\1)([dmY])\2(?!\1|\3)[dmY]$/', $format) === 1;
     }
 
     /**
