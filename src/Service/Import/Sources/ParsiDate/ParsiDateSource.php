@@ -173,7 +173,7 @@ class ParsiDateSource extends AbstractSource implements HasReviewNotes, HasRepor
             ),
         ];
 
-        $latest = get_posts(['post_type' => 'post', 'post_status' => 'publish', 'numberposts' => 1, 'suppress_filters' => true]);
+        $latest = get_posts(['post_type' => 'post', 'post_status' => 'publish', 'numberposts' => 1]);
         if ($latest !== []) {
             $jalali = self::jalaliPath($latest[0], $structure);
             if ($jalali !== null) {
