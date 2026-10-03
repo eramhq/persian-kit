@@ -141,12 +141,12 @@ class ImportLog
     {
         global $wpdb;
 
-        $table = self::tableName();
         $before = $beforeId > 0 ? $wpdb->prepare(' AND id < %d', $beforeId) : '';
 
         // phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
         $rows = $wpdb->get_results($wpdb->prepare(
-            "SELECT * FROM {$table} WHERE source = %s AND outcome = %s{$before} ORDER BY id DESC LIMIT %d",
+            "SELECT * FROM %i WHERE source = %s AND outcome = %s{$before} ORDER BY id DESC LIMIT %d",
+            self::tableName(),
             $source,
             self::CHANGED,
             $limit
@@ -164,11 +164,10 @@ class ImportLog
     {
         global $wpdb;
 
-        $table = self::tableName();
-
-        // phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+        // phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
         return (int) $wpdb->get_var($wpdb->prepare(
-            "SELECT COUNT(*) FROM {$table} WHERE source = %s AND outcome = %s AND object_type = %s AND object_id = %d AND field = %s AND id > %d",
+            'SELECT COUNT(*) FROM %i WHERE source = %s AND outcome = %s AND object_type = %s AND object_id = %d AND field = %s AND id > %d',
+            self::tableName(),
             $row->source,
             self::CHANGED,
             $row->objectType,
@@ -176,7 +175,7 @@ class ImportLog
             $row->field,
             $row->id
         )) > 0;
-        // phpcs:enable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+        // phpcs:enable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
     }
 
     /**
@@ -193,18 +192,17 @@ class ImportLog
 
         global $wpdb;
 
-        $table = self::tableName();
         $where = 'run_id IN (' . implode(',', array_fill(0, count($runIds), '%s')) . ')';
-        $args = $runIds;
+        $args = array_merge([self::tableName()], $runIds);
         if ($outcome !== null) {
             $where .= ' AND outcome = %s';
             $args[] = $outcome;
         }
 
         // phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare, WordPress.DB.PreparedSQLPlaceholders.ReplacementsWrongNumber
-        $total = (int) $wpdb->get_var($wpdb->prepare("SELECT COUNT(*) FROM {$table} WHERE {$where}", $args));
+        $total = (int) $wpdb->get_var($wpdb->prepare("SELECT COUNT(*) FROM %i WHERE {$where}", $args));
         $rows = $wpdb->get_results($wpdb->prepare(
-            "SELECT * FROM {$table} WHERE {$where} ORDER BY id ASC LIMIT %d OFFSET %d",
+            "SELECT * FROM %i WHERE {$where} ORDER BY id ASC LIMIT %d OFFSET %d",
             array_merge($args, [$perPage, max(0, $page - 1) * $perPage])
         ), ARRAY_A);
         // phpcs:enable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare, WordPress.DB.PreparedSQLPlaceholders.ReplacementsWrongNumber
@@ -227,11 +225,10 @@ class ImportLog
 
         global $wpdb;
 
-        $table = self::tableName();
         $in = implode(',', array_fill(0, count($runIds), '%s'));
 
         // phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare
-        $rows = $wpdb->get_results($wpdb->prepare("SELECT outcome, COUNT(*) AS total FROM {$table} WHERE run_id IN ({$in}) GROUP BY outcome", $runIds), ARRAY_A);
+        $rows = $wpdb->get_results($wpdb->prepare("SELECT outcome, COUNT(*) AS total FROM %i WHERE run_id IN ({$in}) GROUP BY outcome", array_merge([self::tableName()], $runIds)), ARRAY_A);
         // phpcs:enable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare
 
         foreach (is_array($rows) ? $rows : [] as $row) {
@@ -252,10 +249,8 @@ class ImportLog
 
         global $wpdb;
 
-        $table = self::tableName();
-
-        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
-        return (bool) $wpdb->get_var($wpdb->prepare("SELECT 1 FROM {$table} WHERE source = %s AND outcome = %s LIMIT 1", $source, self::CHANGED));
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+        return (bool) $wpdb->get_var($wpdb->prepare('SELECT 1 FROM %i WHERE source = %s AND outcome = %s LIMIT 1', self::tableName(), $source, self::CHANGED));
     }
 
     /**
@@ -312,18 +307,17 @@ class ImportLog
     {
         global $wpdb;
 
-        $table = self::tableName();
-
-        // phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+        // phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
         $row = $wpdb->get_row($wpdb->prepare(
-            "SELECT old_value FROM {$table} WHERE source = %s AND outcome = %s AND object_type = %s AND object_id = %d AND field = %s ORDER BY id ASC LIMIT 1",
+            'SELECT old_value FROM %i WHERE source = %s AND outcome = %s AND object_type = %s AND object_id = %d AND field = %s ORDER BY id ASC LIMIT 1',
+            self::tableName(),
             $source,
             self::CHANGED,
             $objectType,
             $objectId,
             $field
         ), ARRAY_A);
-        // phpcs:enable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+        // phpcs:enable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 
         return is_array($row) ? ['found' => true, 'value' => self::decode($row['old_value'])] : ['found' => false, 'value' => null];
     }

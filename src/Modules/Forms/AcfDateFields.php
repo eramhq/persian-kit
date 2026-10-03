@@ -118,8 +118,23 @@ class AcfDateFields
 
         DatePicker::enqueue();
 
-        // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- attributesHtml() escapes each value.
-        echo '<div class="acf-input-wrap persian-kit-acf-date"><input' . DatePicker::attributesHtml($attributes) . '></div>';
+        $html = '<div class="acf-input-wrap persian-kit-acf-date"><input' . DatePicker::attributesHtml($attributes) . '></div>';
+        // DatePicker::attributes() adds only data-persian-kit-date* attributes.
+        $allowed = [
+            'div'   => ['class' => true],
+            'input' => [
+                'type'     => true,
+                'id'       => true,
+                'class'    => true,
+                'name'     => true,
+                'value'    => true,
+                'readonly' => true,
+                'disabled' => true,
+                'data-*'   => true,
+            ],
+        ];
+
+        echo wp_kses($html, $allowed);
     }
 
     /**

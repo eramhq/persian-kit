@@ -24,7 +24,7 @@ $config = [
 >
     <div class="persian-kit-tool__header">
         <span class="persian-kit-tool__icon">
-            <?php echo \PersianKit\Components\Icon::render('switch'); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- fixed SVG markup. ?>
+            <?php \PersianKit\Components\Icon::print('switch'); ?>
         </span>
         <div>
             <h2 class="persian-kit-tool__title"><?php esc_html_e('Switch from another plugin', 'persian-kit'); ?></h2>

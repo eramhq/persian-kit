@@ -23,7 +23,7 @@ $also = $args['also'] ?? [];
 <?php if (!empty($args['empty'])) : ?>
     <div class="persian-kit-empty">
         <span class="persian-kit-empty__icon">
-            <?php echo Icon::render('integrations'); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- fixed SVG markup. ?>
+            <?php Icon::print('integrations'); ?>
         </span>
         <p class="persian-kit-empty__title"><?php esc_html_e('None of the supported plugins are active on this site.', 'persian-kit'); ?></p>
     </div>

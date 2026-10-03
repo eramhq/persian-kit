@@ -67,7 +67,7 @@ $sectionStart = static function (string $id, string $descriptionHtml = '') use (
         <div class="persian-kit-section__header">
             <h2 class="persian-kit-section__title" id="persian-kit-section-<?php echo esc_attr($id); ?>"><?php echo esc_html($sections[$id]['title']); ?></h2>
             <?php if ($description !== '') : ?>
-                <p class="persian-kit-section__description"><?php echo $description; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped above. ?></p>
+                <p class="persian-kit-section__description"><?php echo wp_kses_post($description); ?></p>
             <?php endif; ?>
         </div>
     <?php

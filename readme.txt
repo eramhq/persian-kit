@@ -58,6 +58,8 @@ Persian Kit ships and credits the following third-party components:
 * [@internationalized/date](https://github.com/adobe/react-spectrum/tree/main/packages/@internationalized/date) — Adobe's calendar library, licensed under the Apache License 2.0, bundled into `public/js/datepicker.js`.
 * Tapin's list of provinces and cities, from [Persian WooCommerce Shipping](https://wordpress.org/plugins/persian-woocommerce-shipping/) by Mahdi Yousefi (GPLv3), in `public/data/pws-tapin.json`, to read addresses that plugin saved with Tapin's ids.
 
+Because `public/data/pws-tapin.json` is GPLv3, the plugin as distributed is under GPLv3. The plugin's own code stays GPLv2 or later.
+
 All bundled components are GPL-compatible. Their license texts ship with the plugin: `packages/eram/*/LICENSE`, `public/fonts/vazirmatn/OFL.txt`, `public/fonts/noto-sans-arabic/OFL.txt`, `public/fonts/ibm-plex-sans-arabic/OFL.txt`, `public/licenses/` and the header of `public/js/admin.js`.
 
 = Source code =
@@ -214,7 +216,6 @@ Payment gateways (Persian Kit has none; keep Persian WooCommerce active for them
 * Fixed: a cut-off post address under a Jalali date now redirects to the post, as WordPress does for Gregorian dates.
 
 = 1.0.0-beta.4 =
-* First WordPress.org release.
 * Jalali date archive pages: /1405/07/ lists the posts of Mehr 1405, /1405/ those of the Jalali year and /1405/07/09/ those of one day. Gregorian archive addresses keep working.
 * The Archives and Calendar widgets and blocks list Jalali months and days and link to the Jalali archive pages. An option keeps them Gregorian.
 * Optional Jalali dates in post permalinks (/1405/07/09/my-post/). Old links redirect to the new ones, and back again if the option is turned off.

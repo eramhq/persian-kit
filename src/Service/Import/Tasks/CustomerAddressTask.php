@@ -58,7 +58,8 @@ class CustomerAddressTask extends AbstractAddressTask implements HasReviewOption
     {
         global $wpdb;
 
-        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.NotPrepared
+        // Built from constants and an integer only.
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.NotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter
         return (int) $wpdb->get_var('SELECT COUNT(*) FROM (' . $this->select(0) . ') counted');
     }
 
@@ -143,7 +144,8 @@ class CustomerAddressTask extends AbstractAddressTask implements HasReviewOption
     {
         global $wpdb;
 
-        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.NotPrepared
+        // Built from constants and an integer only.
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.NotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter
         return array_map('intval', (array) $wpdb->get_col($wpdb->prepare($this->select($after) . ' ORDER BY user_id ASC LIMIT %d', $limit)));
     }
 

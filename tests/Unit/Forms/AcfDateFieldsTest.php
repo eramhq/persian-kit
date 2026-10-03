@@ -38,6 +38,7 @@ class AcfDateFieldsTest extends TestCase
         });
         Functions\when('wp_enqueue_style')->justReturn(null);
         Functions\when('esc_attr')->alias(fn ($text) => htmlspecialchars((string) $text, ENT_QUOTES));
+        Functions\when('wp_kses')->returnArg();
         Functions\when('wp_is_serving_rest_request')->justReturn(false);
         Functions\when('current_time')->alias(fn (string $format) => $format === 'Ymd' ? '20261002' : '2026-10-02 09:30:00');
     }

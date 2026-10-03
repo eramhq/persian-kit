@@ -27,7 +27,7 @@ $selectedPostTypes = array_values(array_diff(array_keys($postTypeLabels), ['atta
 >
     <div class="persian-kit-tool__header">
         <span class="persian-kit-tool__icon">
-            <?php echo \PersianKit\Components\Icon::render('tools'); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- fixed SVG markup. ?>
+            <?php \PersianKit\Components\Icon::print('tools'); ?>
         </span>
         <div>
             <h2 class="persian-kit-tool__title"><?php esc_html_e('Fix letters in existing posts', 'persian-kit'); ?></h2>

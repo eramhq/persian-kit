@@ -26,7 +26,8 @@ final class OrderCandidates
 
         $sql = self::select($legacyOnly, $after) . ' ORDER BY id ASC LIMIT %d';
 
-        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.NotPrepared
+        // Built from constants and an integer only.
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.NotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter
         return array_map('intval', (array) $wpdb->get_col($wpdb->prepare($sql, $limit)));
     }
 
@@ -35,7 +36,7 @@ final class OrderCandidates
         global $wpdb;
 
         // Built from constants and an integer only.
-        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.NotPrepared
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.NotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter
         return (int) $wpdb->get_var('SELECT COUNT(*) FROM (' . self::select($legacyOnly, 0) . ') counted');
     }
 

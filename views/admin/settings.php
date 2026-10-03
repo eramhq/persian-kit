@@ -28,13 +28,6 @@ $seenNonce = $args['seenNonce'] ?? '';
 
 // Every panel but the active one starts hidden. Hidden inputs still submit,
 // so Save sends the settings of every tab.
-$panelAttributes = static function (string $tab) use ($activeTab): string {
-    return sprintf(
-        'id="persian-kit-panel-%1$s" class="persian-kit-panel" role="tabpanel" aria-labelledby="persian-kit-tab-%1$s"%2$s',
-        esc_attr($tab),
-        $tab === $activeTab ? '' : ' hidden'
-    );
-};
 ?>
 <div
     class="wrap persian-kit-wrap"
@@ -83,7 +76,7 @@ $panelAttributes = static function (string $tab) use ($activeTab): string {
                     continue;
                 }
                 ?>
-                <div <?php echo $panelAttributes($tab); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped in $panelAttributes. ?>>
+                <div id="persian-kit-panel-<?php echo esc_attr($tab); ?>" class="persian-kit-panel" role="tabpanel" aria-labelledby="persian-kit-tab-<?php echo esc_attr($tab); ?>"<?php echo $tab === $activeTab ? '' : ' hidden'; ?>>
                     <?php if ($tab === 'woocommerce') : ?>
                         <?php
                         foreach ($groups['woocommerce'] ?? [] as $moduleKey) {
@@ -119,7 +112,7 @@ $panelAttributes = static function (string $tab) use ($activeTab): string {
         </form>
 
         <?php // Outside the settings form: the fix tool's inputs are not settings. ?>
-        <div <?php echo $panelAttributes('tools'); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped in $panelAttributes. ?>>
+        <div id="persian-kit-panel-tools" class="persian-kit-panel" role="tabpanel" aria-labelledby="persian-kit-tab-tools"<?php echo $activeTab === 'tools' ? '' : ' hidden'; ?>>
             <?php \PersianKit\Components\View::load('admin/partials/tools', $args['tools'] ?? []); ?>
         </div>
 

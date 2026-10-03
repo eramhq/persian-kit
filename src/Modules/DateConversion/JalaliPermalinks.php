@@ -162,7 +162,8 @@ class JalaliPermalinks
 
         // The queries core's _find_post_by_old_slug() and _find_post_by_old_date()
         // run, on a date range; the result is cached above until posts change.
-        // phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+        // $languageFirst is built with prepare() in ContentLanguage.
+        // phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter
         $found = (int) $wpdb->get_var($wpdb->prepare(
             "SELECT post_id FROM {$wpdb->postmeta}, {$wpdb->posts}
             WHERE ID = post_id AND post_type = %s
@@ -198,7 +199,7 @@ class JalaliPermalinks
                 $endDay
             ));
         }
-        // phpcs:enable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+        // phpcs:enable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter
 
         wp_cache_set($cacheKey, $found, 'persian_kit');
 
@@ -245,7 +246,8 @@ class JalaliPermalinks
         $languageFirst = $language === null ? '' : " ORDER BY ({$language}) DESC";
 
         // Core's query, on a date range. Runs only on a 404.
-        // phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+        // $languageFirst is built with prepare() in ContentLanguage.
+        // phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter
         $postId = (int) $wpdb->get_var($wpdb->prepare(
             "SELECT ID FROM {$wpdb->posts}
             WHERE post_name LIKE %s
@@ -254,7 +256,7 @@ class JalaliPermalinks
               AND post_status IN (" . implode(',', array_fill(0, count($statuses), '%s')) . "){$languageFirst}",
             array_merge([$namePattern], $postTypes, [$range['start'], $range['end']], $statuses)
         ));
-        // phpcs:enable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+        // phpcs:enable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter
 
         if ($postId === 0) {
             return false;

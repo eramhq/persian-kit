@@ -145,14 +145,15 @@ class AcfValueTask extends AbstractTask implements HasReviewOptions
 
             foreach (self::META as $table => [$type, $column]) {
                 $metaTable = $wpdb->{$table};
-                // phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare, WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.PreparedSQLPlaceholders.ReplacementsWrongNumber
+                // $condition is one of the two fixed strings above.
+                // phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare, WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.PreparedSQLPlaceholders.ReplacementsWrongNumber, PluginCheck.Security.DirectDB.UnescapedDBParameter
                 $found = $wpdb->get_results($wpdb->prepare(
-                    "SELECT v.{$column} AS id, v.meta_key AS meta_key, v.meta_value AS meta_value FROM {$metaTable} r
-                    INNER JOIN {$metaTable} v ON v.{$column} = r.{$column} AND v.meta_key = SUBSTRING(r.meta_key, 2)
-                    WHERE r.meta_key LIKE %s AND r.meta_value IN ({$in}) AND v.meta_value <> '' AND " . sprintf($condition, 'meta_value') . " ORDER BY v.{$column}, v.meta_key",
-                    array_merge([$reference], $keys)
+                    'SELECT v.%i AS id, v.meta_key AS meta_key, v.meta_value AS meta_value FROM %i r
+                    INNER JOIN %i v ON v.%i = r.%i AND v.meta_key = SUBSTRING(r.meta_key, 2)
+                    WHERE r.meta_key LIKE %s AND r.meta_value IN (' . $in . ") AND v.meta_value <> '' AND " . sprintf($condition, 'meta_value') . ' ORDER BY v.%i, v.meta_key',
+                    array_merge([$column, $metaTable, $metaTable, $column, $column, $reference], $keys, [$column])
                 ), ARRAY_A);
-                // phpcs:enable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare, WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.PreparedSQLPlaceholders.ReplacementsWrongNumber
+                // phpcs:enable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare, WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.PreparedSQLPlaceholders.ReplacementsWrongNumber, PluginCheck.Security.DirectDB.UnescapedDBParameter
 
                 foreach (is_array($found) ? $found : [] as $row) {
                     $rows[] = ['type' => $type, 'id' => (int) $row['id'], 'key' => (string) $row['meta_key'], 'value' => (string) $row['meta_value'], 'twice' => $twice];
@@ -160,14 +161,15 @@ class AcfValueTask extends AbstractTask implements HasReviewOptions
             }
 
             // Options pages: _options_date = field key, beside options_date.
-            // phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare, WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.PreparedSQLPlaceholders.ReplacementsWrongNumber
+            // $condition is one of the two fixed strings above.
+            // phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare, WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.PreparedSQLPlaceholders.ReplacementsWrongNumber, PluginCheck.Security.DirectDB.UnescapedDBParameter
             $found = $wpdb->get_results($wpdb->prepare(
                 "SELECT v.option_name, v.option_value FROM {$wpdb->options} r
                 INNER JOIN {$wpdb->options} v ON v.option_name = SUBSTRING(r.option_name, 2)
                 WHERE r.option_name LIKE %s AND r.option_value IN ({$in}) AND v.option_value <> '' AND " . sprintf($condition, 'option_value') . ' ORDER BY v.option_name',
                 array_merge([$reference], $keys)
             ), ARRAY_A);
-            // phpcs:enable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare, WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.PreparedSQLPlaceholders.ReplacementsWrongNumber
+            // phpcs:enable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare, WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.PreparedSQLPlaceholders.ReplacementsWrongNumber, PluginCheck.Security.DirectDB.UnescapedDBParameter
 
             foreach (is_array($found) ? $found : [] as $row) {
                 $rows[] = ['type' => 'option', 'id' => 0, 'key' => (string) $row['option_name'], 'value' => (string) $row['option_value'], 'twice' => $twice];

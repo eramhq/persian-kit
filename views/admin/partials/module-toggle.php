@@ -41,7 +41,7 @@ $descId       = 'persian-kit-module-' . $moduleKey . '-description';
     <div class="persian-kit-module__header">
         <?php if ($moduleIcon !== '') : ?>
             <span class="persian-kit-module__icon">
-                <?php echo \PersianKit\Components\Icon::render($moduleIcon); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- fixed SVG markup. ?>
+                <?php \PersianKit\Components\Icon::print($moduleIcon); ?>
             </span>
         <?php endif; ?>
         <div class="persian-kit-module__info">
