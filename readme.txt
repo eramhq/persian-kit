@@ -35,6 +35,7 @@ Persian Kit is a modular WordPress plugin for Persian-language sites. It focuses
 * Persian digits in the WooCommerce cart and checkout blocks' prices
 * Persian digits in WooCommerce emails: order numbers, prices, quantities and dates, while phone numbers, postcodes and links keep English digits (off until you turn it on)
 * Thousand toman and thousand rial currencies for WooCommerce, with prices in rials in the product data search engines read
+* "Call for price" (تماس بگیرید) in place of an empty WooCommerce price, with its own text for the shop and an optional phone number or page to link to
 * Works with Yoast SEO and Rank Math: prices in rials and Gregorian dates in what they give search engines, and Jalali titles on date archives
 * Works with WPML and Polylang: dates, digits and the Persian writing tools follow each page's language, and admin screens each admin's own
 * A Jalali date picker for Contact Form 7 and ACF date fields, WooCommerce's admin date fields and the post date in the classic editor and Quick Edit, which keep saving Gregorian dates
@@ -125,6 +126,10 @@ Yes. Under WooCommerce > Checkout and addresses, choose "Only these provinces" a
 = Can my store price in thousand toman? =
 
 Yes. Pick "Iranian thousand toman" (هزار تومان) or "Iranian thousand rial" (هزار ریال) under WooCommerce > Settings > General > Currency. Changing the currency doesn't convert prices you have saved, shipping costs or coupons, so update them yourself, and check that your payment gateway supports thousand toman first. Search engines get prices in rials, because they don't accept toman. Before you deactivate Persian Kit, switch the currency back to toman or rial.
+
+= Can products without a price show "Call for price"? =
+
+Yes. Under WooCommerce > Prices and currency, tick "Show a text instead of an empty price", and leave the price empty on the products sold on request; a price of 0 means free. The product page shows «تماس بگیرید» or your own text, and the shop, categories and related products can have a shorter one. Add a phone number or a contact page address to link the text on the product page to it, and to turn the shop button into "Call for price". These products still can't be added to the cart.
 
 = Does Persian Kit work with Yoast SEO and Rank Math? =
 

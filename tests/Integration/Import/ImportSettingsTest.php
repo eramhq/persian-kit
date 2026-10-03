@@ -13,6 +13,7 @@ use PersianKit\Service\Import\PluginsScreenNotice;
 use PersianKit\Service\Import\Settings\SettingRow;
 use PersianKit\Service\Import\Sources\ParsiDate\ParsiDateSettings;
 use PersianKit\Service\Import\Sources\ParsiDate\ParsiDateSource;
+use PersianKit\Service\Import\Sources\PersianWooCommerce\PersianWooCommerceSettings;
 use PersianKit\Service\Import\Sources\PersianWooCommerce\PersianWooCommerceSource;
 use PersianKit\Service\Import\Sources\Shipping\PwsSource;
 use PersianKit\Tests\Integration\Support\UsesImportLog;
@@ -107,7 +108,70 @@ class ImportSettingsTest extends WordPressIntegrationTestCase
         $this->assertSame(['woocommerce.allowed_states' => ['ESF', 'THR']], $rows['allowed_states']->changes);
         // A commercial font can't come with Persian Kit: close, unticked.
         $this->assertFalse($rows['admin_font_family']->ticked);
-        $this->assertSame('not_yet', $rows['enable_call_for_price']->status->value);
+        // Its default text is Persian Kit's too, so it stays empty.
+        $this->assertSame('same', $rows['enable_call_for_price']->status->value);
+        $this->assertSame(['woocommerce.call_for_price' => true], $rows['enable_call_for_price']->changes);
+    }
+
+    public function test_call_for_price_texts_are_imported_without_their_markup(): void
+    {
+        $this->resetSettings(['woocommerce' => ['enabled' => false, 'call_for_price_list_text' => 'Our own']]);
+        update_option('PW_Options', [
+            'enable_call_for_price'          => 'yes',
+            'call_for_price_text'            => '<strong>استعلام بگیرید</strong>',
+            'call_for_price_text_on_archive' => '<a href="tel:021">تماس</a>',
+            'call_for_price_text_on_home'    => '<a href="tel:021">تماس</a>',
+            'call_for_price_text_on_related' => '<strong>تماس بگیرید</strong>',
+            'call_for_price_hide_sale_sign'  => 'yes',
+        ]);
+        $source = new PersianWooCommerceSource();
+
+        $rows = $this->byId($this->runner()->settingRows($source));
+        $row = $rows['enable_call_for_price'];
+
+        $this->assertSame('close', $row->status->value);
+        $this->assertTrue($row->ticked);
+        $this->assertStringContainsString('one text for every list', $row->reason);
+        $this->assertStringContainsString('without links', $row->reason);
+        $this->assertSame([
+            'woocommerce.call_for_price'           => true,
+            'woocommerce.call_for_price_text'      => 'استعلام بگیرید',
+            'woocommerce.call_for_price_list_text' => 'تماس',
+        ], $row->changes);
+        $this->assertSame('automatic', $rows['call_for_price_hide_sale_sign']->status->value);
+        // The module is off: its own row turns it on.
+        $this->assertSame(['woocommerce.enabled' => true], $rows['module:woocommerce']->changes);
+
+        $this->runner()->start($source);
+        $this->runner()->run('test', 30.0);
+
+        $this->resetSettingsCache();
+        $woo = Bootstrap::get(SettingsManager::class)->module('woocommerce');
+        $this->assertTrue($woo['enabled']);
+        $this->assertTrue($woo['call_for_price']);
+        $this->assertSame('استعلام بگیرید', $woo['call_for_price_text']);
+        // A text already typed in Persian Kit is kept.
+        $this->assertSame('Our own', $woo['call_for_price_list_text']);
+    }
+
+    public function test_one_call_for_price_text_everywhere_is_the_same(): void
+    {
+        update_option('PW_Options', array_merge(['enable_call_for_price' => 'yes'], array_fill_keys(
+            ['call_for_price_text', 'call_for_price_text_on_archive', 'call_for_price_text_on_home', 'call_for_price_text_on_related'],
+            '<strong>تماس با فروشگاه</strong>'
+        )));
+
+        $row = $this->byId((new PersianWooCommerceSettings())->rows())['enable_call_for_price'];
+
+        $this->assertSame('same', $row->status->value);
+        $this->assertSame(['woocommerce.call_for_price' => true, 'woocommerce.call_for_price_text' => 'تماس با فروشگاه'], $row->changes);
+    }
+
+    public function test_keeping_persian_woocommerce_asks_to_turn_its_call_for_price_off(): void
+    {
+        update_option('PW_Options', ['enable_jalali_datepicker' => 'no', 'enable_iran_cities' => 'no', 'fix_postcode_persian_number' => 'no', 'fix_phone_persian_number' => 'no', 'phone_validation' => 'no', 'enable_call_for_price' => 'yes']);
+
+        $this->assertContains('enable_call_for_price', PersianWooCommerceSource::overlappingOn());
     }
 
     public function test_city_list_of_persian_woocommerce_is_left_to_the_shipping_plugin(): void
@@ -208,7 +272,7 @@ class ImportSettingsTest extends WordPressIntegrationTestCase
 
     public function test_the_report_downloads_as_csv_with_a_byte_order_mark(): void
     {
-        update_option('PW_Options', ['persian_price' => 'yes', 'enable_call_for_price' => 'yes']);
+        update_option('PW_Options', ['persian_price' => 'yes', 'enable_call_for_price' => 'yes', 'remove_extra_field_physical' => 'yes']);
         $source = new PersianWooCommerceSource();
         $this->runner()->start($source);
         $this->runner()->run('test', 30.0);
@@ -219,6 +283,7 @@ class ImportSettingsTest extends WordPressIntegrationTestCase
         // Persian Kit already shows Persian prices by default; the city list was turned on.
         $this->assertStringNotContainsString('"digit_conversion.prices"', $csv);
         $this->assertStringContainsString('"woocommerce.city_select","Off","On"', $csv);
+        $this->assertStringContainsString('"Text instead of an empty price","woocommerce.call_for_price","Off","On"', $csv);
         $this->assertStringContainsString('"Not imported"', $csv);
         // A value a spreadsheet would run as a formula is quoted.
         $this->assertSame("\"'=1+1\",\"a\"\"b\"\r\n", ImportReport::csvLine(['=1+1', 'a"b']));

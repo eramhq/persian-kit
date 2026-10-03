@@ -2,6 +2,7 @@
 
 namespace PersianKit\Service\Import\Sources\PersianWooCommerce;
 
+use PersianKit\Modules\WooCommerce\CallForPrice;
 use PersianKit\Service\Import\AbstractSource;
 use PersianKit\Service\Import\Iran\IranProvinces;
 use PersianKit\Service\Import\Settings\SettingRow;
@@ -17,6 +18,9 @@ defined('ABSPATH') || exit;
 class PersianWooCommerceSettings
 {
     private const IRANIAN_CURRENCIES = ['IRR', 'IRT', 'IRHR', 'IRHT'];
+
+    /** Its "call for price" texts' default, without the <strong> around it. */
+    private const CALL_FOR_PRICE_DEFAULT = 'تماس بگیرید';
 
     /**
      * @return list<SettingRow>
@@ -81,6 +85,10 @@ class PersianWooCommerceSettings
             );
         }
 
+        if ($on('enable_call_for_price')) {
+            $rows = array_merge($rows, $this->callForPriceRows($on));
+        }
+
         $rows = array_merge($rows, $this->fontRows(), $this->automaticRows(), $this->notYetRows($on));
 
         return $rows;
@@ -108,6 +116,68 @@ class PersianWooCommerceSettings
         sort($codes);
 
         return $codes;
+    }
+
+    /**
+     * Its texts for the product page and archives. Its home page and
+     * related products texts have no match of their own: Persian Kit has
+     * one text for every list.
+     *
+     * @param callable(string): bool $on
+     * @return list<SettingRow>
+     */
+    private function callForPriceRows(callable $on): array
+    {
+        $texts = [];
+        $html = false;
+        foreach (['product' => 'call_for_price_text', 'archive' => 'call_for_price_text_on_archive', 'home' => 'call_for_price_text_on_home', 'related' => 'call_for_price_text_on_related'] as $place => $key) {
+            $raw = PersianWooCommerceSource::value($key);
+            $raw = is_string($raw) ? trim($raw) : '';
+            // Its default wraps the text in <strong>; any other tag is a link or markup.
+            $plain = (string) preg_replace('#</?(strong|b)>#i', '', $raw);
+            $html = $html || $plain !== wp_strip_all_tags($plain);
+            $text = CallForPrice::sanitizeText($plain);
+            // Its default is Persian Kit's too, and stays translatable while empty.
+            $texts[$place] = $text === self::CALL_FOR_PRICE_DEFAULT ? '' : $text;
+        }
+
+        $changes = ['woocommerce.call_for_price' => true];
+        if ($texts['product'] !== '') {
+            $changes['woocommerce.call_for_price_text'] = $texts['product'];
+        }
+        if ($texts['archive'] !== '' && $texts['archive'] !== $texts['product']) {
+            $changes['woocommerce.call_for_price_list_text'] = $texts['archive'];
+        }
+
+        $reasons = [];
+        if ($texts['home'] !== $texts['archive'] || $texts['related'] !== $texts['archive']) {
+            $reasons[] = __('Persian Kit has one text for every list, so its home page and related products texts become the archive text.', 'persian-kit');
+        }
+        if ($html) {
+            $reasons[] = __('The texts are imported without links or formatting; a phone number or page to link to can be set in Persian Kit.', 'persian-kit');
+        }
+
+        $rows = [new SettingRow(
+            'enable_call_for_price',
+            __('"Call for price" for products without a price', 'persian-kit'),
+            $reasons === [] ? SettingStatus::Same : SettingStatus::Close,
+            __('Text instead of an empty price', 'persian-kit'),
+            $changes,
+            implode(' ', $reasons)
+        )];
+
+        if ($on('call_for_price_hide_sale_sign')) {
+            $rows[] = new SettingRow(
+                'call_for_price_hide_sale_sign',
+                __('No sale badge without a price', 'persian-kit'),
+                SettingStatus::Automatic,
+                '',
+                [],
+                __('Persian Kit shows no sale badge on a product without a price.', 'persian-kit')
+            );
+        }
+
+        return $rows;
     }
 
     /**
@@ -179,9 +249,6 @@ class PersianWooCommerceSettings
         $options = get_option('PW_Options', []);
         $options = is_array($options) ? $options : [];
 
-        if ($on('enable_call_for_price')) {
-            $rows[] = $notYet('enable_call_for_price', __('"Call for price" for products without a price', 'persian-kit'), $planned('#11'));
-        }
         if ((float) ($options['minimum_order_amount'] ?? 0) > 0) {
             $rows[] = $notYet('minimum_order_amount', __('Minimum order amount', 'persian-kit'));
         }
