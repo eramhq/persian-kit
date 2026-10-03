@@ -111,7 +111,8 @@ abstract class AbstractAddressTask extends AbstractTask
         return [
             'label'  => $label,
             'before' => trim($address['state'] . ' / ' . $address['city'], ' /'),
-            'after'  => trim(\PersianKit\Service\Import\Iran\IranProvinces::name($after['state']) . ' / ' . $after['city'] . ($after['address_2'] !== $address['address_2'] ? ' / ' . $after['address_2'] : ''), ' /'),
+            // With the code, which is what changes when the name was saved before.
+            'after'  => trim(\PersianKit\Service\Import\Iran\IranProvinces::name($after['state']) . ' (' . $after['state'] . ') / ' . $after['city'] . ($after['address_2'] !== $address['address_2'] ? ' / ' . $after['address_2'] : ''), ' /'),
         ];
     }
 

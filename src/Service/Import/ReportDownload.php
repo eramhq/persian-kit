@@ -30,7 +30,7 @@ class ReportDownload
      */
     public static function url(): string
     {
-        return wp_nonce_url(admin_url('admin-post.php?action=' . self::ACTION), self::ACTION);
+        return add_query_arg(['action' => self::ACTION, '_wpnonce' => wp_create_nonce(self::ACTION)], admin_url('admin-post.php'));
     }
 
     public function handle(): void

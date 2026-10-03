@@ -53,7 +53,7 @@ defined('ABSPATH') || exit;
                 <div class="persian-kit-switch__group" x-show="review.rows.length > 0">
                     <h3><?php esc_html_e('Settings', 'persian-kit'); ?></h3>
                     <div class="persian-kit-switch__scroll">
-                        <table class="persian-kit-switch__table">
+                        <table class="persian-kit-switch__table persian-kit-switch__table--settings">
                             <thead>
                                 <tr>
                                     <th scope="col"><span class="screen-reader-text"><?php esc_html_e('Import', 'persian-kit'); ?></span></th>
@@ -91,10 +91,10 @@ defined('ABSPATH') || exit;
                 </div>
 
                 <!-- Data -->
-                <div class="persian-kit-switch__group" x-show="review.tasks.length > 0">
+                <div class="persian-kit-switch__group" x-show="review.tasks.some((task) => !task.available || task.count > 0)">
                     <h3><?php esc_html_e('Data', 'persian-kit'); ?></h3>
                     <template x-for="task in review.tasks" :key="task.key">
-                        <div class="persian-kit-switch__task">
+                        <div class="persian-kit-switch__task" x-show="!task.available || task.count > 0">
                             <input type="checkbox" :id="'persian-kit-task-' + task.key" x-model="tasks[task.key]" :disabled="!task.available">
                             <div>
                                 <label :for="'persian-kit-task-' + task.key">

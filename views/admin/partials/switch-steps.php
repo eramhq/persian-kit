@@ -15,7 +15,7 @@ defined('ABSPATH') || exit;
                 <?php \PersianKit\Components\View::load('admin/partials/switch-checklist'); ?>
 
                 <div class="persian-kit-callout">
-                    <p><?php esc_html_e('Switch at a quiet time. Until the import ends, shipping zones and addresses may not match, and checkout may offer no shipping.', 'persian-kit'); ?></p>
+                    <p x-text="quietNote"></p>
                 </div>
 
                 <p>
