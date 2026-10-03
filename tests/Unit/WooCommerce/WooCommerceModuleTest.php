@@ -14,6 +14,7 @@ use PersianKit\Modules\WooCommerce\CityField;
 use PersianKit\Modules\WooCommerce\IranianCurrencies;
 use PersianKit\Modules\WooCommerce\NationalIdField;
 use PersianKit\Modules\WooCommerce\OrderNumberInput;
+use PersianKit\Modules\WooCommerce\PersianEmailFont;
 use PersianKit\Modules\WooCommerce\ProvinceLimit;
 use PersianKit\Modules\WooCommerce\SchemaPrices;
 use PersianKit\Modules\WooCommerce\ShortCheckout;
@@ -56,6 +57,7 @@ class WooCommerceModuleTest extends TestCase
             OrderNumberInput::class,
             CheckoutValidator::class,
             NationalIdField::class,
+            PersianEmailFont::class,
         ], $this->bootAndListFetched());
     }
 
@@ -70,6 +72,7 @@ class WooCommerceModuleTest extends TestCase
             OrderNumberInput::class,
             CheckoutValidator::class,
             NationalIdField::class,
+            PersianEmailFont::class,
             WooOrderMonthFilter::class,
             WooAdminDateFields::class,
             WooPostedDateNormalizer::class,
@@ -85,6 +88,7 @@ class WooCommerceModuleTest extends TestCase
             WooDateDisplayFilter::class,
             NationalIdField::class,
             CityField::class,
+            PersianEmailFont::class,
         ], $this->bootAndListFetched(['checkout_normalize' => false, 'checkout_validate' => false, 'city_select' => true]));
     }
 
@@ -99,6 +103,7 @@ class WooCommerceModuleTest extends TestCase
             OrderNumberInput::class,
             CheckoutValidator::class,
             NationalIdField::class,
+            PersianEmailFont::class,
             WooPostedDateNormalizer::class,
         ], $this->bootAndListFetched());
     }
@@ -114,6 +119,7 @@ class WooCommerceModuleTest extends TestCase
             OrderNumberInput::class,
             CheckoutValidator::class,
             NationalIdField::class,
+            PersianEmailFont::class,
         ], $this->bootAndListFetched(['dates_admin' => false]));
     }
 
@@ -171,6 +177,7 @@ class WooCommerceModuleTest extends TestCase
             'call_for_price_text'      => '',
             'call_for_price_list_text' => '',
             'call_for_price_link'      => '',
+            'email_font'               => false,
         ], $module->sanitizeSettings(['enabled' => '1', 'checkout_normalize' => '0', 'checkout_validate' => '1', 'national_id' => 'required', 'dates_admin' => '1']));
 
         $this->assertSame('off', $module->sanitizeSettings(['national_id' => 'always'])['national_id']);
@@ -191,6 +198,7 @@ class WooCommerceModuleTest extends TestCase
             'call_for_price_text'      => '',
             'call_for_price_list_text' => '',
             'call_for_price_link'      => '',
+            'email_font'               => true,
         ], WooCommerceModule::defaults());
     }
 
@@ -230,6 +238,20 @@ class WooCommerceModuleTest extends TestCase
         $this->assertNotContains(CallForPrice::class, $this->bootAndListFetched());
         $this->assertContains(CallForPrice::class, $this->bootAndListFetched(['call_for_price' => true]));
         $this->assertNotContains(CallForPrice::class, $this->bootAndListFetched(['call_for_price' => true], 'bootDisabled'));
+    }
+
+    public function test_the_persian_email_font_is_on_by_default_also_in_the_admin(): void
+    {
+        foreach ([false, true] as $admin) {
+            Functions\when('is_admin')->justReturn($admin);
+
+            $this->assertContains(PersianEmailFont::class, $this->bootAndListFetched());
+            $this->assertNotContains(PersianEmailFont::class, $this->bootAndListFetched(['email_font' => false]));
+            $this->assertNotContains(PersianEmailFont::class, $this->bootAndListFetched([], 'bootDisabled'));
+        }
+
+        $this->assertTrue($this->makeModule()->sanitizeSettings(['email_font' => '1'])['email_font']);
+        $this->assertFalse($this->makeModule()->sanitizeSettings(['email_font' => '0'])['email_font']);
     }
 
     public function test_sanitize_settings_cleans_the_call_for_price_texts_and_link(): void

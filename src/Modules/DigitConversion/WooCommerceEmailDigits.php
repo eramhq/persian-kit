@@ -354,6 +354,6 @@ class WooCommerceEmailDigits
      */
     private static function isPersianEmail(): bool
     {
-        return ContentLanguage::isPersianLocale(ContentLanguage::currentLocale());
+        return ContentLanguage::currentIsPersian();
     }
 }

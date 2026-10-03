@@ -50,6 +50,7 @@ class WooCommerceModule extends AbstractModule
             'call_for_price_text'      => '',
             'call_for_price_list_text' => '',
             'call_for_price_link'      => '',
+            'email_font'               => true,
         ];
     }
 
@@ -68,7 +69,7 @@ class WooCommerceModule extends AbstractModule
 
     /**
      * The section cards on the WooCommerce tab, by anchor. A section shows
-     * once it has an option; Emails joins them with its first one.
+     * once it has an option; descriptions with links are written in the view.
      *
      * @return array<string, array{title: string, description: string}>
      */
@@ -81,6 +82,10 @@ class WooCommerceModule extends AbstractModule
             ],
             'prices'   => [
                 'title'       => __('Prices and currency', 'persian-kit'),
+                'description' => '',
+            ],
+            'emails'   => [
+                'title'       => __('Emails', 'persian-kit'),
                 'description' => '',
             ],
             'dates'    => [
@@ -119,6 +124,7 @@ class WooCommerceModule extends AbstractModule
             'call_for_price_text'      => CallForPrice::sanitizeText($values['call_for_price_text'] ?? ''),
             'call_for_price_list_text' => CallForPrice::sanitizeText($values['call_for_price_list_text'] ?? ''),
             'call_for_price_link'      => self::sanitizeCallForPriceLink($values['call_for_price_link'] ?? ''),
+            'email_font'               => !empty($values['email_font']),
         ];
     }
 
@@ -183,6 +189,9 @@ class WooCommerceModule extends AbstractModule
         $container->register(ShortCheckout::class, function () {
             return new ShortCheckout();
         });
+        $container->register(PersianEmailFont::class, function () {
+            return new PersianEmailFont();
+        });
         $container->register(IranianCurrencies::class, function () {
             return new IranianCurrencies();
         });
@@ -238,6 +247,11 @@ class WooCommerceModule extends AbstractModule
         // Also in the admin: the Store API, admin-ajax and the products list.
         if ($this->setting('call_for_price')) {
             $container->get(CallForPrice::class)->register();
+        }
+
+        // Also in the admin: emails are sent from admin screens, cron and REST.
+        if ($this->setting('email_font')) {
+            $container->get(PersianEmailFont::class)->register();
         }
 
         // Order screens, product and coupon edit screens, and the variations
