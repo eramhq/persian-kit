@@ -5,11 +5,47 @@ namespace PersianKit\Tests\Unit\WooCommerce;
 use Brain\Monkey;
 use Brain\Monkey\Filters;
 use PersianKit\Modules\WooCommerce\CityField;
+use PersianKit\Modules\WooCommerce\CityNames;
 use PHPUnit\Framework\TestCase;
 
 class CityFieldTest extends TestCase
 {
     private const DATA_FILE = __DIR__ . '/../../../resources/data/ir-cities.json';
+
+    /** Each province's capital, which the list puts first. */
+    private const CAPITALS = [
+        'ABZ' => 'کرج',
+        'ADL' => 'اردبیل',
+        'BHR' => 'بوشهر',
+        'CHB' => 'شهرکرد',
+        'EAZ' => 'تبریز',
+        'ESF' => 'اصفهان',
+        'FRS' => 'شیراز',
+        'GIL' => 'رشت',
+        'GLS' => 'گرگان',
+        'GZN' => 'قزوین',
+        'HDN' => 'همدان',
+        'HRZ' => 'بندرعباس',
+        'ILM' => 'ایلام',
+        'KBD' => 'یاسوج',
+        'KHZ' => 'اهواز',
+        'KRD' => 'سنندج',
+        'KRH' => 'کرمانشاه',
+        'KRN' => 'کرمان',
+        'LRS' => 'خرم‌آباد',
+        'MKZ' => 'اراک',
+        'MZN' => 'ساری',
+        'NKH' => 'بجنورد',
+        'QHM' => 'قم',
+        'RKH' => 'مشهد',
+        'SBN' => 'زاهدان',
+        'SKH' => 'بیرجند',
+        'SMN' => 'سمنان',
+        'THR' => 'تهران',
+        'WAZ' => 'ارومیه',
+        'YZD' => 'یزد',
+        'ZJN' => 'زنجان',
+    ];
 
     protected function setUp(): void
     {
@@ -31,8 +67,73 @@ class CityFieldTest extends TestCase
             'ABZ', 'ADL', 'BHR', 'CHB', 'EAZ', 'ESF', 'FRS', 'GIL', 'GLS', 'GZN', 'HDN', 'HRZ', 'ILM', 'KBD', 'KHZ', 'KRD',
             'KRH', 'KRN', 'LRS', 'MKZ', 'MZN', 'NKH', 'QHM', 'RKH', 'SBN', 'SKH', 'SMN', 'THR', 'WAZ', 'YZD', 'ZJN',
         ], $this->sortedKeys($cities));
-        $this->assertSame('تهران', $cities['THR'][0], 'the capital comes first');
         $this->assertContains('اسلامشهر', $cities['THR']);
+    }
+
+    public function test_each_province_lists_its_capital_first(): void
+    {
+        $cities = (new CityField(self::DATA_FILE))->cities();
+
+        $this->assertCount(31, self::CAPITALS);
+        foreach (self::CAPITALS as $state => $capital) {
+            $this->assertSame($capital, $cities[$state][0], $state);
+        }
+    }
+
+    public function test_no_two_cities_of_a_province_share_a_matching_key(): void
+    {
+        foreach ((new CityField(self::DATA_FILE))->cities() as $state => $names) {
+            $keys = array_map([CityNames::class, 'key'], $names);
+
+            $this->assertSame(count($keys), count(array_unique($keys)), $state);
+        }
+    }
+
+    public function test_register_adds_the_save_hooks(): void
+    {
+        $field = new CityField(self::DATA_FILE);
+        $field->register();
+
+        $this->assertNotFalse(has_action('woocommerce_store_api_checkout_update_customer_from_request', [$field, 'nameCustomerCities']));
+        $this->assertSame(20, has_filter('woocommerce_checkout_posted_data', [$field, 'namePostedCities']));
+        $this->assertNotFalse(has_action('woocommerce_after_save_address_validation', [$field, 'nameSavedAddressCity']));
+    }
+
+    public function test_the_classic_checkout_saves_a_city_under_its_listed_name(): void
+    {
+        $data = (new CityField(self::DATA_FILE))->namePostedCities([
+            'billing_country'  => 'IR',
+            'billing_state'    => 'MZN',
+            'billing_city'     => 'قائمشهر',
+            'shipping_country' => 'IR',
+            'shipping_state'   => 'THR',
+            'shipping_city'    => 'روستای من',
+        ]);
+
+        $this->assertSame('قایم شهر', $data['billing_city']);
+        $this->assertSame('روستای من', $data['shipping_city'], 'a place not on the list is kept');
+    }
+
+    public function test_the_block_checkout_and_my_account_set_the_customers_city(): void
+    {
+        $field = new CityField(self::DATA_FILE);
+        $customer = new \WC_Customer([
+            'billing_country'  => 'IR',
+            'billing_state'    => 'ADL',
+            'billing_city'     => 'مشکین شهر',
+            'shipping_country' => 'DE',
+            'shipping_state'   => 'ADL',
+            'shipping_city'    => 'مشکین شهر',
+        ]);
+
+        $field->nameCustomerCities($customer);
+
+        $this->assertSame('مشگین شهر', $customer->get_billing_city());
+        $this->assertSame('مشکین شهر', $customer->get_shipping_city(), 'only Iranian addresses');
+
+        $customer->set_shipping_country('IR');
+        $field->nameSavedAddressCity(1, 'shipping', [], $customer);
+        $this->assertSame('مشگین شهر', $customer->get_shipping_city());
     }
 
     public function test_the_city_names_use_persian_letters(): void

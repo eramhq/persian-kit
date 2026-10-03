@@ -344,6 +344,12 @@ if (!class_exists('WC_Data')) {
                 return $this->props[substr($name, 4)] ?? '';
             }
 
+            if (str_starts_with($name, 'set_')) {
+                $this->props[substr($name, 4)] = $args[0] ?? null;
+
+                return null;
+            }
+
             throw new BadMethodCallException($name);
         }
     }

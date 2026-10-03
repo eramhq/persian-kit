@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-10-03T03:08:25+00:00\n"
+"POT-Creation-Date: 2026-10-03T05:09:54+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: persian-kit\n"
@@ -350,11 +350,11 @@ msgstr ""
 msgid "Minute"
 msgstr ""
 
-#: src/Modules/DateConversion/PostTypeMonthFilter.php:49
+#: src/Modules/DateConversion/PostTypeMonthFilter.php:50
 msgid "All dates"
 msgstr ""
 
-#: src/Modules/DateConversion/PostTypeMonthFilter.php:265
+#: src/Modules/DateConversion/PostTypeMonthFilter.php:271
 msgid "Filter by date"
 msgstr ""
 
@@ -525,6 +525,24 @@ msgstr ""
 
 #: src/Modules/WooCommerce/CheckoutValidator.php:110
 msgid "Billing postcode"
+msgstr ""
+
+#: src/Modules/WooCommerce/CityField.php:193
+msgid "City suggestions"
+msgstr ""
+
+#: src/Modules/WooCommerce/CityField.php:194
+msgid "1 city suggested."
+msgstr ""
+
+#. translators: %d: the number of cities in the list.
+#: src/Modules/WooCommerce/CityField.php:196
+#, php-format
+msgid "%d cities suggested."
+msgstr ""
+
+#: src/Modules/WooCommerce/CityField.php:197
+msgid "No matching city"
 msgstr ""
 
 #: src/Modules/WooCommerce/IranianCurrencies.php:56

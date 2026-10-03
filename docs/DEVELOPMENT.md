@@ -81,6 +81,20 @@ npm run dist
 4. Run `npm run dist`.
 5. Run Plugin Check on `dist/persian-kit/`, then install the zip in a clean WordPress site and verify activation.
 
+## Updating the city list
+
+`resources/data/ir-cities.json` holds the cities the [`city_select`](REFERENCE.md#woocommerce-checkout) option suggests, and the names it saves. It comes from the Statistical Centre of Iran's country-divisions list (`_source` in the file says which one). To update it from a newer list:
+
+1. Download the country-divisions spreadsheet (فهرست تقسیمات کشوری) from https://amar.org.ir/geo.
+2. Keep the rows with `CODEREC` 5 (شهر). Map each province to its WooCommerce state code (`THR`, `ESF`, …; see `i18n/states.php` in WooCommerce).
+3. Fold numbered urban-zone rows (`رشت 1`, `رشت 2`) into their city.
+4. Write Arabic ي and ك as Persian ی and ک. Keep everything else as the list writes it, half-spaces included: these are the names saved on orders.
+5. Put each province's capital first, then the rest sorted with `Intl.Collator('fa').compare`.
+6. Update `_source` with the file name and year.
+7. Run `composer test` and `npm run test:js`. `CityFieldTest` checks the 31 provinces, the capitals, the letters, and that no two cities of a province share a matching key (`CityNames::key()`); two that did would both be saved as typed. The cases in `tests/fixtures/city-matches.json` run against the new list in PHP and JavaScript.
+
+A renamed city only changes new addresses; saved orders and addresses keep the old name.
+
 ## Notes
 
 - Source assets live in `resources/`.

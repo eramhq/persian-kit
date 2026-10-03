@@ -94,6 +94,17 @@ class WooCommerceMyAccountTest extends WordPressIntegrationTestCase
         $this->assertSame('روستای من', (new \WC_Customer($this->userId))->get_billing_city());
     }
 
+    public function test_a_city_typed_another_way_is_saved_under_its_listed_name(): void
+    {
+        $this->cityField()->register();
+
+        $this->assertTrue($this->saveBillingAddress([
+            'billing_state' => 'MZN',
+            'billing_city'  => 'قائمشهر',
+        ]), implode(' | ', $this->errorNotices()));
+        $this->assertSame('قایم شهر', (new \WC_Customer($this->userId))->get_billing_city());
+    }
+
     public function test_the_checkout_block_loads_the_city_list_once_on_any_page(): void
     {
         $this->cityField()->register();
@@ -108,9 +119,13 @@ class WooCommerceMyAccountTest extends WordPressIntegrationTestCase
             $data = (string) wp_scripts()->get_data($handle, 'data');
             $this->assertSame(1, substr_count($data, 'var persianKitCities'));
             $this->assertStringContainsString('"THR":["\u062a\u0647\u0631\u0627\u0646"', $data);
+            $this->assertStringContainsString('"noResults":', $data);
+            $this->assertTrue(wp_style_is($handle, 'enqueued'));
         } finally {
             wp_dequeue_script($handle);
             wp_deregister_script($handle);
+            wp_dequeue_style($handle);
+            wp_deregister_style($handle);
         }
     }
 
