@@ -26,7 +26,9 @@ class ImportRestController
     public function registerRoutes(): void
     {
         $this->route('/import/sources', 'GET', 'sources');
-        $this->route('/import/' . self::SOURCE . '/review', 'GET', 'review');
+        $this->route('/import/' . self::SOURCE . '/review', 'GET', 'review', [
+            'rescan' => ['type' => 'boolean', 'default' => false],
+        ]);
         $this->route('/import/' . self::SOURCE . '/count', 'GET', 'count', ['task' => $this->stringArg(true)]);
         $this->route('/import/' . self::SOURCE . '/preview', 'GET', 'preview', [
             'task'  => $this->stringArg(true),
@@ -68,7 +70,7 @@ class ImportRestController
 
     public function review(\WP_REST_Request $request): \WP_REST_Response|\WP_Error
     {
-        return $this->handle(fn (): array => $this->review->review($this->source($request)));
+        return $this->handle(fn (): array => $this->review->review($this->source($request), (bool) $request->get_param('rescan')));
     }
 
     public function count(\WP_REST_Request $request): \WP_REST_Response|\WP_Error
