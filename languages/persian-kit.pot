@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-10-03T10:10:44+00:00\n"
+"POT-Creation-Date: 2026-10-03T10:40:36+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: persian-kit\n"
@@ -91,6 +91,7 @@ msgstr ""
 
 #: src/Core/AdminPage.php:400
 #: views/admin/partials/woocommerce-settings.php:185
+#: views/admin/partials/woocommerce-settings.php:246
 msgid "Display"
 msgstr ""
 
@@ -102,7 +103,7 @@ msgstr ""
 #: src/Core/ConflictDetector.php:43
 #: src/Core/ConflictDetector.php:87
 #: src/Modules/WooCommerce/WooCommerceModule.php:21
-#: src/Modules/WooCommerce/WooCommerceModule.php:62
+#: src/Modules/WooCommerce/WooCommerceModule.php:63
 #: src/Service/Import/ImportReport.php:238
 #: views/admin/partials/woocommerce-settings.php:175
 msgid "WooCommerce"
@@ -158,6 +159,7 @@ msgstr ""
 #: src/Service/Import/ImportReport.php:230
 #: src/Service/Import/Sources/ParsiDate/ParsiDateSettings.php:191
 #: views/admin/partials/woocommerce-settings.php:186
+#: views/admin/partials/woocommerce-settings.php:247
 msgid "Persian digits"
 msgstr ""
 
@@ -661,27 +663,31 @@ msgstr ""
 msgid "Jalali dates in the shop admin and emails, checkout fields for Iran, and thousand toman and thousand rial currencies."
 msgstr ""
 
-#: src/Modules/WooCommerce/WooCommerceModule.php:79
+#: src/Modules/WooCommerce/WooCommerceModule.php:80
 msgid "Checkout and addresses"
 msgstr ""
 
-#: src/Modules/WooCommerce/WooCommerceModule.php:80
+#: src/Modules/WooCommerce/WooCommerceModule.php:81
 msgid "What customers type at checkout, and fields for Iran."
 msgstr ""
 
-#: src/Modules/WooCommerce/WooCommerceModule.php:83
+#: src/Modules/WooCommerce/WooCommerceModule.php:84
 msgid "Prices and currency"
 msgstr ""
 
-#: src/Modules/WooCommerce/WooCommerceModule.php:87
+#: src/Modules/WooCommerce/WooCommerceModule.php:88
+msgid "Emails"
+msgstr ""
+
+#: src/Modules/WooCommerce/WooCommerceModule.php:92
 msgid "Dates"
 msgstr ""
 
-#: src/Modules/WooCommerce/WooCommerceModule.php:88
+#: src/Modules/WooCommerce/WooCommerceModule.php:93
 msgid "Dates on orders and in emails follow Jalali dates on the Display tab."
 msgstr ""
 
-#: src/Modules/WooCommerce/WooCommerceModule.php:143
+#: src/Modules/WooCommerce/WooCommerceModule.php:149
 msgid "Settings saved. The \"Call for price\" link was cleared: type a phone number or a page address, such as /contact/."
 msgstr ""
 
@@ -1957,6 +1963,7 @@ msgid "Shop prices"
 msgstr ""
 
 #: views/admin/partials/digit-conversion-settings.php:20
+#: views/admin/partials/woocommerce-settings.php:248
 msgid "WooCommerce emails"
 msgstr ""
 
@@ -2426,11 +2433,25 @@ msgstr ""
 msgid "021 1234 5678 or /contact/"
 msgstr ""
 
-#: views/admin/partials/woocommerce-settings.php:247
+#. translators: %s: link to the setting, such as "Display › Persian digits › WooCommerce emails".
+#: views/admin/partials/woocommerce-settings.php:244
+#, php-format
+msgid "Persian digits in emails are set under %s."
+msgstr ""
+
+#: views/admin/partials/woocommerce-settings.php:258
+msgid "Persian font in emails"
+msgstr ""
+
+#: views/admin/partials/woocommerce-settings.php:259
+msgid "For emails in Persian, while WooCommerce's default font is in use: Tahoma, or the phone's own Persian font."
+msgstr ""
+
+#: views/admin/partials/woocommerce-settings.php:274
 msgid "Jalali date picker in the shop admin"
 msgstr ""
 
-#: views/admin/partials/woocommerce-settings.php:248
+#: views/admin/partials/woocommerce-settings.php:275
 msgid "Order, product and coupon dates, and the month filter on the orders list."
 msgstr ""
 
