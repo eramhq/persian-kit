@@ -33,3 +33,6 @@ defined('ABSPATH') || exit;
         <span x-text="task.options.label"></span>
     </label>
 </template>
+<template x-if="task.options && task.options.notice">
+    <p class="persian-kit-warning" x-text="task.options.notice"></p>
+</template>

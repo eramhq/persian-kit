@@ -7,6 +7,7 @@ use PersianKit\Core\SettingsManager;
 use PersianKit\Service\Import\Settings\SettingsImporter;
 use PersianKit\Service\Import\Sources\ParsiDate\ParsiDateSource;
 use PersianKit\Service\Import\Sources\PersianWooCommerce\PersianWooCommerceSource;
+use PersianKit\Service\Import\Sources\Shipping\PwsAddressFallback;
 use PersianKit\Service\Import\Sources\Shipping\PwsSource;
 
 defined('ABSPATH') || exit;
@@ -69,6 +70,9 @@ final class ImportServices
 
     public static function boot(ServiceContainer $container): void
     {
+        // Addresses the shipping plugin saved as ids read as names while it is inactive.
+        (new PwsAddressFallback())->register();
+
         add_action('rest_api_init', static function () use ($container): void {
             $container->get(ImportRestController::class)->registerRoutes();
         });

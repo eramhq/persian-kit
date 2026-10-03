@@ -6,6 +6,9 @@ use PersianKit\Core\SettingsManager;
 use PersianKit\Service\Import\AbstractSource;
 use PersianKit\Service\Import\ChecklistItem;
 use PersianKit\Service\Import\HasReviewNotes;
+use PersianKit\Service\Import\Iran\PwsTermMap;
+use PersianKit\Service\Import\Tasks\CustomerAddressTask;
+use PersianKit\Service\Import\Tasks\OrderAddressTask;
 
 defined('ABSPATH') || exit;
 
@@ -51,6 +54,30 @@ class PwsSource extends AbstractSource implements HasReviewNotes
     public function settingRows(SettingsManager $settings): array
     {
         return (new PwsSettings())->rows();
+    }
+
+    /**
+     * In order of urgency: zones first, so checkout offers shipping again.
+     */
+    public function tasks(): array
+    {
+        return [
+            new ShippingZoneTask(),
+            new DefaultCountryTask(),
+            new CustomerAddressTask(),
+            new OrderAddressTask(),
+        ];
+    }
+
+    /**
+     * Its terms and Tapin mode, in case the terms are deleted with it.
+     */
+    public function snapshot(): array
+    {
+        return [
+            'term_map' => PwsTermMap::load()->toSnapshot(),
+            'tapin'    => PwsSettings::tapinEnabled(),
+        ];
     }
 
     /**

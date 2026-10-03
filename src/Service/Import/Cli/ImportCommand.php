@@ -187,8 +187,8 @@ class ImportCommand
         if (is_string($map) && $map !== '') {
             $options['status_map'] = self::parseStatusMap($map);
         }
-        // WP-CLI turns --no-district-line into district-line=false.
-        if (\WP_CLI\Utils\get_flag_value($assocArgs, 'district-line', true) === false) {
+        // WP-CLI passes --no-district-line as is, or as district-line=false.
+        if (\WP_CLI\Utils\get_flag_value($assocArgs, 'no-district-line', false) || \WP_CLI\Utils\get_flag_value($assocArgs, 'district-line', true) === false) {
             $options['district_line'] = false;
         }
         if ($options !== []) {
