@@ -38,6 +38,7 @@ Persian Kit is a modular WordPress plugin for Persian-language sites. It focuses
 * Works with WPML and Polylang: dates, digits and the Persian writing tools follow each page's language, and admin screens each admin's own
 * A Jalali date picker for Contact Form 7 and ACF date fields, WooCommerce's admin date fields and the post date in the classic editor and Quick Edit, which keep saving Gregorian dates
 * Contact Form 7 fields that check Iranian mobile numbers, national IDs, postcodes, card numbers and IBANs
+* Forminator: a Jalali date picker for Calendar date fields, and Iranian checks for fields with a persian-kit class
 
 = Bundled software =
 
@@ -137,9 +138,13 @@ Weglot isn't supported: it translates finished pages and keeps the site's langua
 
 Yes. Each turns on by itself when the plugin is active (Integrations tab). Contact Form 7's date fields and ACF's Date Picker and Date Time Picker fields get a Jalali date picker. The dates are still saved and sent as Gregorian dates, so existing entries, emails and theme code keep working; while Jalali dates is on, Contact Form 7 emails and ACF values in templates show the Jalali date. Contact Form 7 also gets [mobile_ir], [national_id], [postcode_ir], [card_ir] and [iban_ir] fields that check what is typed, with buttons for them in the form editor.
 
+= Does Persian Kit work with Forminator? =
+
+Yes, from Forminator 1.50. Date fields in the Calendar style get a Jalali date picker and still save Gregorian dates, so entries and exports are unchanged; while Jalali dates is on, emails and the Submissions screen show the Jalali date. For Iranian checks, add a class to a field's "Additional CSS Classes": persian-kit-mobile, persian-kit-national-id, persian-kit-postcode, persian-kit-card or persian-kit-iban. Persian digits typed into phone and number fields become English digits.
+
 = What happens to my forms if I turn an integration off? =
 
-They keep working. While the Contact Form 7 integration is off, its Iranian fields are plain text inputs that accept any text; the settings page names the forms that use them before you save. If you deactivate Persian Kit itself, Contact Form 7 shows tags such as [national_id your-id] as text, so replace them first.
+They keep working. While the Contact Form 7 integration is off, its Iranian fields are plain text inputs that accept any text; the settings page names the forms that use them before you save. Forminator fields with a persian-kit class become plain Forminator fields, and its card names those forms too. If you deactivate Persian Kit itself, Contact Form 7 shows tags such as [national_id your-id] as text, so replace them first.
 
 = Can customers enter a village? =
 

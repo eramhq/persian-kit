@@ -459,7 +459,8 @@ On a site with WPML or Polylang and at least one language set up, Persian Kit fo
 | Pages: digits, post and comment dates, `wp_date()` with global conversion, date archive titles (and Yoast's `%%date%%`, Rank Math's `%date%`), the archive list and calendar, the admin bar clock, WooCommerce dates on shop pages and My Account, the ACF date picker and ACF values | The page's language |
 | Emails: WooCommerce email digits and dates | The email's language: a locale switched for it (`switch_to_locale()`, as WooCommerce and Polylang for WooCommerce do), or a language WPML switched to (`wpml_switch_language`, as WooCommerce Multilingual does) |
 | Contact Form 7 date fields and their mail tags | The form's own language: Contact Form 7 shows a form and sends its mail in the language it was made in, when that language is installed. Otherwise the page's language |
-| Admin screens: date pickers, month filters, media dates, WooCommerce order, product and coupon dates | The admin's own language (Users › Profile › Language), also in the block editor |
+| Forminator Calendar fields and their emails | The picker follows the page's language; emails follow the language of the page the form was sent from (`page_id`) |
+| Admin screens: date pickers, month filters, media dates, WooCommerce order, product and coupon dates, Forminator's Submissions screen | The admin's own language (Users › Profile › Language), also in the block editor |
 | Jalali post permalinks | Each post's language |
 | Writing tools: the ی/ک and half-space fixes on save, Fix letters in existing posts, Persian slugs, the half-space key | The language of what is saved, whoever saves it: an admin with an English profile still gets the fixes on a Persian post |
 
@@ -718,7 +719,7 @@ Another plugin that converts digits in emails, such as Persian WooCommerce's Per
 
 ## Integrations
 
-An integration is a module that works with another plugin: WooCommerce (`woocommerce`), Contact Form 7 (`cf7`), ACF (`acf`), Yoast SEO (`yoast`), Rank Math (`rank_math`), WPML (`wpml`) and Polylang (`polylang`). Each turns on by itself when its plugin is active, and does nothing while it is not. The plugin is checked when the page loads, by its classes, functions and constants, so a network-activated plugin counts on every site.
+An integration is a module that works with another plugin: WooCommerce (`woocommerce`), Contact Form 7 (`cf7`), ACF (`acf`), Forminator (`forminator`), Yoast SEO (`yoast`), Rank Math (`rank_math`), WPML (`wpml`) and Polylang (`polylang`). Each turns on by itself when its plugin is active, and does nothing while it is not. The plugin is checked when the page loads, by its classes, functions and constants, so a network-activated plugin counts on every site.
 
 - WooCommerce has its own tab on the settings page, shown only while WooCommerce is active, with a card for each section: Checkout and addresses, Prices and currency, Dates. `?tab=woocommerce#checkout` (`#prices`, `#dates`) links to one. While WooCommerce is inactive, `?tab=woocommerce` opens the first tab. Under Dates, `dates_admin` turns the Jalali date pickers on the order, product and coupon screens, and the month filter on the orders list, on or off; dates on orders and in emails follow the Jalali dates module.
 - The Integrations tab has a card for each other integration, grouped as Forms, Store and Compatibility. A plugin that is active but too old, or that needs an add-on (such as a Pro version), has a card that says why, with its switch disabled.
@@ -744,6 +745,8 @@ Not covered: the Open Graph price tags of Yoast WooCommerce SEO (a paid add-on, 
 
 A field type Persian Kit adds to a form plugin keeps rendering while the integration is off, as a plain text input that accepts any text and is not checked. Forms built with it never show the raw form tag. The integration's card names the forms that use these fields when it is switched off, before it is saved.
 
+Forminator has no Persian Kit field types: its fields only carry a `persian-kit-*` class, so while the integration is off they are Forminator's own fields again, with its own calendar and no Iranian checks. Its card lists the forms with those classes.
+
 If Persian Kit itself is deactivated, its field types are gone: Contact Form 7 then prints a tag such as `[national_id your-id]` as text. Replace these tags before deactivating Persian Kit.
 
 ### Writing an integration
@@ -760,7 +763,7 @@ A module becomes an integration by returning a category and the plugins it needs
 
 ## Forms
 
-Contact Form 7 (`cf7`) and ACF (`acf`) are separate integrations, each with its own switch.
+Contact Form 7 (`cf7`), ACF (`acf`) and Forminator (`forminator`) are separate integrations, each with its own switch.
 
 ### Contact Form 7
 
@@ -785,6 +788,30 @@ While the integration is off, the Iranian fields are plain text inputs: nothing 
 
 - Date Picker and Date Time Picker fields get the Jalali date picker on edit screens, in ACF blocks and in `acf_form()`. Values are stored as ACF stores them (`Ymd`, `Y-m-d H:i:s`). Fields from ACF 4 with a `save_format` keep ACF's own picker.
 - While the Jalali dates module is on, the formatted value (`get_field()`, `the_field()`) is a Jalali date in the field's return format: `Y/m/d` returns `1405/07/10`. Return formats that code parses (`Ymd`, `Y-m-d`, `Y-m-d H:i:s`, `U`, `c` and the like) stay Gregorian, as do REST API responses and the unformatted value (`get_field('name', $post_id, false)`). If your theme parses a formatted value such as `d/m/Y`, read the unformatted value or use the `persian_kit_acf_jalali_value` filter.
+
+### Forminator
+
+Forminator 1.50 or newer. Its form builder can't take new field types, so the Iranian checks are turned on with a class.
+
+- **Dates.** A Date field in the **Calendar** style gets the Jalali date picker. It still submits the Gregorian date in the field's own format (`10/02/2026` for `mm/dd/yy`), so Forminator's checks, conditions ("is before", "is after"), saved entries and exports work as before. All nine of Forminator's date formats are supported. Without JavaScript the field is a text field, and a typed Jalali date (`۱۴۰۵/۷/۱۰`, or `۱۰/۷/۱۴۰۵` in a day-first format) is converted before Forminator checks it. Dropdowns and Number boxes stay Gregorian. Add `persian-kit-gregorian` to a Calendar's "Additional CSS Classes" to keep Forminator's own calendar.
+- **Date limits.** The Jalali picker applies a start and end date (a specific date or "today ± N days") and "no past dates" (none before the default date, as in Forminator). Disabled weekdays, disabled dates and ranges, and limits taken from another date field are checked by Forminator when the form is sent, with its own message, but the picker doesn't grey them out.
+- **Emails and Submissions.** While the Jalali dates module is on, `{date-1}` in an email (body and subject, admin and user emails) and the dates in `{all_fields}` show the Jalali date in the site's date format, as does the Submissions screen for an admin whose language is Persian. Saved entries, CSV exports, integrations and webhooks keep the Gregorian date; so do redirect URLs and user meta filled from `{date-1}`.
+- **Digits.** Persian and Arabic digits become English in Phone, Number and Currency fields, in Calendar dates and in fields with an Iranian class: as people type (Forminator checks phone numbers and numbers in the browser), and again on the server. Other text keeps its digits. Number and Currency fields with a thousands separator are masked; a typed or pasted Persian digit is swapped for the English one before the mask sees it. A Number field without a separator is an `<input type="number">`, which some browsers clear when a Persian digit is typed; give it a separator, or use a Text field.
+- **Iranian checks.** Add one of these classes to a field's "Additional CSS Classes" box (Styling tab):
+
+| Class | Use it on | Checked with | Saved as |
+| --- | --- | --- | --- |
+| `persian-kit-mobile` | Text or Phone | `persian_kit_validate_phone()`, mobile numbers only | `09121234567` |
+| `persian-kit-national-id` | Text | `persian_kit_validate_national_id()` | 10 digits |
+| `persian-kit-postcode` | Text | `persian_kit_validate_postal_code()` | 10 digits |
+| `persian-kit-card` | Text | `persian_kit_validate_card_number()` | 16 digits |
+| `persian-kit-iban` | Text | `persian_kit_validate_iban()` | `IR` and 24 digits |
+
+The classes count on Text, Phone and Number fields and are ignored on others; use Text for values with leading zeros. With several classes, the first Iranian one counts. A Phone field with a country picker sends `+98 912…`, which is accepted and saved as `09121234567`. A value that isn't valid is rejected when the form is sent, with the message shown beside the field; a valid one is saved and emailed in its standard form. An empty required field gets Forminator's own message. Marked inputs read left to right and get a numeric keyboard where that fits.
+
+- **Forms loaded over AJAX, multi-step forms and repeaters.** The picker is put on the field wherever Forminator renders it: on any step, in a popup, in a form loaded over AJAX, and in each new row of a repeated Group field, which gets its own picker and starts from the field's default. Each row is checked on its own. Fields hidden by a condition are not checked.
+
+The card's list of forms with Iranian classes comes from a scan of the forms' fields, cached and cleared when a form is saved, cloned, imported, trashed or deleted. Polls and quizzes are not changed.
 
 ## WP-CLI
 
@@ -815,6 +842,7 @@ The settings page (the Persian Kit menu) has five tabs: Display and Writing hold
 | `woocommerce` | WooCommerce | `enabled` (on), `checkout_normalize` (on), `checkout_validate` (on), `national_id` (`off`), `city_select` (off), `allowed_states` (`[]`, all provinces), `dates_admin` (on) |
 | `cf7` | Integrations > Forms > Contact Form 7 | `enabled` (on) |
 | `acf` | Integrations > Forms > ACF | `enabled` (on) |
+| `forminator` | Integrations > Forms > Forminator | `enabled` (on) |
 
 The option is registered with the Settings API (group `persian_kit`), so every write is sanitized, whether it comes from the settings page or from `update_option()`. Each module's values are merged over what is stored and sanitized by the module; a module left out keeps its stored values, and keys that are not module keys are dropped. Booleans are stored as `true`/`false`.
 

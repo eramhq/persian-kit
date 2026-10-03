@@ -9,15 +9,15 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-10-02T18:26:14+00:00\n"
+"POT-Creation-Date: 2026-10-03T02:13:45+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: persian-kit\n"
 
 #. Plugin Name of the plugin
 #: persian-kit.php
-#: src/Core/AdminPage.php:113
 #: src/Core/AdminPage.php:114
+#: src/Core/AdminPage.php:115
 #: src/Core/ConflictDetector.php:144
 #: src/Service/Assets/AssetManager.php:45
 #: views/admin/partials/footer.php:30
@@ -63,37 +63,37 @@ msgstr ""
 msgid "Needs %1$s %2$s or newer (this site has %3$s)."
 msgstr ""
 
-#: src/Core/AdminPage.php:105
+#: src/Core/AdminPage.php:106
 msgid "Settings"
 msgstr ""
 
-#: src/Core/AdminPage.php:268
+#: src/Core/AdminPage.php:269
 msgid "Forms"
 msgstr ""
 
-#: src/Core/AdminPage.php:269
+#: src/Core/AdminPage.php:270
 msgid "Store"
 msgstr ""
 
-#: src/Core/AdminPage.php:270
+#: src/Core/AdminPage.php:271
 #: views/admin/partials/compatibility-guidance.php:16
 msgid "Compatibility"
 msgstr ""
 
-#: src/Core/AdminPage.php:355
+#: src/Core/AdminPage.php:356
 msgid "You do not have permission to access this page."
 msgstr ""
 
-#: src/Core/AdminPage.php:374
+#: src/Core/AdminPage.php:375
 #: views/admin/partials/woocommerce-settings.php:180
 msgid "Display"
 msgstr ""
 
-#: src/Core/AdminPage.php:375
+#: src/Core/AdminPage.php:376
 msgid "Writing"
 msgstr ""
 
-#: src/Core/AdminPage.php:376
+#: src/Core/AdminPage.php:377
 #: src/Core/ConflictDetector.php:40
 #: src/Core/ConflictDetector.php:82
 #: src/Modules/WooCommerce/WooCommerceModule.php:20
@@ -102,11 +102,11 @@ msgstr ""
 msgid "WooCommerce"
 msgstr ""
 
-#: src/Core/AdminPage.php:377
+#: src/Core/AdminPage.php:378
 msgid "Integrations"
 msgstr ""
 
-#: src/Core/AdminPage.php:378
+#: src/Core/AdminPage.php:379
 msgid "Tools"
 msgstr ""
 
@@ -316,7 +316,7 @@ msgstr ""
 msgid "Activity"
 msgstr ""
 
-#: src/Modules/DateConversion/DatePicker.php:54
+#: src/Modules/DateConversion/DatePicker.php:57
 msgid "Time"
 msgstr ""
 
@@ -408,6 +408,14 @@ msgstr ""
 #: src/Modules/Forms/Cf7TagGenerator.php:63
 #, php-format
 msgid "%s are checked when the form is sent, and saved and emailed with English digits."
+msgstr ""
+
+#: src/Modules/Forms/ForminatorModule.php:21
+msgid "Forminator"
+msgstr ""
+
+#: src/Modules/Forms/ForminatorModule.php:26
+msgid "Jalali date picker for Calendar date fields, and Iranian checks for fields with a persian-kit class."
 msgstr ""
 
 #: src/Modules/Forms/IranianFieldTypes.php:58

@@ -370,6 +370,14 @@ msgstr "ACF"
 msgid "Jalali date picker for Date Picker and Date Time Picker fields. Dates are still saved as Gregorian."
 msgstr "تقویم شمسی برای فیلدهای ⁦Date Picker⁩ و ⁦Date Time Picker⁩. تاریخ‌ها همچنان میلادی ذخیره می‌شوند."
 
+#: src/Modules/Forms/ForminatorModule.php:21
+msgid "Forminator"
+msgstr "Forminator"
+
+#: src/Modules/Forms/ForminatorModule.php:26
+msgid "Jalali date picker for Calendar date fields, and Iranian checks for fields with a persian-kit class."
+msgstr "تقویم شمسی برای فیلدهای تاریخ با سبک ⁦Calendar⁩، و بررسی ایرانی برای فیلدهایی که کلاس ⁦persian-kit⁩ دارند."
+
 #: src/Modules/Forms/Cf7IranianFields.php:76
 msgid "Mobile number that the sender entered is invalid"
 msgstr "شماره موبایلی که فرستنده وارد کرده نامعتبر است"

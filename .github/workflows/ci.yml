@@ -68,6 +68,8 @@ jobs:
       PERSIAN_KIT_TESTS_CF7_DIR: /tmp/wordpress/wp-content/plugins/contact-form-7
       ACF_VERSION: '6.8.10'
       PERSIAN_KIT_TESTS_ACF_DIR: /tmp/wordpress/wp-content/plugins/advanced-custom-fields
+      FORMINATOR_VERSION: '1.57.3'
+      PERSIAN_KIT_TESTS_FORMINATOR_DIR: /tmp/wordpress/wp-content/plugins/forminator
       WORDPRESS_SEO_VERSION: '28.6'
       PERSIAN_KIT_TESTS_YOAST_DIR: /tmp/wordpress/wp-content/plugins/wordpress-seo
       RANK_MATH_VERSION: '1.0.279'
@@ -112,6 +114,12 @@ jobs:
           curl -sSfL -o /tmp/acf.zip "https://downloads.wordpress.org/plugin/advanced-custom-fields.${ACF_VERSION}.zip"
           unzip -q /tmp/acf.zip -d "$WP_CORE_DIR/wp-content/plugins"
           test -f "$PERSIAN_KIT_TESTS_ACF_DIR/acf.php"
+
+      - name: Download Forminator
+        run: |
+          curl -sSfL -o /tmp/forminator.zip "https://downloads.wordpress.org/plugin/forminator.${FORMINATOR_VERSION}.zip"
+          unzip -q /tmp/forminator.zip -d "$WP_CORE_DIR/wp-content/plugins"
+          test -f "$PERSIAN_KIT_TESTS_FORMINATOR_DIR/forminator.php"
 
       - name: Download Yoast SEO
         run: |
