@@ -77,6 +77,13 @@ jobs:
       # Loaded only for the multilingual run.
       POLYLANG_VERSION: '3.8.10'
       PERSIAN_KIT_TESTS_POLYLANG_DIR: /tmp/wordpress/wp-content/plugins/polylang
+      # Loaded only for the run against the plugins a site can switch from.
+      # WordPress.org keeps no zip of Persian WooCommerce 10.0.5 or its
+      # shipping plugin 4.4.8, so their latest releases are tested.
+      PARSIDATE_VERSION: '6.4'
+      PERSIAN_KIT_TESTS_PARSIDATE_DIR: /tmp/wordpress/wp-content/plugins/wp-parsidate
+      PERSIAN_KIT_TESTS_PERSIAN_WOOCOMMERCE_DIR: /tmp/wordpress/wp-content/plugins/persian-woocommerce
+      PERSIAN_KIT_TESTS_PWS_DIR: /tmp/wordpress/wp-content/plugins/persian-woocommerce-shipping
       WP_TEST_DB_HOST: 127.0.0.1
       WP_TEST_DB_USER: root
       WP_TEST_DB_PASSWORD: root
@@ -139,6 +146,17 @@ jobs:
           unzip -q /tmp/polylang.zip -d "$WP_CORE_DIR/wp-content/plugins"
           test -f "$PERSIAN_KIT_TESTS_POLYLANG_DIR/polylang.php"
 
+      - name: Download Parsi Date, Persian WooCommerce and its shipping plugin
+        run: |
+          for plugin in "wp-parsidate.${PARSIDATE_VERSION}" persian-woocommerce persian-woocommerce-shipping; do
+            curl -sSfL -o "/tmp/${plugin}.zip" "https://downloads.wordpress.org/plugin/${plugin}.zip"
+            unzip -q "/tmp/${plugin}.zip" -d "$WP_CORE_DIR/wp-content/plugins"
+          done
+          test -f "$PERSIAN_KIT_TESTS_PARSIDATE_DIR/wp-parsidate.php"
+          test -f "$PERSIAN_KIT_TESTS_PERSIAN_WOOCOMMERCE_DIR/woocommerce-persian.php"
+          test -f "$PERSIAN_KIT_TESTS_PWS_DIR/woocommerce-shipping.php"
+          grep -h '^ \* Version:' "$PERSIAN_KIT_TESTS_PERSIAN_WOOCOMMERCE_DIR/woocommerce-persian.php" "$PERSIAN_KIT_TESTS_PWS_DIR/woocommerce-shipping.php"
+
       - name: Set up WordPress test library
         run: composer test:integration:setup
 
@@ -147,6 +165,9 @@ jobs:
 
       - name: Integration tests (Polylang)
         run: composer test:integration:polylang
+
+      - name: Integration tests (Parsi Date, Persian WooCommerce, shipping)
+        run: composer test:integration:sources
 
   js:
     name: JavaScript tests

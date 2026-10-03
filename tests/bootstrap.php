@@ -39,6 +39,14 @@ if (file_exists($wpTestsDir . '/includes/functions.php')) {
     if (getenv('PERSIAN_KIT_TESTS_MULTILINGUAL')) {
         $plugins['POLYLANG'] = 'polylang/polylang.php';
     }
+    // The plugins a site can switch from, for the tests that check Persian
+    // Kit against them (composer test:integration:sources). Parsi Date
+    // converts every date once active, so they load only for that run.
+    if (getenv('PERSIAN_KIT_TESTS_SOURCES')) {
+        $plugins['PARSIDATE'] = 'wp-parsidate/wp-parsidate.php';
+        $plugins['PERSIAN_WOOCOMMERCE'] = 'persian-woocommerce/woocommerce-persian.php';
+        $plugins['PWS'] = 'persian-woocommerce-shipping/woocommerce-shipping.php';
+    }
     $pluginFiles = [];
     foreach ($plugins as $name => $file) {
         $dir = getenv("PERSIAN_KIT_TESTS_{$name}_DIR") ?: dirname(__DIR__, 2) . '/' . dirname($file);
@@ -64,6 +72,11 @@ if (file_exists($wpTestsDir . '/includes/functions.php')) {
         // The Rank Math modules the tests cover, before it loads them.
         if (isset($pluginFiles['RANK_MATH'])) {
             update_option('rank_math_modules', ['sitemap', 'rich-snippet', 'woocommerce']);
+        }
+
+        // Parsi Date with Jalali dates and Jalali post links, as most sites use it.
+        if (isset($pluginFiles['PARSIDATE'])) {
+            update_option('wp_parsidate', ['persian_date' => true, 'conv_permalinks' => true]);
         }
 
         foreach ($pluginFiles as $path) {
