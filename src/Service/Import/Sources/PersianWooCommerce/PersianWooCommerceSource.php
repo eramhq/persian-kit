@@ -187,8 +187,16 @@ class PersianWooCommerceSource extends AbstractSource implements HasReportTips
             return [];
         }
 
+        // Loading the gateways runs each one's constructor; one that fails
+        // must not take this page down with it.
+        try {
+            $loaded = WC()->payment_gateways()->payment_gateways();
+        } catch (\Throwable $error) {
+            return [];
+        }
+
         $gateways = [];
-        foreach (WC()->payment_gateways()->payment_gateways() as $id => $gateway) {
+        foreach ($loaded as $id => $gateway) {
             $ours = $gateway instanceof \Persian_Woocommerce_Gateways || $id === 'wc_zibal';
             if ($ours && ($gateway->enabled ?? 'no') === 'yes') {
                 $gateways[(string) $id] = wp_strip_all_tags((string) $gateway->get_method_title());
