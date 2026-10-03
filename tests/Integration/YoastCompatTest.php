@@ -82,6 +82,13 @@ class YoastCompatTest extends WordPressIntegrationTestCase
         array_map([$this, 'assertMachineDate'], $matches[1]);
     }
 
+    public function test_only_the_tab_title_gets_persian_digits(): void
+    {
+        $html = $this->head(get_permalink($this->postTitledTop10()));
+
+        $this->assertOnlyTheTabTitleConverts($html, 'yoast-schema-graph', ['headline', 'name']);
+    }
+
     public function test_a_jalali_month_archive_is_named_for_its_jalali_month(): void
     {
         $this->postOnFarvardin16();

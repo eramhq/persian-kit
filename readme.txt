@@ -20,7 +20,7 @@ Persian Kit is a modular WordPress plugin for Persian-language sites. It focuses
 * Jalali archive pages (/1405/07/ lists the posts of Mehr 1405), and a Jalali archive list and calendar in the Archives and Calendar widgets and blocks
 * Optional Jalali dates in post permalinks (/1405/07/09/my-post/), with old links redirected
 * REST API Jalali companion fields
-* Persian digits in content, dates, counts and WooCommerce prices (off until you turn it on)
+* Persian digits in content, titles, the browser tab, widgets, menus, category and tag lists, dates, counts and WooCommerce prices (off until you turn it on)
 * Search that finds words typed with either Arabic (ي ك) or Persian (ی ک) letters, and numbers typed with either Persian (۱۴۰۵) or English (1405) digits
 * Arabic-to-Persian character normalization on save for posts, comments, categories, tags and menus (off until you turn it on), and for existing posts, with a dry-run count and a confirmation step
 * Optional half-spaces (ZWNJ) in compound words when posts are saved
@@ -126,7 +126,7 @@ Yes. Pick "Iranian thousand toman" (هزار تومان) or "Iranian thousand ri
 
 = Does Persian Kit work with Yoast SEO and Rank Math? =
 
-Yes. While either is active, the product prices they give search engines are in rials, because search engines don't accept toman, and their dates in schema, Open Graph tags and sitemaps stay Gregorian, which search engines need. Date archive titles name the Jalali month. Nothing needs setting up.
+Yes. While either is active, the product prices they give search engines are in rials, because search engines don't accept toman, and their dates in schema, Open Graph tags and sitemaps stay Gregorian, which search engines need. Date archive titles name the Jalali month. With Persian digits on, the browser tab's title gets Persian digits, while the titles in Open Graph tags and schema keep the digits you typed. Nothing needs setting up.
 
 = Does Persian Kit work with WPML and Polylang? =
 

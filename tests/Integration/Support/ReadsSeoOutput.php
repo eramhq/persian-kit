@@ -112,6 +112,36 @@ trait ReadsSeoOutput
         return $product->save();
     }
 
+    /**
+     * The browser tab shows Persian digits; the tags for search engines and
+     * social sites (og:title, twitter:title, JSON-LD) keep the title's own.
+     *
+     * @param list<string> $schemaKeys
+     */
+    private function assertOnlyTheTabTitleConverts(string $html, string $schemaClass, array $schemaKeys): void
+    {
+        $this->assertSame(1, preg_match('#<title>([^<]*)</title>#', $html, $match), 'one title tag');
+        $this->assertStringContainsString('Top ۱۰', $match[1]);
+
+        $tags = array_merge($this->meta($html, 'og:title'), $this->meta($html, 'twitter:title'));
+        $this->assertNotEmpty($this->meta($html, 'og:title'));
+
+        $names = array_filter(
+            $this->valuesOf($this->jsonLd($html, $schemaClass), $schemaKeys),
+            static fn (mixed $value): bool => is_string($value) && str_contains($value, 'Top')
+        );
+        $this->assertNotEmpty($names);
+
+        foreach (array_merge($tags, $names) as $value) {
+            $this->assertStringContainsString('Top 10', $value);
+        }
+    }
+
+    private function postTitledTop10(): int
+    {
+        return self::factory()->post->create(['post_title' => 'Top 10', 'post_status' => 'publish']);
+    }
+
     private function postOnFarvardin16(): int
     {
         return self::factory()->post->create([

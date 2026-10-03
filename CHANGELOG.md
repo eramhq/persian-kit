@@ -4,6 +4,14 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Persian digits
+
+- Persian digits now reach the browser tab's title (also when Yoast SEO or Rank Math writes it), archive, category and tag titles and descriptions, widget titles, block widgets and Custom HTML widgets, category lists and dropdowns, tag clouds, navigation and page-list blocks, comment excerpts and WooCommerce short descriptions. With the numbers option on, also the post counts in archive lists and tag clouds, and the term-count and query-total blocks.
+- Fixed: a title with a dash, a quote, `…` or `&` showed broken characters such as `&#۸۲۱۱;` with Persian digits on. Character references now keep their digits.
+- Fixed: Yoast SEO's JSON-LD headline and Rank Math's breadcrumbs got Persian digits. Everything printed in `wp_head` (Open Graph and Twitter titles, JSON-LD) now keeps the digits as typed; only the `<title>` converts. A post saved outside the admin no longer stores a Persian-digit breadcrumb title in Yoast SEO.
+- The site name keeps the digits it was typed with in the browser tab's title.
+- Gregorian dates, text typed into block theme template parts and product names in the WooCommerce cart keep their digits.
+
 ### Multilingual sites
 
 - The Jalali calendar on a Persian page links only days, and previous and next months, with posts in the page's language. Before, a day or month with only English posts was linked, and its archive was empty.

@@ -27,6 +27,7 @@ class DigitConversionModuleTest extends TestCase
         Functions\when('wp_is_serving_rest_request')->justReturn(false);
         Functions\when('is_feed')->justReturn(false);
         Functions\when('doing_filter')->justReturn(false);
+        Functions\when('doing_action')->justReturn(false);
     }
 
     protected function tearDown(): void
@@ -57,11 +58,122 @@ class DigitConversionModuleTest extends TestCase
 
         $module = $this->bootModule();
 
-        foreach (['the_content', 'the_title', 'get_the_excerpt', 'comment_text', 'widget_text', 'widget_text_content', 'human_time_diff', 'get_the_terms'] as $hook) {
-            $this->assertNotFalse(has_filter($hook), $hook);
+        foreach ([
+            'the_content', 'the_title', 'get_the_excerpt', 'comment_text', 'widget_text', 'widget_text_content',
+            'single_post_title', 'single_cat_title', 'single_tag_title', 'single_term_title',
+            'get_the_archive_description', 'term_description', 'widget_title', 'widget_block_content',
+            'widget_custom_html_content', 'list_cats', 'get_comment_excerpt', 'woocommerce_short_description',
+            'render_block_core/navigation', 'render_block_core/page-list', 'render_block_core/term-name',
+        ] as $hook) {
+            $this->assertSame(99, has_filter($hook, [$module, 'filterContent']), $hook);
+        }
+        $this->assertSame(99, has_filter('get_the_archive_title', [$module, 'filterArchiveTitle']));
+        $this->assertSame(99, has_filter('wp_generate_tag_cloud_data', [$module, 'filterTagCloudData']));
+        $this->assertSame(99, has_filter('human_time_diff', [$module, 'filterText']));
+        $this->assertSame(99, has_filter('get_the_terms', [$module, 'filterTerms']));
+        foreach (['pre_get_document_title', 'document_title', 'wp_title'] as $hook) {
+            $this->assertSame(9999, has_filter($hook, [$module, 'filterDocumentTitle']), $hook);
         }
         $this->assertFalse(has_filter('the_excerpt'), 'get_the_excerpt already covers the_excerpt');
-        $this->assertSame(99, has_filter('the_content', [$module, 'filterContent']));
+    }
+
+    public function test_titles_keep_their_character_references(): void
+    {
+        Functions\when('get_bloginfo')->justReturn('');
+        $module = $this->makeModule();
+
+        $this->assertSame('Don&#8217;t ۱۰ &#8211; x', $module->filterContent('Don&#8217;t 10 &#8211; x'));
+        $this->assertSame('Top ۱۰ &amp; more', $module->filterDocumentTitle('Top 10 &amp; more'));
+    }
+
+    public function test_convert_content_takes_a_fast_path_for_plain_text(): void
+    {
+        $this->assertSame('سال ۱۴۰۳', DigitConversionModule::convertContent('سال 1403'));
+        // No markup to segment, so a PCRE failure doesn't matter.
+        $this->assertSame('۱۲', self::withFailingPcre(fn () => DigitConversionModule::convertContent('12')));
+    }
+
+    public function test_an_empty_pre_get_document_title_stays_empty(): void
+    {
+        $this->assertSame('', $this->makeModule()->filterDocumentTitle(''));
+    }
+
+    public function test_the_document_title_keeps_the_site_name_as_typed(): void
+    {
+        Functions\when('get_bloginfo')->justReturn('Shop24');
+
+        $this->assertSame('Top ۱۰ &#8211; Shop24', $this->makeModule()->filterDocumentTitle('Top 10 &#8211; Shop24'));
+    }
+
+    public function test_the_document_title_converts_whole_when_the_site_name_has_no_digits(): void
+    {
+        Functions\when('get_bloginfo')->justReturn('فروشگاه');
+
+        $this->assertSame('صفحه ۲ &#8211; فروشگاه', $this->makeModule()->filterDocumentTitle('صفحه 2 &#8211; فروشگاه'));
+    }
+
+    public function test_tags_in_wp_head_keep_their_digits_but_the_document_title_converts(): void
+    {
+        Functions\when('get_bloginfo')->justReturn('');
+        Functions\when('doing_action')->alias(static fn (?string $hook = null): bool => $hook === 'wp_head');
+        $module = $this->makeModule();
+
+        $this->assertSame('Top 10', $module->filterContent('Top 10'));
+        $this->assertSame('Top ۱۰', $module->filterDocumentTitle('Top 10'));
+    }
+
+    public function test_nothing_converts_while_a_post_is_saved(): void
+    {
+        Functions\when('doing_action')->alias(static fn (?string $hook = null): bool => $hook === 'wp_insert_post');
+
+        $this->assertSame('Top 10', $this->makeModule()->filterContent('Top 10'));
+    }
+
+    public function test_date_archive_titles_are_left_to_the_date_options(): void
+    {
+        $module = $this->makeModule();
+
+        Functions\when('is_date')->justReturn(true);
+        $this->assertSame('Year: 2025', $module->filterArchiveTitle('Year: 2025'));
+
+        Functions\when('is_date')->justReturn(false);
+        $this->assertSame('Category: <span>Top ۱۰</span>', $module->filterArchiveTitle('Category: <span>Top 10</span>'));
+    }
+
+    public function test_tag_cloud_converts_names_and_counts_only(): void
+    {
+        $tag = [
+            'url'        => 'https://example.test/tag/top-10/',
+            'name'       => 'Top 10 &amp; more',
+            'real_count' => 12,
+            'aria_label' => ' aria-label="Top 10 (12 items)"',
+            'show_count' => '<span class="tag-link-count"> (12)</span>',
+        ];
+
+        $converted = $this->makeModule()->filterTagCloudData([$tag])[0];
+
+        $this->assertSame('Top ۱۰ &amp; more', $converted['name']);
+        $this->assertSame('<span class="tag-link-count"> (۱۲)</span>', $converted['show_count']);
+        $this->assertSame($tag['url'], $converted['url']);
+        $this->assertSame(12, $converted['real_count']);
+        $this->assertSame($tag['aria_label'], $converted['aria_label']);
+
+        $withoutNumbers = $this->makeModule(['numbers' => false])->filterTagCloudData([$tag])[0];
+        $this->assertSame('Top ۱۰ &amp; more', $withoutNumbers['name']);
+        $this->assertSame($tag['show_count'], $withoutNumbers['show_count'], 'counts follow the numbers option');
+
+        $this->assertNull($this->makeModule()->filterTagCloudData(null));
+    }
+
+    public function test_archive_links_convert_only_the_count(): void
+    {
+        $link = "\t<li><a href='https://example.test/2025/03/'>March 2025</a>&nbsp;(12)</li>\n";
+
+        $this->assertSame(
+            "\t<li><a href='https://example.test/2025/03/'>March 2025</a>&nbsp;(۱۲)</li>\n",
+            $this->makeModule()->filterArchivesLink($link, 'https://example.test/2025/03/', 'March 2025', 'html', '', '&nbsp;(12)')
+        );
+        $this->assertSame($link, $this->makeModule()->filterArchivesLink($link, '', 'March 2025', 'html', '', ''), 'no count, nothing to do');
     }
 
     public function test_boot_skips_admin_screens(): void
@@ -182,7 +294,23 @@ class DigitConversionModuleTest extends TestCase
         $this->assertSame(99, has_filter('persian_kit_date_display', [$module, 'filterText']));
         $this->assertSame(99, has_filter('number_format_i18n', [$module, 'filterText']));
         $this->assertSame(99, has_filter('formatted_woocommerce_price', [$module, 'filterText']));
+        $this->assertSame(99, has_filter('get_archives_link', [$module, 'filterArchivesLink']));
+        $this->assertSame(99, has_filter('render_block_core/term-count', [$module, 'filterContent']));
+        $this->assertSame(99, has_filter('render_block_core/query-total', [$module, 'filterContent']));
         $this->assertNotFalse(has_action('wp_enqueue_scripts', [$module, 'enqueueBlockPriceScript']));
+    }
+
+    public function test_each_new_hook_can_be_turned_off_by_name(): void
+    {
+        Functions\when('is_admin')->justReturn(false);
+        Monkey\Filters\expectApplied('persian_kit_digit_conversion')
+            ->andReturnUsing(static fn (bool $convert, string $hook): bool => !in_array($hook, ['document_title', 'list_cats'], true));
+
+        $this->bootModule();
+
+        $this->assertFalse(has_filter('document_title'));
+        $this->assertFalse(has_filter('list_cats'));
+        $this->assertNotFalse(has_filter('wp_title'));
     }
 
     public function test_block_price_script_loads_on_block_cart_and_checkout_only(): void
@@ -217,6 +345,9 @@ class DigitConversionModuleTest extends TestCase
         $this->assertFalse(has_filter('persian_kit_date_display'));
         $this->assertFalse(has_filter('number_format_i18n'));
         $this->assertFalse(has_filter('formatted_woocommerce_price'));
+        $this->assertFalse(has_filter('get_archives_link'));
+        $this->assertFalse(has_filter('render_block_core/term-count'));
+        $this->assertFalse(has_filter('render_block_core/query-total'));
         $this->assertFalse(has_action('wp_enqueue_scripts'));
         $this->assertNotFalse(has_filter('the_content'));
     }
