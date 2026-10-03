@@ -513,7 +513,16 @@ add_filter('persian_kit_date_display', function (string $date, string $format, i
 
 ### `persian_kit_digit_conversion`
 
-Return `false` to stop digit conversion on one hook. The second argument is the hook name: `the_content`, `the_title`, `get_the_excerpt`, `comment_text`, `widget_text`, `widget_text_content`, `human_time_diff` or `get_the_terms`. With the module's options on, also `persian_kit_date_display` (Jalali dates), `number_format_i18n` (counts), `formatted_woocommerce_price` (WooCommerce prices), `woocommerce_block_prices` (the script that converts prices drawn by the cart and checkout blocks, loaded on those pages only), `woocommerce_emails` (everything in [WooCommerce emails](#woocommerce-emails)) and `woocommerce_email_order_number` (order numbers in emails only).
+Return `false` to stop digit conversion on one hook. The second argument is the hook name:
+
+- **Content**: `the_content`, `get_the_excerpt`, `comment_text`, `get_comment_excerpt`, `human_time_diff`, `get_the_terms`, `woocommerce_short_description`.
+- **Titles**: `the_title`, `single_post_title`, `single_cat_title`, `single_tag_title`, `single_term_title`, `get_the_archive_title` (not date archives, which follow the dates option), `get_the_archive_description`, `term_description` (also WooCommerce category descriptions).
+- **The browser tab's title**: `pre_get_document_title`, `document_title` and `wp_title`, at priority 9999, so the title Yoast SEO or Rank Math writes is converted too.
+- **Widgets**: `widget_title`, `widget_text`, `widget_text_content`, `widget_block_content` (block widgets), `widget_custom_html_content`.
+- **Lists**: `list_cats` (category names in the list, the dropdown and the categories block), `wp_generate_tag_cloud_data` (tag names; the counts too when the numbers option is on).
+- **Blocks**: `render_block_core/navigation`, `render_block_core/page-list`, `render_block_core/term-name`.
+
+With the module's options on, also `persian_kit_date_display` (Jalali dates), `number_format_i18n` (counts), `get_archives_link` (the post count after each archive link; the label is a Jalali date, already converted, or a Gregorian one, which keeps its digits), `render_block_core/term-count` and `render_block_core/query-total` (counts), `formatted_woocommerce_price` (WooCommerce prices), `woocommerce_block_prices` (the script that converts prices drawn by the cart and checkout blocks, loaded on those pages only), `woocommerce_emails` (everything in [WooCommerce emails](#woocommerce-emails)) and `woocommerce_email_order_number` (order numbers in emails only).
 
 Text inside `<pre>`, `<code>`, `<kbd>` and `<samp>` elements keeps its digits.
 
@@ -522,6 +531,17 @@ add_filter('persian_kit_digit_conversion', function (bool $enabled, string $hook
     return $hook === 'the_title' ? false : $enabled;
 }, 10, 2);
 ```
+
+Tags, links, image addresses and character references such as `&#8211;` keep their digits. In the browser tab's title, the site name keeps the digits it was typed with (`Shop24`), as it does everywhere else on the page.
+
+Tags printed in `wp_head` keep their digits: Open Graph and Twitter titles, and the JSON-LD and breadcrumbs from Yoast SEO and Rank Math. The `<title>` is the only thing converted there. Block themes render the page before `wp_head`, so their visible content still converts. Nothing converts while a post is being saved, so plugins that store a post's title then (Yoast SEO's breadcrumb title) store it as typed.
+
+Not converted:
+
+- Gregorian dates, including a Gregorian calendar or archive list (Jalali archives off). Only Jalali dates get Persian digits.
+- Text typed into a block theme's template parts.
+- Product names in the WooCommerce cart.
+- The Open Graph title from SEO plugins other than Yoast SEO and Rank Math that build it from the browser tab's title.
 
 Digit conversion never runs on admin screens, in REST responses or in feeds. Outgoing mail is skipped while a `wp_mail` filter is running; content rendered before `wp_mail()` is called, such as an email template that calls `the_title` or `the_content`, is still converted. WooCommerce emails are the exception: the site-wide filters leave them alone, and they follow their own option, [WooCommerce emails](#woocommerce-emails).
 
