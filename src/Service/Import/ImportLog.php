@@ -141,17 +141,16 @@ class ImportLog
     {
         global $wpdb;
 
-        $before = $beforeId > 0 ? $wpdb->prepare(' AND id < %d', $beforeId) : '';
-
-        // phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+        // phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
         $rows = $wpdb->get_results($wpdb->prepare(
-            "SELECT * FROM %i WHERE source = %s AND outcome = %s{$before} ORDER BY id DESC LIMIT %d",
+            'SELECT * FROM %i WHERE source = %s AND outcome = %s AND id < %d ORDER BY id DESC LIMIT %d',
             self::tableName(),
             $source,
             self::CHANGED,
+            $beforeId > 0 ? $beforeId : PHP_INT_MAX,
             $limit
         ), ARRAY_A);
-        // phpcs:enable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+        // phpcs:enable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 
         return array_map([LogRow::class, 'fromDatabase'], is_array($rows) ? $rows : []);
     }
@@ -199,13 +198,14 @@ class ImportLog
             $args[] = $outcome;
         }
 
-        // phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare, WordPress.DB.PreparedSQLPlaceholders.ReplacementsWrongNumber
+        // $where holds only placeholders.
+        // phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare, WordPress.DB.PreparedSQLPlaceholders.ReplacementsWrongNumber, PluginCheck.Security.DirectDB.UnescapedDBParameter
         $total = (int) $wpdb->get_var($wpdb->prepare("SELECT COUNT(*) FROM %i WHERE {$where}", $args));
         $rows = $wpdb->get_results($wpdb->prepare(
             "SELECT * FROM %i WHERE {$where} ORDER BY id ASC LIMIT %d OFFSET %d",
             array_merge($args, [$perPage, max(0, $page - 1) * $perPage])
         ), ARRAY_A);
-        // phpcs:enable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare, WordPress.DB.PreparedSQLPlaceholders.ReplacementsWrongNumber
+        // phpcs:enable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare, WordPress.DB.PreparedSQLPlaceholders.ReplacementsWrongNumber, PluginCheck.Security.DirectDB.UnescapedDBParameter
 
         return ['rows' => array_map([LogRow::class, 'fromDatabase'], is_array($rows) ? $rows : []), 'total' => $total];
     }
