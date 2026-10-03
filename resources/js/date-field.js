@@ -10,8 +10,10 @@
  * validation hooks.
  *
  * Attributes read from the input:
- *   data-persian-kit-date-format   'Y-m-d' (default), 'Ymd', or 'Y-m-d H:i:s',
- *                                  which adds a time field
+ *   data-persian-kit-date-format   'Y-m-d' (default), 'Ymd', 'Y-m-d H:i:s',
+ *                                  which adds a time field, or day, month and
+ *                                  year in any order with -, / or . between
+ *                                  them, such as 'd/m/Y' (Forminator)
  *   data-persian-kit-date-type     'date' (default), 'range', 'multiple',
  *                                  'month' or 'year'; types other than 'date'
  *                                  submit the picker's own value unchanged
@@ -47,6 +49,12 @@
         'Y-m-d H:i:s': { pattern: /^(\d{4})-(\d{2})-(\d{2})[ T](\d{2}):(\d{2})(?::(\d{2}))?$/, time: true },
     };
 
+    /** Day, month and year in any order, such as d/m/Y or m.d.Y. */
+    var ORDERED = /^([dmY])([-\/.])([dmY])\2([dmY])$/;
+
+    /** Set on the input: the value it was rendered with, for copies of it. */
+    var INITIAL = 'data-persian-kit-date-initial';
+
     var config = window.persianKitDateField || {};
     var labels = config.labels || {};
 
@@ -65,6 +73,67 @@
     }
 
     /**
+     * How a format is read and written, or null when it is not one the
+     * field knows.
+     *
+     * @return {{pattern?: RegExp, order?: string[], separator?: string, time: boolean}|null}
+     */
+    function spec(format) {
+        if (Object.prototype.hasOwnProperty.call(FORMATS, format)) {
+            return FORMATS[format];
+        }
+
+        var match = ORDERED.exec(format || '');
+        if (!match || match[1] === match[3] || match[1] === match[4] || match[3] === match[4]) {
+            return null;
+        }
+
+        return { order: [match[1], match[3], match[4]], separator: match[2], time: false };
+    }
+
+    function pad(number) {
+        return ('0' + number).slice(-2);
+    }
+
+    /**
+     * The year, month, day and HH:MM time of a value, as written in the
+     * format. In a day-month-year format, a date written year first (as the
+     * picker shows it) and any of the three separators are read too.
+     *
+     * @return {{year: string, month: string, day: string, time: string}|null}
+     */
+    function readParts(text, format) {
+        var match;
+
+        if (!format.order) {
+            match = format.pattern.exec(text) || format.pattern.exec(text.replace(/\//g, '-'));
+            return match ? {
+                year: match[1],
+                month: match[2],
+                day: match[3],
+                time: match[4] ? match[4] + ':' + match[5] : '',
+            } : null;
+        }
+
+        match = /^(\d{1,4})[-\/.](\d{1,4})[-\/.](\d{1,4})$/.exec(text);
+        if (!match) {
+            return null;
+        }
+
+        var order = match[1].length === 4 ? ['Y', 'm', 'd'] : format.order;
+        var found = {};
+        order.forEach(function (token, index) {
+            found[token] = match[index + 1];
+        });
+
+        if (found.Y.length !== 4 || found.m.length > 2 || found.d.length > 2) {
+            return null;
+        }
+
+        return { year: found.Y, month: pad(found.m), day: pad(found.d), time: '' };
+    }
+
+    /**
      * A field value in the given format as an ISO date and an HH:MM time.
      * A Jalali date (years 1200 to 1600) is converted.
      *
@@ -72,17 +141,16 @@
      */
     function parse(value, format) {
         var text = toAsciiDigits(value || '').trim();
-        var pattern = FORMATS[format].pattern;
-        var match = pattern.exec(text) || pattern.exec(text.replace(/\//g, '-'));
-        if (!match) {
+        var parts = readParts(text, spec(format) || FORMATS['Y-m-d']);
+        if (!parts) {
             return null;
         }
 
-        var date = match[1] + '-' + match[2] + '-' + match[3];
-        var year = Number(match[1]);
+        var date = parts.year + '-' + parts.month + '-' + parts.day;
+        var year = Number(parts.year);
         if (year >= JALALI_YEARS[0] && year <= JALALI_YEARS[1]) {
             var calendar = window.PersianKitCalendar;
-            date = calendar ? calendar.jalaliToIso(year, Number(match[2]), Number(match[3])) : null;
+            date = calendar ? calendar.jalaliToIso(year, Number(parts.month), Number(parts.day)) : null;
             if (!date) {
                 return null;
             }
@@ -90,12 +158,22 @@
 
         return {
             date: date,
-            time: match[4] ? match[4] + ':' + match[5] : '',
+            time: parts.time,
         };
     }
 
     /** An ISO date and an optional HH:MM[:SS] time in the field's format. */
     function serialize(date, time, format) {
+        var ordered = spec(format);
+        if (ordered && ordered.order) {
+            var parts = date.split('-');
+            var values = { Y: parts[0], m: parts[1], d: parts[2] };
+
+            return ordered.order.map(function (token) {
+                return values[token];
+            }).join(ordered.separator);
+        }
+
         if (format === 'Ymd') {
             return date.replace(/-/g, '');
         }
@@ -118,16 +196,27 @@
         }
 
         // A copy of an upgraded field (an ACF repeater row cloned from its
-        // template) brings the copied picker along, unconnected.
+        // template, a Forminator group row) brings the copied picker along,
+        // unconnected, and the copied field's current value: a hidden
+        // input's value is its value attribute. The copy starts from the
+        // value the field was rendered with, as the inputs beside it do.
         var previous = input.previousElementSibling;
+        var copiedId = '';
         if (previous && previous.classList.contains('persian-kit-date-field')) {
+            var copiedPicker = previous.querySelector('intl-datepicker');
+            copiedId = copiedPicker ? copiedPicker.id : '';
             previous.remove();
+
+            if (input.hasAttribute(INITIAL)) {
+                input.value = input.getAttribute(INITIAL);
+            }
         }
 
         var type = option(input, 'type') || 'date';
-        var format = FORMATS[option(input, 'format')] ? option(input, 'format') : 'Y-m-d';
-        var withTime = type === 'date' && FORMATS[format].time;
+        var format = spec(option(input, 'format')) ? option(input, 'format') : 'Y-m-d';
+        var withTime = type === 'date' && spec(format).time;
         var initial = input.value;
+        input.setAttribute(INITIAL, initial);
 
         var wrapper = document.createElement('span');
         wrapper.className = 'persian-kit-date-field';
@@ -173,11 +262,13 @@
 
         // Labels pointing at the input name and focus the picker instead;
         // the input keeps its id for scripts that read the value by id.
-        // Read by id: a hidden input (ACF's) has no labels.
+        // Read by id: a hidden input (ACF's) has no labels. A copied row's
+        // label may point at the copied picker, renamed with the row.
         if (input.id) {
             picker.id = input.id + '-picker';
+            var relinkCopied = copiedId !== '' && !document.getElementById(copiedId);
             Array.prototype.forEach.call(document.querySelectorAll('label[for]'), function (label) {
-                if (label.htmlFor === input.id) {
+                if (label.htmlFor === input.id || (relinkCopied && label.htmlFor === copiedId)) {
                     label.htmlFor = picker.id;
                 }
             });

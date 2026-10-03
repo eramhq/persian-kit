@@ -259,6 +259,55 @@ if (!class_exists('WPCF7_Submission')) {
     }
 }
 
+if (!class_exists('Forminator_Mail')) {
+    /**
+     * Forminator's mail base; tests say whether an email is being written.
+     */
+    abstract class Forminator_Mail
+    {
+        public static bool $writing = false;
+
+        public static function is_email_context(): bool
+        {
+            return self::$writing;
+        }
+    }
+}
+
+if (!class_exists('Forminator_Front_Action')) {
+    /**
+     * Forminator's submission state; tests set the form and data being sent.
+     */
+    abstract class Forminator_Front_Action
+    {
+        /** @var mixed */
+        public static $prepared_data = [];
+
+        /** @var mixed */
+        public static $module_object;
+    }
+
+    class Forminator_CForm_Front_Action extends Forminator_Front_Action
+    {
+    }
+}
+
+if (!class_exists('Forminator_Base_Form_Model')) {
+    /**
+     * Forminator's form models; tests register them by id.
+     */
+    class Forminator_Base_Form_Model
+    {
+        /** @var array<int, object> */
+        public static array $models = [];
+
+        public static function get_model(int $id): object|false
+        {
+            return self::$models[$id] ?? false;
+        }
+    }
+}
+
 if (!class_exists('WC_Data')) {
     /**
      * Meta data and props of WooCommerce objects; get_<prop>() reads $props.

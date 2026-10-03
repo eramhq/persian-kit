@@ -154,10 +154,22 @@ class DatePickerTest extends TestCase
         ]));
     }
 
+    public function test_day_month_year_formats_in_any_order(): void
+    {
+        foreach (['d/m/Y', 'm.d.Y', 'Y/m/d', 'd-m-Y'] as $format) {
+            $this->assertTrue(DatePicker::isFormat($format), $format);
+            $this->assertSame($format, DatePicker::attributes(['format' => $format])['data-persian-kit-date-format'] ?? null, $format);
+        }
+
+        foreach (['d/m/y', 'd/d/Y', 'd/m-Y', 'dmY', 'D, d M Y', 'Y-m-d H:i'] as $format) {
+            $this->assertFalse(DatePicker::isFormat($format), $format);
+        }
+    }
+
     public function test_attributes_skip_unknown_options(): void
     {
         $this->assertSame(['data-persian-kit-date' => ''], DatePicker::attributes([
-            'format'       => 'd/m/Y',
+            'format'       => 'd/m/y',
             'type'         => 'week',
             'min'          => 'yesterday',
             'disable_past' => false,

@@ -54,6 +54,7 @@ class AdminPage
         'woocommerce'        => 'cart',
         'cf7'                => 'form',
         'acf'                => 'fields',
+        'forminator'         => 'form',
         'yoast'              => 'search',
         'rank_math'          => 'search',
         'wpml'               => 'globe',

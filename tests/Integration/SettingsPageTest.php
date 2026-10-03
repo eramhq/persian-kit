@@ -13,6 +13,7 @@ use PersianKit\Contracts\ModuleInterface;
 use PersianKit\Core\SettingsManager;
 use PersianKit\Modules\Forms\AcfModule;
 use PersianKit\Modules\Forms\Cf7Module;
+use PersianKit\Modules\Forms\ForminatorModule;
 use PersianKit\Modules\Multilingual\PolylangModule;
 use PersianKit\Modules\Multilingual\WpmlModule;
 use PersianKit\Modules\Seo\RankMathModule;
@@ -88,6 +89,10 @@ class SettingsPageTest extends WordPressIntegrationTestCase
         'acf' => [
             ['persian_kit_settings[acf][enabled]', 'hidden', '0', false],
             ['persian_kit_settings[acf][enabled]', 'checkbox', '1', true],
+        ],
+        'forminator' => [
+            ['persian_kit_settings[forminator][enabled]', 'hidden', '0', false],
+            ['persian_kit_settings[forminator][enabled]', 'checkbox', '1', true],
         ],
     ];
 
@@ -200,7 +205,7 @@ class SettingsPageTest extends WordPressIntegrationTestCase
     {
         $xpath = $this->render();
 
-        $tabs = AdminPage::GROUPS + ['woocommerce' => 'woocommerce', 'cf7' => 'integrations', 'acf' => 'integrations'];
+        $tabs = AdminPage::GROUPS + ['woocommerce' => 'woocommerce', 'cf7' => 'integrations', 'acf' => 'integrations', 'forminator' => 'integrations'];
         foreach ($tabs as $moduleKey => $tab) {
             if (!$this->module($moduleKey)->isAvailable()) {
                 continue;
@@ -412,6 +417,7 @@ class SettingsPageTest extends WordPressIntegrationTestCase
             'woocommerce' => $this->withPlugin(WooCommerceModule::class, false),
             'cf7'         => $this->withPlugin(Cf7Module::class, false),
             'acf'         => $this->withPlugin(AcfModule::class, false),
+            'forminator'  => $this->withPlugin(ForminatorModule::class, false),
             'yoast'       => $this->withPlugin(YoastModule::class, false),
             'rank_math'   => $this->withPlugin(RankMathModule::class, false),
             'wpml'        => $this->withPlugin(WpmlModule::class, false),
@@ -422,7 +428,7 @@ class SettingsPageTest extends WordPressIntegrationTestCase
             'None of the supported plugins are active on this site.',
             trim($xpath->evaluate('string(//*[@id="persian-kit-panel-integrations"]//*[contains(@class, "persian-kit-empty__title")])'))
         );
-        $this->assertSame(7, $xpath->query('//*[@id="persian-kit-group-also"]/following-sibling::ul/li')->length);
+        $this->assertSame(8, $xpath->query('//*[@id="persian-kit-group-also"]/following-sibling::ul/li')->length);
     }
 
     public function test_turning_off_an_integration_warns_about_the_forms_that_use_it(): void
@@ -572,6 +578,9 @@ class SettingsPageTest extends WordPressIntegrationTestCase
                 use FakesPluginState;
             },
             AcfModule::class => new class ($settings) extends AcfModule {
+                use FakesPluginState;
+            },
+            ForminatorModule::class => new class ($settings) extends ForminatorModule {
                 use FakesPluginState;
             },
             YoastModule::class => new class ($settings) extends YoastModule {
