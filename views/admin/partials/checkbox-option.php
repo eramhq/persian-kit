@@ -8,6 +8,7 @@
  * @var string $help       One line under the label, or ''.
  * @var bool   $warning    Shows the help line as a warning.
  * @var bool   $checked    Whether the option is on.
+ * @var string $model      An Alpine property the box is bound to, or ''.
  */
 
 defined('ABSPATH') || exit;
@@ -18,6 +19,7 @@ defined('ABSPATH') || exit;
 $moduleKey = $args['moduleKey'];
 $settingKey = $args['settingKey'];
 $help = $args['help'] ?? '';
+$model = $args['model'] ?? '';
 $name = 'persian_kit_settings[' . $moduleKey . '][' . $settingKey . ']';
 $helpId = 'persian-kit-' . $moduleKey . '-' . $settingKey . '-help';
 ?>
@@ -31,6 +33,9 @@ $helpId = 'persian-kit-' . $moduleKey . '-' . $settingKey . '-help';
             value="1"
             <?php if ($help !== '') : ?>
                 aria-describedby="<?php echo esc_attr($helpId); ?>"
+            <?php endif; ?>
+            <?php if ($model !== '') : ?>
+                x-model="<?php echo esc_attr($model); ?>"
             <?php endif; ?>
             <?php checked(!empty($args['checked'])); ?>
         >

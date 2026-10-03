@@ -735,6 +735,27 @@ a.persian-kit-version:focus {
     padding-inline-start: 0;
 }
 
+/* A text field sits under its label, lined up past the checkbox above it. */
+.persian-kit-option--text {
+    justify-items: start;
+    gap: 4px;
+    padding-inline-start: 24px;
+}
+
+.persian-kit-option--text input[type="text"] {
+    width: 100%;
+    max-width: 25em;
+}
+
+.persian-kit-option--text .persian-kit-option__help {
+    padding-inline-start: 0;
+}
+
+/* A phone number or address reads left to right, lined up with the label. */
+.rtl .persian-kit-option--text input[dir="ltr"] {
+    text-align: right;
+}
+
 /* Provinces: two radios, then a grid of checkboxes that reads down the columns. */
 .persian-kit-option--provinces {
     gap: 6px;

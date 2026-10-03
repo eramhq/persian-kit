@@ -2,6 +2,7 @@
 
 namespace PersianKit\Tests\Integration;
 
+use PersianKit\Modules\WooCommerce\CallForPrice;
 use PersianKit\Tests\Integration\Support\ReadsSeoOutput;
 use PersianKit\Tests\Integration\Support\WordPressIntegrationTestCase;
 
@@ -70,6 +71,35 @@ class RankMathCompatTest extends WordPressIntegrationTestCase
 
         $this->assertSame(['120'], $this->meta($html, 'product:price:amount'));
         $this->assertSame(['IRHT'], $this->meta($html, 'product:price:currency'));
+    }
+
+    public function test_a_product_without_a_price_gets_no_price_of_0(): void
+    {
+        if (!class_exists('WooCommerce')) {
+            $this->markTestSkipped('WooCommerce is not loaded.');
+        }
+
+        $product = new \WC_Product_Simple();
+        $product->set_name('Tea');
+        $product->save();
+        (new CallForPrice('Ask us', '', ''))->register();
+        $settings = get_option('rank-math-options-titles', []);
+        update_option('rank-math-options-titles', array_replace(is_array($settings) ? $settings : [], ['pt_product_slack_enhanced_sharing' => 'on']));
+        // Rank Math keeps its settings, and the product of its Open Graph
+        // tags, for the request.
+        rank_math()->settings->reset();
+        foreach ($GLOBALS['wp_filter']['rank_math/opengraph/facebook']->callbacks[50] ?? [] as $callback) {
+            if (is_array($callback['function']) && $callback['function'][0] instanceof \RankMath\WooCommerce\Opengraph) {
+                \Closure::bind(fn () => $this->product = null, $callback['function'][0], \RankMath\WooCommerce\Base::class)();
+            }
+        }
+
+        $html = $this->head(get_permalink($product->get_id()));
+
+        $this->assertSame([], $this->meta($html, 'product:price:amount'));
+        $this->assertNotContains('0', $this->valuesOf($this->jsonLd($html, 'rank-math-schema'), ['price']));
+        $this->assertSame(1, preg_match('#<meta name="twitter:label\d+" content="Price" />\s*<meta name="twitter:data\d+" content="([^"]*)" />#', $html, $match), 'the Slack preview has its price row');
+        $this->assertSame('Ask us', $match[1]);
     }
 
     public function test_sitemap_lastmod_is_gregorian(): void
