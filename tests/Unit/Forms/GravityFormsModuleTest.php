@@ -9,6 +9,7 @@ use PersianKit\Abstracts\AbstractModule;
 use PersianKit\Container\ServiceContainer;
 use PersianKit\Core\SettingsManager;
 use PersianKit\Modules\Forms\GravityFormsDateField;
+use PersianKit\Modules\Forms\GravityFormsEntryDates;
 use PersianKit\Modules\Forms\GravityFormsFieldUsage;
 use PersianKit\Modules\Forms\GravityFormsInputNormalizer;
 use PersianKit\Modules\Forms\GravityFormsIranianFields;
@@ -39,12 +40,28 @@ class GravityFormsModuleTest extends TestCase
 
     public function test_boot_registers_the_dates_the_digits_the_fields_and_the_usage_cache(): void
     {
+        Functions\when('is_admin')->justReturn(false);
+
         $this->assertSame([
             GravityFormsDateField::class . '::register',
             GravityFormsInputNormalizer::class . '::register',
             GravityFormsIranianFields::class . '::register',
             GravityFormsFieldUsage::class . '::register',
         ], $this->listCalls(fn (GravityFormsModule $module, ServiceContainer $container) => $module->boot($container)));
+    }
+
+    public function test_in_the_admin_entry_dates_are_jalali_while_date_conversion_is_on(): void
+    {
+        Functions\when('is_admin')->justReturn(true);
+
+        $this->assertContains(
+            GravityFormsEntryDates::class . '::register',
+            $this->listCalls(fn (GravityFormsModule $module, ServiceContainer $container) => $module->boot($container))
+        );
+        $this->assertNotContains(
+            GravityFormsEntryDates::class . '::register',
+            $this->listCalls(fn (GravityFormsModule $module, ServiceContainer $container) => $module->boot($container), false)
+        );
     }
 
     public function test_turned_off_the_iranian_fields_stay_and_the_usage_list_stays_current(): void
@@ -131,7 +148,7 @@ class GravityFormsModuleTest extends TestCase
      * @param callable(GravityFormsModule, ServiceContainer): void $boot
      * @return list<string> Service::method calls, in order.
      */
-    protected function listCalls(callable $boot): array
+    protected function listCalls(callable $boot, bool $dateConversion = true): array
     {
         $calls = [];
         $container = Mockery::mock(ServiceContainer::class);
@@ -146,7 +163,7 @@ class GravityFormsModuleTest extends TestCase
             return $service;
         });
 
-        $boot($this->makeModule(), $container);
+        $boot($this->makeModule($dateConversion), $container);
 
         return $calls;
     }

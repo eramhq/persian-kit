@@ -67,6 +67,9 @@ class GravityFormsModule extends AbstractModule
         $container->register(GravityFormsInputNormalizer::class, function () {
             return new GravityFormsInputNormalizer();
         });
+        $container->register(GravityFormsEntryDates::class, function () {
+            return new GravityFormsEntryDates();
+        });
         $container->register(GravityFormsIranianFields::class, function () {
             return new GravityFormsIranianFields();
         });
@@ -85,6 +88,11 @@ class GravityFormsModule extends AbstractModule
         $container->get(GravityFormsInputNormalizer::class)->register();
         $container->get(GravityFormsIranianFields::class)->register();
         $container->get(GravityFormsFieldUsage::class)->register();
+
+        // Submitted on, updated and note dates.
+        if ($this->showsJalaliDates() && is_admin()) {
+            $container->get(GravityFormsEntryDates::class)->register();
+        }
     }
 
     /**
