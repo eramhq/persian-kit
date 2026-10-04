@@ -24,8 +24,9 @@ defined('ABSPATH') || exit;
  * Gravity Forms reads the submission from $_POST again and again (to check
  * it, in the Number field's own check, to save it), so the values are fixed
  * there, before it starts: when a form is sent from the page or over AJAX,
- * through GFAPI::submit_form(), saved to continue later, and checked with
- * GFAPI::validate_form(). Running twice changes nothing. Other text keeps
+ * through GFAPI::submit_form(), saved to continue later, checked with
+ * GFAPI::validate_form(), and when an entry is edited on its page in the
+ * admin. Running twice changes nothing. Other text keeps
  * its digits, and the inputs Gravity Forms checks against what it printed
  * (choices, hidden fields, product names and prices) are left alone, or it
  * would report them as changed.
@@ -65,6 +66,7 @@ class GravityFormsInputNormalizer
     {
         add_filter('gform_pre_process', [$this, 'normalizeSubmission']);
         add_filter('gform_pre_validation', [$this, 'normalizeSubmission']);
+        add_action('gform_pre_entry_detail', [$this, 'normalizeEntryUpdate']);
         add_filter('gform_field_validation', [$this, 'rejectInvalidDate'], 10, 4);
         add_action('gform_enqueue_scripts', [$this, 'enqueue']);
     }
@@ -83,6 +85,19 @@ class GravityFormsInputNormalizer
         }
 
         return $form;
+    }
+
+    /**
+     * An entry edited on its page: Gravity Forms saves $_POST after this,
+     * once it has checked the nonce, without checking the values.
+     *
+     * @param mixed $form
+     */
+    public function normalizeEntryUpdate($form): void
+    {
+        if (isset($_POST['action']) && sanitize_key(wp_unslash($_POST['action'])) === 'update') { // phpcs:ignore WordPress.Security.NonceVerification.Missing
+            $this->normalizeSubmission($form);
+        }
     }
 
     /**

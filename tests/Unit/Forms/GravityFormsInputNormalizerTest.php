@@ -32,6 +32,7 @@ class GravityFormsInputNormalizerTest extends TestCase
 
         $this->assertNotFalse(has_filter('gform_pre_process', [$normalizer, 'normalizeSubmission']));
         $this->assertNotFalse(has_filter('gform_pre_validation', [$normalizer, 'normalizeSubmission']));
+        $this->assertNotFalse(has_action('gform_pre_entry_detail', [$normalizer, 'normalizeEntryUpdate']));
         $this->assertNotFalse(has_filter('gform_field_validation', [$normalizer, 'rejectInvalidDate']));
         $this->assertNotFalse(has_action('gform_enqueue_scripts', [$normalizer, 'enqueue']));
     }
@@ -185,6 +186,25 @@ class GravityFormsInputNormalizerTest extends TestCase
 
         $this->assertSame($form, (new GravityFormsInputNormalizer())->normalizeSubmission($form));
         $this->assertSame('09121234567', $_POST['input_1']);
+    }
+
+    public function test_an_entry_edited_in_the_admin_is_fixed_before_it_is_saved(): void
+    {
+        Functions\when('wp_unslash')->returnArg();
+        Functions\when('sanitize_key')->alias(fn ($key) => strtolower((string) $key));
+        $form = $this->form([['id' => 1, 'type' => 'date', 'dateType' => 'datefield', 'dateFormat' => 'ymd_slash']]);
+        $normalizer = new GravityFormsInputNormalizer();
+
+        // Showing the entry changes nothing.
+        $_POST = ['input_1' => ['1405', '7', '12']];
+        $normalizer->normalizeEntryUpdate($form);
+        $this->assertSame(['1405', '7', '12'], $_POST['input_1']);
+
+        $_POST['action'] = 'update';
+        $normalizer->normalizeEntryUpdate($form);
+        $this->assertSame(['2026', '10', '4'], $_POST['input_1']);
+
+        $_POST = [];
     }
 
     public function test_the_digit_script_is_loaded_with_forms_that_have_such_fields(): void
