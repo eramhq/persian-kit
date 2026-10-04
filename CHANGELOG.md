@@ -4,6 +4,14 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### WooCommerce Analytics
+
+- WooCommerce › Dates › "Jalali dates in WooCommerce Analytics", on by default: Analytics and the WooCommerce home use the Jalali calendar for admins whose language is Persian. "Last month" is 1 to 31 Shahrivar, quarters are Jalali seasons, years start on 1 Farvardin, and "previous year" goes back one Jalali year. Dates in tables, chart axes and tooltips are Jalali; links and saved data stay Gregorian (#29).
+- Bars by month, season or year hold whole Jalali months, seasons and years, with WooCommerce's own totals for each, so unique customers and averages stay right. Reports extensions add through WooCommerce's stats endpoints are covered; `persian_kit_analytics_jalali_intervals` opts one out.
+- Custom ranges are picked on a Jalali calendar.
+- CSV exports, from the browser or emailed, keep the Gregorian date and add a Jalali date column after it.
+- The switch from Parsi Date imports its "Jalali dates in Analytics" setting.
+
 ### Requirements
 
 - Persian Kit now needs WordPress 6.8 and WooCommerce 9.9 or newer, and is tested on both and on the latest releases. With an older WooCommerce, its WooCommerce features are off and the Integrations tab says why.

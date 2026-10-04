@@ -275,6 +275,13 @@ $sectionStart('emails', sprintf(
                 'help'       => __('Order, product and coupon dates, and the month filter on the orders list.', 'persian-kit'),
                 'checked'    => !empty($moduleSettings['dates_admin']),
             ]);
+            View::load('admin/partials/checkbox-option', [
+                'moduleKey'  => 'woocommerce',
+                'settingKey' => 'dates_analytics',
+                'label'      => __('Jalali dates in WooCommerce Analytics', 'persian-kit'),
+                'help'       => __('Date ranges, charts and tables in Jalali; monthly, seasonal and yearly figures cover whole Jalali months, seasons and years. CSV exports add a Jalali date column.', 'persian-kit'),
+                'checked'    => !empty($moduleSettings['dates_analytics']),
+            ]);
             ?>
         </ul>
     </div>

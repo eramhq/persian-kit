@@ -686,6 +686,16 @@ add_filter('persian_kit_woocommerce_cities', function (array $cities) {
 });
 ```
 
+### `persian_kit_analytics_jalali_intervals`
+
+Return `false` to keep a stats endpoint's months, quarters and years Gregorian under [Jalali dates in WooCommerce Analytics](#woocommerce-analytics). It runs for each `/wc-analytics/…/stats` request that asks for Jalali periods, with the route and the `WP_REST_Request`. An endpoint whose intervals are not dates of orders would opt out.
+
+```php
+add_filter('persian_kit_analytics_jalali_intervals', function (bool $enabled, string $route) {
+    return $route === '/wc-analytics/reports/my-report/stats' ? false : $enabled;
+}, 10, 2);
+```
+
 ### `persian_kit_schema_rial_prices`
 
 Return `false` to keep the store's own currency in structured data instead of rials. `$currency` is the node's currency code: `IRT`, `IRHT` or `IRHR`. See [WooCommerce Prices](#woocommerce-prices).
@@ -838,11 +848,24 @@ WooCommerce › Emails › "Persian font in emails" (`email_font`, on by default
 
 [`persian_kit_email_font_family`](#persian_kit_email_font_family) changes the stack.
 
+## WooCommerce Analytics
+
+WooCommerce › Dates › "Jalali dates in WooCommerce Analytics" (`dates_analytics`, on by default) puts WooCommerce Analytics and the WooCommerce home in the Jalali calendar, for admins whose language is Persian (see [Multilingual Sites](#multilingual-sites)). Saved data stays Gregorian, and the URLs keep WooCommerce's keys (`period=last_month`, `after=2026-03-13`), so a bookmark or the "Default date range" setting shows the Jalali period of the day it is opened. Digits are English, as in the rest of the admin.
+
+- **Periods.** The date range picker's presets are Jalali: "Last month" is 1 to 31 Shahrivar, a quarter is a Jalali season (spring, بهار, starts on 1 Farvardin), and a year starts on 1 Farvardin. Days start in the store's time zone, not the browser's, and weeks on the site's first day of the week (Settings › General). "Previous year" goes back one Jalali year, so 30 Esfand of a leap year compares with 29 Esfand; "previous period" of a whole month, season or year is the one before it, and of a part of one (month to date) the same days of the one before. The range labels read `1 - 31 شهریور 1405`. WooCommerce's `window.wc.date` is replaced with a Jalali one before the screens read it, so the presets also apply to the leaderboards, the WooCommerce home and reports extensions add with WooCommerce's date filter.
+- **Custom ranges** are picked on a Jalali calendar in place of WooCommerce's Gregorian one. It writes the days into WooCommerce's own start and end fields, which it hides.
+- **Dates on screen.** Table dates (in the site's date format), chart axes and tooltips are Jalali: `wp.date` is wrapped on these pages. Formats machines read stay Gregorian, such as `Ymd` in the link from the Revenue table to that day's orders.
+- **Bars by month, season and year** hold whole Jalali months, seasons and years: a stats request by `month`, `quarter` or `year` carries `persian_kit_calendar=jalali`, and each Jalali period on the requested page is asked of the same endpoint with its own `after` and `before` (`rest_dispatch_request`). Each period's numbers are WooCommerce's own, with its filters, segments and cache, so unique customers and averages stay right; the first and last periods are cut to the range. Any `/wc-analytics/…/stats` route that replies with `totals` and `intervals` is covered, extensions included; [`persian_kit_analytics_jalali_intervals`](#persian_kit_analytics_jalali_intervals) opts one out. A daily chart over many months places its ticks where Gregorian months begin, with Jalali labels.
+- **CSV exports** keep the Gregorian date and add a column after it, such as "Date (Jalali)", with `1404/07/09`. Files built in the browser find date columns by their values. Exports WooCommerce writes on the server and emails know them by name (`date`, `date_*`, `*_date`, `registered`, `last_active`, `created`, `expires`), for every report type in `woocommerce_export_report_controller_map`; these follow the site's language, as they run later from Action Scheduler.
+- **If WooCommerce changes** `wc.date` so that a function Persian Kit reads is missing, nothing is replaced and Analytics stays Gregorian.
+
+Not covered: an extension that bundles its own copy of WooCommerce's date package keeps Gregorian presets (its dates on screen are still Jalali), and the "Date" rule in a report's advanced filters keeps WooCommerce's Gregorian picker.
+
 ## Integrations
 
 An integration is a module that works with another plugin: WooCommerce (`woocommerce`), Contact Form 7 (`cf7`), ACF (`acf`), Forminator (`forminator`), Yoast SEO (`yoast`), Rank Math (`rank_math`), WPML (`wpml`) and Polylang (`polylang`). Each turns on by itself when its plugin is active, and does nothing while it is not. The plugin is checked when the page loads, by its classes, functions and constants, so a network-activated plugin counts on every site.
 
-- WooCommerce has its own tab on the settings page, shown only while WooCommerce is active, with a card for each section: Checkout and addresses, Prices and currency, Emails, Dates. `?tab=woocommerce#checkout` (`#prices`, `#emails`, `#dates`) links to one. While WooCommerce is inactive, `?tab=woocommerce` opens the first tab. Under Dates, `dates_admin` turns the Jalali date pickers on the order, product and coupon screens, and the month filter on the orders list, on or off; dates on orders and in emails follow the Jalali dates module.
+- WooCommerce has its own tab on the settings page, shown only while WooCommerce is active, with a card for each section: Checkout and addresses, Prices and currency, Emails, Dates. `?tab=woocommerce#checkout` (`#prices`, `#emails`, `#dates`) links to one. While WooCommerce is inactive, `?tab=woocommerce` opens the first tab. Under Dates, `dates_admin` turns the Jalali date pickers on the order, product and coupon screens, and the month filter on the orders list, on or off, and `dates_analytics` the Jalali calendar in [WooCommerce Analytics](#woocommerce-analytics); dates on orders and in emails follow the Jalali dates module.
 - The Integrations tab has a card for each other integration, grouped as Forms, Store and Compatibility. A plugin that is active but too old, or that needs an add-on (such as a Pro version), has a card that says why, with its switch disabled.
 - Plugins that are not active are listed under "Also works with", each with a link to its WordPress.org page, or to its website when it is not on WordPress.org (WPML). One that was set up on this site before says its settings are kept: stored settings stay until the plugin is active again.
 - A card is marked New until the Integrations or WooCommerce tab is opened once after its plugin was activated. The keys of the integrations that have been seen are stored per site in the `persian_kit_seen_integrations` option.
@@ -1006,7 +1029,7 @@ The settings page (the Persian Kit menu) has five tabs: Display and Writing hold
 | `char_normalization` | Writing > Persian ی and ک | `enabled` (on), `normalize_on_save` (off), `teh_marbuta` (off), `half_space_fix` (off) |
 | `zwnj_editor` | Writing > Half-space key | `enabled` (on) |
 | `utilities` | Writing > Persian slugs | `enabled` (on), `persian_slugs` (on) |
-| `woocommerce` | WooCommerce | `enabled` (on), `checkout_normalize` (on), `checkout_validate` (on), `national_id` (`off`), `city_select` (off), `allowed_states` (`[]`, all provinces), `short_checkout` (off), `dates_admin` (on), `call_for_price` (off), `call_for_price_text`, `call_for_price_list_text`, `call_for_price_link` (`''`), `email_font` (on) |
+| `woocommerce` | WooCommerce | `enabled` (on), `checkout_normalize` (on), `checkout_validate` (on), `national_id` (`off`), `city_select` (off), `allowed_states` (`[]`, all provinces), `short_checkout` (off), `dates_admin` (on), `dates_analytics` (on), `call_for_price` (off), `call_for_price_text`, `call_for_price_list_text`, `call_for_price_link` (`''`), `email_font` (on) |
 | `cf7` | Integrations > Forms > Contact Form 7 | `enabled` (on) |
 | `acf` | Integrations > Forms > ACF | `enabled` (on) |
 | `forminator` | Integrations > Forms > Forminator | `enabled` (on) |

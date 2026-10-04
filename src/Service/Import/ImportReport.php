@@ -242,6 +242,7 @@ class ImportReport
             'woocommerce.allowed_states'           => __('Provinces you ship to', 'persian-kit'),
             'woocommerce.short_checkout'           => __('Shorter checkout when nothing needs shipping', 'persian-kit'),
             'woocommerce.dates_admin'              => __('Jalali dates in the shop admin', 'persian-kit'),
+            'woocommerce.dates_analytics'          => __('Jalali dates in WooCommerce Analytics', 'persian-kit'),
             'woocommerce.call_for_price'           => __('Text instead of an empty price', 'persian-kit'),
             'woocommerce.call_for_price_text'      => __('Text on the product page', 'persian-kit'),
             'woocommerce.call_for_price_list_text' => __('Text in the shop and other lists', 'persian-kit'),

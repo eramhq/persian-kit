@@ -30,7 +30,7 @@ Persian Kit is a modular WordPress plugin for Persian-language sites. It focuses
 * ZWNJ editor shortcuts for Classic Editor and Gutenberg
 * Persian slugs that keep Persian letters readable (can be turned off)
 * PHP validation and formatting helpers for common Iranian data
-* WooCommerce Jalali date support for supported screens (HPOS-compatible)
+* WooCommerce Jalali date support for supported screens (HPOS-compatible), and Jalali months, seasons and years in WooCommerce Analytics
 * WooCommerce checkout for Iran: Persian digits in phone numbers and postcodes are saved as English digits, Iranian phone numbers and postcodes are checked, an optional national ID (کد ملی) field, and optional city suggestions for each province that find a city however it is typed
 * Persian digits in the WooCommerce cart and checkout blocks' prices
 * Persian digits in WooCommerce emails: order numbers, prices, quantities and dates, while phone numbers, postcodes and links keep English digits (off until you turn it on)
@@ -126,6 +126,10 @@ Yes. Turn on Display > Persian digits > WooCommerce emails. Order numbers, price
 = Which font do Persian emails use? =
 
 WooCommerce's emails ask for Helvetica or Arial, fonts made for English, so Persian text was shown in whatever font the mail app picked. With "Persian font in emails" on (WooCommerce > Emails, on by default), emails in Persian use Tahoma, then Segoe UI on newer Windows, the iPhone's own Persian font and Noto Sans Arabic on Android. These are installed fonts, so nothing is downloaded and every mail app shows them. A font you picked under WooCommerce > Settings > Emails, or in the block email editor's styles, is kept, as are emails in other languages. On a right-to-left site, block emails read right to left too.
+
+= Does WooCommerce Analytics show Jalali dates? =
+
+Yes, with "Jalali dates in WooCommerce Analytics" on (WooCommerce > Dates, on by default). "Last month" is the last Jalali month, quarters are Jalali seasons (بهار, تابستان, پاییز, زمستان) and years start on 1 Farvardin, so you can read your sales by the periods you file VAT and income tax for. Bars by month, season or year hold whole Jalali months, not Gregorian ones with Jalali names. Custom ranges are picked on a Jalali calendar, dates in tables and charts are Jalali, and CSV exports keep the Gregorian date with a Jalali date column next to it. Your orders and reports are not changed: turn the option off and Analytics is Gregorian again.
 
 = Can I sell only to some provinces? =
 

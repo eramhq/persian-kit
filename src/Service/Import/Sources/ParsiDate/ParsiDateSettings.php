@@ -283,6 +283,16 @@ class ParsiDateSettings
         if ($this->on('woocommerce', 'fix_email_content_numbers')) {
             $rows[] = new SettingRow('fix_email_content_numbers', __('WooCommerce: Persian digits in emails', 'persian-kit'), SettingStatus::Same, __('Persian digits in WooCommerce emails', 'persian-kit'), ['digit_conversion.emails' => true]);
         }
+        if ($this->on('woocommerce', 'analytics_shamsi_date')) {
+            $rows[] = new SettingRow(
+                'analytics_shamsi_date',
+                __('WooCommerce: Jalali dates in Analytics', 'persian-kit'),
+                SettingStatus::Same,
+                __('Jalali dates in WooCommerce Analytics', 'persian-kit'),
+                ['woocommerce.dates_analytics' => true],
+                __('Monthly, seasonal and yearly figures also cover whole Jalali months, seasons and years.', 'persian-kit')
+            );
+        }
 
         return $rows;
     }
@@ -356,9 +366,6 @@ class ParsiDateSettings
         }
         if (is_string($this->value('core', 'hook_deactivator_list')) && trim((string) $this->value('core', 'hook_deactivator_list')) !== '') {
             $rows[] = $notYet('hook_deactivator_list', __('Hooks turned off by name', 'persian-kit'));
-        }
-        if ($this->on('woocommerce', 'analytics_shamsi_date')) {
-            $rows[] = $notYet('analytics_shamsi_date', __('WooCommerce: Jalali dates in Analytics', 'persian-kit'), $planned('#29'));
         }
         $noGateways = __('Persian Kit has no payment gateways. See "Before you deactivate".', 'persian-kit');
         foreach ($this->gateways() as $gateway) {

@@ -90,6 +90,8 @@ class SettingsPageTest extends WordPressIntegrationTestCase
             ['persian_kit_settings[woocommerce][email_font]', 'checkbox', '1', true],
             ['persian_kit_settings[woocommerce][dates_admin]', 'hidden', '0', false],
             ['persian_kit_settings[woocommerce][dates_admin]', 'checkbox', '1', true],
+            ['persian_kit_settings[woocommerce][dates_analytics]', 'hidden', '0', false],
+            ['persian_kit_settings[woocommerce][dates_analytics]', 'checkbox', '1', true],
         ],
         'cf7' => [
             ['persian_kit_settings[cf7][enabled]', 'hidden', '0', false],
