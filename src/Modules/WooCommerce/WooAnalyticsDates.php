@@ -18,8 +18,9 @@ class WooAnalyticsDates
 
     /** The scripts replaced, by handle, and the installer run right after each. */
     private const INSTALLERS = [
-        'wp-date' => 'installWpDate',
-        'wc-date' => 'installWcDate',
+        'wp-date'      => 'installWpDate',
+        'wp-api-fetch' => 'installApiFetch',
+        'wc-date'      => 'installWcDate',
     ];
 
     public function register(): void

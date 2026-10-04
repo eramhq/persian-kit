@@ -174,6 +174,9 @@ class WooCommerceModule extends AbstractModule
         $container->register(WooAnalyticsDates::class, function () {
             return new WooAnalyticsDates();
         });
+        $container->register(WooAnalyticsIntervals::class, function () {
+            return new WooAnalyticsIntervals();
+        });
         $container->register(CheckoutInputNormalizer::class, function () {
             return new CheckoutInputNormalizer();
         });
@@ -272,9 +275,13 @@ class WooCommerceModule extends AbstractModule
             $container->get(WooPostedDateNormalizer::class)->register();
         }
 
-        // Analytics and the WooCommerce home, for admins whose language is Persian.
-        if ($this->setting('dates_analytics') && is_admin() && ContentLanguage::displaysPersian()) {
-            $container->get(WooAnalyticsDates::class)->register();
+        if ($this->setting('dates_analytics')) {
+            // Analytics and the WooCommerce home, for admins whose language is Persian.
+            if (is_admin() && ContentLanguage::displaysPersian()) {
+                $container->get(WooAnalyticsDates::class)->register();
+            }
+            // Jalali periods, asked for by that script over the REST API.
+            $container->get(WooAnalyticsIntervals::class)->register();
         }
     }
 
