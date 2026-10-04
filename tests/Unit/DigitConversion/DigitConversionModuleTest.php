@@ -292,6 +292,7 @@ class DigitConversionModuleTest extends TestCase
         $module = $this->bootModule();
 
         $this->assertSame(99, has_filter('persian_kit_date_display', [$module, 'filterText']));
+        $this->assertSame(99, has_filter('persian_kit_gregorian_date_display', [$module, 'filterText']));
         $this->assertSame(99, has_filter('number_format_i18n', [$module, 'filterText']));
         $this->assertSame(99, has_filter('formatted_woocommerce_price', [$module, 'filterText']));
         $this->assertSame(99, has_filter('get_archives_link', [$module, 'filterArchivesLink']));
@@ -343,6 +344,7 @@ class DigitConversionModuleTest extends TestCase
         $this->bootModule(['dates' => false, 'numbers' => false, 'prices' => false]);
 
         $this->assertFalse(has_filter('persian_kit_date_display'));
+        $this->assertFalse(has_filter('persian_kit_gregorian_date_display'));
         $this->assertFalse(has_filter('number_format_i18n'));
         $this->assertFalse(has_filter('formatted_woocommerce_price'));
         $this->assertFalse(has_filter('get_archives_link'));

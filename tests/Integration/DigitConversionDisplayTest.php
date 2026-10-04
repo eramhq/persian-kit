@@ -150,6 +150,19 @@ class DigitConversionDisplayTest extends WordPressIntegrationTestCase
         $this->assertSame('Top 10', $title);
     }
 
+    public function test_the_gregorian_date_gets_the_digits_of_the_jalali_date(): void
+    {
+        update_option('timezone_string', 'Asia/Tehran');
+        $this->showGregorianToo();
+        $post = self::factory()->post->create([
+            'post_status'   => 'publish',
+            'post_date'     => '2026-10-02 10:30:00',
+            'post_date_gmt' => '2026-10-02 07:00:00',
+        ]);
+
+        $this->assertSame('۱۰ مهر ۱۴۰۵ (' . self::ltr('۲۰۲۶-۱۰-۰۲') . ')', get_the_date('j F Y', $post));
+    }
+
     private function bootDigits(): void
     {
         update_option(SettingsManager::OPTION_KEY, array_replace((array) get_option(SettingsManager::OPTION_KEY), [

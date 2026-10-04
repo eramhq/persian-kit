@@ -100,6 +100,7 @@ class DigitConversionModule extends AbstractModule
 
         if ($this->setting('dates')) {
             $this->registerFilter('persian_kit_date_display', [$this, 'filterText']);
+            $this->registerFilter('persian_kit_gregorian_date_display', [$this, 'filterText']);
         }
 
         if ($this->setting('numbers')) {

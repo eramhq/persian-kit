@@ -5,6 +5,7 @@ namespace PersianKit\Tests\Integration\Multilingual;
 use PersianKit\Container\ServiceContainer;
 use PersianKit\Core\SettingsManager;
 use PersianKit\Modules\DigitConversion\DigitConversionModule;
+use PersianKit\Tests\Integration\Support\BootsDateConversion;
 use PersianKit\Tests\Integration\Support\UsesPolylang;
 use PersianKit\Tests\Integration\Support\WordPressIntegrationTestCase;
 
@@ -15,6 +16,7 @@ use PersianKit\Tests\Integration\Support\WordPressIntegrationTestCase;
  */
 class PolylangDisplayTest extends WordPressIntegrationTestCase
 {
+    use BootsDateConversion;
     use UsesPolylang;
 
     public function set_up(): void
@@ -35,6 +37,17 @@ class PolylangDisplayTest extends WordPressIntegrationTestCase
 
         $this->useLanguage('en');
         $this->assertSame('2026/10/02', get_the_date('Y/m/d', $post));
+        $this->assertSame('2 October 2026', get_the_date('', $post));
+    }
+
+    public function test_the_gregorian_date_shows_only_next_to_jalali_dates(): void
+    {
+        $this->showGregorianToo();
+        $post = get_post($this->postIn('en', ['post_date' => '2026-10-02 10:00:00']));
+
+        $this->assertSame('10 مهر 1405 (' . self::ltr('2026-10-02') . ')', get_the_date('', $post));
+
+        $this->useLanguage('en');
         $this->assertSame('2 October 2026', get_the_date('', $post));
     }
 

@@ -2,10 +2,13 @@
 
 namespace PersianKit\Tests\Integration;
 
+use PersianKit\Tests\Integration\Support\BootsDateConversion;
 use PersianKit\Tests\Integration\Support\WordPressIntegrationTestCase;
 
 class DateConversionIntegrationTest extends WordPressIntegrationTestCase
 {
+    use BootsDateConversion;
+
     private int $adminId;
 
     protected function setUp(): void
@@ -200,5 +203,62 @@ class DateConversionIntegrationTest extends WordPressIntegrationTestCase
         $this->assertStringContainsString('datetime="2025-03-21T15:30:00+03:30"', $output);
         $this->assertStringContainsString('1404', $output);
         $this->assertStringNotContainsString('March 21, 2025', $output);
+    }
+
+    public function test_a_post_shows_the_gregorian_date_too_on_the_front_end(): void
+    {
+        update_option('timezone_string', 'Asia/Tehran');
+        update_option('date_format', 'j F Y');
+        $this->showGregorianToo();
+        $postId = $this->publishedPostOnOctober2();
+        $commentId = self::factory()->comment->create([
+            'comment_post_ID'  => $postId,
+            'comment_date'     => '2026-10-02 10:30:00',
+            'comment_date_gmt' => '2026-10-02 07:00:00',
+        ]);
+
+        $this->go_to(get_permalink($postId));
+        the_post();
+
+        $this->assertSame('10 مهر 1405 (' . self::ltr('2026-10-02') . ')', get_the_date());
+        $this->assertSame('10 مهر 1405 (' . self::ltr('2026-10-02') . ')', get_comment_date('', $commentId));
+        $this->assertSame('10:30', get_the_time('H:i'));
+        $this->assertSame('1405', get_the_date('Y'));
+
+        $block = (new \WP_Block(['blockName' => 'core/post-date', 'attrs' => []], ['postId' => $postId]))->render();
+        $this->assertStringContainsString('<time datetime="2026-10-02T10:30:00+03:30">10 مهر 1405 (' . self::ltr('2026-10-02') . ')</time>', $block);
+    }
+
+    public function test_the_gregorian_date_can_come_first_with_month_names(): void
+    {
+        update_option('timezone_string', 'Asia/Tehran');
+        $this->showGregorianToo('named', 'gregorian_first', 'dash');
+        $postId = $this->publishedPostOnOctober2();
+
+        $this->assertSame('2 اکتبر 2026 – 10 مهر 1405', get_the_date('j F Y', $postId));
+    }
+
+    public function test_feeds_and_rest_keep_one_date(): void
+    {
+        update_option('timezone_string', 'Asia/Tehran');
+        $this->showGregorianToo();
+        $postId = $this->publishedPostOnOctober2();
+
+        $response = rest_do_request(new \WP_REST_Request('GET', '/wp/v2/posts/' . $postId));
+        $this->assertSame('1405-07-10T10:30:00', $response->get_data()['date_jalali']);
+        $this->assertSame('2026-10-02T10:30:00', $response->get_data()['date']);
+
+        $this->go_to(get_feed_link('rss2'));
+        the_post();
+        $this->assertSame('October 2, 2026', get_the_date('F j, Y'));
+    }
+
+    private function publishedPostOnOctober2(): int
+    {
+        return self::factory()->post->create([
+            'post_status'   => 'publish',
+            'post_date'     => '2026-10-02 10:30:00',
+            'post_date_gmt' => '2026-10-02 07:00:00',
+        ]);
     }
 }

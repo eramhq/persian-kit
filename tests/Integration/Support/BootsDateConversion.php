@@ -5,6 +5,8 @@ namespace PersianKit\Tests\Integration\Support;
 use PersianKit\Bootstrap;
 use PersianKit\Core\SettingsManager;
 use PersianKit\Modules\DateConversion\DateConversionModule;
+use PersianKit\Modules\DateConversion\DateFilters;
+use PersianKit\Modules\DateConversion\GregorianCompanion;
 use PersianKit\Modules\DateConversion\JalaliArchiveList;
 use PersianKit\Modules\DateConversion\JalaliCalendar;
 
@@ -33,5 +35,34 @@ trait BootsDateConversion
         $settings->registerDefaults(DateConversionModule::key(), DateConversionModule::defaults());
 
         (new DateConversionModule($settings))->boot(Bootstrap::container());
+    }
+
+    /**
+     * Swap the plugin's date filters for ones with "Show the Gregorian date
+     * too" on. The container keeps the filters it built at load, so they are
+     * replaced here rather than booted again.
+     */
+    private function showGregorianToo(string $style = 'numeric', string $order = 'jalali_first', string $separator = 'parentheses'): void
+    {
+        foreach ($GLOBALS['wp_filter'] as $hook => $filter) {
+            foreach ($filter->callbacks as $priority => $callbacks) {
+                foreach ($callbacks as $callback) {
+                    if (is_array($callback['function']) && $callback['function'][0] instanceof DateFilters) {
+                        remove_filter($hook, $callback['function'], $priority);
+                    }
+                }
+            }
+        }
+
+        (new DateFilters(false, new GregorianCompanion(true, $style, $order, $separator)))->registerTier1();
+    }
+
+    /**
+     * A numeric Gregorian date as the page gets it: between invisible
+     * left-to-right isolate marks.
+     */
+    private static function ltr(string $date): string
+    {
+        return "\u{2066}" . $date . "\u{2069}";
     }
 }
