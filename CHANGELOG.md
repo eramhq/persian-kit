@@ -6,7 +6,7 @@ All notable changes to this project will be documented in this file.
 
 ### WooCommerce Analytics
 
-- WooCommerce › Dates › "Jalali dates in WooCommerce Analytics", on by default: Analytics and the WooCommerce home use the Jalali calendar for admins whose language is Persian. "Last month" is 1 to 31 Shahrivar, quarters are Jalali seasons, years start on 1 Farvardin, and "previous year" goes back one Jalali year. Dates in tables, chart axes and tooltips are Jalali; links and saved data stay Gregorian (#29).
+- WooCommerce › Dates › "Jalali dates in WooCommerce Analytics", on by default: Analytics and the WooCommerce home use the Jalali calendar for admins whose language is Persian. "Last month" is 1 to 31 Shahrivar, quarters are Jalali seasons, years start on 1 Farvardin, and "previous year" goes back one Jalali year; on daily charts, days after 30 Esfand of a leap year still pair with the same day a year before. Dates in tables, chart axes and tooltips are Jalali; links and saved data stay Gregorian (#29).
 - Bars by month, season or year hold whole Jalali months, seasons and years, with WooCommerce's own totals for each, so unique customers and averages stay right. Reports extensions add through WooCommerce's stats endpoints are covered; `persian_kit_analytics_jalali_intervals` opts one out.
 - Custom ranges, and the dates in a report's advanced filters, are picked on a Jalali calendar.
 - CSV exports, from the browser or emailed, keep the Gregorian date and add a Jalali date column after it.

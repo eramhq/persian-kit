@@ -15,7 +15,8 @@
  * Ymd in the link to the orders list, stay Gregorian.
  *
  * Stats requests by month, season or year carry a flag, and the server
- * groups them by Jalali period (WooAnalyticsIntervals.php).
+ * groups them by Jalali period (WooAnalyticsIntervals.php). Daily stats of
+ * the year before are lined up by Jalali day around 30 Esfand.
  *
  * "Custom" in the date range picker, and the date rules in a report's
  * advanced filters, show a Jalali calendar in place of the Gregorian one,
@@ -605,11 +606,153 @@
         }
 
         apiFetch.use(function (options, next) {
-            return next(isInstalled() ? withFlag(options) : options);
+            if (!isInstalled()) {
+                return next(options);
+            }
+
+            var primary = comparedYearOf(options);
+            var result = next(withFlag(options));
+
+            return primary && result && typeof result.then === 'function'
+                ? result.then(function (response) {
+                    return alignResponse(response, primary);
+                })
+                : result;
         });
         state.apiFetch = true;
 
         return true;
+    }
+
+    // --- Daily charts against the previous year: days line up by Jalali day -
+
+    /** The query parameters of a request path or URL. */
+    function queryOf(url) {
+        var query = {};
+        var search = String(url).split('#')[0].split('?')[1] || '';
+
+        new window.URLSearchParams(search).forEach(function (value, key) {
+            query[key] = value;
+        });
+
+        return query;
+    }
+
+    /**
+     * The chart pairs each day with the day at the same place in the year
+     * before. When only one of the two Jalali years has 30 Esfand, every day
+     * after it would pair with the wrong one. For the daily stats of the
+     * year before on this screen, the primary range, else null.
+     */
+    function comparedYearOf(options) {
+        var url = typeof options.path === 'string' ? options.path : (typeof options.url === 'string' ? options.url : '');
+        var params = queryOf(url);
+        var decoded = url;
+
+        try {
+            decoded = decodeURIComponent(url);
+        } catch (error) {
+            // Keep the raw value.
+        }
+        if (params.interval !== 'day' || !params.after || !params.before || !/\/wc-analytics\/[^?&#]+\/stats(?=[?&#]|$)/.test(decoded)) {
+            return null;
+        }
+
+        var settings = window.wcSettings || {};
+        var admin = settings.admin && settings.admin.wcAdminSettings ? settings.admin.wcAdminSettings : {};
+        var dates;
+
+        try {
+            dates = getCurrentDates(queryOf(window.location.search), admin.woocommerce_default_date_range || undefined);
+        } catch (error) {
+            return null;
+        }
+
+        var secondary = dates.secondary;
+        var isComparedYear = secondary.label === findOption(state.original.periods, 'previous_year').label
+            && params.after === secondary.after.clone().startOf('day').format('YYYY-MM-DDTHH:mm:ss')
+            && params.before === secondary.before.clone().endOf('day').format('YYYY-MM-DDTHH:mm:ss');
+
+        return isComparedYear ? dates.primary : null;
+    }
+
+    function isoDay(jy, jm, jd) {
+        var g = Jalali.jalaliToGregorian(jy, jm, jd);
+
+        return g[0] + '-' + pad(g[1]) + '-' + pad(g[2]);
+    }
+
+    /** Totals as zero, also each segment's. */
+    function zeroTotals(totals) {
+        Object.keys(totals || {}).forEach(function (key) {
+            var value = totals[key];
+            if (typeof value === 'number' || (typeof value === 'string' && value !== '' && !isNaN(value))) {
+                totals[key] = 0;
+            } else if (key === 'segments' && Array.isArray(value)) {
+                value.forEach(function (segment) {
+                    zeroTotals(segment && segment.subtotals);
+                });
+            }
+        });
+    }
+
+    /**
+     * The year before's days, lined up with the primary range's: an empty
+     * day after 29 Esfand when only the primary year has 30 Esfand, and
+     * without 30 Esfand when only the year before has it.
+     */
+    function alignIntervals(data, primary) {
+        if (!data || !Array.isArray(data.intervals)) {
+            return data;
+        }
+
+        var after = primary.after.format('YYYY-MM-DD');
+        var before = primary.before.format('YYYY-MM-DD');
+        var changed = false;
+        var intervals = [];
+
+        data.intervals.forEach(function (interval) {
+            var day = /^(\d{4})-(\d{2})-(\d{2})/.exec(String(interval && interval.date_start));
+            var j = day ? Jalali.gregorianToJalali(+day[1], +day[2], +day[3]) : null;
+            var leapAfter = j ? Jalali.isJalaliLeapYear(j[0] + 1) : false;
+
+            if (j && j[1] === 12 && j[2] === 30 && !leapAfter) {
+                changed = true;
+                return;
+            }
+
+            intervals.push(interval);
+
+            if (j && j[1] === 12 && j[2] === 29 && leapAfter && !Jalali.isJalaliLeapYear(j[0])
+                && after <= isoDay(j[0] + 1, 12, 29) && before >= isoDay(j[0] + 1, 12, 30)
+            ) {
+                var empty = JSON.parse(JSON.stringify(interval));
+                zeroTotals(empty.subtotals);
+                intervals.push(empty);
+                changed = true;
+            }
+        });
+
+        return changed ? Object.assign({}, data, { intervals: intervals }) : data;
+    }
+
+    /** A reply WooCommerce reads unparsed (a Response) or parsed, lined up. */
+    function alignResponse(response, primary) {
+        if (!response || typeof response.clone !== 'function' || typeof window.Response !== 'function') {
+            return alignIntervals(response, primary);
+        }
+
+        return response.clone().json().then(function (data) {
+            var aligned = alignIntervals(data, primary);
+
+            return aligned === data ? response : new window.Response(JSON.stringify(aligned), {
+                status: response.status,
+                statusText: response.statusText,
+                headers: response.headers,
+            });
+        }, function () {
+            return response;
+        });
     }
 
     // --- Custom range: a Jalali calendar for WooCommerce's ------------------
@@ -921,6 +1064,7 @@
         // For tests.
         isMachineFormat: isMachineFormat,
         withFlag: withFlag,
+        alignIntervals: alignIntervals,
         addJalaliColumns: addJalaliColumns,
     };
 })(window);
