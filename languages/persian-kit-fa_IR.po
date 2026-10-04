@@ -231,7 +231,7 @@ msgstr "بخشی از نمایش تاریخ‌ها و ایمیل‌های ووک
 #: src/Core/ConflictDetector.php:82
 #: src/Service/Import/ImportReport.php:228
 #: src/Service/Import/Sources/ParsiDate/ParsiDateSettings.php:162
-#: views/admin/partials/date-conversion-settings.php:25
+#: views/admin/partials/date-conversion-settings.php:144
 msgid "Convert every date (advanced)"
 msgstr "تبدیل همه تاریخ‌ها (پیشرفته)"
 
@@ -332,7 +332,7 @@ msgstr "%1$s – %2$s"
 msgid "Post, comment and admin dates in the Shamsi calendar. Saved dates stay Gregorian."
 msgstr "تاریخ نوشته‌ها، دیدگاه‌ها و پیشخوان به تقویم شمسی. تاریخ‌های ذخیره‌شده میلادی می‌مانند."
 
-#: src/Modules/DateConversion/DateFilters.php:255
+#: src/Modules/DateConversion/DateFilters.php:258
 msgid "Activity"
 msgstr "فعالیت"
 
@@ -667,26 +667,26 @@ msgstr "این افزونه این کارها را انجام می‌دهد:"
 msgid "Recommended Persian Kit settings"
 msgstr "تنظیمات پیشنهادی Persian Kit"
 
-#: views/admin/partials/date-conversion-settings.php:17
+#: views/admin/partials/date-conversion-settings.php:23
 msgid "Jalali archives and calendar"
 msgstr "بایگانی و تقویم شمسی"
 
-#: views/admin/partials/date-conversion-settings.php:18
+#: views/admin/partials/date-conversion-settings.php:24
 msgid "Archive lists, the calendar and pages such as /1405/07/."
 msgstr "فهرست بایگانی، تقویم و برگه‌هایی مثل ⁦/1405/07/⁩."
 
 #: src/Service/Import/ImportReport.php:229
 #: src/Service/Import/Sources/ParsiDate/ParsiDateSettings.php:173
 #: src/Service/Import/Sources/ParsiDate/ParsiDateSettings.php:175
-#: views/admin/partials/date-conversion-settings.php:21
+#: views/admin/partials/date-conversion-settings.php:27
 msgid "Jalali dates in post links"
 msgstr "تاریخ شمسی در پیوند نوشته‌ها"
 
-#: views/admin/partials/date-conversion-settings.php:22
+#: views/admin/partials/date-conversion-settings.php:28
 msgid "/1405/07/09/my-post/. Old links redirect."
 msgstr "مثل ⁦/1405/07/09/my-post/⁩. پیوندهای قبلی به پیوند تازه می‌روند."
 
-#: views/admin/partials/date-conversion-settings.php:26
+#: views/admin/partials/date-conversion-settings.php:145
 msgid "Only if your theme still shows Gregorian dates. It can confuse SEO, booking and form plugins."
 msgstr "فقط اگر پوسته هنوز تاریخ میلادی نشان می‌دهد. ممکن است افزونه‌های سئو، رزرو و فرم را به اشتباه بیندازد."
 
@@ -2646,3 +2646,56 @@ msgstr "آمار ماهانه، فصلی و سالانه هم ماه‌ها، ف
 #: views/admin/partials/woocommerce-settings.php:282
 msgid "Date ranges, charts and tables in Jalali; monthly, seasonal and yearly figures cover whole Jalali months, seasons and years. CSV exports add a Jalali date column."
 msgstr "بازه‌های تاریخ، نمودارها و جدول‌ها به تاریخ شمسی؛ آمار ماهانه، فصلی و سالانه ماه‌ها، فصل‌ها و سال‌های کامل شمسی را در بر می‌گیرد. خروجی CSV یک ستون تاریخ شمسی هم دارد."
+
+#: views/admin/partials/date-conversion-settings.php:35
+msgid "Gregorian date"
+msgstr "تاریخ میلادی"
+
+#: views/admin/partials/date-conversion-settings.php:38
+msgid "Numbers"
+msgstr "با عدد"
+
+#: views/admin/partials/date-conversion-settings.php:39
+msgid "Month names"
+msgstr "با نام ماه"
+
+#: views/admin/partials/date-conversion-settings.php:46
+msgid "Jalali first"
+msgstr "اول شمسی"
+
+#: views/admin/partials/date-conversion-settings.php:47
+msgid "Gregorian first"
+msgstr "اول میلادی"
+
+#: views/admin/partials/date-conversion-settings.php:51
+msgid "Between the dates"
+msgstr "بین دو تاریخ"
+
+#: views/admin/partials/date-conversion-settings.php:54
+msgid "Parentheses ( )"
+msgstr "پرانتز ( )"
+
+#: views/admin/partials/date-conversion-settings.php:55
+msgid "Slash /"
+msgstr "خط مورب /"
+
+#: views/admin/partials/date-conversion-settings.php:56
+msgid "Dash –"
+msgstr "خط تیره –"
+
+#: views/admin/partials/date-conversion-settings.php:106
+msgid "Show the Gregorian date too"
+msgstr "نمایش تاریخ میلادی در کنار شمسی"
+
+#: views/admin/partials/date-conversion-settings.php:107
+msgid "Next to post and comment dates on your site. Feeds, search engines and admin screens keep one date."
+msgstr "کنار تاریخ نوشته‌ها و دیدگاه‌ها در سایت. خوراک‌ها، موتورهای جستجو و پیشخوان یک تاریخ نشان می‌دهند."
+
+#: views/admin/partials/date-conversion-settings.php:135
+msgid "Example:"
+msgstr "نمونه:"
+
+#: views/admin/partials/date-conversion-settings.php:43
+msgctxt "which date comes first"
+msgid "Order"
+msgstr "ترتیب"

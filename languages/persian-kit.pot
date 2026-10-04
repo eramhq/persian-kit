@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-10-04T05:47:00+00:00\n"
+"POT-Creation-Date: 2026-10-04T06:40:43+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: persian-kit\n"
@@ -235,7 +235,7 @@ msgstr ""
 #: src/Core/ConflictDetector.php:82
 #: src/Service/Import/ImportReport.php:228
 #: src/Service/Import/Sources/ParsiDate/ParsiDateSettings.php:162
-#: views/admin/partials/date-conversion-settings.php:25
+#: views/admin/partials/date-conversion-settings.php:144
 msgid "Convert every date (advanced)"
 msgstr ""
 
@@ -373,7 +373,7 @@ msgstr ""
 msgid "Post, comment and admin dates in the Shamsi calendar. Saved dates stay Gregorian."
 msgstr ""
 
-#: src/Modules/DateConversion/DateFilters.php:255
+#: src/Modules/DateConversion/DateFilters.php:258
 msgid "Activity"
 msgstr ""
 
@@ -841,7 +841,7 @@ msgstr ""
 #: src/Service/Import/ImportReport.php:229
 #: src/Service/Import/Sources/ParsiDate/ParsiDateSettings.php:173
 #: src/Service/Import/Sources/ParsiDate/ParsiDateSettings.php:175
-#: views/admin/partials/date-conversion-settings.php:21
+#: views/admin/partials/date-conversion-settings.php:27
 msgid "Jalali dates in post links"
 msgstr ""
 
@@ -1959,19 +1959,72 @@ msgstr ""
 msgid "Switch from %s"
 msgstr ""
 
-#: views/admin/partials/date-conversion-settings.php:17
+#: views/admin/partials/date-conversion-settings.php:23
 msgid "Jalali archives and calendar"
 msgstr ""
 
-#: views/admin/partials/date-conversion-settings.php:18
+#: views/admin/partials/date-conversion-settings.php:24
 msgid "Archive lists, the calendar and pages such as /1405/07/."
 msgstr ""
 
-#: views/admin/partials/date-conversion-settings.php:22
+#: views/admin/partials/date-conversion-settings.php:28
 msgid "/1405/07/09/my-post/. Old links redirect."
 msgstr ""
 
-#: views/admin/partials/date-conversion-settings.php:26
+#: views/admin/partials/date-conversion-settings.php:35
+msgid "Gregorian date"
+msgstr ""
+
+#: views/admin/partials/date-conversion-settings.php:38
+msgid "Numbers"
+msgstr ""
+
+#: views/admin/partials/date-conversion-settings.php:39
+msgid "Month names"
+msgstr ""
+
+#: views/admin/partials/date-conversion-settings.php:43
+msgctxt "which date comes first"
+msgid "Order"
+msgstr ""
+
+#: views/admin/partials/date-conversion-settings.php:46
+msgid "Jalali first"
+msgstr ""
+
+#: views/admin/partials/date-conversion-settings.php:47
+msgid "Gregorian first"
+msgstr ""
+
+#: views/admin/partials/date-conversion-settings.php:51
+msgid "Between the dates"
+msgstr ""
+
+#: views/admin/partials/date-conversion-settings.php:54
+msgid "Parentheses ( )"
+msgstr ""
+
+#: views/admin/partials/date-conversion-settings.php:55
+msgid "Slash /"
+msgstr ""
+
+#: views/admin/partials/date-conversion-settings.php:56
+msgid "Dash –"
+msgstr ""
+
+#: views/admin/partials/date-conversion-settings.php:106
+msgid "Show the Gregorian date too"
+msgstr ""
+
+#: views/admin/partials/date-conversion-settings.php:107
+msgid "Next to post and comment dates on your site. Feeds, search engines and admin screens keep one date."
+msgstr ""
+
+#: views/admin/partials/date-conversion-settings.php:135
+msgid "Example:"
+msgstr ""
+
+#: views/admin/partials/date-conversion-settings.php:145
 msgid "Only if your theme still shows Gregorian dates. It can confuse SEO, booking and form plugins."
 msgstr ""
 

@@ -58,6 +58,7 @@ Notes:
 - Accepts Unix timestamps and `strtotime()`-compatible strings. Strings without a timezone are read as UTC.
 - Uses the site timezone unless `$timezone` is given.
 - The output passes through the `persian_kit_date_display` filter.
+- It never adds the Gregorian date, even with **Show the Gregorian date too** on. That option applies to post and comment dates only.
 
 ```php
 echo persian_kit_date('Y/m/d', time());
@@ -523,6 +524,30 @@ add_filter('persian_kit_date_display', function (string $date, string $format, i
 }, 10, 4);
 ```
 
+### `persian_kit_gregorian_date`
+
+With **Show the Gregorian date too** on (Display › Jalali dates), post and comment dates on the site read "۱۰ مهر ۱۴۰۵ (2026-10-02)": `get_the_date()`, `the_date()`, `get_the_modified_date()`, `get_comment_date()`, `get_the_time()` with a date format, and the Post Date and Latest Comments blocks. Only formats with a day, a month and a year get it, so `H:i`, `Y` and `F Y` stay as they are. Feeds, machine formats, `<time datetime>`, `get_post_time()`, REST responses, admin screens, emails, archives and `wp_date()` keep one date.
+
+Return `false` to keep one date in one place. The arguments are the date format and the `DateTimeInterface` of the date.
+
+```php
+add_filter('persian_kit_gregorian_date', function (bool $show, string $format, DateTimeInterface $date) {
+    return is_singular() ? $show : false;
+}, 10, 3);
+```
+
+### `persian_kit_gregorian_date_display`
+
+Filters the Gregorian part before it is joined to the Jalali date: "2026-10-02" (format `Y-m-d`), or "2 اکتبر 2026" (format `j F Y`) with month names. The Persian digits module's **Jalali dates** option converts its digits here. Return `''` to show the Jalali date alone.
+
+In the numbers style, what the filter returns is then put between invisible left-to-right isolate marks (U+2066 and U+2069). Without them, a right-to-left page shows "2026-10-02" after a Persian word as "02-10-2026".
+
+```php
+add_filter('persian_kit_gregorian_date_display', function (string $date, string $format, int $timestamp, DateTimeZone $timezone) {
+    return $date;
+}, 10, 4);
+```
+
 ### `persian_kit_digit_conversion`
 
 Return `false` to stop digit conversion on one hook. The second argument is the hook name:
@@ -534,7 +559,7 @@ Return `false` to stop digit conversion on one hook. The second argument is the 
 - **Lists**: `list_cats` (category names in the list, the dropdown and the categories block), `wp_generate_tag_cloud_data` (tag names; the counts too when the numbers option is on).
 - **Blocks**: `render_block_core/navigation`, `render_block_core/page-list`, `render_block_core/term-name`.
 
-With the module's options on, also `persian_kit_date_display` (Jalali dates), `number_format_i18n` (counts), `get_archives_link` (the post count after each archive link; the label is a Jalali date, already converted, or a Gregorian one, which keeps its digits), `render_block_core/term-count` and `render_block_core/query-total` (counts), `formatted_woocommerce_price` (WooCommerce prices), `woocommerce_block_prices` (the script that converts prices drawn by the cart and checkout blocks, loaded on those pages only), `woocommerce_emails` (everything in [WooCommerce emails](#woocommerce-emails)) and `woocommerce_email_order_number` (order numbers in emails only).
+With the module's options on, also `persian_kit_date_display` and `persian_kit_gregorian_date_display` (Jalali dates, and the Gregorian date shown next to them), `number_format_i18n` (counts), `get_archives_link` (the post count after each archive link; the label is a Jalali date, already converted, or a Gregorian one, which keeps its digits), `render_block_core/term-count` and `render_block_core/query-total` (counts), `formatted_woocommerce_price` (WooCommerce prices), `woocommerce_block_prices` (the script that converts prices drawn by the cart and checkout blocks, loaded on those pages only), `woocommerce_emails` (everything in [WooCommerce emails](#woocommerce-emails)) and `woocommerce_email_order_number` (order numbers in emails only).
 
 Text inside `<pre>`, `<code>`, `<kbd>` and `<samp>` elements keeps its digits.
 
