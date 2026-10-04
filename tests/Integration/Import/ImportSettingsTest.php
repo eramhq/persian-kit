@@ -255,6 +255,39 @@ class ImportSettingsTest extends WordPressIntegrationTestCase
         $this->assertTrue(Bootstrap::get(ImportState::class)->jalaliUrls());
     }
 
+    public function test_parsi_dates_afghan_and_kurdish_month_names_are_imported(): void
+    {
+        // Parsi Date converted only on Persian sites.
+        add_filter('locale', static fn (): string => 'fa_IR');
+
+        update_option('wp_parsidate', ['persian_date' => true, 'months_name_type' => 'dari']);
+        $row = $this->byId((new ParsiDateSettings())->rows())['months_name_type'];
+        $this->assertSame('same', $row->status->value);
+        $this->assertSame(['date_conversion.month_names' => 'dari'], $row->changes);
+        $this->assertTrue($row->ticked);
+
+        update_option('wp_parsidate', ['persian_date' => true, 'months_name_type' => 'pashto']);
+        $row = $this->byId((new ParsiDateSettings())->rows())['months_name_type'];
+        $this->assertSame('close', $row->status->value, 'its Pashto weekdays differ');
+        $this->assertSame(['date_conversion.month_names' => 'pashto'], $row->changes);
+
+        update_option('wp_parsidate', ['persian_date' => true, 'months_name_type' => 'kurdish']);
+        $this->runner()->start(new ParsiDateSource());
+        $this->runner()->run('test', 30.0);
+
+        $this->resetSettingsCache();
+        $this->assertSame('kurdish', Bootstrap::get(SettingsManager::class)->module('date_conversion', 'month_names'));
+    }
+
+    public function test_parsi_dates_persian_month_names_need_no_setting(): void
+    {
+        update_option('wp_parsidate', ['persian_date' => true, 'months_name_type' => 'persian']);
+        $rows = $this->byId((new ParsiDateSettings())->rows());
+
+        $this->assertSame('automatic', $rows['months_name_type']->status->value);
+        $this->assertSame([], $rows['months_name_type']->changes);
+    }
+
     public function test_the_shipping_plugin_review_offers_to_keep_it(): void
     {
         $note = (new PwsSource())->reviewNotes([])[0];

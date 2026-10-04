@@ -48,6 +48,7 @@ class SettingsPageTest extends WordPressIntegrationTestCase
         ['persian_kit_settings[date_conversion][jalali_archives]', 'checkbox', '1', true],
         ['persian_kit_settings[date_conversion][jalali_permalinks]', 'hidden', '0', false],
         ['persian_kit_settings[date_conversion][jalali_permalinks]', 'checkbox', '1', false],
+        ['persian_kit_settings[date_conversion][month_names]', 'select', 'auto', false],
         ['persian_kit_settings[date_conversion][gregorian_date]', 'hidden', '0', false],
         ['persian_kit_settings[date_conversion][gregorian_date]', 'checkbox', '1', false],
         ['persian_kit_settings[date_conversion][gregorian_style]', 'select', 'numeric', false],
