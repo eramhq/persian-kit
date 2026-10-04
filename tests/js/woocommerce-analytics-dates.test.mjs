@@ -418,3 +418,111 @@ test('the flag is added only once wc.date is Jalali', async () => {
 
     assert.deepEqual(seen, [path + '&persian_kit_calendar=jalali', path]);
 });
+
+/**
+ * WooCommerce's custom range calendar as WooCommerce 10.6.2 renders it, in a
+ * page with this script; the inputs record what React would read.
+ */
+async function customRange(after = '03/06/2026', before = '04/04/2026') {
+    const { JSDOM } = await import('jsdom');
+    const dom = new JSDOM('<!doctype html><html lang="fa" dir="rtl"><body></body></html>', { runScripts: 'outside-only' });
+    const { window } = dom;
+
+    moment.now = () => new Date(MEHR_9).getTime();
+    window.moment = moment;
+    window.wp = { date: wpDateStandIn('Asia/Tehran') };
+    window.wcSettings = { timeZone: 'Asia/Tehran' };
+    window.persianKitAnalyticsDates = { startOfWeek: 6, labels: {} };
+    window.persianKitDateField = { locale: 'fa-IR' };
+    window.wc = { date: wooDateStandIn(window) };
+    window.eval(jalaliSource);
+    window.eval(source);
+    window.PersianKitAnalyticsDates.installWcDate();
+
+    window.document.body.innerHTML = `
+        <div class="components-popover woocommerce-filters-date__content">
+            <div class="woocommerce-calendar">
+                <div class="woocommerce-calendar__inputs">
+                    <div class="woocommerce-calendar__input"><input type="text" class="woocommerce-calendar__input-text" value="${after}" placeholder="mm/dd/yyyy" aria-label="Start Date"></div>
+                    <div class="woocommerce-calendar__inputs-to">to</div>
+                    <div class="woocommerce-calendar__input"><input type="text" class="woocommerce-calendar__input-text" value="${before}" placeholder="mm/dd/yyyy" aria-label="End Date"></div>
+                </div>
+                <div class="woocommerce-calendar__react-dates"><div class="DayPicker"></div></div>
+            </div>
+        </div>`;
+    await new Promise((resolve) => window.setTimeout(resolve, 0));
+
+    const inputs = [...window.document.querySelectorAll('.woocommerce-calendar__inputs input')];
+    const typed = [];
+    inputs.forEach((input, index) => input.addEventListener('input', () => typed.push([index ? 'before' : 'after', input.value])));
+    const picker = window.document.querySelector('intl-datepicker');
+    const pick = (value) => picker.dispatchEvent(new window.CustomEvent('intl-change', { detail: { value } }));
+
+    return { window, inputs, picker, typed, pick };
+}
+
+test('custom ranges are picked on a Jalali calendar, written into WooCommerce\'s fields (D)', async () => {
+    const { window, inputs, picker, typed, pick } = await customRange();
+
+    assert.ok(picker, 'the calendar is in place');
+    assert.equal(window.document.querySelector('.woocommerce-calendar').hasAttribute('data-persian-kit-jalali'), true);
+    assert.equal(picker.nextElementSibling.className, 'woocommerce-calendar__react-dates');
+    assert.equal(picker.getAttribute('type'), 'range');
+    assert.equal(picker.getAttribute('calendar'), 'persian');
+    assert.equal(picker.getAttribute('first-day-of-week'), '6');
+    assert.equal(picker.getAttribute('numerals'), 'latn');
+    assert.equal(picker.hasAttribute('disable-future'), true);
+    // 15 Esfand 1404 to 15 Farvardin 1405, read from WooCommerce's fields.
+    assert.equal(picker.getAttribute('value'), '2026-03-06/2026-04-04');
+
+    // A start alone waits for the end.
+    pick('2026-03-13');
+    assert.deepEqual(typed, []);
+
+    // 22 Esfand 1404 to 10 Farvardin 1405, across Nowruz.
+    pick('2026-03-13/2026-03-30');
+    assert.deepEqual(inputs.map((input) => input.value), ['03/13/2026', '03/30/2026']);
+    assert.deepEqual(typed, [['after', '03/13/2026'], ['before', '03/30/2026']]);
+});
+
+test('a range after the old one writes the end first, so the start is never after it', async () => {
+    const { inputs, typed, pick } = await customRange('03/06/2026', '04/04/2026');
+
+    pick('2026-05-01/2026-06-01');
+
+    assert.deepEqual(typed, [['before', '06/01/2026'], ['after', '05/01/2026']]);
+    assert.deepEqual(inputs.map((input) => input.value), ['05/01/2026', '06/01/2026']);
+});
+
+test('the fields keep the order their placeholder names', async () => {
+    const { window, inputs, pick } = await customRange('06/03/2026', '04/04/2026');
+    inputs.forEach((input) => input.setAttribute('placeholder', 'dd/mm/yyyy'));
+
+    pick('2026-03-13/2026-03-30');
+
+    assert.deepEqual(inputs.map((input) => input.value), ['13/03/2026', '30/03/2026']);
+    assert.equal(window.document.querySelectorAll('intl-datepicker').length, 1, 'once per calendar');
+});
+
+test('focus lost to a redrawn day stays in the popover; focus that leaves reaches it', async () => {
+    const { window, picker } = await customRange();
+    const seen = [];
+    window.document.body.addEventListener('focusout', (event) => seen.push(event.persianKitRetold ? 'retold' : 'lost'));
+
+    const root = picker.attachShadow({ mode: 'open' });
+    root.innerHTML = '<button part="day" tabindex="0">22</button><button part="day" tabindex="-1">23</button>';
+    const trusted = (target) => target.dispatchEvent(new window.FocusEvent('focusout', { bubbles: true, composed: true }));
+
+    // The day that had focus is redrawn.
+    const day = root.querySelector('button');
+    trusted(day);
+    day.remove();
+    await new Promise((resolve) => window.setTimeout(resolve, 5));
+    assert.deepEqual(seen, []);
+    assert.equal(root.activeElement?.textContent, '23');
+
+    // Focus goes nowhere from a day still there: the popover hears of it.
+    trusted(root.querySelector('button'));
+    await new Promise((resolve) => window.setTimeout(resolve, 5));
+    assert.deepEqual(seen, ['retold']);
+});

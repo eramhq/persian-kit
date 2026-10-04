@@ -2,6 +2,7 @@
 
 namespace PersianKit\Modules\WooCommerce;
 
+use PersianKit\Modules\DateConversion\DatePicker;
 use PersianKit\Modules\DateConversion\JalaliScript;
 
 defined('ABSPATH') || exit;
@@ -36,6 +37,14 @@ class WooAnalyticsDates
         }
 
         JalaliScript::register();
+        // The calendar for custom ranges, and its locale.
+        DatePicker::enqueue();
+        wp_enqueue_style(
+            self::HANDLE,
+            PERSIAN_KIT_URL . 'public/css/woocommerce-analytics-dates.css',
+            [],
+            PERSIAN_KIT_VERSION
+        );
 
         wp_register_script(
             self::HANDLE,

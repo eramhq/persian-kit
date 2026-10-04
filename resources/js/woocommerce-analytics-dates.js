@@ -17,13 +17,18 @@
  * Stats requests by month, season or year carry a flag, and the server
  * groups them by Jalali period (WooAnalyticsIntervals.php).
  *
+ * "Custom" in the date range picker shows a Jalali calendar in place of
+ * WooCommerce's Gregorian one, and writes the picked days into
+ * WooCommerce's own start and end fields, which it then hides.
+ *
  * Each part is installed by a script printed right after the WooCommerce or
  * WordPress script it replaces (WooAnalyticsDates.php), before anything
  * reads it. If wc.date is missing or has changed shape, nothing is replaced
  * and Analytics stays Gregorian.
  *
  * Depends on: PersianKitJalali; moment with moment-timezone (wp-date) when
- * wc.date is installed.
+ * wc.date is installed; the <intl-datepicker> bundle (DatePicker) for the
+ * custom range.
  */
 (function (window) {
     'use strict';
@@ -80,6 +85,8 @@
     /** Tokens that differ between the calendars; 'Q' is the season, ours only. */
     var CALENDAR_TOKENS = /[dDjlNSwzWFmMntLoYyQ]/;
 
+    /** Set on WooCommerce's custom range calendar once it has a Jalali one. */
+    var PICKER_MARK = 'data-persian-kit-jalali';
 
     var startOfWeek = Math.min(6, Math.max(0, parseInt(config.startOfWeek, 10) || 0));
 
@@ -449,6 +456,7 @@
             },
         });
         state.original = original;
+        watchPickers();
 
         return true;
     }
@@ -595,6 +603,154 @@
         state.apiFetch = true;
 
         return true;
+    }
+
+    // --- Custom range: a Jalali calendar for WooCommerce's ------------------
+
+    /** The moment format of WooCommerce's date fields, read from their placeholder (mm/dd/yyyy). */
+    function inputFormat(input) {
+        var format = String(input.getAttribute('placeholder') || '').toUpperCase();
+
+        return /^(?=.*MM)(?=.*DD)(?=.*YYYY)[MDY\/.\- ]+$/.test(format) ? format : 'MM/DD/YYYY';
+    }
+
+    /** The ISO date in a WooCommerce date field, or ''. */
+    function readInput(input) {
+        var m = window.moment(toAsciiDigits(input.value), inputFormat(input), true);
+
+        return m.isValid() ? m.format('YYYY-MM-DD') : '';
+    }
+
+    /** Sets a field React controls: its own value setter, then the event it listens to. */
+    function setInputValue(input, value) {
+        var setter = Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, 'value').set;
+
+        setter.call(input, value);
+        input.dispatchEvent(new window.Event('input', { bubbles: true }));
+    }
+
+    /**
+     * Writes a picked range into WooCommerce's start and end fields. Each is
+     * checked against the other one's current date, so a start after the
+     * old end waits for the new end.
+     */
+    function writeRange(inputs, start, end) {
+        var after = window.moment(start, 'YYYY-MM-DD', true);
+        var before = window.moment(end, 'YYYY-MM-DD', true);
+        var oldBefore = readInput(inputs[1]);
+
+        if (!after.isValid() || !before.isValid()) {
+            return;
+        }
+
+        var writes = [[inputs[0], after], [inputs[1], before]];
+        if (oldBefore && start > oldBefore) {
+            writes.reverse();
+        }
+
+        writes.forEach(function (write) {
+            var value = write[1].format(inputFormat(write[0]));
+            if (write[0].value !== value) {
+                setInputValue(write[0], value);
+            }
+        });
+    }
+
+    function mountPicker(calendar) {
+        var inputs = calendar.querySelectorAll('.woocommerce-calendar__inputs input');
+        var grid = calendar.querySelector('.woocommerce-calendar__react-dates');
+
+        if (calendar.hasAttribute(PICKER_MARK) || inputs.length !== 2 || !grid) {
+            return;
+        }
+
+        var dateField = window.persianKitDateField || {};
+        var picker = window.document.createElement('intl-datepicker');
+        var start = readInput(inputs[0]);
+        var end = readInput(inputs[1]);
+
+        picker.setAttribute('type', 'range');
+        picker.setAttribute('inline', '');
+        picker.setAttribute('calendar', 'persian');
+        picker.setAttribute('locale', dateField.locale || 'fa-IR');
+        picker.setAttribute('numerals', 'latn');
+        picker.setAttribute('first-day-of-week', String(startOfWeek));
+        // WooCommerce refuses days after today.
+        picker.setAttribute('disable-future', '');
+        if (start && end) {
+            picker.setAttribute('value', start + '/' + end);
+        }
+        // date-field.css: the admin's colours, also when the system is dark.
+        picker.className = 'persian-kit-date-picker persian-kit-analytics-calendar';
+
+        picker.addEventListener('intl-change', function (event) {
+            var value = String((event.detail && event.detail.value) || picker.value || '').split('/');
+            if (value.length === 2 && value[0] && value[1]) {
+                writeRange(inputs, value[0], value[1]);
+            }
+        });
+
+        // A click redraws the days, and the clicked day loses focus to the
+        // page; WordPress's popover reads that as focus leaving it, and
+        // closes. Focus goes back to the calendar instead, and the popover
+        // hears only of focus that really left.
+        picker.addEventListener('focusout', function (event) {
+            var target = event.composedPath ? event.composedPath()[0] : null;
+
+            if (event.relatedTarget || event.persianKitRetold || !target || target === picker) {
+                return;
+            }
+
+            event.stopPropagation();
+            window.setTimeout(function () {
+                if (!picker.isConnected) {
+                    return;
+                }
+                if (target.isConnected) {
+                    var retold = new window.FocusEvent('focusout', { bubbles: true, composed: true });
+                    retold.persianKitRetold = true;
+                    picker.dispatchEvent(retold);
+                    return;
+                }
+
+                var root = picker.shadowRoot;
+                var day = root && (root.querySelector('[part~="day"][tabindex="0"]') || root.querySelector('[part~="day"]'));
+                if (day) {
+                    day.focus();
+                }
+            }, 0);
+        });
+
+        calendar.setAttribute(PICKER_MARK, '');
+        grid.parentNode.insertBefore(picker, grid);
+    }
+
+    function mountPickers(root) {
+        if (root.matches && root.matches('.woocommerce-calendar')) {
+            mountPicker(root);
+        }
+        if (root.querySelectorAll) {
+            Array.prototype.forEach.call(root.querySelectorAll('.woocommerce-calendar'), mountPicker);
+        }
+    }
+
+    /** Watches for the custom range calendar, which opens in a popover. */
+    function watchPickers() {
+        var document = window.document;
+        if (!document || typeof window.MutationObserver === 'undefined') {
+            return;
+        }
+
+        mountPickers(document);
+        new window.MutationObserver(function (mutations) {
+            mutations.forEach(function (mutation) {
+                Array.prototype.forEach.call(mutation.addedNodes, function (node) {
+                    if (node.nodeType === 1) {
+                        mountPickers(node);
+                    }
+                });
+            });
+        }).observe(document.documentElement, { childList: true, subtree: true });
     }
 
     window.PersianKitAnalyticsDates = {

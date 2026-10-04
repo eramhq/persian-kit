@@ -88,6 +88,10 @@ const copies = [
         src: 'resources/js/woocommerce-analytics-dates.js',
         dest: 'public/js/woocommerce-analytics-dates.js',
     },
+    {
+        src: 'resources/css/woocommerce-analytics-dates.css',
+        dest: 'public/css/woocommerce-analytics-dates.css',
+    },
     // WooCommerce city suggestions (checkout, cart calculator, My Account)
     {
         src: 'resources/js/woocommerce-city-select.js',

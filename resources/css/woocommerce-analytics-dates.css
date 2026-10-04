@@ -1,0 +1,19 @@
+/*
+ * Persian Kit — the Jalali calendar under "Custom" in WooCommerce Analytics'
+ * date range picker (woocommerce-analytics-dates.js). It takes the place of
+ * WooCommerce's Gregorian calendar and of its start and end fields, which it
+ * fills in.
+ */
+.woocommerce-calendar[data-persian-kit-jalali] .woocommerce-calendar__inputs,
+.woocommerce-calendar[data-persian-kit-jalali] .woocommerce-calendar__react-dates {
+    display: none;
+}
+
+.woocommerce-calendar intl-datepicker.persian-kit-analytics-calendar {
+    display: block;
+    padding: 16px;
+    /* Seven days across WooCommerce's popover. */
+    --idp-day-size: 36px;
+    --idp-calendar-min-width: 0;
+    --idp-input-min-width: 0;
+}

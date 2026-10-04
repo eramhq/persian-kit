@@ -10,6 +10,7 @@ const requiredOutputs = [
     'public/css/date-field.css',
     'public/css/gutenberg-jalali.css',
     'public/css/woo-order-filter.css',
+    'public/css/woocommerce-analytics-dates.css',
     'public/css/woocommerce-city-select.css',
     'public/js/admin.js',
     'public/js/classic-date-fields.js',
