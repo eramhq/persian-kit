@@ -115,7 +115,7 @@ class PostTypeMonthFilter
 
             $options[$value] = [
                 'value' => $value,
-                'label' => DigitConverter::toPersian($jalali->withLocale('fa')->format('F Y')),
+                'label' => DigitConverter::toPersian(CalendarNames::monthAndYear($jalali->year(), $jalali->month())),
             ];
         }
 

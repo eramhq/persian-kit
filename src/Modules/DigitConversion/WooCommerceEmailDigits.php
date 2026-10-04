@@ -18,10 +18,10 @@ defined('ABSPATH') || exit;
  *
  * Every email body (HTML, plain text and the multipart plain part) is built
  * from template parts named emails/…, so the converters work only while one
- * renders, and only for emails in Persian (isPersianEmail()). In the block
- * email editor, the personalization tags (order number, date, totals) are
- * filled in after the template parts, so their callbacks count as rendering
- * too.
+ * renders, and only for emails in a language that reads Jalali dates, such
+ * as Persian or Pashto (isPersianEmail()). In the block email editor, the
+ * personalization tags (order number, date, totals) are filled in after the
+ * template parts, so their callbacks count as rendering too.
  */
 class WooCommerceEmailDigits
 {
@@ -350,10 +350,10 @@ class WooCommerceEmailDigits
      * it builds a customer email (switch_to_locale()), Polylang for
      * WooCommerce to the customer's, and WooCommerce Multilingual switches
      * WPML's language (ContentLanguage follows each), so an English email
-     * keeps English digits.
+     * keeps English digits, and a Pashto one gets Persian digits.
      */
     private static function isPersianEmail(): bool
     {
-        return ContentLanguage::currentIsPersian();
+        return ContentLanguage::readsJalali(ContentLanguage::currentLocale());
     }
 }

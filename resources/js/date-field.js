@@ -227,7 +227,16 @@
             picker.classList.add('persian-kit-date-picker--no-hint');
         }
         picker.setAttribute('calendar', 'persian');
-        picker.setAttribute('locale', option(input, 'locale') || config.locale || 'fa-IR');
+        var calendar = window.PersianKitCalendar || {};
+        var locale = option(input, 'locale') || config.locale || 'fa-IR';
+        if (calendar.pickerLocale) {
+            locale = calendar.pickerLocale(locale);
+        }
+        picker.setAttribute('locale', locale);
+        var pickerLabels = calendar.labelsFor ? calendar.labelsFor(locale) : null;
+        if (pickerLabels) {
+            picker.setAttribute('labels', pickerLabels);
+        }
         picker.setAttribute('allow-input', '');
         if (type !== 'date') {
             picker.setAttribute('type', type);

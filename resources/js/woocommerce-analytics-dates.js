@@ -59,11 +59,14 @@
         'containsLeapYear',
     ];
 
-    var MONTHS = ['', 'فروردین', 'اردیبهشت', 'خرداد', 'تیر', 'مرداد', 'شهریور', 'مهر', 'آبان', 'آذر', 'دی', 'بهمن', 'اسفند'];
-    var MONTHS_SHORT = ['', 'فرو', 'ارد', 'خرد', 'تیر', 'مرد', 'شهر', 'مهر', 'آبا', 'آذر', 'دی', 'بهم', 'اسف'];
-    var WEEKDAYS = ['یکشنبه', 'دوشنبه', 'سه‌شنبه', 'چهارشنبه', 'پنج‌شنبه', 'جمعه', 'شنبه'];
-    var WEEKDAYS_SHORT = ['ی', 'د', 'س', 'چ', 'پ', 'ج', 'ش'];
-    var SEASONS = ['بهار', 'تابستان', 'پاییز', 'زمستان'];
+    // The names of the page's set (JalaliScript.php), else the Iranian ones.
+    var names = (Jalali && Jalali.names) || {};
+    var MONTHS = names.months || ['', 'فروردین', 'اردیبهشت', 'خرداد', 'تیر', 'مرداد', 'شهریور', 'مهر', 'آبان', 'آذر', 'دی', 'بهمن', 'اسفند'];
+    var MONTHS_SHORT = names.monthsShort || ['', 'فرو', 'ارد', 'خرد', 'تیر', 'مرد', 'شهر', 'مهر', 'آبا', 'آذر', 'دی', 'بهم', 'اسف'];
+    var WEEKDAYS = names.weekdays || ['یکشنبه', 'دوشنبه', 'سه‌شنبه', 'چهارشنبه', 'پنج‌شنبه', 'جمعه', 'شنبه'];
+    var WEEKDAYS_SHORT = names.weekdaysShort || ['ی', 'د', 'س', 'چ', 'پ', 'ج', 'ش'];
+    var SEASONS = names.seasons || ['بهار', 'تابستان', 'پاییز', 'زمستان'];
+    var ORDINAL = typeof names.ordinal === 'string' ? names.ordinal : 'ام';
 
     /**
      * Formats machines read, as in DateDisplayGuard::isMachineFormat(), and
@@ -520,7 +523,7 @@
                 case 'j': out += j[2]; break;
                 case 'l': out += WEEKDAYS[weekday]; break;
                 case 'N': out += jalaliWeekday; break;
-                case 'S': out += 'ام'; break;
+                case 'S': out += ORDINAL; break;
                 case 'w': out += jalaliWeekday - 1; break;
                 case 'z': out += dayOfYear; break;
                 case 'W': out += Math.floor(dayOfYear / 7) + 1; break;
@@ -816,11 +819,17 @@
     function createPicker(type, value) {
         var dateField = window.persianKitDateField || {};
         var picker = window.document.createElement('intl-datepicker');
+        var calendar = window.PersianKitCalendar || {};
+        var locale = calendar.pickerLocale ? calendar.pickerLocale(dateField.locale || 'fa-IR') : dateField.locale || 'fa-IR';
+        var pickerLabels = calendar.labelsFor ? calendar.labelsFor(locale) : null;
 
         picker.setAttribute('type', type);
         picker.setAttribute('inline', '');
         picker.setAttribute('calendar', 'persian');
-        picker.setAttribute('locale', dateField.locale || 'fa-IR');
+        picker.setAttribute('locale', locale);
+        if (pickerLabels) {
+            picker.setAttribute('labels', pickerLabels);
+        }
         picker.setAttribute('numerals', 'latn');
         picker.setAttribute('first-day-of-week', String(startOfWeek));
         if (value) {

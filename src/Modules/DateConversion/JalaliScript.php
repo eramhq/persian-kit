@@ -5,8 +5,9 @@ namespace PersianKit\Modules\DateConversion;
 defined('ABSPATH') || exit;
 
 /**
- * Registers the Jalali calendar script (public/js/jalali.js) and the
- * translated labels of the block editor's date editor, which is built on it.
+ * Registers the Jalali calendar script (public/js/jalali.js), the
+ * translated labels of the block editor's date editor, which is built on it,
+ * and the month and weekday names of this request's set (CalendarNames).
  * The other admin date fields use the date picker (DatePicker).
  */
 final class JalaliScript
@@ -35,8 +36,29 @@ final class JalaliScript
                 'day'    => __('Day', 'persian-kit'),
                 'hour'   => __('Hour', 'persian-kit'),
                 'minute' => __('Minute', 'persian-kit'),
+                'names'  => self::names(),
             ]) . ';',
             'before'
         );
+    }
+
+    /**
+     * The current set's names as jalali.js reads them: months from index 1,
+     * weekdays from Sunday, seasons from spring.
+     *
+     * @return array{months: list<string>, monthsShort: list<string>, weekdays: list<string>, weekdaysShort: list<string>, seasons: list<string>, ordinal: string}
+     */
+    public static function names(): array
+    {
+        $names = CalendarNames::current();
+
+        return [
+            'months'        => array_merge([''], array_values($names['months'])),
+            'monthsShort'   => array_merge([''], array_values($names['months_short'])),
+            'weekdays'      => array_values($names['weekdays']),
+            'weekdaysShort' => array_values($names['weekdays_short']),
+            'seasons'       => $names['seasons'],
+            'ordinal'       => $names['ordinal'],
+        ];
     }
 }
