@@ -398,6 +398,200 @@ if (!class_exists('GF_Field')) {
     }
 }
 
+if (!class_exists('WPForms_Field')) {
+    /**
+     * WPForms' submission handler: errors and formatted fields, by form and
+     * field id.
+     */
+    class WPForms_Process
+    {
+        /** @var array<int|string, array<int|string, mixed>> */
+        public array $errors = [];
+
+        /** @var array<int|string, array<string, mixed>> */
+        public array $fields = [];
+    }
+
+    /**
+     * wpforms(): its objects; tests start each with a new process.
+     */
+    class WPForms_Registry
+    {
+        public static ?WPForms_Registry $instance = null;
+
+        public WPForms_Process $process;
+
+        public function __construct()
+        {
+            $this->process = new WPForms_Process();
+        }
+
+        public function obj(string $name): ?object
+        {
+            return $name === 'process' ? $this->process : null;
+        }
+    }
+
+    function wpforms(): WPForms_Registry
+    {
+        return WPForms_Registry::$instance ??= new WPForms_Registry();
+    }
+
+    function wpforms_validate_field_id(mixed $id): int|string
+    {
+        return is_numeric($id) ? (int) $id : (string) $id;
+    }
+
+    /**
+     * As WPForms' own: empty attributes are left out, empty data attributes
+     * are not.
+     *
+     * @param array<string>        $class
+     * @param array<string, mixed> $datas
+     * @param array<string, mixed> $atts
+     */
+    function wpforms_html_attributes(string $id = '', array $class = [], array $datas = [], array $atts = []): string
+    {
+        $parts = $id === '' ? [] : ['id="' . $id . '"'];
+        if ($class !== []) {
+            $parts[] = 'class="' . implode(' ', $class) . '"';
+        }
+        foreach ($datas as $name => $value) {
+            $parts[] = 'data-' . $name . '="' . htmlspecialchars((string) $value) . '"';
+        }
+        foreach ($atts as $name => $value) {
+            if ((string) $value === '0' || !empty($value)) {
+                $parts[] = $name . '="' . htmlspecialchars((string) $value) . '"';
+            }
+        }
+
+        return implode(' ', $parts);
+    }
+
+    /**
+     * WPForms' field base, with the hooks the integration relies on. Field
+     * options and previews are recorded rather than printed.
+     */
+    abstract class WPForms_Field
+    {
+        /** @var string */
+        public $name;
+
+        /** @var string */
+        public $type;
+
+        /** @var string|false */
+        public $icon = false;
+
+        /** @var string */
+        public $keywords = '';
+
+        /** @var int */
+        public $order = 1;
+
+        /** @var string */
+        public $group = 'standard';
+
+        /** @var mixed */
+        public $default_settings;
+
+        /** @var list<string> The options and preview options asked for, in order. */
+        public array $printed = [];
+
+        public function __construct()
+        {
+            $this->init();
+
+            add_filter("wpforms_fields_get_field_object_{$this->type}", fn () => $this);
+            add_filter('wpforms_builder_fields_buttons', [$this, 'field_button'], 15);
+            add_action("wpforms_process_validate_{$this->type}", [$this, 'validate'], 10, 3);
+            add_action("wpforms_process_format_{$this->type}", [$this, 'format'], 10, 3);
+        }
+
+        abstract public function init();
+
+        /** @param mixed $field */
+        abstract public function field_options($field);
+
+        /** @param mixed $field */
+        abstract public function field_preview($field);
+
+        /**
+         * @param mixed $field
+         * @param mixed $deprecated
+         * @param mixed $form_data
+         */
+        abstract public function field_display($field, $deprecated, $form_data);
+
+        /**
+         * @param array<string, array{group_name: string, fields: list<array<string, mixed>>}> $fields
+         * @return array<string, mixed>
+         */
+        public function field_button($fields)
+        {
+            $fields[$this->group]['fields'][] = ['order' => $this->order, 'name' => $this->name, 'type' => $this->type, 'icon' => $this->icon, 'keywords' => $this->keywords];
+
+            return $fields;
+        }
+
+        /**
+         * @param mixed                $field
+         * @param array<string, mixed> $args
+         */
+        public function field_option($option, $field, $args = [], $do_echo = true)
+        {
+            $this->printed[] = 'option:' . $option . (isset($args['markup']) ? ':' . $args['markup'] : '');
+
+            return '';
+        }
+
+        /**
+         * @param mixed                $field
+         * @param array<string, mixed> $args
+         */
+        public function field_element($option, $field, $args = [], $do_echo = true)
+        {
+            $this->printed[] = 'element:' . $option . ':' . ($args['slug'] ?? '');
+
+            return $option === 'select' ? json_encode($args['options'] ?? []) . '=' . ($args['value'] ?? '') : '';
+        }
+
+        /**
+         * @param mixed                $field
+         * @param array<string, mixed> $args
+         */
+        public function field_preview_option($option, $field, $args = [], $do_echo = true)
+        {
+            $this->printed[] = 'preview:' . $option;
+
+            return '';
+        }
+
+        /**
+         * WPForms' Required check.
+         *
+         * @param mixed $field_id
+         * @param mixed $field_submit
+         * @param mixed $form_data
+         */
+        public function validate($field_id, $field_submit, $form_data)
+        {
+            if (!empty($form_data['fields'][$field_id]['required']) && empty($field_submit) && (string) $field_submit !== '0') {
+                wpforms()->obj('process')->errors[$form_data['id']][$field_id] = 'This field is required.';
+            }
+        }
+
+        /**
+         * @param mixed $field_id
+         * @param mixed $field_submit
+         * @param mixed $form_data
+         */
+        public function format($field_id, $field_submit, $form_data)
+        {
+        }
+    }
+}
+
 if (!class_exists('WC_Data')) {
     /**
      * Meta data and props of WooCommerce objects; get_<prop>() reads $props.

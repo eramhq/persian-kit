@@ -17,6 +17,7 @@ parameters:
         - tests/stubs/acf.php
         - tests/stubs/forminator.php
         - tests/stubs/gravityforms.php
+        - tests/stubs/wpforms.php
         - tests/stubs/polylang.php
         - tests/stubs/woocommerce-email-editor.php
     bootstrapFiles:
