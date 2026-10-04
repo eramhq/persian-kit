@@ -310,16 +310,85 @@ if (!class_exists('Forminator_Base_Form_Model')) {
 
 if (!class_exists('GFAPI')) {
     /**
-     * Gravity Forms' API; tests register fields by form and field id.
+     * Gravity Forms' API; tests register fields by form and field id, and
+     * forms.
      */
     class GFAPI
     {
         /** @var array<int, array<string, object>> */
         public static array $fields = [];
 
+        /** @var list<array<string, mixed>> */
+        public static array $forms = [];
+
         public static function get_field(int $formId, mixed $fieldId): object|false
         {
             return self::$fields[$formId][(string) $fieldId] ?? false;
+        }
+
+        /** @return list<array<string, mixed>> */
+        public static function get_forms(?bool $active = true, bool $trash = false, string $sortColumn = 'id'): array
+        {
+            return self::$forms;
+        }
+    }
+}
+
+if (!class_exists('GF_Field')) {
+    /**
+     * Gravity Forms' field base: settings are properties, missing ones null.
+     */
+    class GF_Field
+    {
+        /** @var array<string, mixed> */
+        private array $settings = [];
+
+        public function __get(string $name): mixed
+        {
+            return $this->settings[$name] ?? null;
+        }
+
+        public function __set(string $name, mixed $value): void
+        {
+            $this->settings[$name] = $value;
+        }
+
+        public function __isset(string $name): bool
+        {
+            return isset($this->settings[$name]);
+        }
+    }
+
+    class GF_Field_Text extends GF_Field
+    {
+        public $type = 'text';
+
+        /** @param array<string, mixed> $form */
+        public function get_field_input($form, $value = '', $entry = null)
+        {
+            return "<div class='ginput_container ginput_container_text'><input name='input_1' id='input_1_1' type='text' value='' class='large'/></div>";
+        }
+    }
+
+    /**
+     * Gravity Forms' field types; tests read what was registered.
+     */
+    class GF_Fields
+    {
+        /** @var array<string, GF_Field> */
+        public static array $fields = [];
+
+        public static function register(GF_Field $field): void
+        {
+            if (isset(self::$fields[$field->type])) {
+                throw new Exception('Field type already registered: ' . $field->type);
+            }
+            self::$fields[$field->type] = $field;
+        }
+
+        public static function exists(string $type): bool
+        {
+            return isset(self::$fields[$type]);
         }
     }
 }

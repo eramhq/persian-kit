@@ -15,6 +15,7 @@ $persianKitDeleteOptions = static function (): void {
     $wpdb->query("DROP TABLE IF EXISTS {$wpdb->prefix}persian_kit_import_log");
     delete_transient('persian_kit_cf7_field_usage');
     delete_transient('persian_kit_forminator_field_usage');
+    delete_transient('persian_kit_gravityforms_field_usage');
 };
 
 if (is_multisite()) {

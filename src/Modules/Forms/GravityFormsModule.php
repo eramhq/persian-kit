@@ -23,7 +23,7 @@ class GravityFormsModule extends AbstractModule
 
     public static function description(): string
     {
-        return __('Jalali dates in Date fields, and English digits in phone, number and date inputs.', 'persian-kit');
+        return __('Jalali dates in Date fields, an "Iranian fields" group with checks for mobile number, national ID and more, and English digits in phone, number and date inputs.', 'persian-kit');
     }
 
     public static function category(): ?string
@@ -67,6 +67,12 @@ class GravityFormsModule extends AbstractModule
         $container->register(GravityFormsInputNormalizer::class, function () {
             return new GravityFormsInputNormalizer();
         });
+        $container->register(GravityFormsIranianFields::class, function () {
+            return new GravityFormsIranianFields();
+        });
+        $container->register(GravityFormsFieldUsage::class, function () {
+            return new GravityFormsFieldUsage();
+        });
     }
 
     /**
@@ -77,6 +83,34 @@ class GravityFormsModule extends AbstractModule
     {
         $container->get(GravityFormsDateField::class)->register();
         $container->get(GravityFormsInputNormalizer::class)->register();
+        $container->get(GravityFormsIranianFields::class)->register();
+        $container->get(GravityFormsFieldUsage::class)->register();
+    }
+
+    /**
+     * While it is off, forms keep showing their Iranian fields, as text
+     * inputs without checks, and the list of those forms stays current for
+     * the settings page's warning.
+     */
+    public function bootDisabled(ServiceContainer $container): void
+    {
+        $container->get(GravityFormsIranianFields::class)->registerFallback();
+        $container->get(GravityFormsFieldUsage::class)->register();
+    }
+
+    /**
+     * @return list<array{title: string, url: string}>
+     */
+    public function formsUsingFields(): array
+    {
+        if (!$this->isAvailable()) {
+            return [];
+        }
+
+        return array_map(static fn (array $form): array => [
+            'title' => $form['title'],
+            'url'   => admin_url('admin.php?page=gf_edit_forms&id=' . $form['id']),
+        ], (new GravityFormsFieldUsage())->formsUsingFields());
     }
 
     protected function supportsGravityForms(): bool
