@@ -10,9 +10,14 @@
  * (period=last_month), so a bookmark shows the Jalali period of the day it
  * is opened.
  *
- * It is installed by a script printed right after WooCommerce's
- * (WooAnalyticsDates.php), before anything reads it. If wc.date is missing
- * or has changed shape, nothing is replaced and Analytics stays Gregorian.
+ * wp.date is wrapped the same way: dates printed for people (tables, chart
+ * axes and tooltips) come out Jalali, while formats machines read, such as
+ * Ymd in the link to the orders list, stay Gregorian.
+ *
+ * Each part is installed by a script printed right after the WooCommerce or
+ * WordPress script it replaces (WooAnalyticsDates.php), before anything
+ * reads it. If wc.date is missing or has changed shape, nothing is replaced
+ * and Analytics stays Gregorian.
  *
  * Depends on: PersianKitJalali; moment with moment-timezone (wp-date) when
  * wc.date is installed.
@@ -39,13 +44,54 @@
     ];
 
     var MONTHS = ['', 'فروردین', 'اردیبهشت', 'خرداد', 'تیر', 'مرداد', 'شهریور', 'مهر', 'آبان', 'آذر', 'دی', 'بهمن', 'اسفند'];
+    var MONTHS_SHORT = ['', 'فرو', 'ارد', 'خرد', 'تیر', 'مرد', 'شهر', 'مهر', 'آبا', 'آذر', 'دی', 'بهم', 'اسف'];
+    var WEEKDAYS = ['یکشنبه', 'دوشنبه', 'سه‌شنبه', 'چهارشنبه', 'پنج‌شنبه', 'جمعه', 'شنبه'];
+    var WEEKDAYS_SHORT = ['ی', 'د', 'س', 'چ', 'پ', 'ج', 'ش'];
+    var SEASONS = ['بهار', 'تابستان', 'پاییز', 'زمستان'];
+
+    /**
+     * Formats machines read, as in DateDisplayGuard::isMachineFormat(), and
+     * WooCommerce's own: Ymd in links, Y-m-d\TH:i:s for chart keys.
+     */
+    var MACHINE_FORMATS = [
+        'U',
+        'G',
+        'c',
+        'r',
+        'Y-m-d\\TH:i:s\\Z',
+        'Y-m-d\\TH:i:sP',
+        'Y-m-d\\TH:i:sO',
+        'Y-m-d\\TH:i:s.vP',
+        'X-m-d\\TH:i:sP',
+        'l, d-M-Y H:i:s T',
+        'l, d-M-y H:i:s T',
+        'D, d M y H:i:s O',
+        'D, d M Y H:i:s O',
+        'D, d M Y H:i:s \\G\\M\\T',
+    ];
+    var ISO_FORMAT = /^Y(-m-d|md)((\\T| )H:i(:s)?)?$/;
+
+    /** Tokens that differ between the calendars; 'Q' is the season, ours only. */
+    var CALENDAR_TOKENS = /[dDjlNSwzWFmMntLoYyQ]/;
+
 
     var startOfWeek = Math.min(6, Math.max(0, parseInt(config.startOfWeek, 10) || 0));
 
     var state = {
-        /** The original wc.date, once replaced. */
+        /** The original wc.date, once replaced; the other parts wait for it. */
         original: null,
     };
+
+    function pad(n) {
+        return n < 10 ? '0' + n : String(n);
+    }
+
+    function toAsciiDigits(value) {
+        return String(value).replace(/[۰-۹٠-٩]/g, function (digit) {
+            var code = digit.charCodeAt(0);
+            return String(code - (code >= 0x06F0 ? 0x06F0 : 0x0660));
+        });
+    }
 
     function isInstalled() {
         return state.original !== null;
@@ -289,7 +335,7 @@
         return String(text).replace(/([a-zA-Z\\])/g, '\\$1');
     }
 
-    /** Formats for the chart and tables, day before month. */
+    /** Formats for the chart and tables, read by the wrapped wp.date. */
     function getDateFormatsForIntervalPhp(interval, ticks) {
         var original = state.original;
         var dayTicks = original.dayTicksThreshold || 63;
@@ -332,8 +378,8 @@
                 formats.x2Format = 'Y';
                 break;
             case 'quarter':
-                formats.screenReaderFormat = formats.tooltipLabelFormat = 'F Y';
-                formats.xFormat = 'F';
+                formats.screenReaderFormat = formats.tooltipLabelFormat = 'Q Y';
+                formats.xFormat = 'Q';
                 formats.x2Format = 'Y';
                 break;
             case 'year':
@@ -400,7 +446,112 @@
         return true;
     }
 
+    // --- wp.date: Jalali display formats ------------------------------------
+
+    function isMachineFormat(format) {
+        return MACHINE_FORMATS.indexOf(format) !== -1 || ISO_FORMAT.test(format);
+    }
+
+    function hasCalendarToken(format) {
+        return CALENDAR_TOKENS.test(format.replace(/\\[\s\S]/g, ''));
+    }
+
+    /**
+     * format() with the calendar tokens in Jalali, as JalaliFormatter does on
+     * the server. The Gregorian day comes from the original function, so its
+     * time zone handling stays; the other tokens are its own output.
+     */
+    function formatJalali(original, args) {
+        var format = args[0];
+        var rest = Array.prototype.slice.call(args, 1);
+        var call = function (token) {
+            return original.apply(null, [token].concat(rest));
+        };
+        var ymd = /^(\d{4})-(\d{2})-(\d{2})$/.exec(toAsciiDigits(call('Y-m-d')));
+
+        if (!ymd) {
+            return original.apply(null, args);
+        }
+
+        var gy = +ymd[1];
+        var gm = +ymd[2];
+        var gd = +ymd[3];
+        var j = Jalali.gregorianToJalali(gy, gm, gd);
+        var weekday = new Date(Date.UTC(gy, gm - 1, gd)).getUTCDay();
+        var jalaliWeekday = (weekday + 1) % 7 + 1;
+        var dayOfYear = (j[1] <= 6 ? (j[1] - 1) * 31 : 186 + (j[1] - 7) * 30) + j[2];
+        var out = '';
+
+        for (var i = 0; i < format.length; i++) {
+            var token = format.charAt(i);
+
+            if (token === '\\') {
+                i++;
+                out += format.charAt(i);
+                continue;
+            }
+
+            switch (token) {
+                case 'd': out += pad(j[2]); break;
+                case 'D': out += WEEKDAYS_SHORT[weekday]; break;
+                case 'j': out += j[2]; break;
+                case 'l': out += WEEKDAYS[weekday]; break;
+                case 'N': out += jalaliWeekday; break;
+                case 'S': out += 'ام'; break;
+                case 'w': out += jalaliWeekday - 1; break;
+                case 'z': out += dayOfYear; break;
+                case 'W': out += Math.floor(dayOfYear / 7) + 1; break;
+                case 'F': out += MONTHS[j[1]]; break;
+                case 'm': out += pad(j[1]); break;
+                case 'M': out += MONTHS_SHORT[j[1]]; break;
+                case 'n': out += j[1]; break;
+                case 't': out += Jalali.jalaliMonthLength(j[1], j[0]); break;
+                case 'L': out += Jalali.isJalaliLeapYear(j[0]) ? '1' : '0'; break;
+                case 'o':
+                case 'Y': out += j[0]; break;
+                case 'y': out += pad(j[0] % 100); break;
+                case 'Q': out += SEASONS[Math.floor((j[1] - 1) / 3)]; break;
+                default: out += /[a-zA-Z]/.test(token) ? call(token) : token;
+            }
+        }
+
+        return out;
+    }
+
+    function wrapFormatter(original) {
+        return function (format) {
+            if (!isInstalled() || typeof format !== 'string' || isMachineFormat(format) || !hasCalendarToken(format)) {
+                return original.apply(this, arguments);
+            }
+
+            return formatJalali(original, arguments);
+        };
+    }
+
+    /** Wraps wp.date's formatters; they stay Gregorian until wc.date is replaced. */
+    function installWpDate() {
+        var wp = window.wp;
+        var original = wp && wp.date;
+
+        if (!original || typeof original.format !== 'function' || original.persianKitJalali) {
+            return false;
+        }
+
+        var members = { persianKitJalali: true };
+        ['format', 'date', 'gmdate', 'dateI18n', 'gmdateI18n'].forEach(function (name) {
+            if (typeof original[name] === 'function') {
+                members[name] = wrapFormatter(original[name]);
+            }
+        });
+        wp.date = copyModule(original, members);
+
+        return true;
+    }
+
     window.PersianKitAnalyticsDates = {
+        installWpDate: installWpDate,
         installWcDate: installWcDate,
+        // For tests.
+        isMachineFormat: isMachineFormat,
     };
 })(window);

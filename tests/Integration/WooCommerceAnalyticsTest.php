@@ -48,6 +48,22 @@ class WooCommerceAnalyticsTest extends WordPressIntegrationTestCase
         $this->assertLessThan($script, strpos($html, 'public/js/jalali.js'));
     }
 
+    public function test_wp_date_is_wrapped_right_after_it_loads(): void
+    {
+        wp_register_script('wc-date', 'https://example.com/wc/date/index.js', [], '1', true);
+
+        (new WooAnalyticsDates())->enqueue('woocommerce_page_wc-admin');
+        wp_enqueue_script('wp-date');
+
+        $html = $this->printedScripts();
+        $script = strpos($html, 'public/js/woocommerce-analytics-dates.js');
+        $wpDate = strpos($html, 'wp-includes/js/dist/date');
+        $installer = strpos($html, 'window.PersianKitAnalyticsDates.installWpDate();');
+
+        $this->assertNotFalse($script);
+        $this->assertTrue($script < $wpDate && $wpDate < $installer, $html);
+    }
+
     public function test_other_admin_pages_are_left_alone(): void
     {
         wp_register_script('wc-date', 'https://example.com/wc/date/index.js', [], '1', true);

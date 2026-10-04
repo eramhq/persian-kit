@@ -81,6 +81,31 @@ function wooDateStandIn(window) {
     return date;
 }
 
+const PHP_TO_MOMENT = { Y: 'YYYY', y: 'YY', m: 'MM', n: 'M', d: 'DD', j: 'D', F: 'MMMM', M: 'MMM', D: 'ddd', l: 'dddd', H: 'HH', G: 'H', h: 'hh', g: 'h', i: 'mm', s: 'ss', A: 'A', a: 'a', N: 'E', w: 'd' };
+
+/** wp.date's formatters for PHP formats, Gregorian, in English; date() and dateI18n() in the site's time zone. */
+function wpDateStandIn(timeZone) {
+    const formatMoment = (format, m) => {
+        let out = '';
+        for (let i = 0; i < format.length; i++) {
+            const token = format[i];
+            if (token === '\\') {
+                out += format[++i] ?? '';
+            } else {
+                out += PHP_TO_MOMENT[token] ? m.format(PHP_TO_MOMENT[token]) : token;
+            }
+        }
+        return out;
+    };
+    const site = (value, zone) => moment.tz(value ?? moment.now(), zone || timeZone);
+    return {
+        setSettings() {},
+        format: (format, value) => formatMoment(format, moment(value ?? moment.now())),
+        date: (format, value, zone) => formatMoment(format, site(value, zone)),
+        dateI18n: (format, value, zone) => formatMoment(format, site(value, zone)),
+    };
+}
+
 /**
  * A page at the given moment (UTC), store time zone Tehran unless set, with
  * WooCommerce's date package and this script installed.
@@ -95,6 +120,7 @@ function page(now, { timeZone = 'Asia/Tehran', startOfWeek = 6, date } = {}) {
     window.wp = { i18n: { __: (text) => text } };
     window.wcSettings = { timeZone };
     window.persianKitAnalyticsDates = { startOfWeek, labels: { weekOf: 'هفته' } };
+    window.wp.date = wpDateStandIn(timeZone);
 
     if (date) {
         window.wc = { date };
@@ -106,6 +132,9 @@ function page(now, { timeZone = 'Asia/Tehran', startOfWeek = 6, date } = {}) {
 
     runInContext(jalaliSource, window);
     runInContext(source, window);
+    // In the order the page loads them: wp.date, then wc.date.
+    window.PersianKitAnalyticsDates.installWpDate();
+    window.gregorianBeforeWcDate = window.wp.date.format('j F Y', '2025-10-01 00:00:00');
     window.installed = window.PersianKitAnalyticsDates.installWcDate();
 
     return window;
@@ -297,10 +326,48 @@ test('the chart formats put the day before the month', () => {
     assert.equal(window.wc.date.containsLeapYear('2028-01-01', '2028-12-31'), false);
 });
 
-test('a wc.date of another shape is left alone (13)', () => {
+test('a wc.date of another shape is left alone, and dates stay Gregorian (13)', () => {
     const changed = { getCurrentDates: () => 'woo', presetValues: [], periods: [] };
     const window = page(MEHR_9, { date: changed });
 
     assert.equal(window.installed, false);
     assert.equal(window.wc.date, changed);
+    assert.equal(window.wp.date.format('j F Y', '2025-10-01 00:00:00'), '1 October 2025');
+});
+
+test('dates printed for people are Jalali (B)', () => {
+    const window = page(MEHR_9);
+    const { format, dateI18n } = window.wp.date;
+
+    assert.equal(window.gregorianBeforeWcDate, '1 October 2025', 'Gregorian until wc.date is replaced');
+    assert.equal(format('j F Y', '2025-10-01 00:00:00'), '9 مهر 1404');
+    assert.equal(format('F Y', '2025-09-23 00:00:00'), 'مهر 1404');
+    assert.equal(format('Q Y', '2025-12-22 00:00:00'), 'زمستان 1404');
+    assert.equal(format('Q', '2025-03-21 00:00:00'), 'بهار');
+    assert.equal(format('Y/m/d', '2025-10-01 12:34:56'), '1404/07/09');
+    assert.equal(format('l j F Y', '2025-10-01'), 'چهارشنبه 9 مهر 1404');
+    // Time tokens come from wp.date itself.
+    assert.equal(format('gA j F Y', '2025-10-01 15:00:00'), '3PM 9 مهر 1404');
+    assert.equal(format('H:i', '2025-10-01 15:04:00'), '15:04');
+    assert.equal(format('\\W\\e\\e\\k j', '2025-10-01'), 'Week 9');
+    assert.equal(format('هفته j F Y', '2025-10-01'), 'هفته 9 مهر 1404');
+    // In the time zone wp.date uses: 00:20 on 1 Mehr in Tehran.
+    assert.equal(dateI18n('j F Y', '2025-09-22T20:50:00Z'), '1 مهر 1404');
+    assert.equal(typeof window.wp.date.setSettings, 'function');
+});
+
+test('formats machines read stay Gregorian (11)', () => {
+    const window = page(MEHR_9);
+    const { format } = window.wp.date;
+
+    // The link from the Revenue table to the orders of that day.
+    assert.equal(format('Ymd', '2025-10-01 00:00:00'), '20251001');
+    // The chart's keys.
+    assert.equal(format('Y-m-d\\TH:i:s', '2025-10-01 00:00:00'), '2025-10-01T00:00:00');
+    assert.equal(format('Y-m-d', '2025-10-01'), '2025-10-01');
+    assert.equal(format('Y-m-d H:i:s', '2025-10-01 08:00:00'), '2025-10-01 08:00:00');
+    for (const machine of ['U', 'c', 'D, d M Y H:i:s O', 'Y-m-d\\TH:i:sP']) {
+        assert.equal(window.PersianKitAnalyticsDates.isMachineFormat(machine), true, machine);
+    }
+    assert.equal(window.PersianKitAnalyticsDates.isMachineFormat('Y/m/d'), false);
 });
