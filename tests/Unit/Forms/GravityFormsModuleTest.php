@@ -9,7 +9,9 @@ use PersianKit\Abstracts\AbstractModule;
 use PersianKit\Container\ServiceContainer;
 use PersianKit\Core\SettingsManager;
 use PersianKit\Modules\Forms\GravityFormsDateField;
+use PersianKit\Modules\Forms\GravityFormsFieldUsage;
 use PersianKit\Modules\Forms\GravityFormsInputNormalizer;
+use PersianKit\Modules\Forms\GravityFormsIranianFields;
 use PersianKit\Modules\Forms\GravityFormsModule;
 use PHPUnit\Framework\TestCase;
 
@@ -35,12 +37,33 @@ class GravityFormsModuleTest extends TestCase
         $this->assertSame(['enabled' => true], GravityFormsModule::defaults());
     }
 
-    public function test_boot_registers_the_dates_and_the_digits(): void
+    public function test_boot_registers_the_dates_the_digits_the_fields_and_the_usage_cache(): void
     {
         $this->assertSame([
             GravityFormsDateField::class . '::register',
             GravityFormsInputNormalizer::class . '::register',
+            GravityFormsIranianFields::class . '::register',
+            GravityFormsFieldUsage::class . '::register',
         ], $this->listCalls(fn (GravityFormsModule $module, ServiceContainer $container) => $module->boot($container)));
+    }
+
+    public function test_turned_off_the_iranian_fields_stay_and_the_usage_list_stays_current(): void
+    {
+        $this->assertSame([
+            GravityFormsIranianFields::class . '::registerFallback',
+            GravityFormsFieldUsage::class . '::register',
+        ], $this->listCalls(fn (GravityFormsModule $module, ServiceContainer $container) => $module->bootDisabled($container)));
+    }
+
+    public function test_forms_using_the_fields_link_to_their_edit_screens(): void
+    {
+        Functions\when('get_transient')->justReturn([['id' => 12, 'title' => 'Contact']]);
+        Functions\when('admin_url')->alias(fn (string $path) => 'https://example.org/wp-admin/' . $path);
+
+        $this->assertSame(
+            [['title' => 'Contact', 'url' => 'https://example.org/wp-admin/admin.php?page=gf_edit_forms&id=12']],
+            $this->makeModule()->formsUsingFields()
+        );
     }
 
     public function test_it_needs_gravity_forms_2_9_or_newer_from_its_own_website(): void
@@ -61,6 +84,7 @@ class GravityFormsModuleTest extends TestCase
 
         $this->assertFalse($without->isAvailable());
         $this->assertSame(AbstractModule::REASON_INACTIVE, $without->unavailableReason()['code'] ?? null);
+        $this->assertSame([], $without->formsUsingFields());
     }
 
     public function test_entries_and_merge_tags_show_jalali_dates_while_date_conversion_is_on(): void
@@ -94,7 +118,13 @@ class GravityFormsModuleTest extends TestCase
             }
         );
 
-        return new GravityFormsModule($manager);
+        // Gravity Forms counts as active.
+        return new class ($manager) extends GravityFormsModule {
+            protected function supportsGravityForms(): bool
+            {
+                return true;
+            }
+        };
     }
 
     /**

@@ -18,6 +18,8 @@ defined('ABSPATH') || exit;
  *                                         the boxes and drop-downs, becomes
  *                                         the Gregorian date in the field's
  *                                         format and order
+ *     Iranian fields                      saved in their standard form when
+ *                                         valid, such as 09121234567
  *
  * Gravity Forms reads the submission from $_POST again and again (to check
  * it, in the Number field's own check, to save it), so the values are fixed
@@ -99,6 +101,15 @@ class GravityFormsInputNormalizer
                 continue;
             }
 
+            $iranianType = GravityFormsIranianFields::iranianType($field);
+            if ($iranianType !== null) {
+                if (isset($post["input_{$id}"]) && is_string($post["input_{$id}"])) {
+                    $post["input_{$id}"] = IranianFieldTypes::normalize($iranianType, $post["input_{$id}"]);
+                }
+
+                continue;
+            }
+
             foreach (self::digitInputs($field) as $suffix) {
                 $key = "input_{$id}{$suffix}";
                 if (!isset($post[$key])) {
@@ -140,7 +151,7 @@ class GravityFormsInputNormalizer
     public function enqueue($form): void
     {
         foreach (is_array($form) && is_array($form['fields'] ?? null) ? $form['fields'] : [] as $field) {
-            if (is_object($field) && self::digitInputs($field) !== []) {
+            if (is_object($field) && (self::digitInputs($field) !== [] || GravityFormsIranianFields::iranianType($field) !== null)) {
                 FormDigitsScript::enqueue(self::SCRIPT, 'gravityforms-digits.js');
 
                 return;
