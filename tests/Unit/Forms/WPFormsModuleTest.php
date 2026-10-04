@@ -8,6 +8,7 @@ use Mockery;
 use PersianKit\Abstracts\AbstractModule;
 use PersianKit\Container\ServiceContainer;
 use PersianKit\Core\SettingsManager;
+use PersianKit\Modules\Forms\WPFormsDateField;
 use PersianKit\Modules\Forms\WPFormsIranianFields;
 use PersianKit\Modules\Forms\WPFormsModule;
 use PHPUnit\Framework\TestCase;
@@ -38,6 +39,7 @@ class WPFormsModuleTest extends TestCase
     {
         $this->assertSame([
             WPFormsIranianFields::class . '::register',
+            WPFormsDateField::class . '::register',
         ], $this->listCalls(fn (WPFormsModule $module, ServiceContainer $container) => $module->boot($container)));
     }
 
@@ -45,6 +47,7 @@ class WPFormsModuleTest extends TestCase
     {
         $this->assertSame([
             WPFormsIranianFields::class . '::registerFallback',
+            WPFormsDateField::class . '::registerFallback',
         ], $this->listCalls(fn (WPFormsModule $module, ServiceContainer $container) => $module->bootDisabled($container)));
     }
 
