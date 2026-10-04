@@ -22,17 +22,18 @@ if (file_exists($wpTestsDir . '/includes/functions.php')) {
     require_once $wpTestsDir . '/includes/functions.php';
 
     // Plugins the integration tests cover: WooCommerce, Contact Form 7, ACF,
-    // Forminator, Yoast SEO, Rank Math and Polylang. Each loads from
+    // Forminator, Gravity Forms, Yoast SEO, Rank Math and Polylang. Each loads from
     // PERSIAN_KIT_TESTS_<NAME>_DIR (as in CI), or when installed next to the
     // plugin. Their tests are skipped without them; set
     // PERSIAN_KIT_TESTS_WITHOUT_<NAME>=1 to run the suite without one.
     $plugins = [
-        'WOOCOMMERCE' => 'woocommerce/woocommerce.php',
-        'CF7'         => 'contact-form-7/wp-contact-form-7.php',
-        'ACF'         => 'advanced-custom-fields/acf.php',
-        'FORMINATOR'  => 'forminator/forminator.php',
-        'YOAST'       => 'wordpress-seo/wp-seo.php',
-        'RANK_MATH'   => 'seo-by-rank-math/rank-math.php',
+        'WOOCOMMERCE'  => 'woocommerce/woocommerce.php',
+        'CF7'          => 'contact-form-7/wp-contact-form-7.php',
+        'ACF'          => 'advanced-custom-fields/acf.php',
+        'FORMINATOR'   => 'forminator/forminator.php',
+        'GRAVITYFORMS' => 'gravityforms/gravityforms.php',
+        'YOAST'        => 'wordpress-seo/wp-seo.php',
+        'RANK_MATH'    => 'seo-by-rank-math/rank-math.php',
     ];
     // Polylang filters every query by language once it has languages, so
     // it loads only for the multilingual run (composer test:integration:polylang).
@@ -116,6 +117,13 @@ if (file_exists($wpTestsDir . '/includes/functions.php')) {
         // Forminator's entry tables, as on activation, once it has loaded.
         tests_add_filter('init', static function () {
             \Forminator_Database_Tables::install_database_tables();
+        }, 99);
+    }
+
+    if (isset($pluginFiles['GRAVITYFORMS'])) {
+        // Gravity Forms' tables, as on activation, once it has loaded.
+        tests_add_filter('init', static function () {
+            gf_upgrade()->install();
         }, 99);
     }
 
