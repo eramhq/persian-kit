@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 import { existsSync, readFileSync } from 'node:fs';
 import { createRequire } from 'node:module';
 import { createContext, runInContext } from 'node:vm';
+import { fileURLToPath } from 'node:url';
 
 const require = createRequire(import.meta.url);
 const moment = require('moment-timezone');
@@ -13,7 +14,7 @@ const source = readFileSync(new URL('../../resources/js/woocommerce-analytics-da
 // WooCommerce's own date package when it sits next to the plugin (or in
 // PERSIAN_KIT_TESTS_WOOCOMMERCE_DIR), else a stand-in with the same members.
 const wooCommerceDir = process.env.PERSIAN_KIT_TESTS_WOOCOMMERCE_DIR
-    || new URL('../../../woocommerce', import.meta.url).pathname;
+    || fileURLToPath(new URL('../../../woocommerce', import.meta.url));
 const wooDatePath = `${wooCommerceDir}/assets/client/admin/date/index.js`;
 const wooDateSource = existsSync(wooDatePath) ? readFileSync(wooDatePath, 'utf8') : null;
 

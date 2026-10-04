@@ -114,6 +114,11 @@ jobs:
           unzip -q /tmp/woocommerce.zip -d "$WP_CORE_DIR/wp-content/plugins"
           test -f "$PERSIAN_KIT_TESTS_WOOCOMMERCE_DIR/woocommerce.php"
 
+      # What the Jalali Analytics script replaces is still in this WooCommerce
+      # (Node's built-in modules only; this job has no npm packages).
+      - name: Analytics date contract
+        run: node --test tests/js/woocommerce-analytics-contract.test.mjs
+
       - name: Download Contact Form 7
         run: |
           curl -sSfL -o /tmp/contact-form-7.zip "https://downloads.wordpress.org/plugin/contact-form-7.${CF7_VERSION}.zip"
