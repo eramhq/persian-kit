@@ -21,6 +21,7 @@ use PersianKit\Modules\WooCommerce\SchemaPrices;
 use PersianKit\Modules\WooCommerce\ShortCheckout;
 use PersianKit\Modules\WooCommerce\WooAdminDateFields;
 use PersianKit\Modules\WooCommerce\WooAnalyticsDates;
+use PersianKit\Modules\WooCommerce\WooAnalyticsIntervals;
 use PersianKit\Modules\WooCommerce\WooCommerceModule;
 use PersianKit\Modules\WooCommerce\WooDateDisplayFilter;
 use PersianKit\Modules\WooCommerce\WooOrderMonthFilter;
@@ -60,6 +61,7 @@ class WooCommerceModuleTest extends TestCase
             CheckoutValidator::class,
             NationalIdField::class,
             PersianEmailFont::class,
+            WooAnalyticsIntervals::class,
         ], $this->bootAndListFetched());
     }
 
@@ -79,6 +81,7 @@ class WooCommerceModuleTest extends TestCase
             WooAdminDateFields::class,
             WooPostedDateNormalizer::class,
             WooAnalyticsDates::class,
+            WooAnalyticsIntervals::class,
         ], $this->bootAndListFetched());
     }
 
@@ -92,6 +95,7 @@ class WooCommerceModuleTest extends TestCase
             NationalIdField::class,
             CityField::class,
             PersianEmailFont::class,
+            WooAnalyticsIntervals::class,
         ], $this->bootAndListFetched(['checkout_normalize' => false, 'checkout_validate' => false, 'city_select' => true]));
     }
 
@@ -108,6 +112,7 @@ class WooCommerceModuleTest extends TestCase
             NationalIdField::class,
             PersianEmailFont::class,
             WooPostedDateNormalizer::class,
+            WooAnalyticsIntervals::class,
         ], $this->bootAndListFetched());
     }
 
@@ -124,6 +129,7 @@ class WooCommerceModuleTest extends TestCase
             NationalIdField::class,
             PersianEmailFont::class,
             WooAnalyticsDates::class,
+            WooAnalyticsIntervals::class,
         ], $this->bootAndListFetched(['dates_admin' => false]));
     }
 
@@ -133,6 +139,7 @@ class WooCommerceModuleTest extends TestCase
 
         $this->assertContains(WooAnalyticsDates::class, $this->bootAndListFetched());
         $this->assertNotContains(WooAnalyticsDates::class, $this->bootAndListFetched(['dates_analytics' => false]));
+        $this->assertNotContains(WooAnalyticsIntervals::class, $this->bootAndListFetched(['dates_analytics' => false]));
     }
 
     public function test_schema_prices_stay_while_the_module_is_off(): void

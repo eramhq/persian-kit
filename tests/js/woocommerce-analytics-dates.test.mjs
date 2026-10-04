@@ -371,3 +371,50 @@ test('formats machines read stay Gregorian (11)', () => {
     }
     assert.equal(window.PersianKitAnalyticsDates.isMachineFormat('Y/m/d'), false);
 });
+
+test('stats by month, season or year ask the server for Jalali periods (C)', () => {
+    const window = page(MEHR_9);
+    const { withFlag } = window.PersianKitAnalyticsDates;
+    const path = '/wc-analytics/reports/revenue/stats?order=asc&interval=month&per_page=100&after=2025-03-21T00%3A00%3A00';
+
+    assert.equal(withFlag({ path }).path, path + '&persian_kit_calendar=jalali');
+    assert.equal(withFlag({ path: path.replace('month', 'quarter') }).path.endsWith('&persian_kit_calendar=jalali'), true);
+    assert.equal(withFlag({ path: '/wc-analytics/reports/pk-extension/stats?interval=year' }).path, '/wc-analytics/reports/pk-extension/stats?interval=year&persian_kit_calendar=jalali');
+    // Plain permalinks.
+    const url = 'http://example.com/?rest_route=%2Fwc-analytics%2Freports%2Forders%2Fstats&interval=month';
+    assert.equal(withFlag({ url }).url, url + '&persian_kit_calendar=jalali');
+
+    // Days, weeks, other reports and other endpoints go as they are.
+    for (const other of [
+        path.replace('month', 'day'),
+        path.replace('month', 'week'),
+        '/wc-analytics/reports/revenue?interval=month',
+        '/wc-analytics/leaderboards?after=2025-03-21',
+        '/wp/v2/posts?interval=month',
+    ]) {
+        const options = { path: other };
+        assert.equal(withFlag(options), options, other);
+    }
+});
+
+test('the flag is added only once wc.date is Jalali', async () => {
+    const seen = [];
+    const middlewares = [];
+    const apiFetch = {
+        use: (middleware) => middlewares.push(middleware),
+        run: (options) => middlewares[0](options, (final) => seen.push(final.path)),
+    };
+    const path = '/wc-analytics/reports/revenue/stats?interval=month';
+
+    const jalali = page(MEHR_9);
+    jalali.wp.apiFetch = apiFetch;
+    assert.equal(jalali.PersianKitAnalyticsDates.installApiFetch(), true);
+    apiFetch.run({ path });
+
+    const gregorian = page(MEHR_9, { date: { presetValues: [], periods: [] } });
+    gregorian.wp.apiFetch = { ...apiFetch, use: (middleware) => { middlewares[0] = middleware; } };
+    gregorian.PersianKitAnalyticsDates.installApiFetch();
+    apiFetch.run({ path });
+
+    assert.deepEqual(seen, [path + '&persian_kit_calendar=jalali', path]);
+});

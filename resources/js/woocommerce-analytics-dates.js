@@ -14,6 +14,9 @@
  * axes and tooltips) come out Jalali, while formats machines read, such as
  * Ymd in the link to the orders list, stay Gregorian.
  *
+ * Stats requests by month, season or year carry a flag, and the server
+ * groups them by Jalali period (WooAnalyticsIntervals.php).
+ *
  * Each part is installed by a script printed right after the WooCommerce or
  * WordPress script it replaces (WooAnalyticsDates.php), before anything
  * reads it. If wc.date is missing or has changed shape, nothing is replaced
@@ -28,6 +31,9 @@
     var Jalali = window.PersianKitJalali;
     var config = window.persianKitAnalyticsDates || {};
     var labels = config.labels || {};
+
+    /** Query parameter that asks the server for Jalali periods (WooAnalyticsIntervals::FLAG). */
+    var FLAG = 'persian_kit_calendar';
 
     /** Months in a WooCommerce interval; a quarter is a Jalali season. */
     var MONTHS_IN = { month: 1, quarter: 3, year: 12 };
@@ -80,6 +86,7 @@
     var state = {
         /** The original wc.date, once replaced; the other parts wait for it. */
         original: null,
+        apiFetch: false,
     };
 
     function pad(n) {
@@ -548,10 +555,54 @@
         return true;
     }
 
+    // --- Stats requests: the flag for Jalali periods ------------------------
+
+    function isJalaliStatsRequest(url) {
+        var decoded = url;
+        try {
+            decoded = decodeURIComponent(url);
+        } catch (error) {
+            // Keep the raw value.
+        }
+
+        return /\/wc-analytics\/[^?&#]+\/stats(?=[?&#]|$)/.test(decoded)
+            && /[?&]interval=(month|quarter|year)(?=[&#]|$)/.test(decoded);
+    }
+
+    function withFlag(options) {
+        var key = typeof options.path === 'string' ? 'path' : (typeof options.url === 'string' ? 'url' : '');
+
+        if (!key || !isJalaliStatsRequest(options[key])) {
+            return options;
+        }
+
+        var copy = Object.assign({}, options);
+        copy[key] = options[key] + (options[key].indexOf('?') === -1 ? '?' : '&') + FLAG + '=jalali';
+
+        return copy;
+    }
+
+    function installApiFetch() {
+        var apiFetch = window.wp && window.wp.apiFetch;
+
+        if (state.apiFetch || !apiFetch || typeof apiFetch.use !== 'function') {
+            return false;
+        }
+
+        apiFetch.use(function (options, next) {
+            return next(isInstalled() ? withFlag(options) : options);
+        });
+        state.apiFetch = true;
+
+        return true;
+    }
+
     window.PersianKitAnalyticsDates = {
         installWpDate: installWpDate,
         installWcDate: installWcDate,
+        installApiFetch: installApiFetch,
         // For tests.
         isMachineFormat: isMachineFormat,
+        withFlag: withFlag,
     };
 })(window);
