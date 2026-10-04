@@ -20,6 +20,7 @@ use PersianKit\Modules\WooCommerce\ProvinceLimit;
 use PersianKit\Modules\WooCommerce\SchemaPrices;
 use PersianKit\Modules\WooCommerce\ShortCheckout;
 use PersianKit\Modules\WooCommerce\WooAdminDateFields;
+use PersianKit\Modules\WooCommerce\WooAnalyticsDates;
 use PersianKit\Modules\WooCommerce\WooCommerceModule;
 use PersianKit\Modules\WooCommerce\WooDateDisplayFilter;
 use PersianKit\Modules\WooCommerce\WooOrderMonthFilter;
@@ -77,6 +78,7 @@ class WooCommerceModuleTest extends TestCase
             WooOrderMonthFilter::class,
             WooAdminDateFields::class,
             WooPostedDateNormalizer::class,
+            WooAnalyticsDates::class,
         ], $this->bootAndListFetched());
     }
 
@@ -121,7 +123,16 @@ class WooCommerceModuleTest extends TestCase
             CheckoutValidator::class,
             NationalIdField::class,
             PersianEmailFont::class,
+            WooAnalyticsDates::class,
         ], $this->bootAndListFetched(['dates_admin' => false]));
+    }
+
+    public function test_analytics_dates_have_their_own_option(): void
+    {
+        Functions\when('is_admin')->justReturn(true);
+
+        $this->assertContains(WooAnalyticsDates::class, $this->bootAndListFetched());
+        $this->assertNotContains(WooAnalyticsDates::class, $this->bootAndListFetched(['dates_analytics' => false]));
     }
 
     public function test_schema_prices_stay_while_the_module_is_off(): void
@@ -187,6 +198,7 @@ class WooCommerceModuleTest extends TestCase
             'allowed_states'           => [],
             'short_checkout'           => false,
             'dates_admin'              => true,
+            'dates_analytics'          => false,
             'call_for_price'           => false,
             'call_for_price_text'      => '',
             'call_for_price_list_text' => '',
@@ -208,6 +220,7 @@ class WooCommerceModuleTest extends TestCase
             'allowed_states'           => [],
             'short_checkout'           => false,
             'dates_admin'              => true,
+            'dates_analytics'          => true,
             'call_for_price'           => false,
             'call_for_price_text'      => '',
             'call_for_price_list_text' => '',

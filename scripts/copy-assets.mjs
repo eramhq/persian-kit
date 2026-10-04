@@ -83,6 +83,11 @@ const copies = [
         src: 'resources/js/woocommerce-date-fields.js',
         dest: 'public/js/woocommerce-date-fields.js',
     },
+    // Jalali dates in WooCommerce Analytics
+    {
+        src: 'resources/js/woocommerce-analytics-dates.js',
+        dest: 'public/js/woocommerce-analytics-dates.js',
+    },
     // WooCommerce city suggestions (checkout, cart calculator, My Account)
     {
         src: 'resources/js/woocommerce-city-select.js',
