@@ -85,7 +85,16 @@ class JalaliFormatter
      */
     public static function format(string $format, int|string $timestamp = '', ?\DateTimeZone $timezone = null): string
     {
-        return self::formatDateTime($format, self::resolveDateTime($timestamp, $timezone));
+        return self::formatDateTime($format, self::dateTime($timestamp, $timezone));
+    }
+
+    /**
+     * The moment format() shows for $timestamp: a Unix timestamp or a date
+     * string, now when empty, in $timezone (the site timezone by default).
+     */
+    public static function dateTime(int|string $timestamp = '', ?\DateTimeZone $timezone = null): \DateTimeImmutable
+    {
+        return \DateTimeImmutable::createFromMutable(self::resolveDateTime($timestamp, $timezone));
     }
 
     public static function formatDateTime(string $format, \DateTimeInterface $dateTime): string
@@ -101,7 +110,7 @@ class JalaliFormatter
      */
     public static function fromLocalMysql(string $format, ?string $local): ?string
     {
-        $dateTime = self::parseMysql($local, wp_timezone());
+        $dateTime = self::localMysqlDateTime($local);
 
         return $dateTime ? self::formatDateTime($format, $dateTime) : null;
     }
@@ -113,11 +122,27 @@ class JalaliFormatter
      */
     public static function fromGmtMysql(string $format, ?string $gmt, ?\DateTimeZone $displayTimezone = null): ?string
     {
-        $dateTime = self::parseMysql($gmt, new \DateTimeZone('UTC'));
+        $dateTime = self::gmtMysqlDateTime($gmt, $displayTimezone);
 
-        return $dateTime
-            ? self::formatDateTime($format, $dateTime->setTimezone($displayTimezone ?? wp_timezone()))
-            : null;
+        return $dateTime ? self::formatDateTime($format, $dateTime) : null;
+    }
+
+    /**
+     * A site-local MySQL datetime in the site timezone, or null when it is
+     * empty, all zeros or unparseable.
+     */
+    public static function localMysqlDateTime(?string $local): ?\DateTimeImmutable
+    {
+        return self::parseMysql($local, wp_timezone());
+    }
+
+    /**
+     * A UTC MySQL datetime moved to $displayTimezone (the site timezone by
+     * default), or null when it is empty, all zeros or unparseable.
+     */
+    public static function gmtMysqlDateTime(?string $gmt, ?\DateTimeZone $displayTimezone = null): ?\DateTimeImmutable
+    {
+        return self::parseMysql($gmt, new \DateTimeZone('UTC'))?->setTimezone($displayTimezone ?? wp_timezone());
     }
 
     /**

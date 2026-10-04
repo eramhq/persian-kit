@@ -7,6 +7,7 @@ use Brain\Monkey;
 use Brain\Monkey\Functions;
 use Brain\Monkey\Filters;
 use PersianKit\Modules\DateConversion\DateFilters;
+use PersianKit\Modules\DateConversion\GregorianCompanion;
 use PersianKit\Service\Language\ContentLanguage;
 use PersianKit\Tests\Unit\Support\UsesLanguages;
 
@@ -356,5 +357,112 @@ class DateFiltersTest extends TestCase
 
         $this->assertStringContainsString('1404 &lt;b&gt; &amp;', $result);
         $this->assertStringNotContainsString('<b>', $result);
+    }
+
+    /**
+     * Filters with "Show the Gregorian date too" on, on a front end request
+     * in Tehran.
+     */
+    private function withGregorian(): DateFilters
+    {
+        Functions\when('wp_timezone')->justReturn(new \DateTimeZone('Asia/Tehran'));
+        Functions\when('wp_doing_ajax')->justReturn(false);
+        Functions\when('wp_is_serving_rest_request')->justReturn(false);
+
+        return new DateFilters(false, new GregorianCompanion(true));
+    }
+
+    private function post(): object
+    {
+        return (object) [
+            'post_date'         => '2026-10-02 10:30:00',
+            'post_date_gmt'     => '2026-10-02 07:00:00',
+            'post_modified'     => '2026-10-03 09:00:00',
+            'post_modified_gmt' => '2026-10-03 05:30:00',
+        ];
+    }
+
+    public function test_post_dates_show_the_gregorian_date_too(): void
+    {
+        $filters = $this->withGregorian();
+
+        $this->assertSame('1405/07/10 (' . self::ltr('2026-10-02') . ')', $filters->filterPostDate('October 2, 2026', '', $this->post()));
+        $this->assertSame('1405/07/11 (' . self::ltr('2026-10-03') . ')', $filters->filterModifiedDate('October 3, 2026', 'Y/m/d', $this->post()));
+        $this->assertSame('10 مهر 1405 (' . self::ltr('2026-10-02') . ')', $filters->filterPostTime('October 2, 2026', 'j F Y', $this->post()));
+    }
+
+    public function test_the_gregorian_date_is_read_from_the_gmt_date_when_the_local_one_is_missing(): void
+    {
+        $filters = $this->withGregorian();
+        $post = (object) ['post_date' => '0000-00-00 00:00:00', 'post_date_gmt' => '2026-10-01 21:00:00'];
+
+        $this->assertSame('1405/07/10 (' . self::ltr('2026-10-02') . ')', $filters->filterPostDate('', 'Y/m/d', $post));
+    }
+
+    public function test_comment_dates_show_the_gregorian_date_too(): void
+    {
+        $comment = (object) ['comment_date' => '2026-10-02 10:30:00', 'comment_date_gmt' => '2026-10-02 07:00:00'];
+
+        $this->assertSame('1405/07/10 (' . self::ltr('2026-10-02') . ')', $this->withGregorian()->filterCommentDate('October 2, 2026', '', $comment));
+    }
+
+    public function test_the_date_shows_the_gregorian_date_inside_before_and_after(): void
+    {
+        $filters = $this->withGregorian();
+        Functions\when('get_post')->justReturn($this->post());
+
+        $this->assertSame('<h2>1405/07/10 (' . self::ltr('2026-10-02') . ')</h2>', $filters->filterTheDate('<h2>October 2, 2026</h2>', '', '<h2>', '</h2>'));
+    }
+
+    public function test_times_keep_one_date(): void
+    {
+        $filters = $this->withGregorian();
+        $comment = (object) ['comment_date' => '2026-10-02 10:30:00', 'comment_date_gmt' => '2026-10-02 07:00:00'];
+
+        $this->assertSame('10:30', $filters->filterPostTime('10:30', '', $this->post()));
+        $this->assertSame('09:00', $filters->filterModifiedTime('09:00', '', $this->post()));
+        $this->assertSame('10:30', $filters->filterCommentTime('10:30', '', false, true, $comment));
+    }
+
+    public function test_post_date_block_shows_the_gregorian_date_and_keeps_the_datetime_attribute(): void
+    {
+        $content = '<div class="wp-block-post-date"><time datetime="2026-10-02T10:30:00+03:30"><a href="/hello/">October 2, 2026</a></time></div>';
+
+        $result = $this->withGregorian()->filterPostDateBlock($content, ['attrs' => ['format' => 'Y/m/d']]);
+
+        $this->assertSame(
+            '<div class="wp-block-post-date"><time datetime="2026-10-02T10:30:00+03:30"><a href="/hello/">1405/07/10 (' . self::ltr('2026-10-02') . ')</a></time></div>',
+            $result
+        );
+    }
+
+    public function test_latest_comments_block_shows_the_gregorian_date(): void
+    {
+        $content = '<ol><li><time datetime="2026-10-02T10:30:00+03:30" class="wp-block-latest-comments__comment-date">October 2, 2026</time></li></ol>';
+
+        $this->assertSame(
+            '<ol><li><time datetime="2026-10-02T10:30:00+03:30" class="wp-block-latest-comments__comment-date">1405/07/10 (' . self::ltr('2026-10-02') . ')</time></li></ol>',
+            $this->withGregorian()->filterLatestCommentsBlock($content, [])
+        );
+    }
+
+    public function test_get_post_time_and_wp_date_keep_one_date(): void
+    {
+        $filters = $this->withGregorian();
+        $post = $this->post();
+        Functions\when('get_post')->justReturn($post);
+        Functions\when('get_post_datetime')->justReturn(new \DateTimeImmutable($post->post_date, new \DateTimeZone('Asia/Tehran')));
+
+        $this->assertSame('1405/07/10', $filters->filterGetPostTime('2026/10/02', 'Y/m/d', false));
+        $this->assertSame('1405/07/10', $filters->filterWpDate('2026/10/02', 'Y/m/d', 1790924400, new \DateTimeZone('Asia/Tehran')));
+    }
+
+    /**
+     * A numeric Gregorian date as the page gets it: between invisible
+     * left-to-right isolate marks.
+     */
+    private static function ltr(string $date): string
+    {
+        return "\u{2066}" . $date . "\u{2069}";
     }
 }

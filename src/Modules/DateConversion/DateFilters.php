@@ -10,11 +10,14 @@ class DateFilters
 {
     private bool $globalConversion;
 
+    private GregorianCompanion $gregorian;
+
     private static bool $inFilter = false;
 
-    public function __construct(bool $globalConversion)
+    public function __construct(bool $globalConversion, ?GregorianCompanion $gregorian = null)
     {
         $this->globalConversion = $globalConversion;
+        $this->gregorian = $gregorian ?? new GregorianCompanion(false);
     }
 
     /**
@@ -80,9 +83,9 @@ class DateFilters
             return $date;
         }
 
-        $formatted = JalaliFormatter::fromLocalMysql($format ?: $this->defaultDateFormat(), $post->post_date);
+        $dateTime = JalaliFormatter::localMysqlDateTime($post->post_date);
 
-        return $formatted === null ? $date : $before . $formatted . $after;
+        return $dateTime === null ? $date : $before . $this->formatWithGregorian($format ?: $this->defaultDateFormat(), $dateTime) . $after;
     }
 
     public function filterPostTime(string $time, string $format, ?object $post = null): string
@@ -183,7 +186,7 @@ class DateFilters
         return $this->replaceRenderedTimeText(
             $blockContent,
             function (string $datetime, string $innerHtml) use ($format): string {
-                $formattedDate = esc_html(JalaliFormatter::format($format, $datetime));
+                $formattedDate = esc_html($this->formatWithGregorian($format, JalaliFormatter::dateTime($datetime)));
 
                 return $this->replaceLinkedTimeText($innerHtml, $formattedDate);
             },
@@ -202,7 +205,7 @@ class DateFilters
 
         return $this->replaceRenderedTimeText(
             $blockContent,
-            fn (string $datetime, string $innerHtml): string => esc_html(JalaliFormatter::format($this->defaultDateFormat(), $datetime))
+            fn (string $datetime, string $innerHtml): string => esc_html($this->formatWithGregorian($this->defaultDateFormat(), JalaliFormatter::dateTime($datetime)))
         );
     }
 
@@ -307,9 +310,18 @@ class DateFilters
      */
     private function formatStored(string $format, ?string $local, ?string $gmt, string $fallback): string
     {
-        return JalaliFormatter::fromLocalMysql($format, $local)
-            ?? JalaliFormatter::fromGmtMysql($format, $gmt)
-            ?? $fallback;
+        $dateTime = JalaliFormatter::localMysqlDateTime($local) ?? JalaliFormatter::gmtMysqlDateTime($gmt);
+
+        return $dateTime === null ? $fallback : $this->formatWithGregorian($format, $dateTime);
+    }
+
+    /**
+     * The Jalali date, with the Gregorian one next to it when the site asks
+     * for both and $format is a full date.
+     */
+    private function formatWithGregorian(string $format, \DateTimeInterface $dateTime): string
+    {
+        return $this->gregorian->append(JalaliFormatter::formatDateTime($format, $dateTime), $format, $dateTime);
     }
 
     private function matchesCoreOutput(string $time, string $format, \DateTimeInterface $dateTime): bool
