@@ -735,6 +735,15 @@ a.persian-kit-version:focus {
     padding-inline-start: 0;
 }
 
+/* Choices that belong to the checkbox above, lined up past it. */
+.persian-kit-option--nested {
+    padding-inline-start: 24px;
+}
+
+.persian-kit-option--nested .persian-kit-option__help {
+    padding-inline-start: 0;
+}
+
 /* A text field sits under its label, lined up past the checkbox above it. */
 .persian-kit-option--text {
     justify-items: start;

@@ -30,13 +30,31 @@ class DateConversionModule extends AbstractModule
      */
     public static function defaults(): array
     {
-        return ['enabled' => true, 'global_conversion' => false, 'jalali_archives' => true, 'jalali_permalinks' => false];
+        return [
+            'enabled'             => true,
+            'global_conversion'   => false,
+            'jalali_archives'     => true,
+            'jalali_permalinks'   => false,
+            'gregorian_date'      => false,
+            'gregorian_style'     => 'numeric',
+            'gregorian_order'     => 'jalali_first',
+            'gregorian_separator' => 'parentheses',
+        ];
     }
 
     public function register(ServiceContainer $container): void
     {
-        $container->register(DateFilters::class, function () {
-            return new DateFilters((bool) $this->setting('global_conversion', false));
+        $container->register(GregorianCompanion::class, function () {
+            return new GregorianCompanion(
+                (bool) $this->setting('gregorian_date'),
+                (string) $this->setting('gregorian_style'),
+                (string) $this->setting('gregorian_order'),
+                (string) $this->setting('gregorian_separator')
+            );
+        });
+
+        $container->register(DateFilters::class, function (ServiceContainer $container) {
+            return new DateFilters((bool) $this->setting('global_conversion', false), $container->get(GregorianCompanion::class));
         });
 
         $container->register(PostTypeMonthFilter::class, function () {
@@ -100,10 +118,14 @@ class DateConversionModule extends AbstractModule
     public function sanitizeSettings(array $values): array
     {
         return [
-            'enabled'           => !empty($values['enabled']),
-            'global_conversion' => !empty($values['global_conversion']),
-            'jalali_archives'   => !empty($values['jalali_archives']),
-            'jalali_permalinks' => !empty($values['jalali_permalinks']),
+            'enabled'             => !empty($values['enabled']),
+            'global_conversion'   => !empty($values['global_conversion']),
+            'jalali_archives'     => !empty($values['jalali_archives']),
+            'jalali_permalinks'   => !empty($values['jalali_permalinks']),
+            'gregorian_date'      => !empty($values['gregorian_date']),
+            'gregorian_style'     => self::choice($values['gregorian_style'] ?? null, GregorianCompanion::STYLES),
+            'gregorian_order'     => self::choice($values['gregorian_order'] ?? null, GregorianCompanion::ORDERS),
+            'gregorian_separator' => self::choice($values['gregorian_separator'] ?? null, GregorianCompanion::SEPARATORS),
         ];
     }
 
@@ -174,5 +196,15 @@ class DateConversionModule extends AbstractModule
     private function usesJalaliPermalinks(): bool
     {
         return (bool) $this->setting('jalali_permalinks') && (bool) apply_filters('persian_kit_jalali_permalinks', true);
+    }
+
+    /**
+     * $value when it is one of $choices, otherwise the first (the default).
+     *
+     * @param list<string> $choices
+     */
+    private static function choice(mixed $value, array $choices): string
+    {
+        return is_string($value) && in_array($value, $choices, true) ? $value : $choices[0];
     }
 }
