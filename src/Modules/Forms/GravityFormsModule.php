@@ -23,7 +23,7 @@ class GravityFormsModule extends AbstractModule
 
     public static function description(): string
     {
-        return __('Jalali dates in Date fields, an "Iranian fields" group with checks for mobile number, national ID and more, an Iran address type, toman and rial, and English digits in phone, number and date inputs.', 'persian-kit');
+        return __('Jalali dates in Date fields, Iranian fields such as mobile number and national ID, an Iran address type, and toman and rial.', 'persian-kit');
     }
 
     public static function category(): ?string

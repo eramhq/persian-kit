@@ -16,8 +16,8 @@ msgstr ""
 
 #. Plugin Name of the plugin
 #: persian-kit.php
-#: src/Core/AdminPage.php:119
 #: src/Core/AdminPage.php:120
+#: src/Core/AdminPage.php:121
 #: src/Core/ConflictDetector.php:177
 #: src/Service/Assets/AssetManager.php:45
 #: src/Service/Import/PluginsScreenNotice.php:56
@@ -65,41 +65,41 @@ msgstr "به %s نیاز دارد."
 msgid "Needs %1$s %2$s or newer (this site has %3$s)."
 msgstr "به %1$s نسخه %2$s یا جدیدتر نیاز دارد (نسخه این سایت %3$s است)."
 
-#: src/Core/AdminPage.php:111
+#: src/Core/AdminPage.php:112
 #: views/admin/partials/switch-review.php:54
 #: public/js/admin.js:4456
 msgid "Settings"
 msgstr "تنظیمات"
 
-#: src/Core/AdminPage.php:294
+#: src/Core/AdminPage.php:295
 msgid "Forms"
 msgstr "فرم‌ها"
 
-#: src/Core/AdminPage.php:295
+#: src/Core/AdminPage.php:296
 msgid "Store"
 msgstr "فروشگاه"
 
-#: src/Core/AdminPage.php:296
+#: src/Core/AdminPage.php:297
 #: views/admin/partials/compatibility-guidance.php:16
 msgid "Compatibility"
 msgstr "سازگاری"
 
-#: src/Core/AdminPage.php:381
+#: src/Core/AdminPage.php:382
 #: src/Service/Import/ReportDownload.php:39
 msgid "You do not have permission to access this page."
 msgstr "شما اجازه دسترسی به این صفحه را ندارید."
 
-#: src/Core/AdminPage.php:400
+#: src/Core/AdminPage.php:401
 #: views/admin/partials/woocommerce-settings.php:185
 #: views/admin/partials/woocommerce-settings.php:246
 msgid "Display"
 msgstr "نمایش"
 
-#: src/Core/AdminPage.php:401
+#: src/Core/AdminPage.php:402
 msgid "Writing"
 msgstr "نگارش"
 
-#: src/Core/AdminPage.php:402
+#: src/Core/AdminPage.php:403
 #: src/Core/ConflictDetector.php:43
 #: src/Core/ConflictDetector.php:87
 #: src/Modules/WooCommerce/WooCommerceModule.php:21
@@ -109,11 +109,11 @@ msgstr "نگارش"
 msgid "WooCommerce"
 msgstr "ووکامرس"
 
-#: src/Core/AdminPage.php:403
+#: src/Core/AdminPage.php:404
 msgid "Integrations"
 msgstr "یکپارچه‌سازی"
 
-#: src/Core/AdminPage.php:404
+#: src/Core/AdminPage.php:405
 msgid "Tools"
 msgstr "ابزارها"
 
@@ -455,6 +455,7 @@ msgstr "شماره موبایل"
 msgid "National ID"
 msgstr "کد ملی"
 
+#: src/Modules/Forms/GravityFormsAddress.php:46
 #: src/Modules/Forms/IranianFieldTypes.php:66
 msgid "Postcode"
 msgstr "کد پستی"
@@ -577,6 +578,7 @@ msgstr "کد ملی (اختیاری)"
 msgid "National ID:"
 msgstr "کد ملی:"
 
+#: src/Modules/Forms/GravityFormsAddress.php:47
 #: src/Modules/WooCommerce/ProvinceLimit.php:179
 msgid "Province"
 msgstr "استان"
@@ -2774,3 +2776,51 @@ msgstr "Parsi Date آن را کنار هر تاریخی که تبدیل می‌�
 #: src/Service/Import/Sources/ParsiDate/ParsiDateSettings.php:274
 msgid "Parsi Date added it to every date it converted. Persian Kit adds it, as numbers (2026-10-02), after a dash, to post and comment dates on the site that have a day, month and year; times, admin screens and feeds keep one date."
 msgstr "Parsi Date آن را کنار هر تاریخی که تبدیل می‌کرد می‌گذاشت. Persian Kit آن را به صورت عدد (2026-10-02) و بعد از خط تیره، کنار تاریخ کامل (روز، ماه و سال) نوشته‌ها و دیدگاه‌ها در سایت می‌گذارد؛ ساعت‌ها، پیشخوان و خوراک‌ها یک تاریخ نشان می‌دهند."
+
+#: src/Modules/Forms/GravityForms/CardField.php:18
+msgid "A 16-digit Iranian bank card number, checked against its check digit."
+msgstr "شماره کارت بانکی ۱۶ رقمی، که با رقم کنترلش بررسی می‌شود."
+
+#: src/Modules/Forms/GravityForms/IbanField.php:18
+msgid "An Iranian IBAN (Sheba), checked and saved as IR and 24 digits."
+msgstr "شماره شبا، که بررسی و به شکل ⁦IR⁩ و ۲۴ رقم ذخیره می‌شود."
+
+#: src/Modules/Forms/GravityForms/MobileField.php:18
+msgid "An Iranian mobile number, checked and saved as 09xxxxxxxxx."
+msgstr "شماره موبایل ایرانی، که بررسی و به شکل ⁦09xxxxxxxxx⁩ ذخیره می‌شود."
+
+#: src/Modules/Forms/GravityForms/NationalIdField.php:18
+msgid "An Iranian national ID (code melli), checked against its check digit."
+msgstr "کد ملی، که با رقم کنترلش بررسی می‌شود."
+
+#: src/Modules/Forms/GravityForms/PostcodeField.php:18
+msgid "An Iranian 10-digit postcode."
+msgstr "کد پستی ۱۰ رقمی ایران."
+
+#: src/Modules/Forms/GravityFormsAddress.php:45
+msgid "Iran"
+msgstr "ایران"
+
+#: src/Modules/Forms/GravityFormsCurrencies.php:37
+msgid "Iranian toman"
+msgstr "تومان ایران"
+
+#: src/Modules/Forms/GravityFormsCurrencies.php:38
+msgid "Iranian rial"
+msgstr "ریال ایران"
+
+#: src/Modules/Forms/GravityFormsDateField.php:173
+msgid "Gregorian calendar"
+msgstr "تقویم میلادی"
+
+#: src/Modules/Forms/GravityFormsDateField.php:174
+msgid "Keep Gravity Forms' own calendar instead of the Jalali one."
+msgstr "تقویم خود ⁦Gravity Forms⁩ به جای تقویم شمسی بماند."
+
+#: src/Modules/Forms/GravityFormsModule.php:21
+msgid "Gravity Forms"
+msgstr "Gravity Forms"
+
+#: src/Modules/Forms/GravityFormsModule.php:26
+msgid "Jalali dates in Date fields, Iranian fields such as mobile number and national ID, an Iran address type, and toman and rial."
+msgstr "تاریخ شمسی در فیلدهای تاریخ، فیلدهای ایرانی مثل شماره موبایل و کد ملی، نوع نشانی ایران، و تومان و ریال."
