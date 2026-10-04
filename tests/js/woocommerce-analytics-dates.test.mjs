@@ -114,7 +114,7 @@ function wpDateStandIn(timeZone) {
 function page(now, { timeZone = 'Asia/Tehran', startOfWeek = 6, date } = {}) {
     moment.now = () => new Date(now).getTime();
 
-    const window = createContext({ console, Object, Array, Math, Date, URLSearchParams });
+    const window = createContext({ console, Object, Array, Math, Date, URLSearchParams, Response, JSON, location: { search: '' } });
     window.window = window;
     window.moment = moment;
     window.lodash = lodash;
@@ -605,4 +605,79 @@ test('a date rule in the advanced filters is picked on a Jalali calendar too', a
     // 1 Farvardin 1405: written into the field, then the dropdown closes.
     picker.dispatchEvent(new window.CustomEvent('intl-change', { detail: { value: '2026-03-21' } }));
     assert.deepEqual(events, ['input 03/21/2026', 'keydown Escape']);
+});
+
+/** Daily intervals from one Gregorian day to another, with net revenue. */
+function days(from, to) {
+    const intervals = [];
+    for (let day = moment.utc(from); day.isSameOrBefore(moment.utc(to)); day.add(1, 'day')) {
+        intervals.push({ interval: day.format('YYYY-MM-DD'), date_start: day.format('YYYY-MM-DD 00:00:00'), subtotals: { net_revenue: 10, orders_count: '1', segments: [{ segment_id: 1, subtotals: { net_revenue: 10 } }] } });
+    }
+    return intervals;
+}
+
+const primaryRange = (window, after, before) => ({ after: window.moment(after), before: window.moment(before) });
+
+test('the year before gets an empty day where only the primary year has 30 Esfand', () => {
+    const window = page(MEHR_9);
+    // 25 Esfand 1403 to 3 Farvardin 1404 against the same days of 1402, whose Esfand has 29 days.
+    const aligned = window.PersianKitAnalyticsDates.alignIntervals({ totals: { net_revenue: 80 }, intervals: days('2024-03-15', '2024-03-22') }, primaryRange(window, '2025-03-15', '2025-03-23'));
+    const dates = aligned.intervals.map((interval) => interval.interval);
+
+    assert.equal(aligned.intervals.length, 9, 'as many days as 25 Esfand to 3 Farvardin 1404');
+    assert.deepEqual(JSON.parse(JSON.stringify(dates.slice(4, 7))), ['2024-03-19', '2024-03-19', '2024-03-20']);
+    // 30 Esfand 1403 pairs with nothing, 1 Farvardin with 1 Farvardin.
+    assert.equal(aligned.intervals[5].subtotals.net_revenue, 0);
+    assert.equal(aligned.intervals[5].subtotals.orders_count, 0);
+    assert.equal(aligned.intervals[5].subtotals.segments[0].subtotals.net_revenue, 0);
+    assert.equal(aligned.intervals[4].subtotals.net_revenue, 10, 'the copied day keeps its numbers');
+    assert.deepEqual(JSON.parse(JSON.stringify(aligned.totals)), { net_revenue: 80 });
+});
+
+test('the year before loses 30 Esfand where only it has one', () => {
+    const window = page(MEHR_9);
+    // 25 Esfand 1404 to 3 Farvardin 1405 against 1403, which has 30 Esfand (20 March 2025).
+    const aligned = window.PersianKitAnalyticsDates.alignIntervals({ intervals: days('2025-03-15', '2025-03-23') }, primaryRange(window, '2026-03-16', '2026-03-23'));
+
+    assert.equal(aligned.intervals.length, 8);
+    assert.equal(aligned.intervals.some((interval) => interval.interval === '2025-03-20'), false);
+});
+
+test('days already in line are left as they are', () => {
+    const window = page(MEHR_9);
+    const { alignIntervals } = window.PersianKitAnalyticsDates;
+
+    // From 30 Esfand 1403: the year before starts on 29 Esfand 1402, one day each.
+    const fromLeapDay = { intervals: days('2024-03-19', '2024-03-24') };
+    assert.equal(alignIntervals(fromLeapDay, primaryRange(window, '2025-03-20', '2025-03-25')), fromLeapDay);
+    // Away from Esfand.
+    const autumn = { intervals: days('2024-09-22', '2024-10-01') };
+    assert.equal(alignIntervals(autumn, primaryRange(window, '2025-09-23', '2025-10-01')), autumn);
+});
+
+test('only the daily stats of the year before on this screen are lined up', async () => {
+    const window = page(MEHR_9);
+    window.location.search = '?page=wc-admin&path=%2Fanalytics%2Frevenue&period=custom&compare=previous_year&after=2025-03-15&before=2025-03-23';
+    const middlewares = [];
+    window.wp.apiFetch = { use: (middleware) => middlewares.push(middleware) };
+    window.PersianKitAnalyticsDates.installApiFetch();
+
+    const fetchStats = async (after, before, interval = 'day') => {
+        const path = `/wc-analytics/reports/revenue/stats?order=asc&interval=${interval}&per_page=100&after=${after}&before=${before}`;
+        const response = await middlewares[0]({ path, parse: false }, () => Promise.resolve(new Response(
+            JSON.stringify({ totals: {}, intervals: days(after.slice(0, 10), before.slice(0, 10)) }),
+            { headers: { 'X-WP-Total': '9' } }
+        )));
+        return { total: response.headers.get('X-WP-Total'), length: (await response.json()).intervals.length };
+    };
+
+    // The year before: one empty day added, headers kept.
+    assert.deepEqual(await fetchStats('2024-03-15T00:00:00', '2024-03-22T23:59:59'), { total: '9', length: 9 });
+    // The primary range, and another range, as they came.
+    assert.deepEqual(await fetchStats('2025-03-15T00:00:00', '2025-03-23T23:59:59'), { total: '9', length: 9 });
+    assert.deepEqual(await fetchStats('2024-03-14T00:00:00', '2024-03-22T23:59:59'), { total: '9', length: 9 });
+
+    // Compared with the previous period: nothing to line up.
+    window.location.search = window.location.search.replace('previous_year', 'previous_period');
+    assert.deepEqual(await fetchStats('2024-03-15T00:00:00', '2024-03-22T23:59:59'), { total: '9', length: 8 });
 });
