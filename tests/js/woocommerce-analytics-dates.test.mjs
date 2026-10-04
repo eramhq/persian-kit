@@ -526,3 +526,50 @@ test('focus lost to a redrawn day stays in the popover; focus that leaves reache
     await new Promise((resolve) => window.setTimeout(resolve, 5));
     assert.deepEqual(seen, ['retold']);
 });
+
+test('CSV files from the browser get a Jalali column after each date column (E)', () => {
+    const window = page(MEHR_9);
+    window.persianKitAnalyticsDates.labels.jalaliColumn = '%s (شمسی)';
+    const generated = [];
+    window.wc.csvExport = {
+        generateCSVDataFromTable: (headers, rows) => {
+            generated.push({ headers, rows });
+            return headers.map((header) => header.label).join(',') + '\n' + rows.map((row) => row.map((cell) => cell.value).join(',')).join('\n');
+        },
+        downloadCSVFile() {},
+    };
+
+    assert.equal(window.PersianKitAnalyticsDates.installCsvExport(), true);
+
+    // The Revenue table: its date cells hold date_start.
+    const csv = window.wc.csvExport.generateCSVDataFromTable(
+        [{ key: 'date', label: 'Date' }, { key: 'orders_count', label: 'Orders' }],
+        [
+            [{ display: '9 مهر 1404', value: '2025-10-01 00:00:00' }, { display: '2', value: 2 }],
+            [{ display: '10 مهر 1404', value: '2025-10-02 00:00:00' }, { display: '0', value: 0 }],
+        ]
+    );
+    assert.equal(csv, 'Date,Date (شمسی),Orders\n2025-10-01 00:00:00,1404/07/09,2\n2025-10-02 00:00:00,1404/07/10,0');
+});
+
+test('only columns of dates count, and empty cells stay empty', () => {
+    const window = page(MEHR_9);
+    const { addJalaliColumns } = window.PersianKitAnalyticsDates;
+    const table = addJalaliColumns(
+        [{ key: 'registered', label: 'Sign up' }, { key: 'sku', label: 'SKU' }, { key: 'last', label: 'Last active' }],
+        [
+            [{ value: '2025-03-20 10:00:00' }, { value: '2025-03-20' }, { value: '' }],
+            [{ value: '2025-03-21T09:00:00' }, { value: 'PK-1' }, { value: '2024-03-19' }],
+        ]
+    );
+
+    const plainData = (value) => JSON.parse(JSON.stringify(value));
+    assert.deepEqual(plainData(table.headers.map((header) => header.label)), ['Sign up', 'Sign up (Jalali)', 'SKU', 'Last active', 'Last active (Jalali)']);
+    assert.deepEqual(plainData(table.rows.map((row) => row.map((cell) => cell.value))), [
+        ['2025-03-20 10:00:00', '1403/12/30', '2025-03-20', '', ''],
+        ['2025-03-21T09:00:00', '1404/01/01', 'PK-1', '2024-03-19', '1402/12/29'],
+    ]);
+
+    const plain = [[{ value: 'a' }]];
+    assert.equal(addJalaliColumns([{ key: 'name', label: 'Name' }], plain).rows, plain);
+});

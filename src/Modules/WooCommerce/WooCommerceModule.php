@@ -177,6 +177,9 @@ class WooCommerceModule extends AbstractModule
         $container->register(WooAnalyticsIntervals::class, function () {
             return new WooAnalyticsIntervals();
         });
+        $container->register(WooAnalyticsExport::class, function () {
+            return new WooAnalyticsExport();
+        });
         $container->register(CheckoutInputNormalizer::class, function () {
             return new CheckoutInputNormalizer();
         });
@@ -282,6 +285,8 @@ class WooCommerceModule extends AbstractModule
             }
             // Jalali periods, asked for by that script over the REST API.
             $container->get(WooAnalyticsIntervals::class)->register();
+            // Exports run later, from Action Scheduler.
+            $container->get(WooAnalyticsExport::class)->register();
         }
     }
 

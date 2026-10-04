@@ -22,6 +22,7 @@ class WooAnalyticsDates
         'wp-date'      => 'installWpDate',
         'wp-api-fetch' => 'installApiFetch',
         'wc-date'      => 'installWcDate',
+        'wc-csv'       => 'installCsvExport',
     ];
 
     public function register(): void
@@ -60,7 +61,9 @@ class WooAnalyticsDates
                 // As WooCommerce groups weeks on the server.
                 'startOfWeek' => (int) get_option('start_of_week', 0),
                 'labels'      => [
-                    'weekOf' => __('Week of', 'persian-kit'),
+                    'weekOf'       => __('Week of', 'persian-kit'),
+                    /* translators: %s: the name of a date column in a report, such as Date. */
+                    'jalaliColumn' => __('%s (Jalali)', 'persian-kit'),
                 ],
             ]) . ';',
             'before'

@@ -3,7 +3,9 @@
 namespace PersianKit\Tests\Integration;
 
 use Automattic\WooCommerce\Admin\API\Reports\Orders\Stats\DataStore as OrderStatsDataStore;
+use Automattic\WooCommerce\Admin\ReportCSVExporter;
 use PersianKit\Modules\WooCommerce\WooAnalyticsDates;
+use PersianKit\Modules\WooCommerce\WooAnalyticsExport;
 use PersianKit\Modules\WooCommerce\WooAnalyticsIntervals;
 use PersianKit\Tests\Integration\Support\WordPressIntegrationTestCase;
 
@@ -175,6 +177,33 @@ class WooCommerceAnalyticsTest extends WordPressIntegrationTestCase
 
         // Another shape is left to the endpoint.
         $this->assertSame(['rows' => []], $this->stats(['interval' => 'month'], true, 'pk-other')->get_data());
+    }
+
+    public function test_the_emailed_export_has_a_jalali_date_next_to_the_gregorian_one(): void
+    {
+        (new WooAnalyticsExport())->register();
+        $this->order('2025-10-01 12:00:00', 40);
+
+        // As Action Scheduler runs it, with no browser.
+        $exporter = new ReportCSVExporter('orders', [
+            'after'  => '2025-09-23T00:00:00',
+            'before' => '2025-10-22T23:59:59',
+        ]);
+        $exporter->set_filename('pk-test-orders-' . wp_generate_password(6, false));
+        $exporter->set_page(1);
+        $exporter->generate_file();
+
+        $lines = array_values(array_filter(explode("\n", str_replace("\xEF\xBB\xBF", '', $exporter->get_headers_row_file() . $exporter->get_file()))));
+        // The file and its headers file.
+        foreach (glob(ReportCSVExporter::get_reports_directory() . pathinfo($exporter->get_filename(), PATHINFO_FILENAME) . '*') ?: [] as $file) {
+            unlink($file); // phpcs:ignore WordPress.WP.AlternativeFunctions.unlink_unlink
+        }
+
+        $header = str_getcsv($lines[0], ',', '"', '');
+        $row = array_combine($header, str_getcsv($lines[1], ',', '"', ''));
+        $this->assertSame(['Date', 'Date (Jalali)'], array_slice($header, 0, 2));
+        $this->assertSame('1404/07/09', $row['Date (Jalali)']);
+        $this->assertStringStartsWith('2025-10-01', $row['Date']);
     }
 
     /**
