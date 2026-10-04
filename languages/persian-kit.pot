@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-10-03T11:12:39+00:00\n"
+"POT-Creation-Date: 2026-10-04T05:47:00+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: persian-kit\n"
@@ -103,7 +103,7 @@ msgstr ""
 #: src/Core/ConflictDetector.php:43
 #: src/Core/ConflictDetector.php:87
 #: src/Modules/WooCommerce/WooCommerceModule.php:21
-#: src/Modules/WooCommerce/WooCommerceModule.php:63
+#: src/Modules/WooCommerce/WooCommerceModule.php:64
 #: src/Service/Import/ImportReport.php:238
 #: views/admin/partials/woocommerce-settings.php:175
 msgid "WooCommerce"
@@ -415,7 +415,7 @@ msgstr ""
 msgid "All dates"
 msgstr ""
 
-#: src/Modules/DateConversion/PostTypeMonthFilter.php:271
+#: src/Modules/DateConversion/PostTypeMonthFilter.php:272
 msgid "Filter by date"
 msgstr ""
 
@@ -424,8 +424,8 @@ msgid "Show ۱۲۳ instead of 123 in your site's content."
 msgstr ""
 
 #: src/Modules/Forms/AcfModule.php:21
-#: src/Service/Import/ImportReport.php:248
-#: src/Service/Import/Sources/ParsiDate/ParsiDateSettings.php:298
+#: src/Service/Import/ImportReport.php:249
+#: src/Service/Import/Sources/ParsiDate/ParsiDateSettings.php:308
 msgid "ACF"
 msgstr ""
 
@@ -490,9 +490,9 @@ msgid "Mobile number"
 msgstr ""
 
 #: src/Modules/Forms/IranianFieldTypes.php:65
-#: src/Modules/WooCommerce/NationalIdField.php:90
-#: src/Modules/WooCommerce/NationalIdField.php:118
-#: src/Modules/WooCommerce/NationalIdField.php:216
+#: src/Modules/WooCommerce/NationalIdField.php:86
+#: src/Modules/WooCommerce/NationalIdField.php:114
+#: src/Modules/WooCommerce/NationalIdField.php:212
 msgid "National ID"
 msgstr ""
 
@@ -573,7 +573,7 @@ msgstr ""
 msgid "Call for the price of “%s”"
 msgstr ""
 
-#: src/Modules/WooCommerce/CallForPrice.php:193
+#: src/Modules/WooCommerce/CallForPrice.php:195
 #: views/admin/partials/woocommerce-settings.php:210
 msgctxt "shown instead of an empty price"
 msgid "Call for price"
@@ -641,11 +641,11 @@ msgstr ""
 msgid "For prices like 12.5, set the number of decimals below."
 msgstr ""
 
-#: src/Modules/WooCommerce/NationalIdField.php:91
+#: src/Modules/WooCommerce/NationalIdField.php:87
 msgid "National ID (optional)"
 msgstr ""
 
-#: src/Modules/WooCommerce/NationalIdField.php:198
+#: src/Modules/WooCommerce/NationalIdField.php:194
 msgid "National ID:"
 msgstr ""
 
@@ -659,35 +659,46 @@ msgstr ""
 msgid "%1$s is not valid. Please enter one of the following: %2$s"
 msgstr ""
 
+#: src/Modules/WooCommerce/WooAnalyticsDates.php:64
+msgid "Week of"
+msgstr ""
+
+#. translators: %s: the name of a date column in a report, such as Date.
+#: src/Modules/WooCommerce/WooAnalyticsDates.php:66
+#: src/Modules/WooCommerce/WooAnalyticsExport.php:70
+#, php-format
+msgid "%s (Jalali)"
+msgstr ""
+
 #: src/Modules/WooCommerce/WooCommerceModule.php:26
 msgid "Jalali dates in the shop admin and emails, checkout fields for Iran, and thousand toman and thousand rial currencies."
 msgstr ""
 
-#: src/Modules/WooCommerce/WooCommerceModule.php:80
+#: src/Modules/WooCommerce/WooCommerceModule.php:82
 msgid "Checkout and addresses"
 msgstr ""
 
-#: src/Modules/WooCommerce/WooCommerceModule.php:81
+#: src/Modules/WooCommerce/WooCommerceModule.php:83
 msgid "What customers type at checkout, and fields for Iran."
 msgstr ""
 
-#: src/Modules/WooCommerce/WooCommerceModule.php:84
+#: src/Modules/WooCommerce/WooCommerceModule.php:86
 msgid "Prices and currency"
 msgstr ""
 
-#: src/Modules/WooCommerce/WooCommerceModule.php:88
+#: src/Modules/WooCommerce/WooCommerceModule.php:90
 msgid "Emails"
 msgstr ""
 
-#: src/Modules/WooCommerce/WooCommerceModule.php:92
+#: src/Modules/WooCommerce/WooCommerceModule.php:94
 msgid "Dates"
 msgstr ""
 
-#: src/Modules/WooCommerce/WooCommerceModule.php:93
+#: src/Modules/WooCommerce/WooCommerceModule.php:95
 msgid "Dates on orders and in emails follow Jalali dates on the Display tab."
 msgstr ""
 
-#: src/Modules/WooCommerce/WooCommerceModule.php:149
+#: src/Modules/WooCommerce/WooCommerceModule.php:152
 msgid "Settings saved. The \"Call for price\" link was cleared: type a phone number or a page address, such as /contact/."
 msgstr ""
 
@@ -879,26 +890,32 @@ msgid "Jalali dates in the shop admin"
 msgstr ""
 
 #: src/Service/Import/ImportReport.php:245
+#: src/Service/Import/Sources/ParsiDate/ParsiDateSettings.php:291
+#: views/admin/partials/woocommerce-settings.php:281
+msgid "Jalali dates in WooCommerce Analytics"
+msgstr ""
+
+#: src/Service/Import/ImportReport.php:246
 #: src/Service/Import/Sources/PersianWooCommerce/PersianWooCommerceSettings.php:176
 msgid "Text instead of an empty price"
 msgstr ""
 
-#: src/Service/Import/ImportReport.php:246
+#: src/Service/Import/ImportReport.php:247
 #: views/admin/partials/woocommerce-settings.php:209
 msgid "Text on the product page"
 msgstr ""
 
-#: src/Service/Import/ImportReport.php:247
+#: src/Service/Import/ImportReport.php:248
 #: views/admin/partials/woocommerce-settings.php:214
 msgid "Text in the shop and other lists"
 msgstr ""
 
-#: src/Service/Import/ImportReport.php:258
+#: src/Service/Import/ImportReport.php:259
 #: src/Service/Import/Settings/SettingsImporter.php:260
 msgid "On"
 msgstr ""
 
-#: src/Service/Import/ImportReport.php:258
+#: src/Service/Import/ImportReport.php:259
 #: src/Service/Import/Settings/SettingsImporter.php:260
 #: views/admin/partials/woocommerce-settings.php:43
 msgid "Off"
@@ -1267,90 +1284,94 @@ msgstr ""
 msgid "WooCommerce: Persian digits in emails"
 msgstr ""
 
-#: src/Service/Import/Sources/ParsiDate/ParsiDateSettings.php:298
-msgid "ACF: Jalali date fields"
+#: src/Service/Import/Sources/ParsiDate/ParsiDateSettings.php:289
+msgid "WooCommerce: Jalali dates in Analytics"
 msgstr ""
 
-#: src/Service/Import/Sources/ParsiDate/ParsiDateSettings.php:304
-msgid "ACF: save dates in Jalali"
+#: src/Service/Import/Sources/ParsiDate/ParsiDateSettings.php:293
+msgid "Monthly, seasonal and yearly figures also cover whole Jalali months, seasons and years."
 msgstr ""
 
 #: src/Service/Import/Sources/ParsiDate/ParsiDateSettings.php:308
+msgid "ACF: Jalali date fields"
+msgstr ""
+
+#: src/Service/Import/Sources/ParsiDate/ParsiDateSettings.php:314
+msgid "ACF: save dates in Jalali"
+msgstr ""
+
+#: src/Service/Import/Sources/ParsiDate/ParsiDateSettings.php:318
 msgid "Persian Kit saves Gregorian dates and shows them in Jalali. The ACF data task converts the dates saved in Jalali."
 msgstr ""
 
-#: src/Service/Import/Sources/ParsiDate/ParsiDateSettings.php:324
+#: src/Service/Import/Sources/ParsiDate/ParsiDateSettings.php:334
 msgid "Multilingual sites"
 msgstr ""
 
-#: src/Service/Import/Sources/ParsiDate/ParsiDateSettings.php:324
+#: src/Service/Import/Sources/ParsiDate/ParsiDateSettings.php:334
 msgid "Persian Kit follows each page's language on WPML and Polylang sites."
 msgstr ""
 
-#: src/Service/Import/Sources/ParsiDate/ParsiDateSettings.php:327
+#: src/Service/Import/Sources/ParsiDate/ParsiDateSettings.php:337
 msgid "Jalali date in the admin bar"
 msgstr ""
 
-#: src/Service/Import/Sources/ParsiDate/ParsiDateSettings.php:327
+#: src/Service/Import/Sources/ParsiDate/ParsiDateSettings.php:337
 msgid "Dates in the admin are Jalali while Jalali dates are on."
 msgstr ""
 
-#: src/Service/Import/Sources/ParsiDate/ParsiDateSettings.php:330
+#: src/Service/Import/Sources/ParsiDate/ParsiDateSettings.php:340
 msgid "Persian month names"
 msgstr ""
 
-#: src/Service/Import/Sources/ParsiDate/ParsiDateSettings.php:330
+#: src/Service/Import/Sources/ParsiDate/ParsiDateSettings.php:340
 msgid "Persian Kit uses the Persian month names."
 msgstr ""
 
-#: src/Service/Import/Sources/ParsiDate/ParsiDateSettings.php:344
+#: src/Service/Import/Sources/ParsiDate/ParsiDateSettings.php:354
 #: src/Service/Import/Sources/PersianWooCommerce/PersianWooCommerceSettings.php:258
 #: src/Service/Import/Sources/Shipping/PwsSettings.php:72
 msgid "Persian Kit has no match yet."
 msgstr ""
 
 #. translators: %s: issue number, such as #14.
-#: src/Service/Import/Sources/ParsiDate/ParsiDateSettings.php:346
+#: src/Service/Import/Sources/ParsiDate/ParsiDateSettings.php:356
 #, php-format
 msgid "Planned for Persian Kit (%s)."
 msgstr ""
 
-#: src/Service/Import/Sources/ParsiDate/ParsiDateSettings.php:349
+#: src/Service/Import/Sources/ParsiDate/ParsiDateSettings.php:359
 msgid "Dates in both calendars"
 msgstr ""
 
-#: src/Service/Import/Sources/ParsiDate/ParsiDateSettings.php:352
+#: src/Service/Import/Sources/ParsiDate/ParsiDateSettings.php:362
 msgid "Dari, Kurdish or Pashto month names"
 msgstr ""
 
-#: src/Service/Import/Sources/ParsiDate/ParsiDateSettings.php:355
+#: src/Service/Import/Sources/ParsiDate/ParsiDateSettings.php:365
 msgid "Classic widgets screen"
 msgstr ""
 
-#: src/Service/Import/Sources/ParsiDate/ParsiDateSettings.php:355
+#: src/Service/Import/Sources/ParsiDate/ParsiDateSettings.php:365
 msgid "Use the Classic Widgets plugin for this."
 msgstr ""
 
-#: src/Service/Import/Sources/ParsiDate/ParsiDateSettings.php:358
+#: src/Service/Import/Sources/ParsiDate/ParsiDateSettings.php:368
 msgid "Hooks turned off by name"
 msgstr ""
 
-#: src/Service/Import/Sources/ParsiDate/ParsiDateSettings.php:361
-msgid "WooCommerce: Jalali dates in Analytics"
-msgstr ""
-
-#: src/Service/Import/Sources/ParsiDate/ParsiDateSettings.php:363
+#: src/Service/Import/Sources/ParsiDate/ParsiDateSettings.php:370
 #: src/Service/Import/Sources/PersianWooCommerce/PersianWooCommerceSettings.php:285
 msgid "Persian Kit has no payment gateways. See \"Before you deactivate\"."
 msgstr ""
 
 #. translators: %s: bank name, such as mellat.
-#: src/Service/Import/Sources/ParsiDate/ParsiDateSettings.php:366
+#: src/Service/Import/Sources/ParsiDate/ParsiDateSettings.php:373
 #, php-format
 msgid "WooCommerce: %s bank gateway"
 msgstr ""
 
-#: src/Service/Import/Sources/ParsiDate/ParsiDateSettings.php:370
+#: src/Service/Import/Sources/ParsiDate/ParsiDateSettings.php:377
 msgid "Easy Digital Downloads"
 msgstr ""
 
@@ -2455,17 +2476,21 @@ msgstr ""
 msgid "Order, product and coupon dates, and the month filter on the orders list."
 msgstr ""
 
+#: views/admin/partials/woocommerce-settings.php:282
+msgid "Date ranges, charts and tables in Jalali; monthly, seasonal and yearly figures cover whole Jalali months, seasons and years. CSV exports add a Jalali date column."
+msgstr ""
+
 #. translators: 1: name of another plugin, 2: Persian Kit module name.
 #: views/admin/partials/woocommerce-tab.php:32
 #, php-format
 msgid "%1$s is active and handles some of the same things. We recommend turning off %2$s here."
 msgstr ""
 
-#: views/admin/settings.php:114
+#: views/admin/settings.php:107
 msgid "Save changes"
 msgstr ""
 
-#: views/admin/settings.php:116
+#: views/admin/settings.php:109
 msgid "Unsaved changes"
 msgstr ""
 

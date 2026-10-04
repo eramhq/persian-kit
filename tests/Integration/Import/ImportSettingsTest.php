@@ -41,7 +41,7 @@ class ImportSettingsTest extends WordPressIntegrationTestCase
             'conv_dates' => 'yes', 'conv_arabic' => true, 'enable_fonts' => true, 'dual_date' => true,
             'save_options_time_123456' => 1735689600,
         ]);
-        update_option('wp_parsidate_woocommerce', ['fix_prices' => true, 'validate_postcode' => true, 'mellat_gateway_enable' => true]);
+        update_option('wp_parsidate_woocommerce', ['fix_prices' => true, 'validate_postcode' => true, 'mellat_gateway_enable' => true, 'analytics_shamsi_date' => true]);
         update_option('wp_parsidate_acf', ['fix_date' => true, 'save_persian_date' => true]);
 
         $rows = $this->byId((new ParsiDateSource())->settingRows(Bootstrap::get(SettingsManager::class)));
@@ -61,6 +61,8 @@ class ImportSettingsTest extends WordPressIntegrationTestCase
         $this->assertSame('not_yet', $rows['dual_date']->status->value);
         $this->assertStringContainsString('#14', $rows['dual_date']->reason);
         $this->assertSame('not_yet', $rows['gateway_mellat']->status->value);
+        $this->assertSame('same', $rows['analytics_shamsi_date']->status->value);
+        $this->assertSame(['woocommerce.dates_analytics' => true], $rows['analytics_shamsi_date']->changes);
         $this->assertArrayNotHasKey('edd', $rows);
     }
 
