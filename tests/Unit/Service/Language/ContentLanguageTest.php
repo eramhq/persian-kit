@@ -5,6 +5,7 @@ namespace PersianKit\Tests\Unit\Service\Language;
 use Brain\Monkey;
 use Brain\Monkey\Filters;
 use Brain\Monkey\Functions;
+use PersianKit\Modules\DateConversion\CalendarNames;
 use PersianKit\Service\Language\ContentLanguage;
 use PersianKit\Tests\Unit\Support\FakeLanguageSource;
 use PHPUnit\Framework\TestCase;
@@ -34,6 +35,7 @@ class ContentLanguageTest extends TestCase
     protected function tearDown(): void
     {
         ContentLanguage::reset();
+        CalendarNames::reset();
         unset($_GET['_locale'], $GLOBALS['pagenow'], $GLOBALS['post']);
         Monkey\tearDown();
         parent::tearDown();
@@ -54,6 +56,60 @@ class ContentLanguageTest extends TestCase
 
         Functions\when('determine_locale')->justReturn('fa_IR');
         $this->assertTrue(ContentLanguage::currentIsPersian());
+    }
+
+    public function test_pashto_and_kurdish_pages_read_jalali_dates_but_are_not_written_in_persian(): void
+    {
+        $this->source->languages = ['fa_IR', 'ps_AF', 'ckb', 'en_US'];
+
+        foreach (['ps', 'ps_AF', 'ckb', 'ckb_IR'] as $locale) {
+            $this->source->current = $locale;
+            $this->source->posts = [5 => $locale];
+            ContentLanguage::useSource($this->source);
+
+            $this->assertTrue(ContentLanguage::readsJalali($locale), $locale);
+            $this->assertTrue(ContentLanguage::displaysPersian(), $locale);
+            $this->assertTrue(ContentLanguage::postReadsJalali(5), $locale);
+            $this->assertFalse(ContentLanguage::currentIsPersian(), $locale);
+            $this->assertFalse(ContentLanguage::postIsPersian(5), "{$locale}: Pashto has its own ي");
+            $this->assertFalse(ContentLanguage::writesPersian('post', 5), $locale);
+        }
+
+        $this->source->current = 'en_US';
+        $this->source->posts = [5 => 'en_US'];
+        ContentLanguage::useSource($this->source);
+
+        $this->assertFalse(ContentLanguage::displaysPersian());
+        $this->assertFalse(ContentLanguage::postReadsJalali(5));
+    }
+
+    public function test_a_language_given_month_names_reads_jalali_dates(): void
+    {
+        $this->source->current = 'en_US';
+        ContentLanguage::useSource($this->source);
+        CalendarNames::configure('auto', ['en_US' => 'dari', 'ar' => 'auto']);
+
+        $this->assertTrue(ContentLanguage::readsJalali('en_US'));
+        $this->assertTrue(ContentLanguage::displaysPersian());
+        $this->assertFalse(ContentLanguage::languageReadsJalali('en_US'));
+        $this->assertFalse(ContentLanguage::readsJalali('ar'), 'automatic is not a choice');
+        $this->assertFalse(ContentLanguage::writesPersian('post', 5));
+    }
+
+    public function test_the_reading_filter_has_the_last_word(): void
+    {
+        Filters\expectApplied('persian_kit_reads_jalali')->once()->with(true, 'ps_AF')->andReturn(false);
+
+        $this->assertFalse(ContentLanguage::readsJalali('ps_AF'));
+    }
+
+    public function test_the_languages_of_a_multilingual_site(): void
+    {
+        ContentLanguage::useSource($this->source);
+        $this->assertSame(['fa_IR', 'en_US', 'ar'], ContentLanguage::languages());
+
+        ContentLanguage::useSource(null);
+        $this->assertSame([], ContentLanguage::languages());
     }
 
     public function test_a_plugin_with_no_languages_set_up_changes_nothing(): void

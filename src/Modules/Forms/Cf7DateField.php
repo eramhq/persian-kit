@@ -143,11 +143,11 @@ class Cf7DateField
 
         $formLocale = (string) $submission->get_contact_form()->locale();
         if ($formLocale !== '' && in_array($formLocale, array_merge(['en_US'], get_available_languages()), true)) {
-            return ContentLanguage::isPersianLocale($formLocale);
+            return ContentLanguage::readsJalali($formLocale);
         }
 
         $pageId = (int) $submission->get_meta('container_post_id');
 
-        return $pageId > 0 ? ContentLanguage::postIsPersian($pageId) : ContentLanguage::displaysPersian();
+        return $pageId > 0 ? ContentLanguage::postReadsJalali($pageId) : ContentLanguage::displaysPersian();
     }
 }

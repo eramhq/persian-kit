@@ -5,6 +5,7 @@ namespace PersianKit\Tests\Unit\DateConversion;
 use Brain\Monkey;
 use Brain\Monkey\Filters;
 use Brain\Monkey\Functions;
+use PersianKit\Modules\DateConversion\CalendarNames;
 use PersianKit\Modules\DateConversion\GregorianCompanion;
 use PersianKit\Service\Language\ContentLanguage;
 use PHPUnit\Framework\TestCase;
@@ -31,6 +32,7 @@ class GregorianCompanionTest extends TestCase
 
     protected function tearDown(): void
     {
+        CalendarNames::reset();
         Monkey\tearDown();
         parent::tearDown();
     }
@@ -145,6 +147,19 @@ class GregorianCompanionTest extends TestCase
         $this->assertSame(self::JALALI . ' (2 اکتبر 2026)', $companion->append(self::JALALI, 'j F Y', $this->date));
         $this->assertSame('5 مه 2026', GregorianCompanion::gregorian('j F Y', new \DateTimeImmutable('2026-05-05')));
         $this->assertSame('1 ژانویه 2026', GregorianCompanion::gregorian('j F Y', new \DateTimeImmutable('2026-01-01')));
+    }
+
+    public function test_month_names_of_the_chosen_set(): void
+    {
+        Functions\when('determine_locale')->justReturn('fa_IR');
+        ContentLanguage::useSource(null);
+        $may = new \DateTimeImmutable('2026-05-05');
+
+        $expected = ['dari' => '5 می 2026', 'pashto' => '5 مۍ 2026', 'kurdish' => '5 ئایار 2026', 'iranian' => '5 مه 2026'];
+        foreach ($expected as $set => $date) {
+            CalendarNames::configure($set);
+            $this->assertSame($date, GregorianCompanion::gregorian('j F Y', $may), $set);
+        }
     }
 
     public function test_the_gregorian_part_is_the_date_only(): void

@@ -2,6 +2,8 @@
 
 namespace PersianKit\Service\Language;
 
+use PersianKit\Modules\DateConversion\CalendarNames;
+
 defined('ABSPATH') || exit;
 
 /**
@@ -10,8 +12,8 @@ defined('ABSPATH') || exit;
  *
  * Two questions, answered separately:
  * - Reading (displaysPersian): pages and emails convert dates and digits
- *   when their language is Persian; admin screens follow the admin's own
- *   profile language.
+ *   when their language reads Jalali dates (Persian, Pashto, Sorani
+ *   Kurdish); admin screens follow the admin's own profile language.
  * - Writing (writesPersian): the save fixes, Persian slugs and the
  *   half-space key apply to Persian content, whoever edits it.
  *
@@ -109,6 +111,47 @@ final class ContentLanguage
     }
 
     /**
+     * Whether a language's dates are Jalali: Persian, Pashto (ps) and Sorani
+     * Kurdish (ckb), which share the calendar under other month names, and
+     * any language the settings give a set of names (CalendarNames).
+     */
+    public static function readsJalali(string $locale): bool
+    {
+        $reads = self::languageReadsJalali($locale) || CalendarNames::isFixedFor($locale);
+
+        /**
+         * Whether pages in a language show Jalali dates and Persian digits,
+         * on multilingual sites. Saving and slugs still follow
+         * persian_kit_is_persian_locale.
+         *
+         * @param bool   $reads  True for Persian, Pashto and Sorani Kurdish.
+         * @param string $locale A WordPress locale, such as ps_AF.
+         */
+        return (bool) apply_filters('persian_kit_reads_jalali', $reads, $locale);
+    }
+
+    /**
+     * Whether a language reads Jalali dates whatever the settings say:
+     * Persian, Pashto or Sorani Kurdish.
+     */
+    public static function languageReadsJalali(string $locale): bool
+    {
+        return self::isPersianLocale($locale)
+            || CalendarNames::isLanguage($locale, 'ps')
+            || CalendarNames::isLanguage($locale, 'ckb');
+    }
+
+    /**
+     * Locales of the languages set up on a multilingual site; none elsewhere.
+     *
+     * @return list<string>
+     */
+    public static function languages(): array
+    {
+        return self::isMultilingual() ? (self::source()?->languages() ?? []) : [];
+    }
+
+    /**
      * The language people read in this request: the page's, the email's,
      * or in the admin the admin's profile language.
      */
@@ -136,7 +179,7 @@ final class ContentLanguage
      */
     public static function displaysPersian(): bool
     {
-        return !self::isMultilingual() || self::isPersianLocale(self::currentLocale());
+        return !self::isMultilingual() || self::readsJalali(self::currentLocale());
     }
 
     /**
@@ -150,11 +193,24 @@ final class ContentLanguage
             return true;
         }
 
-        $source = self::source();
-        $id = $post instanceof \WP_Post ? (int) $post->ID : $post;
-        $locale = $source?->postLocale($id) ?? $source?->defaultLocale();
+        $locale = self::postLocaleOrDefault($post);
 
         return $locale === null || self::isPersianLocale($locale);
+    }
+
+    /**
+     * Whether a post's language reads Jalali dates (readsJalali): its own
+     * language, else the site's default. A post with neither does.
+     */
+    public static function postReadsJalali(\WP_Post|int $post): bool
+    {
+        if (!self::isMultilingual()) {
+            return true;
+        }
+
+        $locale = self::postLocaleOrDefault($post);
+
+        return $locale === null || self::readsJalali($locale);
     }
 
     /**
@@ -235,6 +291,14 @@ final class ContentLanguage
         self::$multilingual = null;
         self::$ajaxFromAdmin = null;
         self::$restObject = null;
+    }
+
+    private static function postLocaleOrDefault(\WP_Post|int $post): ?string
+    {
+        $source = self::source();
+        $id = $post instanceof \WP_Post ? (int) $post->ID : $post;
+
+        return $source?->postLocale($id) ?? $source?->defaultLocale();
     }
 
     private static function refererIsAdmin(): bool

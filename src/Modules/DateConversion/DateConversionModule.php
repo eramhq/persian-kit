@@ -31,14 +31,16 @@ class DateConversionModule extends AbstractModule
     public static function defaults(): array
     {
         return [
-            'enabled'             => true,
-            'global_conversion'   => false,
-            'jalali_archives'     => true,
-            'jalali_permalinks'   => false,
-            'gregorian_date'      => false,
-            'gregorian_style'     => 'numeric',
-            'gregorian_order'     => 'jalali_first',
-            'gregorian_separator' => 'parentheses',
+            'enabled'               => true,
+            'global_conversion'     => false,
+            'jalali_archives'       => true,
+            'jalali_permalinks'     => false,
+            'gregorian_date'        => false,
+            'gregorian_style'       => 'numeric',
+            'gregorian_order'       => 'jalali_first',
+            'gregorian_separator'   => 'parentheses',
+            'month_names'           => 'auto',
+            'month_names_by_locale' => [],
         ];
     }
 
@@ -118,19 +120,22 @@ class DateConversionModule extends AbstractModule
     public function sanitizeSettings(array $values): array
     {
         return [
-            'enabled'             => !empty($values['enabled']),
-            'global_conversion'   => !empty($values['global_conversion']),
-            'jalali_archives'     => !empty($values['jalali_archives']),
-            'jalali_permalinks'   => !empty($values['jalali_permalinks']),
-            'gregorian_date'      => !empty($values['gregorian_date']),
-            'gregorian_style'     => self::choice($values['gregorian_style'] ?? null, GregorianCompanion::STYLES),
-            'gregorian_order'     => self::choice($values['gregorian_order'] ?? null, GregorianCompanion::ORDERS),
-            'gregorian_separator' => self::choice($values['gregorian_separator'] ?? null, GregorianCompanion::SEPARATORS),
+            'enabled'               => !empty($values['enabled']),
+            'global_conversion'     => !empty($values['global_conversion']),
+            'jalali_archives'       => !empty($values['jalali_archives']),
+            'jalali_permalinks'     => !empty($values['jalali_permalinks']),
+            'gregorian_date'        => !empty($values['gregorian_date']),
+            'gregorian_style'       => self::choice($values['gregorian_style'] ?? null, GregorianCompanion::STYLES),
+            'gregorian_order'       => self::choice($values['gregorian_order'] ?? null, GregorianCompanion::ORDERS),
+            'gregorian_separator'   => self::choice($values['gregorian_separator'] ?? null, GregorianCompanion::SEPARATORS),
+            'month_names'           => self::choice($values['month_names'] ?? null, CalendarNames::CHOICES),
+            'month_names_by_locale' => self::localeChoices($values['month_names_by_locale'] ?? null),
         ];
     }
 
     public function boot(ServiceContainer $container): void
     {
+        $this->configureNames();
         $filters = $container->get(DateFilters::class);
         $filters->registerTier1();
         $filters->registerTier2();
@@ -177,6 +182,7 @@ class DateConversionModule extends AbstractModule
      */
     public function bootDisabled(ServiceContainer $container): void
     {
+        $this->configureNames();
         $container->get(LegacyJalaliUrls::class)->register();
     }
 
@@ -196,6 +202,38 @@ class DateConversionModule extends AbstractModule
     private function usesJalaliPermalinks(): bool
     {
         return (bool) $this->setting('jalali_permalinks') && (bool) apply_filters('persian_kit_jalali_permalinks', true);
+    }
+
+    /**
+     * The month names setting, for every Jalali date in the request: other
+     * modules show Jalali dates too.
+     */
+    private function configureNames(): void
+    {
+        $byLocale = $this->setting('month_names_by_locale');
+
+        CalendarNames::configure((string) $this->setting('month_names'), is_array($byLocale) ? $byLocale : []);
+    }
+
+    /**
+     * Each language's month names, without those left on automatic.
+     *
+     * @return array<string, string>
+     */
+    private static function localeChoices(mixed $values): array
+    {
+        $choices = [];
+
+        foreach (is_array($values) ? $values : [] as $locale => $value) {
+            $choice = self::choice($value, CalendarNames::CHOICES);
+            if ($choice !== 'auto' && preg_match('/^[a-z]{2,3}(_[A-Za-z0-9]+)*$/', (string) $locale) === 1) {
+                $choices[(string) $locale] = $choice;
+            }
+        }
+
+        ksort($choices);
+
+        return $choices;
     }
 
     /**

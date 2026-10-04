@@ -4,7 +4,9 @@ namespace PersianKit\Tests\Unit\DateConversion;
 
 use Brain\Monkey;
 use Brain\Monkey\Functions;
+use PersianKit\Modules\DateConversion\CalendarNames;
 use PersianKit\Modules\DateConversion\PostTypeMonthFilter;
+use PersianKit\Service\Language\ContentLanguage;
 use PHPUnit\Framework\TestCase;
 
 class PostTypeMonthFilterTest extends TestCase
@@ -42,6 +44,8 @@ class PostTypeMonthFilterTest extends TestCase
     {
         unset($_GET['persian_kit_jalali_month'], $_GET['post_status']);
         unset($GLOBALS['pagenow']);
+        CalendarNames::reset();
+        ContentLanguage::reset();
 
         Monkey\tearDown();
         parent::tearDown();
@@ -90,6 +94,22 @@ class PostTypeMonthFilterTest extends TestCase
                 'label' => 'اسفند ۱۴۰۴',
             ],
         ], $filter->monthOptions('post'));
+    }
+
+    public function test_month_options_use_the_chosen_month_names(): void
+    {
+        Functions\when('determine_locale')->justReturn('fa_AF');
+        ContentLanguage::useSource(null);
+        CalendarNames::configure('auto');
+
+        $filter = new class() extends PostTypeMonthFilter {
+            protected function queryDistinctPostDays(string $postType): array
+            {
+                return ['2026-10-04'];
+            }
+        };
+
+        $this->assertSame([['value' => '140507', 'label' => 'میزان ۱۴۰۵']], $filter->monthOptions('post'));
     }
 
     public function test_selected_gregorian_range_accepts_persian_digits(): void

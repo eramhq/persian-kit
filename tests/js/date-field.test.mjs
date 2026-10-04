@@ -12,7 +12,7 @@ const source = readFileSync(new URL('../../resources/js/date-field.js', import.m
  * the form, so only the original input can submit the date. (jsdom's
  * ElementInternals also lacks setFormValue.)
  */
-async function page(body) {
+async function page(body, locale = 'fa-IR', prepare = () => {}) {
     const dom = new JSDOM(`<!doctype html><html lang="fa" dir="rtl"><body>${body}</body></html>`, {
         runScripts: 'outside-only',
         pretendToBeVisual: true,
@@ -20,7 +20,8 @@ async function page(body) {
     const { window } = dom;
 
     delete window.HTMLElement.prototype.attachInternals;
-    window.persianKitDateField = { locale: 'fa-IR', labels: { time: 'ساعت' } };
+    window.persianKitDateField = { locale, labels: { time: 'ساعت' } };
+    prepare(window);
     window.eval(pickerSource);
     window.eval(source);
 
@@ -400,4 +401,44 @@ test('a Forminator group row copied as HTML gets its own picker, value and label
     pickers[0].setValue('2026-10-09');
     assert.equal(input.value, '09/10/2026');
     assert.equal(document.querySelector('input[name="date-1"]').value, '05/10/2026');
+});
+
+test('Pashto and Kurdish pickers get the Persian labels', async () => {
+    for (const locale of ['ps-AF', 'ckb-IR']) {
+        const window = await page('<input type="text" name="visit" data-persian-kit-date>', locale);
+        const picker = window.document.querySelector('intl-datepicker');
+
+        assert.equal(picker.getAttribute('locale'), locale);
+        assert.equal(JSON.parse(picker.getAttribute('labels')).today, 'امروز', locale);
+    }
+
+    for (const locale of ['fa-AF', 'en-US']) {
+        const window = await page('<input type="text" name="visit" data-persian-kit-date>', locale);
+
+        assert.equal(window.document.querySelector('intl-datepicker').hasAttribute('labels'), false, locale);
+    }
+});
+
+test('without the browser\'s Pashto or Kurdish names, the picker shows Dari or Iranian ones', async () => {
+    // As in Chrome: no Pashto data (English and the Gregorian calendar), and
+    // ckb-IR with Sorani months but English weekdays.
+    const withoutData = (window) => {
+        const DateTimeFormat = window.Intl.DateTimeFormat;
+        window.Intl.DateTimeFormat = function (locale, options) {
+            if (/^ps/.test(locale)) {
+                return new DateTimeFormat('en-US', { ...options, calendar: 'gregory' });
+            }
+            const format = new DateTimeFormat(locale, options);
+            return /^ckb/.test(locale) ? { resolvedOptions: () => format.resolvedOptions(), format: () => 'ڕەزبەر Sunday' } : format;
+        };
+        window.Intl.DateTimeFormat.supportedLocalesOf = DateTimeFormat.supportedLocalesOf;
+    };
+
+    for (const [locale, expected] of [['ps-AF', 'fa-AF'], ['ckb-IR', 'fa-IR']]) {
+        const window = await page('<input type="text" name="visit" data-persian-kit-date>', locale, withoutData);
+        const picker = window.document.querySelector('intl-datepicker');
+
+        assert.equal(picker.getAttribute('locale'), expected, locale);
+        assert.equal(picker.hasAttribute('labels'), false, 'the picker has its own Persian labels');
+    }
 });

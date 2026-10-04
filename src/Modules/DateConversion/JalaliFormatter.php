@@ -8,56 +8,6 @@ defined('ABSPATH') || exit;
 
 class JalaliFormatter
 {
-    private const MONTHS_LONG = [
-        1  => 'فروردین',
-        2  => 'اردیبهشت',
-        3  => 'خرداد',
-        4  => 'تیر',
-        5  => 'مرداد',
-        6  => 'شهریور',
-        7  => 'مهر',
-        8  => 'آبان',
-        9  => 'آذر',
-        10 => 'دی',
-        11 => 'بهمن',
-        12 => 'اسفند',
-    ];
-
-    private const MONTHS_SHORT = [
-        1  => 'فرو',
-        2  => 'ارد',
-        3  => 'خرد',
-        4  => 'تیر',
-        5  => 'مرد',
-        6  => 'شهر',
-        7  => 'مهر',
-        8  => 'آبا',
-        9  => 'آذر',
-        10 => 'دی',
-        11 => 'بهم',
-        12 => 'اسف',
-    ];
-
-    private const WEEKDAYS_LONG = [
-        0 => 'یکشنبه',
-        1 => 'دوشنبه',
-        2 => 'سه‌شنبه',
-        3 => 'چهارشنبه',
-        4 => 'پنج‌شنبه',
-        5 => 'جمعه',
-        6 => 'شنبه',
-    ];
-
-    private const WEEKDAYS_SHORT = [
-        0 => 'ی',
-        1 => 'د',
-        2 => 'س',
-        3 => 'چ',
-        4 => 'پ',
-        5 => 'ج',
-        6 => 'ش',
-    ];
-
     private const NATIVE_TOKENS = [
         'B',
         'h',
@@ -215,6 +165,8 @@ class JalaliFormatter
         $weekday = (int) $dateTime->format('w');
         $dayOfYear = $jalali->dayOfYear();
         $jalaliWeekday = self::jalaliWeekdayNumber($weekday);
+        $names = CalendarNames::current();
+        $morning = (int) $dateTime->format('G') < 12;
 
         $output = '';
         $length = strlen($format);
@@ -239,30 +191,30 @@ class JalaliFormatter
 
             $output .= match ($token) {
                 'd' => sprintf('%02d', $day),
-                'D' => self::WEEKDAYS_SHORT[$weekday],
+                'D' => $names['weekdays_short'][$weekday],
                 'j' => (string) $day,
-                'l' => self::WEEKDAYS_LONG[$weekday],
+                'l' => $names['weekdays'][$weekday],
                 'N' => (string) $jalaliWeekday,
-                'S' => 'ام',
+                'S' => $names['ordinal'],
                 'w' => (string) ($jalaliWeekday - 1),
                 'z' => (string) $dayOfYear,
                 'W' => (string) (intdiv($dayOfYear, 7) + 1),
-                'F' => self::MONTHS_LONG[$month],
+                'F' => $names['months'][$month],
                 'm' => sprintf('%02d', $month),
-                'M' => self::MONTHS_SHORT[$month],
+                'M' => $names['months_short'][$month],
                 'n' => (string) $month,
                 't' => (string) $jalali->daysInMonth(),
                 'L' => $jalali->isLeapYear() ? '1' : '0',
                 'o', 'Y' => (string) $year,
                 'y' => sprintf('%02d', $year % 100),
-                'a' => ((int) $dateTime->format('G') < 12) ? 'ق.ظ' : 'ب.ظ',
-                'A' => ((int) $dateTime->format('G') < 12) ? 'قبل از ظهر' : 'بعد از ظهر',
+                'a' => $morning ? $names['am'] : $names['pm'],
+                'A' => $morning ? $names['am_long'] : $names['pm_long'],
                 'c' => sprintf('%04d-%02d-%02dT%s', $year, $month, $day, $dateTime->format('H:i:sP')),
                 'r' => sprintf(
                     '%s, %02d %s %d %s',
-                    self::WEEKDAYS_SHORT[$weekday],
+                    $names['weekdays_short'][$weekday],
                     $day,
-                    self::MONTHS_SHORT[$month],
+                    $names['months_short'][$month],
                     $year,
                     $dateTime->format('H:i:s P')
                 ),

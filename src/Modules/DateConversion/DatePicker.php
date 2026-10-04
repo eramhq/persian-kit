@@ -27,6 +27,18 @@ final class DatePicker
     /** Picker types; types other than 'date' submit the picker's own value. */
     public const TYPES = ['date', 'range', 'multiple', 'month', 'year'];
 
+    /**
+     * Intl tags with each set's month names. Plain ckb has no Solar Hijri
+     * names in CLDR, ckb-IR has. Where the browser lacks a tag's names, the
+     * picker falls back to fa-AF or fa-IR (datepicker-entry.js).
+     */
+    private const SET_LOCALES = [
+        'iranian' => 'fa-IR',
+        'dari'    => 'fa-AF',
+        'pashto'  => 'ps-AF',
+        'kurdish' => 'ckb-IR',
+    ];
+
     public static function register(): void
     {
         if (wp_script_is(self::FIELD, 'registered')) {
@@ -147,10 +159,20 @@ final class DatePicker
     /**
      * The picker's locale: the page's language and region as a BCP 47 tag.
      * WordPress variants such as pt_PT_ao90 are not valid tags for Intl.
+     * With Dari, Pashto or Kurdish month names, a tag whose Intl data has
+     * them (SET_LOCALES), and the Iranian ones where the language reads
+     * other names.
      */
     private static function locale(): string
     {
-        if (!preg_match('/^([a-z]{2,3})(?:_([A-Z]{2}))?/', determine_locale(), $matches)) {
+        $locale = determine_locale();
+        $set = CalendarNames::currentSet();
+
+        if ($set !== 'iranian' || CalendarNames::setFor($locale) !== 'iranian') {
+            return self::SET_LOCALES[$set];
+        }
+
+        if (!preg_match('/^([a-z]{2,3})(?:_([A-Z]{2}))?/', $locale, $matches)) {
             return 'fa-IR';
         }
 

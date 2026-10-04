@@ -5,7 +5,9 @@ namespace PersianKit\Tests\Unit\DateConversion;
 use PHPUnit\Framework\TestCase;
 use Brain\Monkey;
 use Brain\Monkey\Functions;
+use PersianKit\Modules\DateConversion\CalendarNames;
 use PersianKit\Modules\DateConversion\JalaliFormatter;
+use PersianKit\Service\Language\ContentLanguage;
 
 class JalaliFormatterTest extends TestCase
 {
@@ -17,6 +19,8 @@ class JalaliFormatterTest extends TestCase
 
     protected function tearDown(): void
     {
+        CalendarNames::reset();
+        ContentLanguage::reset();
         Monkey\tearDown();
         parent::tearDown();
     }
@@ -150,5 +154,34 @@ class JalaliFormatterTest extends TestCase
         $timestamp = gmmktime(12, 0, 45, 3, 21, 2025);
 
         $this->assertSame('7 6 1 1 1404', JalaliFormatter::format('N w z W o', $timestamp));
+    }
+
+    /**
+     * @return array<string, array{string, string, string}>
+     */
+    public static function nameSets(): array
+    {
+        return [
+            'iranian' => ['iranian', 'مهر مهر یکشنبه ی ام ق.ظ قبل از ظهر', 'ب.ظ بعد از ظهر'],
+            'dari'    => ['dari', 'میزان میزان یکشنبه ی ام ق.ظ قبل از ظهر', 'ب.ظ بعد از ظهر'],
+            'pashto'  => ['pashto', 'تله تله یکشنبه یکشنبه  غ.م. غ.م.', 'غ.و. غ.و.'],
+            'kurdish' => ['kurdish', 'ڕەزبەر ڕەزبەر یەکشەممە یەکشەممە  ب.ن ب.ن', 'د.ن د.ن'],
+        ];
+    }
+
+    /**
+     * @dataProvider nameSets
+     */
+    public function test_each_name_set(string $set, string $morning, string $afternoon): void
+    {
+        Functions\when('wp_timezone')->justReturn(new \DateTimeZone('Asia/Tehran'));
+        Functions\when('determine_locale')->justReturn('fa_IR');
+        ContentLanguage::useSource(null);
+        CalendarNames::configure($set);
+
+        // Sunday 4 October 2026 = 12 Mehr 1405.
+        $this->assertSame($morning, JalaliFormatter::format('F M l D S a A', '2026-10-04 06:30:00 UTC'));
+        $this->assertSame($afternoon, JalaliFormatter::format('a A', '2026-10-04 12:30:00 UTC'));
+        $this->assertSame('12/07/1405', JalaliFormatter::format('d/m/Y', '2026-10-04 06:30:00 UTC'), 'the numbers stay');
     }
 }

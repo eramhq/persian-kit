@@ -111,7 +111,7 @@ function wpDateStandIn(timeZone) {
  * A page at the given moment (UTC), store time zone Tehran unless set, with
  * WooCommerce's date package and this script installed.
  */
-function page(now, { timeZone = 'Asia/Tehran', startOfWeek = 6, date } = {}) {
+function page(now, { timeZone = 'Asia/Tehran', startOfWeek = 6, date, names } = {}) {
     moment.now = () => new Date(now).getTime();
 
     const window = createContext({ console, Object, Array, Math, Date, URLSearchParams, Response, JSON, location: { search: '' } });
@@ -121,6 +121,9 @@ function page(now, { timeZone = 'Asia/Tehran', startOfWeek = 6, date } = {}) {
     window.wp = { i18n: { __: (text) => text } };
     window.wcSettings = { timeZone };
     window.persianKitAnalyticsDates = { startOfWeek, labels: { weekOf: 'هفته' } };
+    if (names) {
+        window.persianKitDateLabels = { names };
+    }
     window.wp.date = wpDateStandIn(timeZone);
 
     if (date) {
@@ -334,6 +337,23 @@ test('a wc.date of another shape is left alone, and dates stay Gregorian (13)', 
     assert.equal(window.installed, false);
     assert.equal(window.wc.date, changed);
     assert.equal(window.wp.date.format('j F Y', '2025-10-01 00:00:00'), '1 October 2025');
+});
+
+const PASHTO = {
+    months: ['', 'وری', 'غویی', 'غبرګولی', 'چنګاښ', 'زمری', 'وږی', 'تله', 'لړم', 'لیندۍ', 'مرغومی', 'سلواغه', 'کب'],
+    monthsShort: ['', 'وری', 'غویی', 'غبرګولی', 'چنګاښ', 'زمری', 'وږی', 'تله', 'لړم', 'لیندۍ', 'مرغومی', 'سلواغه', 'کب'],
+    weekdays: ['یکشنبه', 'دوشنبه', 'سې شنبه', 'چهارشنبه', 'پنجشنبه', 'جمعه', 'شنبه'],
+    weekdaysShort: ['یکشنبه', 'دوشنبه', 'سې شنبه', 'چهارشنبه', 'پنجشنبه', 'جمعه', 'شنبه'],
+    seasons: ['پسرلی', 'دوبی', 'منی', 'ژمی'],
+    ordinal: '',
+};
+
+test('dates use the names of the page\'s set', () => {
+    const { format } = page(MEHR_9, { names: PASHTO }).wp.date;
+
+    assert.equal(format('l j F Y', '2025-10-01'), 'چهارشنبه 9 تله 1404');
+    assert.equal(format('D jS M', '2025-09-30'), 'سې شنبه 8 تله');
+    assert.equal(format('Q Y', '2025-12-22 00:00:00'), 'ژمی 1404');
 });
 
 test('dates printed for people are Jalali (B)', () => {

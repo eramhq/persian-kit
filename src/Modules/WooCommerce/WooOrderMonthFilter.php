@@ -4,6 +4,7 @@ namespace PersianKit\Modules\WooCommerce;
 
 use PersianKit\Dependencies\Eram\Daynum\CivilDateTime;
 use PersianKit\Dependencies\Eram\Abzar\Digits\DigitConverter;
+use PersianKit\Modules\DateConversion\CalendarNames;
 
 defined('ABSPATH') || exit;
 
@@ -147,7 +148,7 @@ class WooOrderMonthFilter
         while ($cursor->greaterThanOrEqual($oldestMonth)) {
             $jalali = $cursor->jalali();
             $value = sprintf('%04d%02d', $jalali->year(), $jalali->month());
-            $label = DigitConverter::toPersian($jalali->withLocale('fa')->format('F Y'));
+            $label = DigitConverter::toPersian(CalendarNames::monthAndYear($jalali->year(), $jalali->month()));
 
             $options[] = [
                 'value' => $value,

@@ -9,6 +9,7 @@ use Mockery;
 use PersianKit\Container\ServiceContainer;
 use PersianKit\Core\SettingsManager;
 use PersianKit\Modules\DateConversion\AdminDateScript;
+use PersianKit\Modules\DateConversion\CalendarNames;
 use PersianKit\Modules\DateConversion\DateArchiveFilter;
 use PersianKit\Modules\DateConversion\DateConversionModule;
 use PersianKit\Modules\DateConversion\DateFilters;
@@ -18,6 +19,7 @@ use PersianKit\Modules\DateConversion\JalaliArchiveList;
 use PersianKit\Modules\DateConversion\JalaliCalendar;
 use PersianKit\Modules\DateConversion\JalaliDateArchive;
 use PersianKit\Modules\DateConversion\JalaliPermalinks;
+use PersianKit\Modules\DateConversion\LegacyJalaliUrls;
 use PersianKit\Modules\DateConversion\MediaAttachmentDateFormatter;
 use PersianKit\Modules\DateConversion\MediaGridDateFilter;
 use PersianKit\Modules\DateConversion\PostTypeMonthFilter;
@@ -54,10 +56,12 @@ class DateConversionModuleTest extends TestCase
         parent::setUp();
         Monkey\setUp();
         ContentLanguage::reset();
+        CalendarNames::reset();
     }
 
     protected function tearDown(): void
     {
+        CalendarNames::reset();
         Monkey\tearDown();
         parent::tearDown();
     }
@@ -208,14 +212,16 @@ class DateConversionModuleTest extends TestCase
         $module = $this->makeModule();
 
         $this->assertSame([
-            'enabled'             => true,
-            'global_conversion'   => false,
-            'jalali_archives'     => false,
-            'jalali_permalinks'   => false,
-            'gregorian_date'      => false,
-            'gregorian_style'     => 'numeric',
-            'gregorian_order'     => 'jalali_first',
-            'gregorian_separator' => 'parentheses',
+            'enabled'               => true,
+            'global_conversion'     => false,
+            'jalali_archives'       => false,
+            'jalali_permalinks'     => false,
+            'gregorian_date'        => false,
+            'gregorian_style'       => 'numeric',
+            'gregorian_order'       => 'jalali_first',
+            'gregorian_separator'   => 'parentheses',
+            'month_names'           => 'auto',
+            'month_names_by_locale' => [],
         ], $module->sanitizeSettings([
             'enabled' => true,
         ]));
@@ -226,14 +232,16 @@ class DateConversionModuleTest extends TestCase
         $module = $this->makeModule();
 
         $this->assertSame([
-            'enabled'             => true,
-            'global_conversion'   => true,
-            'jalali_archives'     => true,
-            'jalali_permalinks'   => true,
-            'gregorian_date'      => false,
-            'gregorian_style'     => 'numeric',
-            'gregorian_order'     => 'jalali_first',
-            'gregorian_separator' => 'parentheses',
+            'enabled'               => true,
+            'global_conversion'     => true,
+            'jalali_archives'       => true,
+            'jalali_permalinks'     => true,
+            'gregorian_date'        => false,
+            'gregorian_style'       => 'numeric',
+            'gregorian_order'       => 'jalali_first',
+            'gregorian_separator'   => 'parentheses',
+            'month_names'           => 'auto',
+            'month_names_by_locale' => [],
         ], $module->sanitizeSettings([
             'enabled'           => true,
             'global_conversion' => '1',
@@ -255,14 +263,16 @@ class DateConversionModuleTest extends TestCase
         };
 
         $this->assertSame([
-            'enabled'             => true,
-            'global_conversion'   => false,
-            'jalali_archives'     => false,
-            'jalali_permalinks'   => false,
-            'gregorian_date'      => false,
-            'gregorian_style'     => 'numeric',
-            'gregorian_order'     => 'jalali_first',
-            'gregorian_separator' => 'parentheses',
+            'enabled'               => true,
+            'global_conversion'     => false,
+            'jalali_archives'       => false,
+            'jalali_permalinks'     => false,
+            'gregorian_date'        => false,
+            'gregorian_style'       => 'numeric',
+            'gregorian_order'       => 'jalali_first',
+            'gregorian_separator'   => 'parentheses',
+            'month_names'           => 'auto',
+            'month_names_by_locale' => [],
         ], $module->sanitizeSettings([
             'enabled'           => true,
             'global_conversion' => false,
@@ -307,6 +317,53 @@ class DateConversionModuleTest extends TestCase
         $this->assertSame('numeric', $values['gregorian_style']);
         $this->assertSame('jalali_first', $values['gregorian_order']);
         $this->assertSame('parentheses', $values['gregorian_separator']);
+    }
+
+    public function test_month_names_are_kept_only_when_known(): void
+    {
+        $values = $this->makeModule()->sanitizeSettings([
+            'month_names'           => 'pashto',
+            'month_names_by_locale' => [
+                'ps_AF'        => 'dari',
+                'fa_IR'        => 'auto',
+                'en_US'        => 'klingon',
+                'de_DE_formal' => 'kurdish',
+                '"><script>'   => 'dari',
+                'ckb'          => ['kurdish'],
+            ],
+        ]);
+
+        $this->assertSame('pashto', $values['month_names']);
+        $this->assertSame(['de_DE_formal' => 'kurdish', 'ps_AF' => 'dari'], $values['month_names_by_locale']);
+
+        $values = $this->makeModule()->sanitizeSettings(['month_names' => 'Dari', 'month_names_by_locale' => 'dari']);
+        $this->assertSame('auto', $values['month_names']);
+        $this->assertSame([], $values['month_names_by_locale']);
+    }
+
+    public function test_the_admin_language_gets_the_month_names_it_reads(): void
+    {
+        $this->inLanguage('ps_AF', true);
+        $this->bootAndListFetched(['month_names_by_locale' => ['fa_IR' => 'dari']]);
+        $this->assertSame('pashto', CalendarNames::currentSet());
+
+        CalendarNames::reset();
+        $this->inLanguage('fa_IR', true);
+        $this->bootAndListFetched(['month_names_by_locale' => ['fa_IR' => 'dari']]);
+        $this->assertSame('dari', CalendarNames::currentSet(), 'the saved choice reaches the names');
+    }
+
+    public function test_the_month_names_setting_applies_while_the_module_is_off(): void
+    {
+        ContentLanguage::useSource(null);
+        Functions\when('determine_locale')->justReturn('fa_IR');
+
+        $container = Mockery::mock(ServiceContainer::class);
+        $container->shouldReceive('get')->with(LegacyJalaliUrls::class)->andReturn(Mockery::mock(LegacyJalaliUrls::class, ['register' => null]));
+
+        $this->makeModule(['month_names' => 'kurdish'])->bootDisabled($container);
+
+        $this->assertSame('kurdish', CalendarNames::currentSet());
     }
 
     public function test_the_saved_gregorian_choices_reach_the_date_filters(): void

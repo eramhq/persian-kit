@@ -2,7 +2,6 @@
 
 namespace PersianKit\Modules\DateConversion;
 
-use PersianKit\Dependencies\Eram\Daynum\Locale\PersianLocale;
 use PersianKit\Service\Language\ContentLanguage;
 
 defined('ABSPATH') || exit;
@@ -114,7 +113,8 @@ final class GregorianCompanion
     }
 
     /**
-     * The Gregorian date in "Y-m-d", or "j F Y" with Persian month names.
+     * The Gregorian date in "Y-m-d", or "j F Y" with the month names of
+     * this request's set (CalendarNames).
      */
     public static function gregorian(string $format, \DateTimeInterface $dateTime): string
     {
@@ -122,7 +122,7 @@ final class GregorianCompanion
             return $dateTime->format($format);
         }
 
-        $month = (new PersianLocale())->monthNameShort('gregorian', (int) $dateTime->format('n'));
+        $month = CalendarNames::current()['gregorian_months'][(int) $dateTime->format('n')];
 
         return $dateTime->format('j') . ' ' . $month . ' ' . $dateTime->format('Y');
     }

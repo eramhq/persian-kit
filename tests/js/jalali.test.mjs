@@ -91,3 +91,34 @@ test('formatJalaliLabel', () => {
     assert.equal(Jalali.formatJalaliLabel({ jy: 1405, jm: 10, jd: 15, hh: 10, mn: 30 }), '15 دی 1405 10:30');
     assert.equal(Jalali.formatJalaliLabel({ jy: 1405, jm: 1, jd: 1, hh: 7, mn: 5 }), '1 فروردین 1405 07:05');
 });
+
+const DARI = {
+    months: ['', 'حمل', 'ثور', 'جوزا', 'سرطان', 'اسد', 'سنبله', 'میزان', 'عقرب', 'قوس', 'جدی', 'دلو', 'حوت'],
+    monthsShort: ['', 'حمل', 'ثور', 'جوزا', 'سرطان', 'اسد', 'سنبله', 'میزان', 'عقرب', 'قوس', 'جدی', 'دلو', 'حوت'],
+    weekdays: ['یکشنبه', 'دوشنبه', 'سه‌شنبه', 'چهارشنبه', 'پنج‌شنبه', 'جمعه', 'شنبه'],
+    weekdaysShort: ['ی', 'د', 'س', 'چ', 'پ', 'ج', 'ش'],
+    seasons: ['بهار', 'تابستان', 'خزان', 'زمستان'],
+    ordinal: 'ام',
+};
+
+test('month names come from the page (JalaliScript.php)', () => {
+    const page = { persianKitDateLabels: { names: DARI } };
+    runInNewContext(source, page);
+
+    assert.equal(page.PersianKitJalali.JALALI_MONTHS[7], 'میزان');
+    assert.equal(page.PersianKitJalali.formatJalaliLabel({ jy: 1405, jm: 7, jd: 12, hh: 9, mn: 5 }), '12 میزان 1405 09:05');
+    assert.equal(page.PersianKitJalali.names.seasons[2], 'خزان');
+    assert.equal(page.PersianKitJalali.names.ordinal, 'ام');
+});
+
+test('without names, or with a list cut short, the Iranian names', () => {
+    assert.equal(Jalali.JALALI_MONTHS[7], 'مهر');
+    assert.deepEqual({ ...Jalali.names }, {});
+
+    const page = { persianKitDateLabels: { names: { months: ['', 'حمل'], weekdays: DARI.weekdays, seasons: 'خزان' } } };
+    runInNewContext(source, page);
+
+    assert.equal(page.PersianKitJalali.JALALI_MONTHS[7], 'مهر');
+    assert.equal(page.PersianKitJalali.JALALI_WEEKDAYS[4], 'پنج‌شنبه', 'a complete list is kept');
+    assert.equal(page.PersianKitJalali.names.seasons, undefined);
+});

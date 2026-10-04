@@ -4,7 +4,9 @@ namespace PersianKit\Tests\Unit\DateConversion;
 
 use Brain\Monkey;
 use Brain\Monkey\Functions;
+use PersianKit\Modules\DateConversion\CalendarNames;
 use PersianKit\Modules\DateConversion\DatePicker;
+use PersianKit\Service\Language\ContentLanguage;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
@@ -63,6 +65,8 @@ class DatePickerTest extends TestCase
 
     protected function tearDown(): void
     {
+        CalendarNames::reset();
+        ContentLanguage::reset();
         Monkey\tearDown();
         parent::tearDown();
     }
@@ -113,6 +117,34 @@ class DatePickerTest extends TestCase
     public function test_the_picker_uses_the_page_language(string $locale, string $expected): void
     {
         $this->locale = $locale;
+
+        DatePicker::register();
+
+        $this->assertStringContainsString('"locale":"' . $expected . '"', $this->inline[0][1]);
+    }
+
+    /**
+     * @return array<string, array{string, string, string}>
+     */
+    public static function monthNames(): array
+    {
+        return [
+            'Dari site'              => ['fa_AF', 'auto', 'fa-AF'],
+            'Pashto site'            => ['ps', 'auto', 'ps-AF'],
+            'Kurdish site'           => ['ckb', 'auto', 'ckb-IR'],
+            'Dari names, Iran'       => ['fa_IR', 'dari', 'fa-AF'],
+            'Iranian names, Dari'    => ['fa_AF', 'iranian', 'fa-IR'],
+            'Kurdish names, English' => ['en_US', 'kurdish', 'ckb-IR'],
+            'Iranian names, English' => ['en_US', 'iranian', 'en-US'],
+        ];
+    }
+
+    #[DataProvider('monthNames')]
+    public function test_the_picker_shows_the_month_names_of_the_dates(string $locale, string $choice, string $expected): void
+    {
+        $this->locale = $locale;
+        ContentLanguage::useSource(null);
+        CalendarNames::configure($choice);
 
         DatePicker::register();
 

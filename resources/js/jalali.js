@@ -4,12 +4,18 @@
  * Algorithm ported from Ali Farhadi's jdate.js (GPL-2.0).
  * Provides Gregorian↔Jalali conversion, leap-year check, and month lengths.
  *
+ * Month and weekday names come from window.persianKitDateLabels.names
+ * (JalaliScript.php): Iranian, Dari, Pashto or Kurdish, as the page's
+ * language or the settings choose. Without them, the Iranian names.
+ *
  * Exposed as window.PersianKitJalali for use by other scripts.
  */
 (function (root) {
     'use strict';
 
-    var JALALI_MONTHS = [
+    var names = readNames((root.persianKitDateLabels || {}).names);
+
+    var JALALI_MONTHS = names.months || [
         '',
         'فروردین',
         'اردیبهشت',
@@ -25,7 +31,7 @@
         'اسفند'
     ];
 
-    var JALALI_WEEKDAYS = [
+    var JALALI_WEEKDAYS = names.weekdays || [
         'یکشنبه',
         'دوشنبه',
         'سه‌شنبه',
@@ -34,6 +40,36 @@
         'جمعه',
         'شنبه'
     ];
+
+    /**
+     * The names the server sent, each list kept only when it is complete:
+     * months and monthsShort from index 1 (13 items), weekdays and
+     * weekdaysShort from Sunday, seasons from spring, and the ordinal suffix.
+     *
+     * @param {*} given
+     * @returns {{months?: string[], monthsShort?: string[], weekdays?: string[], weekdaysShort?: string[], seasons?: string[], ordinal?: string}}
+     */
+    function readNames(given) {
+        var lengths = { months: 13, monthsShort: 13, weekdays: 7, weekdaysShort: 7, seasons: 4 };
+        var found = {};
+
+        if (!given || typeof given !== 'object') {
+            return found;
+        }
+
+        Object.keys(lengths).forEach(function (key) {
+            var list = given[key];
+            if (Array.isArray(list) && list.length === lengths[key] && list.every(function (name) { return typeof name === 'string'; })) {
+                found[key] = list.slice();
+            }
+        });
+
+        if (typeof given.ordinal === 'string') {
+            found.ordinal = given.ordinal;
+        }
+
+        return found;
+    }
 
     /**
      * Convert Gregorian date to Jalali.
@@ -290,6 +326,7 @@
         formatJalaliLabel: formatJalaliLabel,
         JALALI_MONTHS: JALALI_MONTHS,
         JALALI_WEEKDAYS: JALALI_WEEKDAYS,
+        names: names,
         pad: pad
     };
 
