@@ -23,7 +23,7 @@ class GravityFormsModule extends AbstractModule
 
     public static function description(): string
     {
-        return __('Jalali dates in Date fields, an "Iranian fields" group with checks for mobile number, national ID and more, and English digits in phone, number and date inputs.', 'persian-kit');
+        return __('Jalali dates in Date fields, an "Iranian fields" group with checks for mobile number, national ID and more, an Iran address type, and English digits in phone, number and date inputs.', 'persian-kit');
     }
 
     public static function category(): ?string
@@ -73,6 +73,9 @@ class GravityFormsModule extends AbstractModule
         $container->register(GravityFormsIranianFields::class, function () {
             return new GravityFormsIranianFields();
         });
+        $container->register(GravityFormsAddress::class, function () {
+            return new GravityFormsAddress();
+        });
         $container->register(GravityFormsFieldUsage::class, function () {
             return new GravityFormsFieldUsage();
         });
@@ -87,6 +90,7 @@ class GravityFormsModule extends AbstractModule
         $container->get(GravityFormsDateField::class)->register();
         $container->get(GravityFormsInputNormalizer::class)->register();
         $container->get(GravityFormsIranianFields::class)->register();
+        $container->get(GravityFormsAddress::class)->register();
         $container->get(GravityFormsFieldUsage::class)->register();
 
         // Submitted on, updated and note dates.
@@ -97,12 +101,14 @@ class GravityFormsModule extends AbstractModule
 
     /**
      * While it is off, forms keep showing their Iranian fields, as text
-     * inputs without checks, and the list of those forms stays current for
-     * the settings page's warning.
+     * inputs without checks, and their Iran addresses, and the list of the
+     * forms with Iranian fields stays current for the settings page's
+     * warning.
      */
     public function bootDisabled(ServiceContainer $container): void
     {
         $container->get(GravityFormsIranianFields::class)->registerFallback();
+        $container->get(GravityFormsAddress::class)->registerFallback();
         $container->get(GravityFormsFieldUsage::class)->register();
     }
 

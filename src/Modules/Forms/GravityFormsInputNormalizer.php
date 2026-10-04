@@ -18,8 +18,8 @@ defined('ABSPATH') || exit;
  *                                         the boxes and drop-downs, becomes
  *                                         the Gregorian date in the field's
  *                                         format and order
- *     Iranian fields                      saved in their standard form when
- *                                         valid, such as 09121234567
+ *     Iranian fields, and an Iran         saved in their standard form when
+ *     address's postcode                  valid, such as 09121234567
  *
  * Gravity Forms reads the submission from $_POST again and again (to check
  * it, in the Number field's own check, to save it), so the values are fixed
@@ -116,9 +116,13 @@ class GravityFormsInputNormalizer
                     continue;
                 }
 
-                $post[$key] = GravityFormsDateField::isJalali($field)
-                    ? $this->normalizeDate($field, $post[$key], $formId)
-                    : self::englishDigits($post[$key]);
+                if (GravityFormsDateField::isJalali($field)) {
+                    $post[$key] = $this->normalizeDate($field, $post[$key], $formId);
+                } elseif (GravityFormsAddress::isIran($field) && is_string($post[$key])) {
+                    $post[$key] = IranianFieldTypes::normalize('postcode_ir', $post[$key]);
+                } else {
+                    $post[$key] = self::englishDigits($post[$key]);
+                }
             }
         }
 

@@ -390,6 +390,11 @@ if (!class_exists('GF_Field')) {
         {
             return isset(self::$fields[$type]);
         }
+
+        public static function get(string $type): GF_Field|false
+        {
+            return self::$fields[$type] ?? false;
+        }
     }
 }
 

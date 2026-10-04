@@ -77,5 +77,8 @@ namespace {
         public static function register($field): void {}
 
         public static function exists(string $field_type): bool {}
+
+        /** @return GF_Field|false */
+        public static function get(string $field_type) {}
     }
 }
