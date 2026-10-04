@@ -42,7 +42,7 @@ jobs:
         run: composer phpcs
 
   integration:
-    name: Integration (PHP ${{ matrix.php }}, WP ${{ matrix.wp }}, WC ${{ matrix.woocommerce }}, GF ${{ matrix.gravityforms }})
+    name: Integration (PHP ${{ matrix.php }}, WP ${{ matrix.wp }}, WC ${{ matrix.woocommerce }}, GF ${{ matrix.gravityforms }}, WPForms ${{ matrix.wpforms }})
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
@@ -51,10 +51,10 @@ jobs:
         # (Requires at least / WC requires at least in persian-kit.php) on
         # the oldest PHP. Yoast 28.3 and later need WordPress 6.9. Gravity
         # Forms 2.9 is the oldest the integration supports, before 3.0's new
-        # date picker.
+        # date picker; WPForms 1.9.1 the oldest with wpforms()->obj().
         include:
-          - { php: '8.4', wp: '7.1.2', woocommerce: '11.1.2', yoast: '28.6', gravityforms: '3.1.3' }
-          - { php: '8.1', wp: '6.8.10', woocommerce: '9.9.7', yoast: '28.2', gravityforms: '2.9.31' }
+          - { php: '8.4', wp: '7.1.2', woocommerce: '11.1.2', yoast: '28.6', gravityforms: '3.1.3', wpforms: '2.0.2.1' }
+          - { php: '8.1', wp: '6.8.10', woocommerce: '9.9.7', yoast: '28.2', gravityforms: '2.9.31', wpforms: '1.9.1.1' }
     services:
       mysql:
         image: mysql:8.0
@@ -78,6 +78,8 @@ jobs:
       PERSIAN_KIT_TESTS_FORMINATOR_DIR: /tmp/wordpress/wp-content/plugins/forminator
       GRAVITYFORMS_VERSION: ${{ matrix.gravityforms }}
       PERSIAN_KIT_TESTS_GRAVITYFORMS_DIR: /tmp/wordpress/wp-content/plugins/gravityforms
+      WPFORMS_VERSION: ${{ matrix.wpforms }}
+      PERSIAN_KIT_TESTS_WPFORMS_DIR: /tmp/wordpress/wp-content/plugins/wpforms-lite
       WORDPRESS_SEO_VERSION: ${{ matrix.yoast }}
       PERSIAN_KIT_TESTS_YOAST_DIR: /tmp/wordpress/wp-content/plugins/wordpress-seo
       RANK_MATH_VERSION: '1.0.279'
@@ -149,6 +151,12 @@ jobs:
           unzip -q /tmp/gravityforms.zip -d /tmp
           mv "/tmp/gravityforms-${GRAVITYFORMS_VERSION}" "$PERSIAN_KIT_TESTS_GRAVITYFORMS_DIR"
           test -f "$PERSIAN_KIT_TESTS_GRAVITYFORMS_DIR/gravityforms.php"
+
+      - name: Download WPForms Lite
+        run: |
+          curl -sSfL -o /tmp/wpforms-lite.zip "https://downloads.wordpress.org/plugin/wpforms-lite.${WPFORMS_VERSION}.zip"
+          unzip -q /tmp/wpforms-lite.zip -d "$WP_CORE_DIR/wp-content/plugins"
+          test -f "$PERSIAN_KIT_TESTS_WPFORMS_DIR/wpforms.php"
 
       - name: Download Yoast SEO
         run: |
