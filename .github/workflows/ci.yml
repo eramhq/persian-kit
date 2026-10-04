@@ -42,17 +42,19 @@ jobs:
         run: composer phpcs
 
   integration:
-    name: Integration (PHP ${{ matrix.php }}, WP ${{ matrix.wp }}, WC ${{ matrix.woocommerce }})
+    name: Integration (PHP ${{ matrix.php }}, WP ${{ matrix.wp }}, WC ${{ matrix.woocommerce }}, GF ${{ matrix.gravityforms }})
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
         # The latest releases, and the oldest the plugin claims to support
         # (Requires at least / WC requires at least in persian-kit.php) on
-        # the oldest PHP. Yoast 28.3 and later need WordPress 6.9.
+        # the oldest PHP. Yoast 28.3 and later need WordPress 6.9. Gravity
+        # Forms 2.9 is the oldest the integration supports, before 3.0's new
+        # date picker.
         include:
-          - { php: '8.4', wp: '7.1.2', woocommerce: '11.1.2', yoast: '28.6' }
-          - { php: '8.1', wp: '6.8.10', woocommerce: '9.9.7', yoast: '28.2' }
+          - { php: '8.4', wp: '7.1.2', woocommerce: '11.1.2', yoast: '28.6', gravityforms: '3.1.3' }
+          - { php: '8.1', wp: '6.8.10', woocommerce: '9.9.7', yoast: '28.2', gravityforms: '2.9.31' }
     services:
       mysql:
         image: mysql:8.0
@@ -74,6 +76,8 @@ jobs:
       PERSIAN_KIT_TESTS_ACF_DIR: /tmp/wordpress/wp-content/plugins/advanced-custom-fields
       FORMINATOR_VERSION: '1.57.3'
       PERSIAN_KIT_TESTS_FORMINATOR_DIR: /tmp/wordpress/wp-content/plugins/forminator
+      GRAVITYFORMS_VERSION: ${{ matrix.gravityforms }}
+      PERSIAN_KIT_TESTS_GRAVITYFORMS_DIR: /tmp/wordpress/wp-content/plugins/gravityforms
       WORDPRESS_SEO_VERSION: ${{ matrix.yoast }}
       PERSIAN_KIT_TESTS_YOAST_DIR: /tmp/wordpress/wp-content/plugins/wordpress-seo
       RANK_MATH_VERSION: '1.0.279'
@@ -136,6 +140,15 @@ jobs:
           curl -sSfL -o /tmp/forminator.zip "https://downloads.wordpress.org/plugin/forminator.${FORMINATOR_VERSION}.zip"
           unzip -q /tmp/forminator.zip -d "$WP_CORE_DIR/wp-content/plugins"
           test -f "$PERSIAN_KIT_TESTS_FORMINATOR_DIR/forminator.php"
+
+      # Gravity Forms is GPL but not on WordPress.org; Pronamic mirrors its
+      # releases on GitHub. It runs without a license key.
+      - name: Download Gravity Forms
+        run: |
+          curl -sSfL -o /tmp/gravityforms.zip "https://github.com/pronamic/gravityforms/archive/refs/tags/${GRAVITYFORMS_VERSION}.zip"
+          unzip -q /tmp/gravityforms.zip -d /tmp
+          mv "/tmp/gravityforms-${GRAVITYFORMS_VERSION}" "$PERSIAN_KIT_TESTS_GRAVITYFORMS_DIR"
+          test -f "$PERSIAN_KIT_TESTS_GRAVITYFORMS_DIR/gravityforms.php"
 
       - name: Download Yoast SEO
         run: |
