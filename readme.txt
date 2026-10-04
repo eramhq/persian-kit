@@ -17,6 +17,7 @@ Persian Kit is a modular WordPress plugin for Persian-language sites. It focuses
 = Features =
 
 * Jalali date conversion at the display layer
+* Optionally, the Gregorian date next to post and comment dates: ۱۰ مهر ۱۴۰۵ (2026-10-02)
 * Jalali archive pages (/1405/07/ lists the posts of Mehr 1405), and a Jalali archive list and calendar in the Archives and Calendar widgets and blocks
 * Optional Jalali dates in post permalinks (/1405/07/09/my-post/), with old links redirected, and old Jalali links kept working with Jalali dates off
 * A guided switch from Parsi Date, Persian WooCommerce and Persian WooCommerce Shipping: their settings, links, widgets, blocks, ACF dates, Iranian addresses and order statuses, with a review first, a report and undo
@@ -110,6 +111,10 @@ Gregorian archives such as `/2025/03/` keep working. Every Gregorian month spans
 Yes, if your permalink structure has the date, such as "Day and name". Turn on "Jalali dates in post links" under Display > Jalali dates, and posts link to `/1405/07/09/my-post/` instead of `/2026/10/01/my-post/`. Old Gregorian links redirect to the new ones, and turning the option off again redirects the Jalali links back.
 
 Jalali links keep working while Jalali dates are off, whichever plugin made them (Persian Kit, Parsi Date or WP Jalali): they redirect to the Gregorian links. They only work while Persian Kit is active. If you deactivate it, they return "not found", so turn the option off first; the Gregorian links then work.
+
+= Can I show the Gregorian date too? =
+
+Yes. Turn on "Show the Gregorian date too" under Display > Jalali dates, and post and comment dates read "۱۰ مهر ۱۴۰۵ (2026-10-02)". You can show it with month names ("۲ اکتبر ۲۰۲۶"), put it first, and choose parentheses, a slash or a dash between the dates. With Persian digits on for dates, it gets Persian digits too. Feeds, search engines, admin screens, emails, the store and archives keep one date.
 
 = Do I need WooCommerce? =
 
