@@ -342,6 +342,33 @@ test('a value in a day-month-year format is shown: a default date, a draft, a pr
     assert.equal(window.PersianKitDateField.parse('02/10/26', 'd/m/Y'), null);
 });
 
+test('all seven Gravity Forms date formats are written and read back', async () => {
+    // GravityFormsDateField::FORMATS, as Gravity Forms prints the field's value.
+    const formats = {
+        'm/d/Y': '10/04/2026',
+        'd/m/Y': '04/10/2026',
+        'd-m-Y': '04-10-2026',
+        'd.m.Y': '04.10.2026',
+        'Y/m/d': '2026/10/04',
+        'Y-m-d': '2026-10-04',
+        'Y.m.d': '2026.10.04',
+    };
+    const inputs = Object.entries(formats)
+        .map(([format, value], index) => `<input name="f${index}" data-persian-kit-date data-persian-kit-date-format="${format}" value="${value}">`)
+        .join('');
+    const window = await page(`<form>${inputs}</form>`);
+    const { document } = window;
+    const pickers = [...document.querySelectorAll('intl-datepicker')];
+
+    assert.deepEqual(pickers.map((picker) => picker.value), Object.values(formats).map(() => '2026-10-04'));
+
+    pickers.forEach((picker) => picker.setValue('2026-10-05'));
+    assert.deepEqual(
+        Object.values(submitted(document.querySelector('form'))),
+        Object.values(formats).map((value) => value.replace('04', '05'))
+    );
+});
+
 test('formats the field does not know fall back to Y-m-d', async () => {
     const window = await page('<form><input name="a" data-persian-kit-date data-persian-kit-date-format="d/d/Y" value="2026-10-02"></form>');
     const { document } = window;
