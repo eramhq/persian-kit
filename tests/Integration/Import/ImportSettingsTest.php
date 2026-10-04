@@ -58,8 +58,7 @@ class ImportSettingsTest extends WordPressIntegrationTestCase
         $this->assertFalse($rows['validate_fields']->ticked);
         $this->assertSame(['acf.enabled' => true], $rows['acf_fix_date']->changes);
         $this->assertSame('automatic', $rows['acf_save_persian_date']->status->value);
-        $this->assertSame('not_yet', $rows['dual_date']->status->value);
-        $this->assertStringContainsString('#14', $rows['dual_date']->reason);
+        $this->assertSame('close', $rows['dual_date']->status->value);
         $this->assertSame('not_yet', $rows['gateway_mellat']->status->value);
         $this->assertSame('same', $rows['analytics_shamsi_date']->status->value);
         $this->assertSame(['woocommerce.dates_analytics' => true], $rows['analytics_shamsi_date']->changes);
@@ -277,6 +276,44 @@ class ImportSettingsTest extends WordPressIntegrationTestCase
 
         $this->resetSettingsCache();
         $this->assertSame('kurdish', Bootstrap::get(SettingsManager::class)->module('date_conversion', 'month_names'));
+    }
+
+    public function test_parsi_dates_dual_date_shows_the_gregorian_date_too(): void
+    {
+        // Parsi Date converted only on Persian sites.
+        add_filter('locale', static fn (): string => 'fa_IR');
+        update_option('wp_parsidate', ['persian_date' => true, 'dual_date' => true]);
+
+        // Its Gregorian date used the site's format, so month names here.
+        update_option('date_format', 'j F Y');
+        $row = $this->byId((new ParsiDateSettings())->rows())['dual_date'];
+        $this->assertSame('close', $row->status->value);
+        $this->assertSame(
+            ['date_conversion.gregorian_date' => true, 'date_conversion.gregorian_style' => 'named', 'date_conversion.gregorian_separator' => 'dash'],
+            $row->changes
+        );
+        $this->assertTrue($row->ticked);
+
+        update_option('date_format', 'Y/m/d');
+        $row = $this->byId((new ParsiDateSettings())->rows())['dual_date'];
+        $this->assertSame('numeric', $row->changes['date_conversion.gregorian_style']);
+
+        $this->runner()->start(new ParsiDateSource());
+        $this->runner()->run('test', 30.0);
+
+        $this->resetSettingsCache();
+        $dates = Bootstrap::get(SettingsManager::class)->module('date_conversion');
+        $this->assertTrue($dates['gregorian_date']);
+        $this->assertSame('numeric', $dates['gregorian_style']);
+        $this->assertSame('jalali_first', $dates['gregorian_order']);
+        $this->assertSame('dash', $dates['gregorian_separator']);
+    }
+
+    public function test_parsi_dates_dual_date_without_its_jalali_dates_is_left_out(): void
+    {
+        update_option('wp_parsidate', ['persian_date' => false, 'dual_date' => true]);
+
+        $this->assertArrayNotHasKey('dual_date', $this->byId((new ParsiDateSettings())->rows()));
     }
 
     public function test_parsi_dates_persian_month_names_need_no_setting(): void

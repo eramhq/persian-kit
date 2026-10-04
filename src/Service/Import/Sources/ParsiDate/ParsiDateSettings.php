@@ -235,6 +235,10 @@ class ParsiDateSettings
             );
         }
 
+        if ($this->on('core', 'dual_date') && $this->on('core', 'persian_date')) {
+            $rows[] = $this->dualDateRow($applied);
+        }
+
         $monthNames = $this->monthNamesRow($applied);
         if ($monthNames !== null) {
             $rows[] = $monthNames;
@@ -243,6 +247,33 @@ class ParsiDateSettings
         $rows = array_merge($rows, $this->woocommerceRows(), $this->acfRows(), $this->automaticRows(), $this->notYetRows());
 
         return $rows;
+    }
+
+    /**
+     * Its dual date: the Gregorian date after every Jalali date it
+     * converted, in the same format (month names when the format has
+     * them) after " - ". Persian Kit's does full post and comment dates on
+     * the site.
+     */
+    private function dualDateRow(bool $applied): SettingRow
+    {
+        $named = preg_match('/(?<!\\\\)[FM]/', (string) get_option('date_format')) === 1;
+
+        return new SettingRow(
+            'dual_date',
+            __('Dates in both calendars', 'persian-kit'),
+            SettingStatus::Close,
+            __('Show the Gregorian date too', 'persian-kit'),
+            [
+                'date_conversion.gregorian_date'      => true,
+                'date_conversion.gregorian_style'     => $named ? 'named' : 'numeric',
+                'date_conversion.gregorian_separator' => 'dash',
+            ],
+            $named
+                ? __('Parsi Date added it to every date it converted. Persian Kit adds it, with month names, after a dash, to post and comment dates on the site that have a day, month and year; times, admin screens and feeds keep one date.', 'persian-kit')
+                : __('Parsi Date added it to every date it converted. Persian Kit adds it, as numbers (2026-10-02), after a dash, to post and comment dates on the site that have a day, month and year; times, admin screens and feeds keep one date.', 'persian-kit'),
+            $applied
+        );
     }
 
     /**
@@ -394,9 +425,6 @@ class ParsiDateSettings
         /* translators: %s: issue number, such as #14. */
         $planned = static fn (string $issue): string => sprintf(__('Planned for Persian Kit (%s).', 'persian-kit'), $issue);
 
-        if ($this->on('core', 'dual_date')) {
-            $rows[] = $notYet('dual_date', __('Dates in both calendars', 'persian-kit'), $planned('#14'));
-        }
         if ($this->on('core', 'disable_widget_block')) {
             $rows[] = $notYet('disable_widget_block', __('Classic widgets screen', 'persian-kit'), __('Use the Classic Widgets plugin for this.', 'persian-kit'));
         }
