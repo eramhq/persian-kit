@@ -235,9 +235,48 @@ class ParsiDateSettings
             );
         }
 
+        $monthNames = $this->monthNamesRow($applied);
+        if ($monthNames !== null) {
+            $rows[] = $monthNames;
+        }
+
         $rows = array_merge($rows, $this->woocommerceRows(), $this->acfRows(), $this->automaticRows(), $this->notYetRows());
 
         return $rows;
+    }
+
+    /**
+     * Its Dari, Pashto or Kurdish month names (months_name_type). One
+     * choice for the site; a multilingual site chooses per language.
+     */
+    private function monthNamesRow(bool $applied): ?SettingRow
+    {
+        $set = $this->value('core', 'months_name_type');
+        $labels = [
+            'dari'    => [__('Dari month names', 'persian-kit'), __('Month names: Dari (Afghanistan)', 'persian-kit')],
+            'pashto'  => [__('Pashto month names', 'persian-kit'), __('Month names: Pashto', 'persian-kit')],
+            'kurdish' => [__('Kurdish month names', 'persian-kit'), __('Month names: Kurdish (Sorani)', 'persian-kit')],
+        ];
+
+        if (!is_string($set) || !isset($labels[$set]) || !$this->on('core', 'persian_date')) {
+            return null;
+        }
+
+        [$sourceLabel, $targetLabel] = $labels[$set];
+
+        if (ContentLanguage::isMultilingual()) {
+            return new SettingRow('months_name_type', $sourceLabel, SettingStatus::Close, '', [], __('Persian Kit chooses month names for each language: set them under Jalali dates.', 'persian-kit'));
+        }
+
+        return new SettingRow(
+            'months_name_type',
+            $sourceLabel,
+            $set === 'dari' ? SettingStatus::Same : SettingStatus::Close,
+            $targetLabel,
+            ['date_conversion.month_names' => $set],
+            $set === 'dari' ? '' : __('Persian Kit writes the weekdays as news sites in this language do.', 'persian-kit'),
+            $applied
+        );
     }
 
     /**
@@ -357,9 +396,6 @@ class ParsiDateSettings
 
         if ($this->on('core', 'dual_date')) {
             $rows[] = $notYet('dual_date', __('Dates in both calendars', 'persian-kit'), $planned('#14'));
-        }
-        if (in_array($this->value('core', 'months_name_type'), ['dari', 'kurdish', 'pashto'], true)) {
-            $rows[] = $notYet('months_name_type', __('Dari, Kurdish or Pashto month names', 'persian-kit'), $planned('#33'));
         }
         if ($this->on('core', 'disable_widget_block')) {
             $rows[] = $notYet('disable_widget_block', __('Classic widgets screen', 'persian-kit'), __('Use the Classic Widgets plugin for this.', 'persian-kit'));

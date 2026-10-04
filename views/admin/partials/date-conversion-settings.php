@@ -7,9 +7,12 @@
 
 use PersianKit\Core\SettingsManager;
 use PersianKit\Dependencies\Eram\Abzar\Digits\DigitConverter;
+use PersianKit\Modules\DateConversion\CalendarNames;
 use PersianKit\Modules\DateConversion\GregorianCompanion;
 use PersianKit\Modules\DateConversion\JalaliFormatter;
+use PersianKit\Modules\DateConversion\JalaliPeriod;
 use PersianKit\Modules\DigitConversion\DigitConversionModule;
+use PersianKit\Service\Language\ContentLanguage;
 
 defined('ABSPATH') || exit;
 
@@ -86,6 +89,48 @@ foreach (GregorianCompanion::STYLES as $style) {
     }
 }
 $exampleKey = implode(' ', [$gregorianValues['style'], $gregorianValues['order'], $gregorianValues['separator']]);
+
+// Month names: one choice for the site, or one per language on multilingual sites.
+$setLabels = [
+    'iranian' => __('Iranian', 'persian-kit'),
+    'dari'    => __('Dari (Afghanistan)', 'persian-kit'),
+    'pashto'  => __('Pashto', 'persian-kit'),
+    'kurdish' => __('Kurdish (Sorani)', 'persian-kit'),
+];
+$todayParts = JalaliPeriod::fromGregorian($today);
+$nameExamples = [];
+foreach (CalendarNames::SETS as $set) {
+    $nameExamples[$set] = $withDigits($todayParts['jd'] . ' ' . CalendarNames::for($set)['months'][$todayParts['jm']] . ' ' . $todayParts['jy']);
+}
+$siteNames = isset($moduleSettings['month_names']) && in_array($moduleSettings['month_names'], CalendarNames::CHOICES, true) ? $moduleSettings['month_names'] : 'auto';
+$namesByLocale = is_array($moduleSettings['month_names_by_locale'] ?? null) ? $moduleSettings['month_names_by_locale'] : [];
+$siteLanguages = ContentLanguage::languages();
+
+// Each select: its field name, label, value, and what Automatic gives.
+$nameSelects = [];
+if ($siteLanguages === []) {
+    $nameSelects[] = [
+        'name'  => 'persian_kit_settings[date_conversion][month_names]',
+        'id'    => 'persian-kit-date_conversion-month_names',
+        'label' => _x('Month names', 'names of the Jalali months', 'persian-kit'),
+        'value' => $siteNames,
+        'auto'  => CalendarNames::setFor(get_locale()),
+    ];
+} else {
+    foreach ($siteLanguages as $locale) {
+        $language = class_exists('Locale') ? (string) \Locale::getDisplayName($locale, get_user_locale()) : '';
+        $value = $namesByLocale[$locale] ?? 'auto';
+        $nameSelects[] = [
+            'name'  => 'persian_kit_settings[date_conversion][month_names_by_locale][' . $locale . ']',
+            'id'    => 'persian-kit-date_conversion-month_names-' . $locale,
+            /* translators: %s: a language, such as Pashto (Afghanistan). */
+            'label' => sprintf(__('Month names in %s', 'persian-kit'), $language !== '' ? $language : $locale),
+            'value' => in_array($value, CalendarNames::CHOICES, true) ? $value : 'auto',
+            // Null: the language shows Gregorian dates unless a set is chosen.
+            'auto'  => ContentLanguage::languageReadsJalali($locale) ? CalendarNames::setFor($locale) : null,
+        ];
+    }
+}
 ?>
 <ul
     class="persian-kit-options"
@@ -100,6 +145,51 @@ $exampleKey = implode(' ', [$gregorianValues['style'], $gregorianValues['order']
         ]);
         ?>
     <?php endforeach; ?>
+
+    <?php foreach ($nameSelects as $select) : ?>
+        <?php
+        $selectExamples = $nameExamples + ['auto' => $select['auto'] === null ? '' : $nameExamples[$select['auto']]];
+        $autoLabel = $select['auto'] === null
+            ? __('Automatic: Gregorian dates', 'persian-kit')
+            /* translators: %s: the month names a language uses, such as Dari (Afghanistan). */
+            : sprintf(__('Automatic: %s', 'persian-kit'), $setLabels[$select['auto']]);
+        ?>
+        <li
+            class="persian-kit-option persian-kit-option--select"
+            x-data="<?php echo esc_attr(wp_json_encode(['names' => $select['value'], 'nameExamples' => $selectExamples])); ?>"
+        >
+            <label class="persian-kit-option__label" for="<?php echo esc_attr($select['id']); ?>">
+                <?php echo esc_html($select['label']); ?>
+            </label>
+            <select
+                id="<?php echo esc_attr($select['id']); ?>"
+                name="<?php echo esc_attr($select['name']); ?>"
+                aria-describedby="<?php echo esc_attr($select['id'] . '-help'); ?>"
+                x-model="names"
+            >
+                <option value="auto" <?php selected($select['value'], 'auto'); ?>><?php echo esc_html($autoLabel); ?></option>
+                <?php foreach ($setLabels as $value => $label) : ?>
+                    <option value="<?php echo esc_attr($value); ?>" <?php selected($select['value'], $value); ?>>
+                        <?php echo esc_html($label); ?>
+                    </option>
+                <?php endforeach; ?>
+            </select>
+            <span class="persian-kit-option__help" id="<?php echo esc_attr($select['id'] . '-help'); ?>" x-show="nameExamples[names]"<?php echo $selectExamples[$select['value']] === '' ? ' x-cloak' : ''; ?>>
+                <?php esc_html_e('Example:', 'persian-kit'); ?>
+                <bdi x-text="nameExamples[names]"><?php echo esc_html($selectExamples[$select['value']]); ?></bdi>
+            </span>
+        </li>
+    <?php endforeach; ?>
+    <?php // The other kind of choice is kept: per language while the site has one, the site's on a multilingual site. ?>
+    <li hidden>
+        <?php if ($siteLanguages === []) : ?>
+            <?php foreach ($namesByLocale as $locale => $value) : ?>
+                <input type="hidden" name="<?php echo esc_attr('persian_kit_settings[date_conversion][month_names_by_locale][' . $locale . ']'); ?>" value="<?php echo esc_attr((string) $value); ?>">
+            <?php endforeach; ?>
+        <?php else : ?>
+            <input type="hidden" name="persian_kit_settings[date_conversion][month_names]" value="<?php echo esc_attr($siteNames); ?>">
+        <?php endif; ?>
+    </li>
 
     <?php
     \PersianKit\Components\View::load('admin/partials/checkbox-option', [

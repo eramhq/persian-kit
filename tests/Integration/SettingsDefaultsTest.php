@@ -90,6 +90,7 @@ class SettingsDefaultsTest extends WordPressIntegrationTestCase
             [
                 'enabled' => true, 'global_conversion' => false, 'jalali_archives' => false, 'jalali_permalinks' => false,
                 'gregorian_date' => false, 'gregorian_style' => 'numeric', 'gregorian_order' => 'jalali_first', 'gregorian_separator' => 'parentheses',
+                'month_names' => 'auto', 'month_names_by_locale' => [],
             ],
             get_option('persian_kit_settings')['date_conversion']
         );
@@ -212,6 +213,7 @@ class SettingsDefaultsTest extends WordPressIntegrationTestCase
             [
                 'enabled' => true, 'global_conversion' => true, 'jalali_archives' => true, 'jalali_permalinks' => false,
                 'gregorian_date' => false, 'gregorian_style' => 'numeric', 'gregorian_order' => 'jalali_first', 'gregorian_separator' => 'parentheses',
+                'month_names' => 'auto', 'month_names_by_locale' => [],
             ],
             $stored['date_conversion']
         );
