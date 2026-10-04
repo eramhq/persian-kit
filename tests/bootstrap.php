@@ -22,7 +22,7 @@ if (file_exists($wpTestsDir . '/includes/functions.php')) {
     require_once $wpTestsDir . '/includes/functions.php';
 
     // Plugins the integration tests cover: WooCommerce, Contact Form 7, ACF,
-    // Forminator, Gravity Forms, Yoast SEO, Rank Math and Polylang. Each loads from
+    // Forminator, Gravity Forms, WPForms, Yoast SEO, Rank Math and Polylang. Each loads from
     // PERSIAN_KIT_TESTS_<NAME>_DIR (as in CI), or when installed next to the
     // plugin. Their tests are skipped without them; set
     // PERSIAN_KIT_TESTS_WITHOUT_<NAME>=1 to run the suite without one.
@@ -32,6 +32,7 @@ if (file_exists($wpTestsDir . '/includes/functions.php')) {
         'ACF'          => 'advanced-custom-fields/acf.php',
         'FORMINATOR'   => 'forminator/forminator.php',
         'GRAVITYFORMS' => 'gravityforms/gravityforms.php',
+        'WPFORMS'      => 'wpforms-lite/wpforms.php',
         'YOAST'        => 'wordpress-seo/wp-seo.php',
         'RANK_MATH'    => 'seo-by-rank-math/rank-math.php',
     ];
