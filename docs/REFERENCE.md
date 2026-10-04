@@ -473,7 +473,8 @@ On a site with WPML or Polylang and at least one language set up, Persian Kit fo
 | Emails: WooCommerce email digits, dates and font | The email's language: a locale switched for it (`switch_to_locale()`, as WooCommerce and Polylang for WooCommerce do), or a language WPML switched to (`wpml_switch_language`, as WooCommerce Multilingual does) |
 | Contact Form 7 date fields and their mail tags | The form's own language: Contact Form 7 shows a form and sends its mail in the language it was made in, when that language is installed. Otherwise the page's language |
 | Forminator Calendar fields and their emails | The picker follows the page's language; emails follow the language of the page the form was sent from (`page_id`) |
-| Admin screens: date pickers, month filters, media dates, WooCommerce order, product and coupon dates, Forminator's Submissions screen | The admin's own language (Users › Profile › Language), also in the block editor |
+| Gravity Forms Date fields, emails and confirmations | The fields follow the page's language; emails follow the language of the page the form was sent from (the entry's `source_id`) |
+| Admin screens: date pickers, month filters, media dates, WooCommerce order, product and coupon dates, Forminator's Submissions screen, Gravity Forms' Entries screens | The admin's own language (Users › Profile › Language), also in the block editor |
 | Jalali post permalinks | Each post's language |
 | Which posts count in the Jalali calendar's days and previous and next months, and in the admin month filters (posts and media) | The page's language; in the admin, the language chosen in Polylang's or WPML's language filter ("All languages" counts every post). Posts of untranslated post types count in every language |
 | Finding a post by its old slug, a cut-off address under a Jalali date, or a Persian slug saved in an older form | A post in the current language first, as above; a match in another language is still found |
@@ -909,11 +910,11 @@ Not covered: an extension that bundles its own copy of WooCommerce's date packag
 
 ## Integrations
 
-An integration is a module that works with another plugin: WooCommerce (`woocommerce`), Contact Form 7 (`cf7`), ACF (`acf`), Forminator (`forminator`), Yoast SEO (`yoast`), Rank Math (`rank_math`), WPML (`wpml`) and Polylang (`polylang`). Each turns on by itself when its plugin is active, and does nothing while it is not. The plugin is checked when the page loads, by its classes, functions and constants, so a network-activated plugin counts on every site.
+An integration is a module that works with another plugin: WooCommerce (`woocommerce`), Contact Form 7 (`cf7`), ACF (`acf`), Forminator (`forminator`), Gravity Forms (`gravityforms`), Yoast SEO (`yoast`), Rank Math (`rank_math`), WPML (`wpml`) and Polylang (`polylang`). Each turns on by itself when its plugin is active, and does nothing while it is not. The plugin is checked when the page loads, by its classes, functions and constants, so a network-activated plugin counts on every site.
 
 - WooCommerce has its own tab on the settings page, shown only while WooCommerce is active, with a card for each section: Checkout and addresses, Prices and currency, Emails, Dates. `?tab=woocommerce#checkout` (`#prices`, `#emails`, `#dates`) links to one. While WooCommerce is inactive, `?tab=woocommerce` opens the first tab. Under Dates, `dates_admin` turns the Jalali date pickers on the order, product and coupon screens, and the month filter on the orders list, on or off, and `dates_analytics` the Jalali calendar in [WooCommerce Analytics](#woocommerce-analytics); dates on orders and in emails follow the Jalali dates module.
 - The Integrations tab has a card for each other integration, grouped as Forms, Store and Compatibility. A plugin that is active but too old, or that needs an add-on (such as a Pro version), has a card that says why, with its switch disabled.
-- Plugins that are not active are listed under "Also works with", each with a link to its WordPress.org page, or to its website when it is not on WordPress.org (WPML). One that was set up on this site before says its settings are kept: stored settings stay until the plugin is active again.
+- Plugins that are not active are listed under "Also works with", each with a link to its WordPress.org page, or to its website when it is not on WordPress.org (WPML, Gravity Forms). One that was set up on this site before says its settings are kept: stored settings stay until the plugin is active again.
 - A card is marked New until the Integrations or WooCommerce tab is opened once after its plugin was activated. The keys of the integrations that have been seen are stored per site in the `persian_kit_seen_integrations` option.
 - Integrations add no admin notices. Advice about another Persian plugin that does the same work is shown at the top of the settings page, as before, and on the card or tab of the integration it concerns.
 
@@ -937,7 +938,9 @@ A field type Persian Kit adds to a form plugin keeps rendering while the integra
 
 Forminator has no Persian Kit field types: its fields only carry a `persian-kit-*` class, so while the integration is off they are Forminator's own fields again, with its own calendar and no Iranian checks. Its card lists the forms with those classes.
 
-If Persian Kit itself is deactivated, its field types are gone: Contact Form 7 then prints a tag such as `[national_id your-id]` as text. Replace these tags before deactivating Persian Kit.
+Gravity Forms' Iranian fields stay registered while its integration is off, as text inputs without checks, and the form editor no longer offers them. The Iran address type and the toman and rial currencies stay too, so forms keep their address type and prices; only the postcode check stops. Date fields show Gravity Forms' own pickers again.
+
+If Persian Kit itself is deactivated, its field types are gone: Contact Form 7 then prints a tag such as `[national_id your-id]` as text, and Gravity Forms shows its Iranian fields as empty fields with no input. Replace or remove them before deactivating Persian Kit. A Gravity Forms address of the Iran type falls back to the default type (International), with a text box for the province.
 
 ### Writing an integration
 
@@ -953,7 +956,7 @@ A module becomes an integration by returning a category and the plugins it needs
 
 ## Forms
 
-Contact Form 7 (`cf7`), ACF (`acf`) and Forminator (`forminator`) are separate integrations, each with its own switch.
+Contact Form 7 (`cf7`), ACF (`acf`), Forminator (`forminator`) and Gravity Forms (`gravityforms`) are separate integrations, each with its own switch.
 
 ### Contact Form 7
 
@@ -1002,6 +1005,33 @@ The classes count on Text, Phone and Number fields and are ignored on others; us
 - **Forms loaded over AJAX, multi-step forms and repeaters.** The picker is put on the field wherever Forminator renders it: on any step, in a popup, in a form loaded over AJAX, and in each new row of a repeated Group field, which gets its own picker and starts from the field's default. Each row is checked on its own. Fields hidden by a condition are not checked.
 
 The card's list of forms with Iranian classes comes from a scan of the forms' fields, cached and cleared when a form is saved, cloned, imported, trashed or deleted. Polls and quizzes are not changed.
+
+### Gravity Forms
+
+Gravity Forms 2.9 or newer.
+
+- **Dates.** Date fields are Jalali in all three styles. A **Date Picker** gets the Jalali date picker in place of Gravity Forms' own (jQuery UI before 3.0, Apex since), and still submits the Gregorian date in the field's own format (`04/10/2026` for mm/dd/yyyy), so Gravity Forms' checks, conditions, saved entries (`Y-m-d`), exports and add-ons work as before. All seven of Gravity Forms' date formats are supported. **Date Field** (number boxes) and **Date Drop Down** take a Jalali day, month and year: the drop-down lists the Jalali month names, and the years cover Gravity Forms' range (`gform_date_min_year` and `gform_date_max_year`, 1920 to next year by default, so 1298 to 1406). When the form is sent, the Jalali date is converted to the Gregorian one in the field's order. A typed Jalali date (`۱۴۰۵/۷/۱۲`, or `۱۲/۷/۱۴۰۵` in a day-first format) is read in any digits: years from 1200 to 1600 are Jalali, from 1700 on Gregorian. A Jalali date that doesn't exist, such as 31 Mehr, fails with Gravity Forms' own date message. Tick **Gregorian calendar** under the field's Date Format to keep Gravity Forms' own picker; pages in a language that doesn't read Jalali dates keep it too. In the admin, an entry being edited gets the same fields.
+- **Entries, emails and confirmations.** While the Jalali dates module is on, the Entries list and an entry's page (and its printout) show Jalali dates in the site's date format, for an admin whose language reads them, as do the entry's "Submitted on" and "Updated" dates, the list's Entry Date and Payment Date columns, and note dates. In emails and confirmations, `{Date:1}` and `{all_fields}` show the Jalali date. `{Date:1:year}`, `:month` and `:day` give the Jalali part, and `:dmy`, `:ymd_dash` and the other orders give the Jalali date in that order. `{Date:1:raw}`, merge tags in a redirect's query string, saved entries and exports keep the Gregorian date.
+- **Digits.** Persian and Arabic digits become English in Phone, Number, Quantity, Time and Date inputs, an address's postcode, a product's quantity and a price the customer enters, and in the Iranian fields: as people type (Gravity Forms' input masks drop them otherwise), and again on the server before Gravity Forms reads the form. Other text keeps its digits. Inputs Gravity Forms checks against what it printed (choices, hidden fields, product names and prices, the address's province and country) are left alone.
+- **Iranian fields.** The form editor's Add Fields panel has an "Iranian fields" group:
+
+| Field | Type | Checked with | Saved as |
+| --- | --- | --- | --- |
+| Mobile number | `persian_kit_mobile` | `persian_kit_validate_phone()`, mobile numbers only | `09121234567` |
+| National ID | `persian_kit_national_id` | `persian_kit_validate_national_id()` | 10 digits |
+| Postcode | `persian_kit_postcode` | `persian_kit_validate_postal_code()` | 10 digits |
+| Bank card number | `persian_kit_card` | `persian_kit_validate_card_number()` | 16 digits |
+| IBAN (Sheba) | `persian_kit_iban` | `persian_kit_validate_iban()` | `IR` and 24 digits |
+
+Each is a Single Line Text field without an input mask or character limit, with its other settings: required, no duplicates, placeholder, default value, conditional logic, custom validation message and so on. A value that isn't valid fails when the form is sent, with the field's custom validation message if it has one; a valid one is saved and emailed in its standard form. An empty required field gets Gravity Forms' own message. The inputs read left to right and get a phone or numeric keyboard, and are styled as text fields by Gravity Forms' themes.
+
+- **Iran address type.** The Address field's Address Type has "Iran": the 31 provinces in Persian for the province, Iran as the country (its input is hidden, as for the United States type), and a postcode that must be a valid Iranian one, saved as 10 English digits.
+- **Toman and rial.** Forms › Settings › Currency has Iranian toman (`IRT`) and Iranian rial (`IRR`), the codes Iranian payment gateways and WooCommerce use: no decimals, a comma between thousands and the word after the amount (`250,000 تومان`). A currency another plugin added under these codes is kept.
+- **Forms loaded over AJAX, multi-page forms and Save and Continue.** The picker and the Jalali parts are put on the fields wherever Gravity Forms renders them: on any page, in a form loaded over AJAX, and when a form is shown again after a failed check, a page change or a resume. Submissions are fixed when sent to the page, over AJAX, through `GFAPI::submit_form()` and `GFAPI::validate_form()`, and when saved to continue later.
+
+The card's list of forms with Iranian fields comes from a scan of the forms, cached and cleared when a form is saved, duplicated, imported, trashed, restored or deleted.
+
+Not covered: the Jalali picker doesn't apply Gravity Forms' JavaScript date options (`gform_datepicker_options_pre_init`), such as a minimum date or disabled days; they are not checked by Gravity Forms on the server either. Another Persian Gravity Forms add-on that also replaces the date picker should have its date feature turned off.
 
 ## Switching from Another Plugin
 
@@ -1079,6 +1109,7 @@ The settings page (the Persian Kit menu) has five tabs: Display and Writing hold
 | `cf7` | Integrations > Forms > Contact Form 7 | `enabled` (on) |
 | `acf` | Integrations > Forms > ACF | `enabled` (on) |
 | `forminator` | Integrations > Forms > Forminator | `enabled` (on) |
+| `gravityforms` | Integrations > Forms > Gravity Forms | `enabled` (on) |
 
 The option is registered with the Settings API (group `persian_kit`), so every write is sanitized, whether it comes from the settings page or from `update_option()`. Each module's values are merged over what is stored and sanitized by the module; a module left out keeps its stored values, and keys that are not module keys are dropped. Booleans are stored as `true`/`false`.
 

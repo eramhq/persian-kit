@@ -4,6 +4,17 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Gravity Forms
+
+Gravity Forms forms get the same Persian support as Contact Form 7 and Forminator (#6), in a new integration (`gravityforms`, on by default, Gravity Forms 2.9 or newer):
+
+- Date fields are Jalali in all three styles. The Date Picker gets the Jalali date picker in place of Gravity Forms' own, in all seven date formats; the number boxes and drop-downs take a Jalali day, month and year, with Jalali month names. Fields still submit and save the Gregorian date, so Gravity Forms' checks, conditions, entries, exports and add-ons are unchanged. A Jalali date that doesn't exist fails with Gravity Forms' own message. "Gregorian calendar" in a Date field's settings keeps Gravity Forms' picker.
+- While Jalali dates is on, the Entries screens (with "Submitted on" and note dates), emails and confirmations show Jalali dates; `{Date:1:year}` and the other modifiers give Jalali parts, and `:raw`, redirect URLs and exports keep the Gregorian date.
+- An "Iranian fields" group in the form editor: mobile number, national ID, postcode, bank card number and IBAN (Sheba), checked when the form is sent and saved in their standard form.
+- An "Iran" address type with the 31 provinces in Persian and a checked postcode, and toman and rial in Gravity Forms' currency setting.
+- Persian digits become English in phone, number, time, date, postcode, quantity and price inputs, as people type and on the server.
+- Turned off, the Iranian fields stay as plain text inputs, the address type and currencies stay, and the card names the forms that use the fields.
+
 ### Afghan and Kurdish month names
 
 - Jalali dates use the month and weekday names of the site's language: Dari for fa_AF (حمل…حوت, "۱۲ میزان ۱۴۰۵"), Pashto for ps (وری…کب, with the weekdays Afghan news sites write) and Sorani Kurdish for ckb (خاکەلێوە…ڕەشەمە). Iranian names stay for every other language, byte for byte. Display › Jalali dates › "Month names" picks a set by hand; on WPML and Polylang sites, each language has its own (#33).

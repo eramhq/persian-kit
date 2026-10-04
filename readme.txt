@@ -45,6 +45,7 @@ Persian Kit is a modular WordPress plugin for Persian-language sites. It focuses
 * A Jalali date picker for Contact Form 7 and ACF date fields, WooCommerce's admin date fields and the post date in the classic editor and Quick Edit, which keep saving Gregorian dates
 * Contact Form 7 fields that check Iranian mobile numbers, national IDs, postcodes, card numbers and IBANs
 * Forminator: a Jalali date picker for Calendar date fields, and checks for Iranian values such as mobile number and national ID in fields with a persian-kit class
+* Gravity Forms: Jalali dates in Date fields, in all three styles, an "Iranian fields" group (mobile number, national ID, postcode, card number, IBAN), an Iran address type, and toman and rial
 
 = Bundled software =
 
@@ -175,9 +176,13 @@ Yes. Each turns on by itself when the plugin is active (Integrations tab). Conta
 
 Yes, from Forminator 1.50. Date fields in the Calendar style get a Jalali date picker and still save Gregorian dates, so entries and exports are unchanged; while Jalali dates is on, emails and the Submissions screen show the Jalali date. For Iranian checks, add a class to a field's "Additional CSS Classes": persian-kit-mobile, persian-kit-national-id, persian-kit-postcode, persian-kit-card or persian-kit-iban. Persian digits typed into phone and number fields become English digits.
 
+= Does Persian Kit work with Gravity Forms? =
+
+Yes, from Gravity Forms 2.9. Date fields get a Jalali date picker, or Jalali number boxes and drop-downs, and still save Gregorian dates, so entries, exports and add-ons are unchanged; while Jalali dates is on, the Entries screens, emails and confirmations show the Jalali date. The form editor's Add Fields panel has an "Iranian fields" group with mobile number, national ID, postcode, bank card number and IBAN fields that check what is typed. The Address field gets an "Iran" type with the provinces in Persian, and the currency setting gets toman and rial. Persian digits typed into phone, number, date and price inputs become English digits.
+
 = What happens to my forms if I turn an integration off? =
 
-They keep working. While the Contact Form 7 integration is off, its Iranian fields are plain text inputs that accept any text; the settings page names the forms that use them before you save. Forminator fields with a persian-kit class become plain Forminator fields, and its card names those forms too. If you deactivate Persian Kit itself, Contact Form 7 shows tags such as [national_id your-id] as text, so replace them first.
+They keep working. While the Contact Form 7 integration is off, its Iranian fields are plain text inputs that accept any text; the settings page names the forms that use them before you save. Forminator fields with a persian-kit class become plain Forminator fields, and its card names those forms too. Gravity Forms' Iranian fields become plain text inputs, and its Iran address type and toman and rial stay. If you deactivate Persian Kit itself, Contact Form 7 shows tags such as [national_id your-id] as text, and Gravity Forms shows its Iranian fields without an input, so replace them first.
 
 = Can customers enter a village? =
 
