@@ -9,6 +9,7 @@ use PersianKit\Modules\DigitConversion\DigitConversionModule;
 use PersianKit\Modules\Forms\AcfModule;
 use PersianKit\Modules\Forms\Cf7Module;
 use PersianKit\Modules\Forms\ForminatorModule;
+use PersianKit\Modules\Forms\GravityFormsModule;
 use PersianKit\Modules\Multilingual\PolylangModule;
 use PersianKit\Modules\Multilingual\WpmlModule;
 use PersianKit\Modules\Seo\RankMathModule;
@@ -36,6 +37,7 @@ final class ModuleRegistry
         Cf7Module::class,
         AcfModule::class,
         ForminatorModule::class,
+        GravityFormsModule::class,
         YoastModule::class,
         RankMathModule::class,
         WpmlModule::class,

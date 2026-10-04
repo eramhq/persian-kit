@@ -10,6 +10,7 @@ use PersianKit\Modules\DigitConversion\DigitConversionModule;
 use PersianKit\Modules\Forms\AcfModule;
 use PersianKit\Modules\Forms\Cf7Module;
 use PersianKit\Modules\Forms\ForminatorModule;
+use PersianKit\Modules\Forms\GravityFormsModule;
 use PersianKit\Modules\Utilities\UtilitiesModule;
 use PersianKit\Modules\WooCommerce\WooCommerceModule;
 use PersianKit\Modules\ZWNJEditor\ZWNJEditorModule;
@@ -49,6 +50,7 @@ class ActivationTest extends WordPressIntegrationTestCase
         $this->assertSame(Cf7Module::defaults(), $settings[Cf7Module::key()]);
         $this->assertSame(AcfModule::defaults(), $settings[AcfModule::key()]);
         $this->assertSame(ForminatorModule::defaults(), $settings[ForminatorModule::key()]);
+        $this->assertSame(GravityFormsModule::defaults(), $settings[GravityFormsModule::key()]);
         $this->assertArrayNotHasKey('forms', $settings);
     }
 
