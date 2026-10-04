@@ -45,6 +45,7 @@ class WooCommerceModule extends AbstractModule
             'allowed_states'           => [],
             'short_checkout'           => false,
             'dates_admin'              => true,
+            'dates_analytics'          => true,
             // Empty texts stay empty, so each language gets its own default.
             'call_for_price'           => false,
             'call_for_price_text'      => '',
@@ -121,6 +122,7 @@ class WooCommerceModule extends AbstractModule
             'allowed_states'           => ProvinceLimit::sanitizeCodes($values['allowed_states'] ?? [], self::provinces()),
             'short_checkout'           => !empty($values['short_checkout']),
             'dates_admin'              => !empty($values['dates_admin']),
+            'dates_analytics'          => !empty($values['dates_analytics']),
             'call_for_price'           => !empty($values['call_for_price']),
             'call_for_price_text'      => CallForPrice::sanitizeText($values['call_for_price_text'] ?? ''),
             'call_for_price_list_text' => CallForPrice::sanitizeText($values['call_for_price_list_text'] ?? ''),
@@ -168,6 +170,9 @@ class WooCommerceModule extends AbstractModule
         });
         $container->register(WooDateDisplayFilter::class, function () {
             return new WooDateDisplayFilter();
+        });
+        $container->register(WooAnalyticsDates::class, function () {
+            return new WooAnalyticsDates();
         });
         $container->register(CheckoutInputNormalizer::class, function () {
             return new CheckoutInputNormalizer();
@@ -265,6 +270,11 @@ class WooCommerceModule extends AbstractModule
                 $container->get(WooAdminDateFields::class)->register();
             }
             $container->get(WooPostedDateNormalizer::class)->register();
+        }
+
+        // Analytics and the WooCommerce home, for admins whose language is Persian.
+        if ($this->setting('dates_analytics') && is_admin() && ContentLanguage::displaysPersian()) {
+            $container->get(WooAnalyticsDates::class)->register();
         }
     }
 
