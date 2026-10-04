@@ -6,7 +6,7 @@ All notable changes to this project will be documented in this file.
 
 ### Gregorian date next to the Jalali date
 
-- Display › Jalali dates › "Show the Gregorian date too", off by default: post and comment dates on the site read "۱۰ مهر ۱۴۰۵ (2026-10-02)", in the Post Date and Latest Comments blocks too. The Gregorian date can show month names in Persian ("۲ اکتبر ۲۰۲۶"), come first, and sit in parentheses or after a slash or dash. It gets Persian digits when the Persian digits module's dates option is on. Times, parts of a date (just the year, say), feeds, `<time datetime>`, REST responses, admin screens, emails, the store, archives and `persian_kit_date()` keep one date. New filters `persian_kit_gregorian_date` and `persian_kit_gregorian_date_display` (#14).
+- Display › Jalali dates › "Show the Gregorian date too", off by default: post and comment dates on the site read "۱۰ مهر ۱۴۰۵ (2026-10-02)", in the Post Date and Latest Comments blocks too. The Gregorian date can show month names in Persian ("۲ اکتبر ۲۰۲۶"), come first, and sit in parentheses or after a slash or dash. It gets Persian digits when the Persian digits module's dates option is on. Times, parts of a date (just the year, say), `Y-m-d` asked for by theme code (unless it is the site's date format), feeds, `<time datetime>`, REST responses, admin screens, emails, the store, archives and `persian_kit_date()` keep one date. New filters `persian_kit_gregorian_date` and `persian_kit_gregorian_date_display` (#14).
 
 ### WooCommerce Analytics
 

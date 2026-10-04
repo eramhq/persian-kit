@@ -24,6 +24,7 @@ class GregorianCompanionTest extends TestCase
         Functions\when('is_admin')->justReturn(false);
         Functions\when('wp_doing_ajax')->justReturn(false);
         Functions\when('wp_is_serving_rest_request')->justReturn(false);
+        Functions\when('get_option')->justReturn('j F Y');
 
         $this->date = new \DateTimeImmutable('2026-10-02 10:30:00', new \DateTimeZone('Asia/Tehran'));
     }
@@ -101,6 +102,32 @@ class GregorianCompanionTest extends TestCase
             'RFC 3339' => [DATE_RFC3339],
             'W3C'      => [DATE_W3C],
         ];
+    }
+
+    /**
+     * @dataProvider dataFormats
+     */
+    public function test_dates_asked_for_as_data_stay_alone(string $format): void
+    {
+        $this->assertSame('x', (new GregorianCompanion(true))->append('x', $format, $this->date));
+    }
+
+    /**
+     * @return array<string, array{string}>
+     */
+    public static function dataFormats(): array
+    {
+        return [
+            'hyphens' => ['Y-m-d'],
+            'no gaps' => ['Ymd'],
+        ];
+    }
+
+    public function test_a_site_that_shows_dates_as_y_m_d_gets_both(): void
+    {
+        Functions\when('get_option')->justReturn('Y-m-d');
+
+        $this->assertSame('x (' . self::ltr('2026-10-02') . ')', (new GregorianCompanion(true))->append('x', 'Y-m-d', $this->date));
     }
 
     public function test_numbers_by_default(): void

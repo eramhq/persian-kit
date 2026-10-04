@@ -526,7 +526,7 @@ add_filter('persian_kit_date_display', function (string $date, string $format, i
 
 ### `persian_kit_gregorian_date`
 
-With **Show the Gregorian date too** on (Display › Jalali dates), post and comment dates on the site read "۱۰ مهر ۱۴۰۵ (2026-10-02)": `get_the_date()`, `the_date()`, `get_the_modified_date()`, `get_comment_date()`, `get_the_time()` with a date format, and the Post Date and Latest Comments blocks. Only formats with a day, a month and a year get it, so `H:i`, `Y` and `F Y` stay as they are. Feeds, machine formats, `<time datetime>`, `get_post_time()`, REST responses, admin screens, emails, archives and `wp_date()` keep one date.
+With **Show the Gregorian date too** on (Display › Jalali dates), post and comment dates on the site read "۱۰ مهر ۱۴۰۵ (2026-10-02)": `get_the_date()`, `the_date()`, `get_the_modified_date()`, `get_comment_date()`, `get_the_time()` with a date format, and the Post Date and Latest Comments blocks. Only formats with a day, a month and a year get it, so `H:i`, `Y` and `F Y` stay as they are. `Y-m-d` and `Ymd` stay as they are too, as themes ask for them to fill `datetime` attributes and data, unless one of them is the site's date format. Feeds, machine formats, `<time datetime>`, `get_post_time()`, REST responses, admin screens, emails, archives and `wp_date()` keep one date.
 
 Return `false` to keep one date in one place. The arguments are the date format and the `DateTimeInterface` of the date.
 
