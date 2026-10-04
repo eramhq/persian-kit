@@ -18,6 +18,7 @@ const requiredOutputs = [
     'public/js/datepicker.js',
     'public/js/form-digits.js',
     'public/js/forminator-digits.js',
+    'public/js/gravityforms-digits.js',
     'public/js/gutenberg-jalali-date.js',
     'public/js/gutenberg-zwnj.js',
     'public/js/jalali.js',

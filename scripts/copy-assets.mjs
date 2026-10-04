@@ -134,6 +134,10 @@ const copies = [
         src: 'resources/js/forminator-digits.js',
         dest: 'public/js/forminator-digits.js',
     },
+    {
+        src: 'resources/js/gravityforms-digits.js',
+        dest: 'public/js/gravityforms-digits.js',
+    },
     // Licences of the libraries bundled into public/js/datepicker.js
     {
         src: 'node_modules/intl-datepicker/LICENSE',

@@ -28,4 +28,11 @@ class FormDateValuesTest extends TestCase
         $this->assertSame('2026/10/02', FormDateValues::inFormat('2026-10-02', 'Y/m/d'));
         $this->assertSame('not a date', FormDateValues::inFormat('not a date', 'd/m/Y'));
     }
+
+    public function test_a_gregorian_date_gives_its_jalali_parts(): void
+    {
+        $this->assertSame(['Y' => 1405, 'm' => 7, 'd' => 12], FormDateValues::jalaliParts(2026, 10, 4));
+        $this->assertSame(['Y' => 1370, 'm' => 6, 'd' => 31], FormDateValues::jalaliParts(1991, 9, 22));
+        $this->assertNull(FormDateValues::jalaliParts(2026, 2, 30));
+    }
 }

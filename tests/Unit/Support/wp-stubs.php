@@ -308,6 +308,22 @@ if (!class_exists('Forminator_Base_Form_Model')) {
     }
 }
 
+if (!class_exists('GFAPI')) {
+    /**
+     * Gravity Forms' API; tests register fields by form and field id.
+     */
+    class GFAPI
+    {
+        /** @var array<int, array<string, object>> */
+        public static array $fields = [];
+
+        public static function get_field(int $formId, mixed $fieldId): object|false
+        {
+            return self::$fields[$formId][(string) $fieldId] ?? false;
+        }
+    }
+}
+
 if (!class_exists('WC_Data')) {
     /**
      * Meta data and props of WooCommerce objects; get_<prop>() reads $props.

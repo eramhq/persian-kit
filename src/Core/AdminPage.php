@@ -58,6 +58,7 @@ class AdminPage
         'cf7'                => 'form',
         'acf'                => 'fields',
         'forminator'         => 'form',
+        'gravityforms'       => 'form',
         'yoast'              => 'search',
         'rank_math'          => 'search',
         'wpml'               => 'globe',

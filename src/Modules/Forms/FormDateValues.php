@@ -2,6 +2,7 @@
 
 namespace PersianKit\Modules\Forms;
 
+use PersianKit\Dependencies\Eram\Daynum\CivilDateTime;
 use PersianKit\Modules\DateConversion\DateInputParser;
 
 defined('ABSPATH') || exit;
@@ -46,5 +47,22 @@ final class FormDateValues
         $dateTime = \DateTimeImmutable::createFromFormat('!Y-m-d', $date);
 
         return $dateTime ? $dateTime->format($format) : $date;
+    }
+
+    /**
+     * A Gregorian date's Jalali year, month and day, or null when it is not
+     * a date.
+     *
+     * @return array{Y: int, m: int, d: int}|null
+     */
+    public static function jalaliParts(int $year, int $month, int $day): ?array
+    {
+        if (!checkdate($month, $day, $year)) {
+            return null;
+        }
+
+        $jalali = CivilDateTime::fromGregorian($year, $month, $day)->jalali();
+
+        return ['Y' => $jalali->year(), 'm' => $jalali->month(), 'd' => $jalali->day()];
     }
 }
