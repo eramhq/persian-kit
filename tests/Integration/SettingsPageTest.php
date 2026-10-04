@@ -15,6 +15,7 @@ use PersianKit\Modules\Forms\AcfModule;
 use PersianKit\Modules\Forms\Cf7Module;
 use PersianKit\Modules\Forms\ForminatorModule;
 use PersianKit\Modules\Forms\GravityFormsModule;
+use PersianKit\Modules\Forms\WPFormsModule;
 use PersianKit\Modules\Multilingual\PolylangModule;
 use PersianKit\Modules\Multilingual\WpmlModule;
 use PersianKit\Modules\Seo\RankMathModule;
@@ -115,6 +116,10 @@ class SettingsPageTest extends WordPressIntegrationTestCase
         'gravityforms' => [
             ['persian_kit_settings[gravityforms][enabled]', 'hidden', '0', false],
             ['persian_kit_settings[gravityforms][enabled]', 'checkbox', '1', true],
+        ],
+        'wpforms' => [
+            ['persian_kit_settings[wpforms][enabled]', 'hidden', '0', false],
+            ['persian_kit_settings[wpforms][enabled]', 'checkbox', '1', true],
         ],
     ];
 
@@ -227,7 +232,7 @@ class SettingsPageTest extends WordPressIntegrationTestCase
     {
         $xpath = $this->render();
 
-        $tabs = AdminPage::GROUPS + ['woocommerce' => 'woocommerce', 'cf7' => 'integrations', 'acf' => 'integrations', 'forminator' => 'integrations', 'gravityforms' => 'integrations'];
+        $tabs = AdminPage::GROUPS + ['woocommerce' => 'woocommerce', 'cf7' => 'integrations', 'acf' => 'integrations', 'forminator' => 'integrations', 'gravityforms' => 'integrations', 'wpforms' => 'integrations'];
         foreach ($tabs as $moduleKey => $tab) {
             if (!$this->module($moduleKey)->isAvailable()) {
                 continue;
@@ -482,6 +487,7 @@ class SettingsPageTest extends WordPressIntegrationTestCase
             'acf'          => $this->withPlugin(AcfModule::class, false),
             'forminator'   => $this->withPlugin(ForminatorModule::class, false),
             'gravityforms' => $this->withPlugin(GravityFormsModule::class, false),
+            'wpforms'      => $this->withPlugin(WPFormsModule::class, false),
             'yoast'        => $this->withPlugin(YoastModule::class, false),
             'rank_math'    => $this->withPlugin(RankMathModule::class, false),
             'wpml'         => $this->withPlugin(WpmlModule::class, false),
@@ -492,7 +498,7 @@ class SettingsPageTest extends WordPressIntegrationTestCase
             'None of the supported plugins are active on this site.',
             trim($xpath->evaluate('string(//*[@id="persian-kit-panel-integrations"]//*[contains(@class, "persian-kit-empty__title")])'))
         );
-        $this->assertSame(9, $xpath->query('//*[@id="persian-kit-group-also"]/following-sibling::ul/li')->length);
+        $this->assertSame(10, $xpath->query('//*[@id="persian-kit-group-also"]/following-sibling::ul/li')->length);
     }
 
     public function test_turning_off_an_integration_warns_about_the_forms_that_use_it(): void
@@ -648,6 +654,9 @@ class SettingsPageTest extends WordPressIntegrationTestCase
                 use FakesPluginState;
             },
             GravityFormsModule::class => new class ($settings) extends GravityFormsModule {
+                use FakesPluginState;
+            },
+            WPFormsModule::class => new class ($settings) extends WPFormsModule {
                 use FakesPluginState;
             },
             YoastModule::class => new class ($settings) extends YoastModule {
