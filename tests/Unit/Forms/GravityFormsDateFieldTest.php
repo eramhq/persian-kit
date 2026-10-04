@@ -162,8 +162,10 @@ class GravityFormsDateFieldTest extends TestCase
         // {all_fields} passes its own options.
         $this->assertSame('1405/07/12', $field->formatMergeTag('10/04/2026', 'all_fields', 'noadmin', $date, '2026-10-04', 'html'));
 
-        // :raw keeps the saved date; other fields stay.
+        // :raw keeps the saved date, :urlencode Gravity Forms' value, :label the label; other fields stay.
         $this->assertSame('2026-10-04', $field->formatMergeTag('2026-10-04', '3', 'raw', $date, '2026-10-04', 'html'));
+        $this->assertSame('10%2F04%2F2026', $field->formatMergeTag('10%2F04%2F2026', '3', 'urlencode', $date, '2026-10-04', 'text'));
+        $this->assertSame('Visit', $field->formatMergeTag('Visit', '3', 'label', $date, '2026-10-04', 'html'));
         $this->assertSame('Ali', $field->formatMergeTag('Ali', '1', '', new FakeGravityField(['type' => 'text']), 'Ali', 'html'));
         $this->assertFalse($field->formatMergeTag(false, '3', '', $date, '2026-10-04', 'html'));
     }

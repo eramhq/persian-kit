@@ -24,8 +24,9 @@ defined('ABSPATH') || exit;
  * doesn't read Jalali dates, keep Gravity Forms' own.
  *
  * While Date Conversion is on, the Entries screens and merge tags in
- * emails and confirmations show the Jalali date. {Date:1:raw}, merge tags
- * in redirect URLs and exports keep the saved Gregorian date.
+ * emails and confirmations show the Jalali date. {Date:1:raw},
+ * {Date:1:urlencode}, merge tags in redirect URLs and exports keep the
+ * saved Gregorian date, and {Date:1:label} prints the label.
  */
 class GravityFormsDateField
 {
@@ -259,8 +260,10 @@ class GravityFormsDateField
             return $value;
         }
 
+        // :raw keeps the saved date, :label prints the label instead, and
+        // :urlencode is for a URL.
         $modifiers = $mergeTag === 'all_fields' ? [] : array_map('trim', explode(',', strtolower((string) $modifier)));
-        if (in_array('raw', $modifiers, true)) {
+        if (array_intersect(['raw', 'label', 'urlencode'], $modifiers) !== []) {
             return $value;
         }
 
