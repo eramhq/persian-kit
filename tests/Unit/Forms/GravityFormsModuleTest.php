@@ -9,6 +9,7 @@ use PersianKit\Abstracts\AbstractModule;
 use PersianKit\Container\ServiceContainer;
 use PersianKit\Core\SettingsManager;
 use PersianKit\Modules\Forms\GravityFormsAddress;
+use PersianKit\Modules\Forms\GravityFormsCurrencies;
 use PersianKit\Modules\Forms\GravityFormsDateField;
 use PersianKit\Modules\Forms\GravityFormsEntryDates;
 use PersianKit\Modules\Forms\GravityFormsFieldUsage;
@@ -48,6 +49,7 @@ class GravityFormsModuleTest extends TestCase
             GravityFormsInputNormalizer::class . '::register',
             GravityFormsIranianFields::class . '::register',
             GravityFormsAddress::class . '::register',
+            GravityFormsCurrencies::class . '::register',
             GravityFormsFieldUsage::class . '::register',
         ], $this->listCalls(fn (GravityFormsModule $module, ServiceContainer $container) => $module->boot($container)));
     }
@@ -66,11 +68,12 @@ class GravityFormsModuleTest extends TestCase
         );
     }
 
-    public function test_turned_off_the_iranian_fields_and_addresses_stay_and_the_usage_list_stays_current(): void
+    public function test_turned_off_the_iranian_fields_addresses_and_currencies_stay_and_the_usage_list_stays_current(): void
     {
         $this->assertSame([
             GravityFormsIranianFields::class . '::registerFallback',
             GravityFormsAddress::class . '::registerFallback',
+            GravityFormsCurrencies::class . '::register',
             GravityFormsFieldUsage::class . '::register',
         ], $this->listCalls(fn (GravityFormsModule $module, ServiceContainer $container) => $module->bootDisabled($container)));
     }
