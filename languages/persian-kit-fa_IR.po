@@ -336,7 +336,7 @@ msgstr "تاریخ نوشته‌ها، دیدگاه‌ها و پیشخوان ب�
 msgid "Activity"
 msgstr "فعالیت"
 
-#: src/Modules/DateConversion/DatePicker.php:68
+#: src/Modules/DateConversion/DatePicker.php:69
 msgid "Time"
 msgstr "زمان"
 
@@ -384,7 +384,7 @@ msgstr "نمایش ۱۲۳ به‌جای ⁦123⁩ در محتوای سایت."
 
 #: src/Modules/Forms/AcfModule.php:21
 #: src/Service/Import/ImportReport.php:249
-#: src/Service/Import/Sources/ParsiDate/ParsiDateSettings.php:347
+#: src/Service/Import/Sources/ParsiDate/ParsiDateSettings.php:378
 msgid "ACF"
 msgstr "ACF"
 
@@ -1061,7 +1061,7 @@ msgstr "اعداد فارسی در قیمت‌ها و ایمیل‌ها در %s 
 #: src/Core/ConflictDetector.php:104
 #: src/Modules/WooCommerce/CityField.php:193
 #: src/Service/Import/ImportReport.php:241
-#: src/Service/Import/Sources/ParsiDate/ParsiDateSettings.php:316
+#: src/Service/Import/Sources/ParsiDate/ParsiDateSettings.php:347
 #: src/Service/Import/Sources/PersianWooCommerce/PersianWooCommerceSettings.php:65
 #: src/Service/Import/Sources/Shipping/PwsSettings.php:43
 msgid "City suggestions"
@@ -1244,25 +1244,25 @@ msgid "Persian digits in counts and numbers"
 msgstr "اعداد فارسی در شمارش‌ها و عددها"
 
 #: src/Service/Import/ImportReport.php:233
-#: src/Service/Import/Sources/ParsiDate/ParsiDateSettings.php:290
+#: src/Service/Import/Sources/ParsiDate/ParsiDateSettings.php:321
 #: src/Service/Import/Sources/PersianWooCommerce/PersianWooCommerceSettings.php:44
 #: src/Service/Import/Sources/PersianWooCommerce/PersianWooCommerceSource.php:218
 msgid "Persian digits in prices"
 msgstr "اعداد فارسی در قیمت‌ها"
 
 #: src/Service/Import/ImportReport.php:234
-#: src/Service/Import/Sources/ParsiDate/ParsiDateSettings.php:323
+#: src/Service/Import/Sources/ParsiDate/ParsiDateSettings.php:354
 msgid "Persian digits in WooCommerce emails"
 msgstr "اعداد فارسی در ایمیل‌های ووکامرس"
 
 #: src/Service/Import/ImportReport.php:239
-#: src/Service/Import/Sources/ParsiDate/ParsiDateSettings.php:294
+#: src/Service/Import/Sources/ParsiDate/ParsiDateSettings.php:325
 #: src/Service/Import/Sources/PersianWooCommerce/PersianWooCommerceSettings.php:72
 msgid "Fix what customers type at checkout"
 msgstr "اصلاح آنچه مشتری در صفحه پرداخت وارد می‌کند"
 
 #: src/Service/Import/ImportReport.php:240
-#: src/Service/Import/Sources/ParsiDate/ParsiDateSettings.php:304
+#: src/Service/Import/Sources/ParsiDate/ParsiDateSettings.php:335
 #: src/Service/Import/Sources/PersianWooCommerce/PersianWooCommerceSettings.php:81
 msgid "Check what customers type at checkout"
 msgstr "بررسی آنچه مشتری در صفحه پرداخت وارد می‌کند"
@@ -1602,116 +1602,116 @@ msgstr "فونت پیشخوان: وزیرمتن"
 msgid "Persian Kit's admin font is Vazirmatn, a similar typeface."
 msgstr "فونت پیشخوان Persian Kit وزیرمتن است، با ظاهری مشابه."
 
-#: src/Service/Import/Sources/ParsiDate/ParsiDateSettings.php:290
+#: src/Service/Import/Sources/ParsiDate/ParsiDateSettings.php:321
 msgid "WooCommerce: Persian digits in prices"
 msgstr "ووکامرس: اعداد فارسی در قیمت‌ها"
 
-#: src/Service/Import/Sources/ParsiDate/ParsiDateSettings.php:294
+#: src/Service/Import/Sources/ParsiDate/ParsiDateSettings.php:325
 msgid "WooCommerce: accept Persian digits in postcode and phone"
 msgstr "ووکامرس: پذیرش اعداد فارسی در کد پستی و تلفن"
 
-#: src/Service/Import/Sources/ParsiDate/ParsiDateSettings.php:302
+#: src/Service/Import/Sources/ParsiDate/ParsiDateSettings.php:333
 msgid "WooCommerce: check postcode and phone"
 msgstr "ووکامرس: بررسی کد پستی و تلفن"
 
-#: src/Service/Import/Sources/ParsiDate/ParsiDateSettings.php:306
+#: src/Service/Import/Sources/ParsiDate/ParsiDateSettings.php:337
 #: src/Service/Import/Sources/PersianWooCommerce/PersianWooCommerceSettings.php:83
 msgid "Persian Kit checks both, and the national ID when that field is on."
 msgstr "Persian Kit هر دو را بررسی می‌کند، و کد ملی را وقتی آن فیلد روشن باشد."
 
-#: src/Service/Import/Sources/ParsiDate/ParsiDateSettings.php:314
+#: src/Service/Import/Sources/ParsiDate/ParsiDateSettings.php:345
 msgid "WooCommerce: cities as a list"
 msgstr "ووکامرس: شهرها به صورت فهرست"
 
-#: src/Service/Import/Sources/ParsiDate/ParsiDateSettings.php:318
+#: src/Service/Import/Sources/ParsiDate/ParsiDateSettings.php:349
 #: src/Service/Import/Sources/PersianWooCommerce/PersianWooCommerceSettings.php:67
 msgid "Customers get suggestions as they type, from the official list of each province, instead of a dropdown."
 msgstr "مشتری هنگام تایپ از فهرست رسمی شهرهای هر استان پیشنهاد می‌گیرد، به جای فهرست کشویی."
 
-#: src/Service/Import/Sources/ParsiDate/ParsiDateSettings.php:323
+#: src/Service/Import/Sources/ParsiDate/ParsiDateSettings.php:354
 msgid "WooCommerce: Persian digits in emails"
 msgstr "ووکامرس: اعداد فارسی در ایمیل‌ها"
 
-#: src/Service/Import/Sources/ParsiDate/ParsiDateSettings.php:347
+#: src/Service/Import/Sources/ParsiDate/ParsiDateSettings.php:378
 msgid "ACF: Jalali date fields"
 msgstr "ACF: فیلدهای تاریخ شمسی"
 
-#: src/Service/Import/Sources/ParsiDate/ParsiDateSettings.php:353
+#: src/Service/Import/Sources/ParsiDate/ParsiDateSettings.php:384
 msgid "ACF: save dates in Jalali"
 msgstr "ACF: ذخیره تاریخ به شمسی"
 
-#: src/Service/Import/Sources/ParsiDate/ParsiDateSettings.php:357
+#: src/Service/Import/Sources/ParsiDate/ParsiDateSettings.php:388
 msgid "Persian Kit saves Gregorian dates and shows them in Jalali. The ACF data task converts the dates saved in Jalali."
 msgstr "Persian Kit تاریخ را میلادی ذخیره و شمسی نشان می‌دهد. بخش «مقدارهای تاریخ ACF» در انتقال، تاریخ‌هایی را که شمسی ذخیره شده‌اند تبدیل می‌کند."
 
-#: src/Service/Import/Sources/ParsiDate/ParsiDateSettings.php:373
+#: src/Service/Import/Sources/ParsiDate/ParsiDateSettings.php:404
 msgid "Multilingual sites"
 msgstr "سایت‌های چندزبانه"
 
-#: src/Service/Import/Sources/ParsiDate/ParsiDateSettings.php:373
+#: src/Service/Import/Sources/ParsiDate/ParsiDateSettings.php:404
 msgid "Persian Kit follows each page's language on WPML and Polylang sites."
 msgstr "Persian Kit در سایت‌های WPML و Polylang زبان هر صفحه را دنبال می‌کند."
 
-#: src/Service/Import/Sources/ParsiDate/ParsiDateSettings.php:376
+#: src/Service/Import/Sources/ParsiDate/ParsiDateSettings.php:407
 msgid "Jalali date in the admin bar"
 msgstr "تاریخ شمسی در نوار مدیریت"
 
-#: src/Service/Import/Sources/ParsiDate/ParsiDateSettings.php:376
+#: src/Service/Import/Sources/ParsiDate/ParsiDateSettings.php:407
 msgid "Dates in the admin are Jalali while Jalali dates are on."
 msgstr "وقتی تاریخ شمسی روشن است، تاریخ‌های پیشخوان شمسی‌اند."
 
-#: src/Service/Import/Sources/ParsiDate/ParsiDateSettings.php:379
+#: src/Service/Import/Sources/ParsiDate/ParsiDateSettings.php:410
 msgid "Persian month names"
 msgstr "نام ماه‌های فارسی"
 
-#: src/Service/Import/Sources/ParsiDate/ParsiDateSettings.php:379
+#: src/Service/Import/Sources/ParsiDate/ParsiDateSettings.php:410
 msgid "Persian Kit uses the Persian month names."
 msgstr "Persian Kit نام ماه‌های فارسی را به کار می‌برد."
 
-#: src/Service/Import/Sources/ParsiDate/ParsiDateSettings.php:393
+#: src/Service/Import/Sources/ParsiDate/ParsiDateSettings.php:424
 #: src/Service/Import/Sources/PersianWooCommerce/PersianWooCommerceSettings.php:258
 #: src/Service/Import/Sources/Shipping/PwsSettings.php:72
 msgid "Persian Kit has no match yet."
 msgstr "Persian Kit هنوز معادلی ندارد."
 
 #. translators: %s: issue number, such as #14.
-#: src/Service/Import/Sources/ParsiDate/ParsiDateSettings.php:395
+#: src/Service/Import/Sources/ParsiDate/ParsiDateSettings.php:426
 #, php-format
 msgid "Planned for Persian Kit (%s)."
 msgstr "در برنامه Persian Kit است (%s)."
 
-#: src/Service/Import/Sources/ParsiDate/ParsiDateSettings.php:398
+#: src/Service/Import/Sources/ParsiDate/ParsiDateSettings.php:264
 msgid "Dates in both calendars"
 msgstr "تاریخ در هر دو تقویم"
 
-#: src/Service/Import/Sources/ParsiDate/ParsiDateSettings.php:401
+#: src/Service/Import/Sources/ParsiDate/ParsiDateSettings.php:429
 msgid "Classic widgets screen"
 msgstr "صفحه کلاسیک ابزارک‌ها"
 
-#: src/Service/Import/Sources/ParsiDate/ParsiDateSettings.php:401
+#: src/Service/Import/Sources/ParsiDate/ParsiDateSettings.php:429
 msgid "Use the Classic Widgets plugin for this."
 msgstr "برای این کار از افزونه Classic Widgets استفاده کنید."
 
-#: src/Service/Import/Sources/ParsiDate/ParsiDateSettings.php:404
+#: src/Service/Import/Sources/ParsiDate/ParsiDateSettings.php:432
 msgid "Hooks turned off by name"
 msgstr "غیرفعال کردن قلاب‌ها با نام"
 
-#: src/Service/Import/Sources/ParsiDate/ParsiDateSettings.php:328
+#: src/Service/Import/Sources/ParsiDate/ParsiDateSettings.php:359
 msgid "WooCommerce: Jalali dates in Analytics"
 msgstr "ووکامرس: تاریخ شمسی در تجزیه و تحلیل"
 
 #. translators: %s: bank name, such as mellat.
-#: src/Service/Import/Sources/ParsiDate/ParsiDateSettings.php:409
+#: src/Service/Import/Sources/ParsiDate/ParsiDateSettings.php:437
 #, php-format
 msgid "WooCommerce: %s bank gateway"
 msgstr "ووکامرس: درگاه بانکی %s"
 
-#: src/Service/Import/Sources/ParsiDate/ParsiDateSettings.php:406
+#: src/Service/Import/Sources/ParsiDate/ParsiDateSettings.php:434
 #: src/Service/Import/Sources/PersianWooCommerce/PersianWooCommerceSettings.php:285
 msgid "Persian Kit has no payment gateways. See \"Before you deactivate\"."
 msgstr "Persian Kit درگاه پرداخت ندارد. «پیش از غیرفعال کردن» را ببینید."
 
-#: src/Service/Import/Sources/ParsiDate/ParsiDateSettings.php:413
+#: src/Service/Import/Sources/ParsiDate/ParsiDateSettings.php:441
 msgid "Easy Digital Downloads"
 msgstr "Easy Digital Downloads"
 
@@ -2630,12 +2630,12 @@ msgid "%s (Jalali)"
 msgstr "%s (شمسی)"
 
 #: src/Service/Import/ImportReport.php:245
-#: src/Service/Import/Sources/ParsiDate/ParsiDateSettings.php:330
+#: src/Service/Import/Sources/ParsiDate/ParsiDateSettings.php:361
 #: views/admin/partials/woocommerce-settings.php:281
 msgid "Jalali dates in WooCommerce Analytics"
 msgstr "تاریخ شمسی در تجزیه و تحلیل ووکامرس"
 
-#: src/Service/Import/Sources/ParsiDate/ParsiDateSettings.php:332
+#: src/Service/Import/Sources/ParsiDate/ParsiDateSettings.php:363
 msgid "Monthly, seasonal and yearly figures also cover whole Jalali months, seasons and years."
 msgstr "آمار ماهانه، فصلی و سالانه هم ماه‌ها، فصل‌ها و سال‌های کامل شمسی را در بر می‌گیرد."
 
@@ -2679,6 +2679,7 @@ msgstr "خط مورب /"
 msgid "Dash –"
 msgstr "خط تیره –"
 
+#: src/Service/Import/Sources/ParsiDate/ParsiDateSettings.php:266
 #: views/admin/partials/date-conversion-settings.php:198
 msgid "Show the Gregorian date too"
 msgstr "نمایش تاریخ میلادی در کنار شمسی"
@@ -2697,35 +2698,35 @@ msgctxt "which date comes first"
 msgid "Order"
 msgstr "ترتیب"
 
-#: src/Service/Import/Sources/ParsiDate/ParsiDateSettings.php:256
+#: src/Service/Import/Sources/ParsiDate/ParsiDateSettings.php:287
 msgid "Dari month names"
 msgstr "نام ماه‌های دری"
 
-#: src/Service/Import/Sources/ParsiDate/ParsiDateSettings.php:256
+#: src/Service/Import/Sources/ParsiDate/ParsiDateSettings.php:287
 msgid "Month names: Dari (Afghanistan)"
 msgstr "نام ماه‌ها: دری (افغانستان)"
 
-#: src/Service/Import/Sources/ParsiDate/ParsiDateSettings.php:257
+#: src/Service/Import/Sources/ParsiDate/ParsiDateSettings.php:288
 msgid "Pashto month names"
 msgstr "نام ماه‌های پشتو"
 
-#: src/Service/Import/Sources/ParsiDate/ParsiDateSettings.php:257
+#: src/Service/Import/Sources/ParsiDate/ParsiDateSettings.php:288
 msgid "Month names: Pashto"
 msgstr "نام ماه‌ها: پشتو"
 
-#: src/Service/Import/Sources/ParsiDate/ParsiDateSettings.php:258
+#: src/Service/Import/Sources/ParsiDate/ParsiDateSettings.php:289
 msgid "Kurdish month names"
 msgstr "نام ماه‌های کردی"
 
-#: src/Service/Import/Sources/ParsiDate/ParsiDateSettings.php:258
+#: src/Service/Import/Sources/ParsiDate/ParsiDateSettings.php:289
 msgid "Month names: Kurdish (Sorani)"
 msgstr "نام ماه‌ها: کردی (سورانی)"
 
-#: src/Service/Import/Sources/ParsiDate/ParsiDateSettings.php:268
+#: src/Service/Import/Sources/ParsiDate/ParsiDateSettings.php:299
 msgid "Persian Kit chooses month names for each language: set them under Jalali dates."
 msgstr "Persian Kit نام ماه‌ها را برای هر زبان جدا انتخاب می‌کند: آن‌ها را در تاریخ شمسی تنظیم کنید."
 
-#: src/Service/Import/Sources/ParsiDate/ParsiDateSettings.php:277
+#: src/Service/Import/Sources/ParsiDate/ParsiDateSettings.php:308
 msgid "Persian Kit writes the weekdays as news sites in this language do."
 msgstr "Persian Kit نام روزهای هفته را همان‌طور می‌نویسد که سایت‌های خبری این زبان می‌نویسند."
 
@@ -2765,3 +2766,11 @@ msgstr "خودکار: %s"
 msgctxt "names of the Jalali months"
 msgid "Month names"
 msgstr "نام ماه‌ها"
+
+#: src/Service/Import/Sources/ParsiDate/ParsiDateSettings.php:273
+msgid "Parsi Date added it to every date it converted. Persian Kit adds it, with month names, after a dash, to post and comment dates on the site that have a day, month and year; times, admin screens and feeds keep one date."
+msgstr "Parsi Date آن را کنار هر تاریخی که تبدیل می‌کرد می‌گذاشت. Persian Kit آن را با نام ماه و بعد از خط تیره، کنار تاریخ کامل (روز، ماه و سال) نوشته‌ها و دیدگاه‌ها در سایت می‌گذارد؛ ساعت‌ها، پیشخوان و خوراک‌ها یک تاریخ نشان می‌دهند."
+
+#: src/Service/Import/Sources/ParsiDate/ParsiDateSettings.php:274
+msgid "Parsi Date added it to every date it converted. Persian Kit adds it, as numbers (2026-10-02), after a dash, to post and comment dates on the site that have a day, month and year; times, admin screens and feeds keep one date."
+msgstr "Parsi Date آن را کنار هر تاریخی که تبدیل می‌کرد می‌گذاشت. Persian Kit آن را به صورت عدد (2026-10-02) و بعد از خط تیره، کنار تاریخ کامل (روز، ماه و سال) نوشته‌ها و دیدگاه‌ها در سایت می‌گذارد؛ ساعت‌ها، پیشخوان و خوراک‌ها یک تاریخ نشان می‌دهند."
