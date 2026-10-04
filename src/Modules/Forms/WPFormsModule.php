@@ -64,6 +64,9 @@ class WPFormsModule extends AbstractModule
         $container->register(WPFormsDateField::class, function () {
             return new WPFormsDateField();
         });
+        $container->register(WPFormsInputNormalizer::class, function () {
+            return new WPFormsInputNormalizer();
+        });
     }
 
     /**
@@ -74,6 +77,7 @@ class WPFormsModule extends AbstractModule
     {
         $container->get(WPFormsIranianFields::class)->register();
         $container->get(WPFormsDateField::class)->register();
+        $container->get(WPFormsInputNormalizer::class)->register();
     }
 
     /**

@@ -9,6 +9,7 @@ use PersianKit\Abstracts\AbstractModule;
 use PersianKit\Container\ServiceContainer;
 use PersianKit\Core\SettingsManager;
 use PersianKit\Modules\Forms\WPFormsDateField;
+use PersianKit\Modules\Forms\WPFormsInputNormalizer;
 use PersianKit\Modules\Forms\WPFormsIranianFields;
 use PersianKit\Modules\Forms\WPFormsModule;
 use PHPUnit\Framework\TestCase;
@@ -35,11 +36,12 @@ class WPFormsModuleTest extends TestCase
         $this->assertSame(['enabled' => true], WPFormsModule::defaults());
     }
 
-    public function test_boot_registers_the_fields(): void
+    public function test_boot_registers_the_fields_and_the_digits(): void
     {
         $this->assertSame([
             WPFormsIranianFields::class . '::register',
             WPFormsDateField::class . '::register',
+            WPFormsInputNormalizer::class . '::register',
         ], $this->listCalls(fn (WPFormsModule $module, ServiceContainer $container) => $module->boot($container)));
     }
 

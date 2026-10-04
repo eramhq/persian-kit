@@ -138,6 +138,10 @@ const copies = [
         src: 'resources/js/gravityforms-digits.js',
         dest: 'public/js/gravityforms-digits.js',
     },
+    {
+        src: 'resources/js/wpforms-digits.js',
+        dest: 'public/js/wpforms-digits.js',
+    },
     // Licences of the libraries bundled into public/js/datepicker.js
     {
         src: 'node_modules/intl-datepicker/LICENSE',

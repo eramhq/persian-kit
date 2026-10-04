@@ -29,6 +29,7 @@ const requiredOutputs = [
     'public/js/woocommerce-block-prices.js',
     'public/js/woocommerce-city-select.js',
     'public/js/woocommerce-date-fields.js',
+    'public/js/wpforms-digits.js',
     'public/data/ir-cities.json',
     'public/data/pws-tapin.json',
     'public/images/logo.svg',
