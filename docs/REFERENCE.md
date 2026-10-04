@@ -479,7 +479,7 @@ On a site with WPML or Polylang and at least one language set up, Persian Kit fo
 | Finding a post by its old slug, a cut-off address under a Jalali date, or a Persian slug saved in an older form | A post in the current language first, as above; a match in another language is still found |
 | Writing tools: the ی/ک and half-space fixes on save, Fix letters in existing posts, Persian slugs, the half-space key | The language of what is saved, whoever saves it: an admin with an English profile still gets the fixes on a Persian post |
 
-Persian means `fa` or a locale of it (`fa_IR`, `fa_AF`); [`persian_kit_is_persian_locale`](#persian_kit_is_persian_locale) changes that.
+Persian means `fa` or a locale of it (`fa_IR`, `fa_AF`); [`persian_kit_is_persian_locale`](#persian_kit_is_persian_locale) changes that. Pages and emails in Pashto (`ps`, `ps_AF`) and Sorani Kurdish (`ckb`, `ckb_IR`) read the same calendar, so they get Jalali dates and Persian digits too, with their own month names, while the writing tools leave them alone: Pashto has its own ي. So does a language given month names under Display › Jalali dates. [`persian_kit_reads_jalali`](#persian_kit_reads_jalali) changes which languages read Jalali dates.
 
 When a language is not known yet:
 
@@ -646,9 +646,30 @@ add_filter('persian_kit_is_persian_locale', function (bool $persian, string $loc
 }, 10, 2);
 ```
 
+### `persian_kit_reads_jalali`
+
+Whether pages and emails in a language get Jalali dates and Persian digits, on multilingual sites: Persian (see [`persian_kit_is_persian_locale`](#persian_kit_is_persian_locale)), Pashto (`ps`, `ps_*`), Sorani Kurdish (`ckb`, `ckb_*`), and any language given month names under Display › Jalali dates. The writing tools (the ی/ک fix, Persian slugs, the half-space key) still follow `persian_kit_is_persian_locale`. For example, to keep Kurdish pages Gregorian:
+
+```php
+add_filter('persian_kit_reads_jalali', function (bool $reads, string $locale) {
+    return str_starts_with($locale, 'ckb') ? false : $reads;
+}, 10, 2);
+```
+
+### `persian_kit_calendar_names`
+
+The month and weekday names of Jalali dates in a language: `iranian` (فروردین…اسفند), `dari` (حمل…حوت), `pashto` (وری…کب) or `kurdish` (Sorani: خاکەلێوە…ڕەشەمە). The days and the year number are the same in each. It receives the set the settings give: "Month names" under Display › Jalali dates, one per language on multilingual sites, where Automatic means `dari` for `fa_AF`, `pashto` for `ps` and `ps_*`, `kurdish` for `ckb` and `ckb_*`, and `iranian` otherwise. The names reach every Jalali date: PHP formats (`F`, `M`, `l`, `D`, `S`, `a`, `A`), the admin month filters, the Gregorian month names next to the Jalali date, the block editor's date panel, WooCommerce Analytics and the date picker, which takes them from the browser's `Intl` data (`fa-AF`, `ps-AF`, `ckb-IR`). A browser without Pashto or Sorani Jalali names (Chrome has neither in full) gets the Dari names for Pashto and the Iranian ones for Kurdish in the picker. An unknown set counts as `iranian`. The answer is kept for each locale during the request.
+
+```php
+// Dari names on the Persian pages of an Afghan site.
+add_filter('persian_kit_calendar_names', function (string $set, string $locale) {
+    return $locale === 'fa_IR' ? 'dari' : $set;
+}, 10, 2);
+```
+
 ### `persian_kit_current_locale`
 
-The language people read in this request, on multilingual sites: the page's, the email's, or the admin's on admin screens. Dates and digits are converted when it is Persian.
+The language people read in this request, on multilingual sites: the page's, the email's, or the admin's on admin screens. Dates and digits are converted when it reads Jalali dates ([`persian_kit_reads_jalali`](#persian_kit_reads_jalali)), and the month names follow it ([`persian_kit_calendar_names`](#persian_kit_calendar_names)).
 
 ```php
 add_filter('persian_kit_current_locale', function (string $locale) {
