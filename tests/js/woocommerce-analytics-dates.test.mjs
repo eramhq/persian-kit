@@ -574,3 +574,35 @@ test('only columns of dates count, and empty cells stay empty', () => {
     const plain = [[{ value: 'a' }]];
     assert.equal(addJalaliColumns([{ key: 'name', label: 'Name' }], plain).rows, plain);
 });
+
+test('a date rule in the advanced filters is picked on a Jalali calendar too', async () => {
+    const { window } = await customRange();
+    window.document.body.insertAdjacentHTML('beforeend', `
+        <fieldset class="woocommerce-filters-advanced__line-item">
+            <div class="components-dropdown">
+                <div class="woocommerce-calendar__input"><input type="text" class="woocommerce-calendar__input-text" value="03/13/2026" placeholder="mm/dd/yyyy"></div>
+                <div class="components-popover">
+                    <h2 class="woocommerce-calendar__date-picker-title">select a date</h2>
+                    <div class="woocommerce-calendar__react-dates is-core-datepicker"><div class="components-datetime__date"></div></div>
+                </div>
+            </div>
+        </fieldset>`);
+    await new Promise((resolve) => window.setTimeout(resolve, 0));
+
+    const fieldset = window.document.querySelector('fieldset');
+    const input = fieldset.querySelector('input');
+    const picker = fieldset.querySelector('intl-datepicker');
+    const events = [];
+    input.addEventListener('input', () => events.push(`input ${input.value}`));
+    fieldset.addEventListener('keydown', (event) => events.push(`keydown ${event.key}`));
+
+    assert.ok(picker);
+    assert.equal(picker.getAttribute('type'), 'date');
+    assert.equal(picker.getAttribute('value'), '2026-03-13', '22 Esfand 1404');
+    assert.equal(picker.hasAttribute('disable-future'), false);
+    assert.equal(fieldset.querySelector('.is-core-datepicker').hasAttribute('data-persian-kit-jalali'), true);
+
+    // 1 Farvardin 1405: written into the field, then the dropdown closes.
+    picker.dispatchEvent(new window.CustomEvent('intl-change', { detail: { value: '2026-03-21' } }));
+    assert.deepEqual(events, ['input 03/21/2026', 'keydown Escape']);
+});
