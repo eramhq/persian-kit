@@ -21,6 +21,10 @@
  * WooCommerce's Gregorian one, and writes the picked days into
  * WooCommerce's own start and end fields, which it then hides.
  *
+ * CSV files built in the browser get a Jalali column after each date
+ * column; the server does the same for the exports it emails
+ * (WooAnalyticsExport.php).
+ *
  * Each part is installed by a script printed right after the WooCommerce or
  * WordPress script it replaces (WooAnalyticsDates.php), before anything
  * reads it. If wc.date is missing or has changed shape, nothing is replaced
@@ -84,6 +88,9 @@
 
     /** Tokens that differ between the calendars; 'Q' is the season, ours only. */
     var CALENDAR_TOKENS = /[dDjlNSwzWFmMntLoYyQ]/;
+
+    /** A date as WooCommerce puts it in report rows: Y-m-d, maybe with the time. */
+    var DATE_VALUE = /^(\d{4})-(\d{2})-(\d{2})(?:[ T]\d{2}:\d{2}(?::\d{2})?)?$/;
 
     /** Set on WooCommerce's custom range calendar once it has a Jalali one. */
     var PICKER_MARK = 'data-persian-kit-jalali';
@@ -753,12 +760,122 @@
         }).observe(document.documentElement, { childList: true, subtree: true });
     }
 
+    // --- CSV from the browser: a Jalali column after each date column -------
+
+    function jalaliValue(value) {
+        var match = DATE_VALUE.exec(value);
+        var gm = match ? +match[2] : 0;
+        var gd = match ? +match[3] : 0;
+
+        if (!match || gm < 1 || gm > 12 || gd < 1 || gd > 31) {
+            return '';
+        }
+
+        var j = Jalali.gregorianToJalali(+match[1], gm, gd);
+
+        return j[0] + '/' + pad(j[1]) + '/' + pad(j[2]);
+    }
+
+    function isDateColumn(rows, index) {
+        var found = false;
+
+        for (var i = 0; i < rows.length; i++) {
+            var cell = Array.isArray(rows[i]) ? rows[i][index] : null;
+            var value = cell ? cell.value : null;
+
+            if (value === undefined || value === null || value === '') {
+                continue;
+            }
+            if (typeof value !== 'string' || !DATE_VALUE.test(value)) {
+                return false;
+            }
+            found = true;
+        }
+
+        return found;
+    }
+
+    /**
+     * The table's headers and rows with a Jalali column (1404/07/09) after
+     * each column whose values are all dates. The Gregorian column stays.
+     */
+    function addJalaliColumns(headers, rows) {
+        if (!Array.isArray(headers) || !Array.isArray(rows)) {
+            return { headers: headers, rows: rows };
+        }
+
+        var dateColumns = headers.map(function (header, index) {
+            return isDateColumn(rows, index);
+        });
+
+        if (dateColumns.indexOf(true) === -1) {
+            return { headers: headers, rows: rows };
+        }
+
+        var label = labels.jalaliColumn || '%s (Jalali)';
+        var newHeaders = [];
+        headers.forEach(function (header, index) {
+            newHeaders.push(header);
+            if (dateColumns[index]) {
+                newHeaders.push({
+                    key: (header && header.key ? header.key : 'date') + '_jalali',
+                    label: label.replace('%s', header && typeof header.label === 'string' ? header.label : ''),
+                });
+            }
+        });
+
+        var newRows = rows.map(function (row) {
+            if (!Array.isArray(row)) {
+                return row;
+            }
+
+            var newRow = [];
+            row.forEach(function (cell, index) {
+                newRow.push(cell);
+                if (dateColumns[index]) {
+                    var value = jalaliValue(cell && typeof cell.value === 'string' ? cell.value : '');
+                    newRow.push({ display: value, value: value });
+                }
+            });
+
+            return newRow;
+        });
+
+        return { headers: newHeaders, rows: newRows };
+    }
+
+    function installCsvExport() {
+        var wc = window.wc;
+        var original = wc && wc.csvExport;
+
+        if (!original || typeof original.generateCSVDataFromTable !== 'function' || original.persianKitJalali) {
+            return false;
+        }
+
+        wc.csvExport = copyModule(original, {
+            persianKitJalali: true,
+            generateCSVDataFromTable: function (headers, rows) {
+                if (!isInstalled()) {
+                    return original.generateCSVDataFromTable.apply(this, arguments);
+                }
+
+                var table = addJalaliColumns(headers, rows);
+
+                return original.generateCSVDataFromTable(table.headers, table.rows);
+            },
+        });
+
+        return true;
+    }
+
     window.PersianKitAnalyticsDates = {
         installWpDate: installWpDate,
         installWcDate: installWcDate,
         installApiFetch: installApiFetch,
+        installCsvExport: installCsvExport,
         // For tests.
         isMachineFormat: isMachineFormat,
         withFlag: withFlag,
+        addJalaliColumns: addJalaliColumns,
     };
 })(window);
