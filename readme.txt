@@ -18,6 +18,7 @@ Persian Kit is a modular WordPress plugin for Persian-language sites. It focuses
 
 * Jalali date conversion at the display layer
 * Optionally, the Gregorian date next to post and comment dates: ۱۰ مهر ۱۴۰۵ (2026-10-02)
+* Afghan and Kurdish month names: Dari (۱۲ میزان ۱۴۰۵), Pashto (۱۲ تله ۱۴۰۵) or Sorani Kurdish (۱۲ ڕەزبەر ۱۴۰۵), chosen by the site's language or by you
 * Jalali archive pages (/1405/07/ lists the posts of Mehr 1405), and a Jalali archive list and calendar in the Archives and Calendar widgets and blocks
 * Optional Jalali dates in post permalinks (/1405/07/09/my-post/), with old links redirected, and old Jalali links kept working with Jalali dates off
 * A guided switch from Parsi Date, Persian WooCommerce and Persian WooCommerce Shipping: their settings, links, widgets, blocks, ACF dates, Iranian addresses and order statuses, with a review first, a report and undo
@@ -116,6 +117,10 @@ Jalali links keep working while Jalali dates are off, whichever plugin made them
 
 Yes. Turn on "Show the Gregorian date too" under Display > Jalali dates, and post and comment dates read "۱۰ مهر ۱۴۰۵ (2026-10-02)". You can show it with month names ("۲ اکتبر ۲۰۲۶"), put it first, and choose parentheses, a slash or a dash between the dates. With Persian digits on for dates, it gets Persian digits too. Feeds, search engines, admin screens, emails, the store and archives keep one date.
 
+= Can I use Afghan or Kurdish month names? =
+
+Yes. Afghanistan and Kurdistan use the same calendar under other names, and Persian Kit picks them from your site's language: Dari (fa_AF) gets حمل، ثور، جوزا… ("۱۲ میزان ۱۴۰۵"), Pashto (ps) وری، غویی، غبرګولی… ("۱۲ تله ۱۴۰۵") and Sorani Kurdish (ckb) خاکەلێوە، گوڵان، جۆزەردان… ("۱۲ ڕەزبەر ۱۴۰۵"). To choose another set, use "Month names" under Display > Jalali dates. Weekdays, the Gregorian month names next to the Jalali date, the date picker and WooCommerce Analytics follow the same choice. The days and the year (1405) are the same as in Iran. On a WPML or Polylang site each language has its own choice, and Pashto and Kurdish pages get Jalali dates like Persian ones.
+
 = Do I need WooCommerce? =
 
 No. WooCommerce features, and the WooCommerce tab on the settings page, only appear when WooCommerce is installed and active.
@@ -158,7 +163,7 @@ Yes. While either is active, the product prices they give search engines are in 
 
 = Does Persian Kit work with WPML and Polylang? =
 
-Yes. Once a language is set up, Persian pages and emails get Jalali dates and Persian digits, and pages in other languages keep Gregorian dates and English digits. Admin screens follow each admin's own language (Users > Profile > Language). Fixing letters, Persian slugs and the half-space key apply to Persian content only, so an Arabic translation keeps its ي and ك. With Jalali dates in post links, only Persian posts get Jalali links.
+Yes. Once a language is set up, Persian, Pashto and Kurdish pages and emails get Jalali dates and Persian digits, and pages in other languages keep Gregorian dates and English digits. Admin screens follow each admin's own language (Users > Profile > Language). Fixing letters, Persian slugs and the half-space key apply to Persian content only, so an Arabic translation keeps its ي and ك. With Jalali dates in post links, only Persian posts get Jalali links.
 
 Weglot isn't supported: it translates finished pages and keeps the site's language, so Persian Kit can't tell its languages apart. TranslatePress and other plugins that change WordPress's language per page can turn this on with `add_filter('persian_kit_multilingual', '__return_true');`.
 

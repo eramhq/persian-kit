@@ -4,6 +4,14 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Afghan and Kurdish month names
+
+- Jalali dates use the month and weekday names of the site's language: Dari for fa_AF (حمل…حوت, "۱۲ میزان ۱۴۰۵"), Pashto for ps (وری…کب, with the weekdays Afghan news sites write) and Sorani Kurdish for ckb (خاکەلێوە…ڕەشەمە). Iranian names stay for every other language, byte for byte. Display › Jalali dates › "Month names" picks a set by hand; on WPML and Polylang sites, each language has its own (#33).
+- The same names reach the admin month filters (posts, media, WooCommerce orders), the Gregorian date's month names, the block editor's date panel, WooCommerce Analytics (seasons too) and the date picker, which takes them from the browser (fa-AF, ps-AF or ckb-IR) and keeps its buttons in Persian for Pashto and Kurdish. Chrome has no Pashto names and only the Sorani months, so there the picker shows the Dari names for Pashto and the Iranian ones for Kurdish.
+- On WPML and Polylang sites, Pashto and Kurdish pages and emails get Jalali dates and Persian digits like Persian ones, while fixing letters, Persian slugs and the half-space key stay Persian only, as Pashto has its own ي. So does a language given a set of names in the settings.
+- The switch from Parsi Date imports its Dari, Pashto and Kurdish month names.
+- New filters `persian_kit_calendar_names` and `persian_kit_reads_jalali`.
+
 ### Gregorian date next to the Jalali date
 
 - Display › Jalali dates › "Show the Gregorian date too", off by default: post and comment dates on the site read "۱۰ مهر ۱۴۰۵ (2026-10-02)", in the Post Date and Latest Comments blocks too. The Gregorian date can show month names in Persian ("۲ اکتبر ۲۰۲۶"), come first, and sit in parentheses or after a slash or dash. It gets Persian digits when the Persian digits module's dates option is on. Times, parts of a date (just the year, say), `Y-m-d` asked for by theme code (unless it is the site's date format), feeds, `<time datetime>`, REST responses, admin screens, emails, the store, archives and `persian_kit_date()` keep one date. New filters `persian_kit_gregorian_date` and `persian_kit_gregorian_date_display` (#14).
