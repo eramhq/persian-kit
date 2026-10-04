@@ -18,8 +18,8 @@ Current release: `1.0.0-beta.6` (beta)
 - Persian slug generation
 - PHP validation and formatting helpers for common Iranian data
 - WooCommerce: Jalali dates, a checkout for Iran (fixed digits, checked phone numbers and postcodes, national ID, cities, provinces you deliver to), thousand toman and thousand rial, and Persian digits in emails
-- A Jalali date picker for Contact Form 7, ACF, Forminator and Gravity Forms date fields, WooCommerce's admin date fields and the post date in the classic editor and Quick Edit
-- Iranian field checks (mobile, national ID, postcode, card, IBAN) for Contact Form 7, Forminator and Gravity Forms
+- A Jalali date picker for Contact Form 7, ACF, Forminator and Gravity Forms date fields, a Jalali date field for WPForms, WooCommerce's admin date fields and the post date in the classic editor and Quick Edit
+- Iranian field checks (mobile, national ID, postcode, card, IBAN) for Contact Form 7, Forminator, Gravity Forms and WPForms
 - Compatibility with Yoast SEO, Rank Math, WPML and Polylang
 - WooCommerce: "call for price" for products with no price, a shorter checkout when nothing needs shipping, and a Persian font in emails
 - A guided switch from Parsi Date, Persian WooCommerce and Persian WooCommerce Shipping, with a review first, a report and undo

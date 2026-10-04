@@ -16,8 +16,8 @@ msgstr ""
 
 #. Plugin Name of the plugin
 #: persian-kit.php
-#: src/Core/AdminPage.php:120
 #: src/Core/AdminPage.php:121
+#: src/Core/AdminPage.php:122
 #: src/Core/ConflictDetector.php:177
 #: src/Service/Assets/AssetManager.php:45
 #: src/Service/Import/PluginsScreenNotice.php:56
@@ -65,41 +65,41 @@ msgstr "به %s نیاز دارد."
 msgid "Needs %1$s %2$s or newer (this site has %3$s)."
 msgstr "به %1$s نسخه %2$s یا جدیدتر نیاز دارد (نسخه این سایت %3$s است)."
 
-#: src/Core/AdminPage.php:112
+#: src/Core/AdminPage.php:113
 #: views/admin/partials/switch-review.php:54
 #: public/js/admin.js:4456
 msgid "Settings"
 msgstr "تنظیمات"
 
-#: src/Core/AdminPage.php:295
+#: src/Core/AdminPage.php:296
 msgid "Forms"
 msgstr "فرم‌ها"
 
-#: src/Core/AdminPage.php:296
+#: src/Core/AdminPage.php:297
 msgid "Store"
 msgstr "فروشگاه"
 
-#: src/Core/AdminPage.php:297
+#: src/Core/AdminPage.php:298
 #: views/admin/partials/compatibility-guidance.php:16
 msgid "Compatibility"
 msgstr "سازگاری"
 
-#: src/Core/AdminPage.php:382
+#: src/Core/AdminPage.php:383
 #: src/Service/Import/ReportDownload.php:39
 msgid "You do not have permission to access this page."
 msgstr "شما اجازه دسترسی به این صفحه را ندارید."
 
-#: src/Core/AdminPage.php:401
+#: src/Core/AdminPage.php:402
 #: views/admin/partials/woocommerce-settings.php:185
 #: views/admin/partials/woocommerce-settings.php:246
 msgid "Display"
 msgstr "نمایش"
 
-#: src/Core/AdminPage.php:402
+#: src/Core/AdminPage.php:403
 msgid "Writing"
 msgstr "نگارش"
 
-#: src/Core/AdminPage.php:403
+#: src/Core/AdminPage.php:404
 #: src/Core/ConflictDetector.php:43
 #: src/Core/ConflictDetector.php:87
 #: src/Modules/WooCommerce/WooCommerceModule.php:21
@@ -109,11 +109,11 @@ msgstr "نگارش"
 msgid "WooCommerce"
 msgstr "ووکامرس"
 
-#: src/Core/AdminPage.php:404
+#: src/Core/AdminPage.php:405
 msgid "Integrations"
 msgstr "یکپارچه‌سازی"
 
-#: src/Core/AdminPage.php:405
+#: src/Core/AdminPage.php:406
 msgid "Tools"
 msgstr "ابزارها"
 
@@ -2809,11 +2809,11 @@ msgstr "تومان ایران"
 msgid "Iranian rial"
 msgstr "ریال ایران"
 
-#: src/Modules/Forms/GravityFormsDateField.php:173
+#: src/Modules/Forms/GravityFormsDateField.php:174
 msgid "Gregorian calendar"
 msgstr "تقویم میلادی"
 
-#: src/Modules/Forms/GravityFormsDateField.php:174
+#: src/Modules/Forms/GravityFormsDateField.php:175
 msgid "Keep Gravity Forms' own calendar instead of the Jalali one."
 msgstr "تقویم خود ⁦Gravity Forms⁩ به جای تقویم شمسی بماند."
 
@@ -2824,3 +2824,29 @@ msgstr "Gravity Forms"
 #: src/Modules/Forms/GravityFormsModule.php:26
 msgid "Jalali dates in Date fields, Iranian fields such as mobile number and national ID, an Iran address type, and toman and rial."
 msgstr "تاریخ شمسی در فیلدهای تاریخ، فیلدهای ایرانی مثل شماره موبایل و کد ملی، نوع نشانی ایران، و تومان و ریال."
+
+#: src/Modules/Forms/WPForms/JalaliDateField.php:49
+msgid "Jalali date"
+msgstr "تاریخ شمسی"
+
+#. translators: %s: a date in the field's format, such as 1405/07/25.
+#: src/Modules/Forms/WPForms/JalaliDateField.php:156
+#, php-format
+msgid "Enter a valid date, such as %s."
+msgstr "یک تاریخ معتبر وارد کنید، مثل ⁦%s⁩."
+
+#: src/Modules/Forms/WPForms/JalaliDateField.php:240
+msgid "Date format"
+msgstr "ساختار تاریخ"
+
+#: src/Modules/Forms/WPForms/JalaliDateField.php:241
+msgid "How the date is written in the field and in emails."
+msgstr "تاریخ در فیلد و در ایمیل‌ها به این شکل نوشته می‌شود."
+
+#: src/Modules/Forms/WPFormsModule.php:19
+msgid "WPForms"
+msgstr "WPForms"
+
+#: src/Modules/Forms/WPFormsModule.php:24
+msgid "Iranian fields such as mobile number and national ID, and a Jalali date field, also in WPForms Lite."
+msgstr "فیلدهای ایرانی مثل شماره موبایل و کد ملی، و فیلد تاریخ شمسی؛ در ⁦WPForms Lite⁩ هم کار می‌کند."
