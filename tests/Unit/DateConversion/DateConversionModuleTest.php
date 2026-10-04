@@ -13,6 +13,7 @@ use PersianKit\Modules\DateConversion\DateArchiveFilter;
 use PersianKit\Modules\DateConversion\DateConversionModule;
 use PersianKit\Modules\DateConversion\DateFilters;
 use PersianKit\Modules\DateConversion\GregorianCalendarMonth;
+use PersianKit\Modules\DateConversion\GregorianCompanion;
 use PersianKit\Modules\DateConversion\JalaliArchiveList;
 use PersianKit\Modules\DateConversion\JalaliCalendar;
 use PersianKit\Modules\DateConversion\JalaliDateArchive;
@@ -207,10 +208,14 @@ class DateConversionModuleTest extends TestCase
         $module = $this->makeModule();
 
         $this->assertSame([
-            'enabled'           => true,
-            'global_conversion' => false,
-            'jalali_archives'   => false,
-            'jalali_permalinks' => false,
+            'enabled'             => true,
+            'global_conversion'   => false,
+            'jalali_archives'     => false,
+            'jalali_permalinks'   => false,
+            'gregorian_date'      => false,
+            'gregorian_style'     => 'numeric',
+            'gregorian_order'     => 'jalali_first',
+            'gregorian_separator' => 'parentheses',
         ], $module->sanitizeSettings([
             'enabled' => true,
         ]));
@@ -221,10 +226,14 @@ class DateConversionModuleTest extends TestCase
         $module = $this->makeModule();
 
         $this->assertSame([
-            'enabled'           => true,
-            'global_conversion' => true,
-            'jalali_archives'   => true,
-            'jalali_permalinks' => true,
+            'enabled'             => true,
+            'global_conversion'   => true,
+            'jalali_archives'     => true,
+            'jalali_permalinks'   => true,
+            'gregorian_date'      => false,
+            'gregorian_style'     => 'numeric',
+            'gregorian_order'     => 'jalali_first',
+            'gregorian_separator' => 'parentheses',
         ], $module->sanitizeSettings([
             'enabled'           => true,
             'global_conversion' => '1',
@@ -246,15 +255,85 @@ class DateConversionModuleTest extends TestCase
         };
 
         $this->assertSame([
-            'enabled'           => true,
-            'global_conversion' => false,
-            'jalali_archives'   => false,
-            'jalali_permalinks' => false,
+            'enabled'             => true,
+            'global_conversion'   => false,
+            'jalali_archives'     => false,
+            'jalali_permalinks'   => false,
+            'gregorian_date'      => false,
+            'gregorian_style'     => 'numeric',
+            'gregorian_order'     => 'jalali_first',
+            'gregorian_separator' => 'parentheses',
         ], $module->sanitizeSettings([
             'enabled'           => true,
             'global_conversion' => false,
             'jalali_archives'   => '0',
             'unexpected'        => 'value',
         ]));
+    }
+
+    public function test_new_and_existing_sites_start_with_one_date(): void
+    {
+        $defaults = DateConversionModule::defaults();
+
+        $this->assertFalse($defaults['gregorian_date']);
+        $this->assertSame('numeric', $defaults['gregorian_style']);
+        $this->assertSame('jalali_first', $defaults['gregorian_order']);
+        $this->assertSame('parentheses', $defaults['gregorian_separator']);
+    }
+
+    public function test_sanitize_settings_keeps_known_gregorian_choices(): void
+    {
+        $values = $this->makeModule()->sanitizeSettings([
+            'gregorian_date'      => '1',
+            'gregorian_style'     => 'named',
+            'gregorian_order'     => 'gregorian_first',
+            'gregorian_separator' => 'dash',
+        ]);
+
+        $this->assertTrue($values['gregorian_date']);
+        $this->assertSame('named', $values['gregorian_style']);
+        $this->assertSame('gregorian_first', $values['gregorian_order']);
+        $this->assertSame('dash', $values['gregorian_separator']);
+    }
+
+    public function test_sanitize_settings_puts_unknown_gregorian_choices_back_to_the_defaults(): void
+    {
+        $values = $this->makeModule()->sanitizeSettings([
+            'gregorian_style'     => 'roman',
+            'gregorian_order'     => ['gregorian_first'],
+            'gregorian_separator' => 'Slash',
+        ]);
+
+        $this->assertSame('numeric', $values['gregorian_style']);
+        $this->assertSame('jalali_first', $values['gregorian_order']);
+        $this->assertSame('parentheses', $values['gregorian_separator']);
+    }
+
+    public function test_the_saved_gregorian_choices_reach_the_date_filters(): void
+    {
+        Functions\when('is_admin')->justReturn(false);
+        Functions\when('wp_is_serving_rest_request')->justReturn(false);
+
+        $factories = [];
+        $container = Mockery::mock(ServiceContainer::class);
+        $container->shouldReceive('register')->andReturnUsing(function (string $id, callable $factory) use (&$factories, $container) {
+            $factories[$id] = $factory;
+
+            return $container;
+        });
+        $container->shouldReceive('get')->andReturnUsing(function (string $id) use (&$factories, $container) {
+            return $factories[$id]($container);
+        });
+
+        $this->makeModule([
+            'gregorian_date'      => true,
+            'gregorian_style'     => 'named',
+            'gregorian_order'     => 'gregorian_first',
+            'gregorian_separator' => 'slash',
+        ])->register($container);
+
+        $date = new \DateTimeImmutable('2026-10-02');
+        $this->assertSame('2 اکتبر 2026 / x', $container->get(GregorianCompanion::class)->append('x', 'j F Y', $date));
+        $this->assertInstanceOf(DateFilters::class, $container->get(DateFilters::class));
     }
 }

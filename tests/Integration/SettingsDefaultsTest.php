@@ -87,7 +87,10 @@ class SettingsDefaultsTest extends WordPressIntegrationTestCase
         ]));
 
         $this->assertSame(
-            ['enabled' => true, 'global_conversion' => false, 'jalali_archives' => false, 'jalali_permalinks' => false],
+            [
+                'enabled' => true, 'global_conversion' => false, 'jalali_archives' => false, 'jalali_permalinks' => false,
+                'gregorian_date' => false, 'gregorian_style' => 'numeric', 'gregorian_order' => 'jalali_first', 'gregorian_separator' => 'parentheses',
+            ],
             get_option('persian_kit_settings')['date_conversion']
         );
     }
@@ -112,6 +115,47 @@ class SettingsDefaultsTest extends WordPressIntegrationTestCase
         ]));
 
         $this->assertTrue(get_option('persian_kit_settings')['date_conversion']['jalali_permalinks']);
+    }
+
+    public function test_the_gregorian_date_options_are_off_by_default_and_hidden(): void
+    {
+        delete_option('persian_kit_settings');
+        remove_all_filters('sanitize_option_persian_kit_settings');
+        update_option('persian_kit_settings', ['date_conversion' => ['enabled' => true, 'global_conversion' => false]]);
+
+        $this->assertFalse($this->settings()->module('date_conversion', 'gregorian_date'));
+        $this->assertSame('numeric', $this->settings()->module('date_conversion', 'gregorian_style'));
+
+        $output = $this->renderSettingsPage();
+        $this->assertMatchesRegularExpression(
+            '/name="persian_kit_settings\[date_conversion\]\[gregorian_date\]"\s+value="1"(?:\s+aria-describedby="[^"]*")?\s+x-model="gregorian"\s*>/s',
+            $output
+        );
+        $this->assertMatchesRegularExpression(
+            '/<li class="[^"]*persian-kit-option--nested" x-show="gregorian" x-cloak>\s*<label[^>]*>\s*Gregorian date/s',
+            $output
+        );
+        $this->assertMatchesRegularExpression('/<option value="numeric"\s+selected=\'selected\'>/', $output);
+    }
+
+    public function test_the_gregorian_date_options_are_saved(): void
+    {
+        update_option('persian_kit_settings', $this->formInput([
+            'date_conversion' => [
+                'enabled'             => '1',
+                'gregorian_date'      => '1',
+                'gregorian_style'     => 'named',
+                'gregorian_order'     => 'gregorian_first',
+                'gregorian_separator' => 'nope',
+            ],
+        ]));
+
+        $stored = get_option('persian_kit_settings')['date_conversion'];
+        $this->assertTrue($stored['gregorian_date']);
+        $this->assertSame('named', $stored['gregorian_style']);
+        $this->assertSame('gregorian_first', $stored['gregorian_order']);
+        $this->assertSame('parentheses', $stored['gregorian_separator']);
+        $this->assertMatchesRegularExpression('/<option value="named"\s+selected=\'selected\'>/', $this->renderSettingsPage());
     }
 
     public function test_bool_options_of_modules_without_their_own_sanitizer_are_booleans(): void
@@ -165,7 +209,10 @@ class SettingsDefaultsTest extends WordPressIntegrationTestCase
 
         $stored = get_option('persian_kit_settings');
         $this->assertSame(
-            ['enabled' => true, 'global_conversion' => true, 'jalali_archives' => true, 'jalali_permalinks' => false],
+            [
+                'enabled' => true, 'global_conversion' => true, 'jalali_archives' => true, 'jalali_permalinks' => false,
+                'gregorian_date' => false, 'gregorian_style' => 'numeric', 'gregorian_order' => 'jalali_first', 'gregorian_separator' => 'parentheses',
+            ],
             $stored['date_conversion']
         );
         $this->assertSame(['enabled' => false, 'persian_slugs' => false], $stored['utilities']);
