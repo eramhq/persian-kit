@@ -5,6 +5,7 @@ namespace PersianKit\Tests\Unit\Forms;
 use Brain\Monkey;
 use Brain\Monkey\Functions;
 use PersianKit\Modules\Forms\ForminatorDateField;
+use PersianKit\Modules\Forms\FormDateValues;
 use PersianKit\Service\Language\ContentLanguage;
 use PersianKit\Tests\Unit\Forms\Support\FakeForminatorForm;
 use PersianKit\Tests\Unit\Support\UsesLanguages;
@@ -104,21 +105,8 @@ class ForminatorDateFieldTest extends TestCase
 
         foreach ($expected as $forminator => $value) {
             $format = ForminatorDateField::FORMATS[$forminator];
-            $this->assertSame($value, ForminatorDateField::inFormat('2026-10-02', $format), $forminator);
-            $this->assertSame('2026-10-02', ForminatorDateField::toGregorian($value, $format), $forminator);
-        }
-    }
-
-    public function test_typed_jalali_dates_are_read_in_the_fields_format_or_year_first(): void
-    {
-        $this->assertSame('2026-10-02', ForminatorDateField::toGregorian('۱۰/۰۷/۱۴۰۵', 'd/m/Y'));
-        $this->assertSame('2026-10-02', ForminatorDateField::toGregorian('7/10/1405', 'm/d/Y'));
-        $this->assertSame('2026-10-02', ForminatorDateField::toGregorian('١٤٠٥.٧.١٠', 'd.m.Y'));
-        $this->assertSame('2026-10-02', ForminatorDateField::toGregorian(' 1405/07/10 ', 'm-d-Y'));
-        $this->assertSame('2026-10-02', ForminatorDateField::toGregorian('2026-10-02', 'd/m/Y'));
-
-        foreach (['', 'soon', '10/02', '31/02/2026', '1405/13/01', '10/02/26'] as $value) {
-            $this->assertNull(ForminatorDateField::toGregorian($value, 'd/m/Y'), $value);
+            $this->assertSame($value, FormDateValues::inFormat('2026-10-02', $format), $forminator);
+            $this->assertSame('2026-10-02', FormDateValues::toGregorian($value, $format), $forminator);
         }
     }
 

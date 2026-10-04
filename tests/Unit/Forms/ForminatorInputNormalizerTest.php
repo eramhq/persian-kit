@@ -141,6 +141,7 @@ class ForminatorInputNormalizerTest extends TestCase
         }
 
         $enqueued = [];
+        Functions\when('wp_register_script')->justReturn(true);
         Functions\when('wp_enqueue_script')->alias(function (string $handle) use (&$enqueued) {
             $enqueued[] = $handle;
         });

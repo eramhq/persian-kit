@@ -125,7 +125,11 @@ const copies = [
         src: 'resources/css/date-field.css',
         dest: 'public/css/date-field.css',
     },
-    // English digits in Forminator's phone and number fields
+    // English digits in form builders' phone and number fields
+    {
+        src: 'resources/js/form-digits.js',
+        dest: 'public/js/form-digits.js',
+    },
     {
         src: 'resources/js/forminator-digits.js',
         dest: 'public/js/forminator-digits.js',

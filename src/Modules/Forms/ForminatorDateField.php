@@ -2,7 +2,6 @@
 
 namespace PersianKit\Modules\Forms;
 
-use PersianKit\Modules\DateConversion\DateInputParser;
 use PersianKit\Modules\DateConversion\DatePicker;
 use PersianKit\Modules\DateConversion\JalaliFormatter;
 use PersianKit\Service\Language\ContentLanguage;
@@ -91,38 +90,6 @@ class ForminatorDateField
     }
 
     /**
-     * A date as Gregorian Y-m-d: written in the field's format, or year
-     * first, Jalali or Gregorian, in any digits. Null when it isn't a date.
-     */
-    public static function toGregorian(string $value, string $format): ?string
-    {
-        $parts = preg_split('/[-\/.]/', persian_kit_to_english_digits(trim($value)));
-        if (!is_array($parts) || count($parts) !== 3) {
-            return null;
-        }
-
-        // Typed year first, as the picker shows a date.
-        $order = strlen($parts[0]) === 4 ? ['Y', 'm', 'd'] : str_split(str_replace(['-', '/', '.'], '', $format));
-        $date = array_combine($order, $parts);
-
-        if (!isset($date['Y'], $date['m'], $date['d'])) {
-            return null;
-        }
-
-        return DateInputParser::toGregorian("{$date['Y']}-{$date['m']}-{$date['d']}");
-    }
-
-    /**
-     * A Gregorian Y-m-d date in the field's format.
-     */
-    public static function inFormat(string $date, string $format): string
-    {
-        $dateTime = \DateTimeImmutable::createFromFormat('!Y-m-d', $date);
-
-        return $dateTime ? $dateTime->format($format) : $date;
-    }
-
-    /**
      * Puts the Jalali picker on a Calendar's input. Its limits come from
      * Forminator's own: a start and end date (already Gregorian Y-m-d, also
      * "today ± N days"), and "no past dates", which in Forminator means none
@@ -156,7 +123,7 @@ class ForminatorDateField
 
             $value = $processor->get_attribute('value');
             if (!isset($options['min']) && $processor->get_attribute('data-past-dates') === 'disable' && is_string($value) && $value !== '') {
-                $options['min'] = (string) self::toGregorian($value, $format);
+                $options['min'] = (string) FormDateValues::toGregorian($value, $format);
             }
 
             foreach (DatePicker::attributes($options) as $name => $attributeValue) {
@@ -287,7 +254,7 @@ class ForminatorDateField
     private static function jalaliDate(string $value, array $field): ?string
     {
         $format = self::isJalali($field) ? self::calendarFormat($field) : null;
-        $date = $format === null ? null : self::toGregorian($value, $format);
+        $date = $format === null ? null : FormDateValues::toGregorian($value, $format);
 
         return $date === null ? null : JalaliFormatter::fromLocalMysql((string) get_option('date_format'), $date . ' 00:00:00');
     }

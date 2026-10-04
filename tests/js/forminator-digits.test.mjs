@@ -3,10 +3,12 @@ import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { JSDOM } from 'jsdom';
 
+const shared = readFileSync(new URL('../../resources/js/form-digits.js', import.meta.url), 'utf8');
 const source = readFileSync(new URL('../../resources/js/forminator-digits.js', import.meta.url), 'utf8');
 
 function page(body) {
     const dom = new JSDOM(`<!doctype html><html lang="fa" dir="rtl"><body>${body}</body></html>`, { runScripts: 'outside-only' });
+    dom.window.eval(shared);
     dom.window.eval(source);
 
     return dom.window;

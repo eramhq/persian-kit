@@ -8,17 +8,10 @@
  * class (Iranian checks). Other text keeps its digits.
  *
  * Number and Currency fields with a thousands separator use Inputmask,
- * which drops a digit it doesn't know before the input changes. So a typed
- * or pasted Persian digit is replaced with the English one before the
- * field sees it (keypress and beforeinput, in the capture phase). Values
- * written another way (autofill, scripts) are fixed on input and change,
- * keeping the caret where it was.
- *
- * Inputs of type number (a Number field without a separator) drop Persian
- * digits before any script sees them in some browsers; the server fixes the
- * digits of a form sent without this script.
+ * which drops a digit it doesn't know before the input changes;
+ * form-digits.js swaps typed digits before it sees them.
  */
-(function (window, document) {
+(function (window) {
     'use strict';
 
     var SELECTOR = [
@@ -30,112 +23,16 @@
         '.persian-kit-postcode input',
         '.persian-kit-card input',
         '.persian-kit-iban input',
-    ].join(', ');
+    ].map(function (input) {
+        return '.forminator-custom-form ' + input;
+    }).join(', ');
 
-    var DIGIT = /[۰-۹٠-٩]/;
-    var DIGITS = /[۰-۹٠-٩]/g;
-
-    function toAsciiDigits(value) {
-        return String(value).replace(DIGITS, function (digit) {
-            var code = digit.charCodeAt(0);
-            return String(code - (code >= 0x06F0 ? 0x06F0 : 0x0660));
-        });
-    }
-
-    function isField(input) {
-        return !!(input && input.matches && input.matches(SELECTOR) && input.closest('.forminator-custom-form'));
-    }
-
-    function selection(input) {
-        try {
-            return { start: input.selectionStart, end: input.selectionEnd };
-        } catch (error) {
-            // Inputs without a selection (type number).
-            return { start: null, end: null };
-        }
-    }
-
-    /** One digit for another: the caret and selection keep their place. */
-    function fix(input) {
-        var value = input.value;
-        var fixed = toAsciiDigits(value);
-        if (fixed === value) {
-            return;
-        }
-
-        var range = selection(input);
-        input.value = fixed;
-
-        if (range.start !== null && document.activeElement === input) {
-            try {
-                input.setSelectionRange(range.start, range.end);
-            } catch (error) {
-                // As above.
-            }
-        }
-    }
-
-    /**
-     * Types the text into the input in place of what the browser was about
-     * to insert, as typing does, so masks and Forminator's checks see it.
-     */
-    function insert(input, text) {
-        if (typeof document.execCommand === 'function' && document.execCommand('insertText', false, text)) {
-            return;
-        }
-
-        var range = selection(input);
-        if (range.start === null || typeof input.setRangeText !== 'function') {
-            input.value += text;
-        } else {
-            input.setRangeText(text, range.start, range.end, 'end');
-        }
-        input.dispatchEvent(new window.Event('input', { bubbles: true }));
-    }
-
-    /** A Persian digit about to be typed or pasted: insert the English one. */
-    function swap(event, text) {
-        var input = event.target;
-        if (!text || !DIGIT.test(text) || !isField(input)) {
-            return;
-        }
-
-        event.preventDefault();
-        event.stopImmediatePropagation();
-        insert(input, toAsciiDigits(text));
-    }
-
-    document.addEventListener('keypress', function (event) {
-        if (!event.isComposing) {
-            swap(event, event.key);
-        }
-    }, true);
-
-    document.addEventListener('beforeinput', function (event) {
-        var type = event.inputType || '';
-        if (type.indexOf('insert') !== 0 || event.isComposing) {
-            return;
-        }
-
-        var text = event.data;
-        if (text === null && event.dataTransfer) {
-            text = event.dataTransfer.getData('text/plain');
-        }
-        swap(event, text);
-    }, true);
-
-    function onChange(event) {
-        if (isField(event.target)) {
-            fix(event.target);
-        }
-    }
-
-    document.addEventListener('input', onChange, true);
-    document.addEventListener('change', onChange, true);
+    var digits = window.PersianKitFormDigits;
+    digits.watch(SELECTOR);
 
     window.PersianKitForminatorDigits = {
         selector: SELECTOR,
-        toAsciiDigits: toAsciiDigits,
-        fix: fix,
+        toAsciiDigits: digits.toAsciiDigits,
+        fix: digits.fix,
     };
-})(window, document);
+})(window);

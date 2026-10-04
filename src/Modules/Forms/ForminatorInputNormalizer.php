@@ -96,9 +96,9 @@ class ForminatorInputNormalizer
 
         $format = ForminatorDateField::calendarFormat($field);
         if ($format !== null) {
-            $date = ForminatorDateField::toGregorian($value, $format);
+            $date = FormDateValues::toGregorian($value, $format);
 
-            return $date === null ? persian_kit_to_english_digits(trim($value)) : ForminatorDateField::inFormat($date, $format);
+            return $date === null ? persian_kit_to_english_digits(trim($value)) : FormDateValues::inFormat($date, $format);
         }
 
         if (in_array($field['type'] ?? '', self::DIGIT_TYPES, true)) {
@@ -119,7 +119,7 @@ class ForminatorInputNormalizer
 
         foreach ((array) $render->get_fields() as $field) {
             if (is_array($field) && (in_array($field['type'] ?? '', self::DIGIT_TYPES, true) || ForminatorIranianFields::markerType($field) !== null)) {
-                wp_enqueue_script(self::SCRIPT, PERSIAN_KIT_URL . 'public/js/forminator-digits.js', [], PERSIAN_KIT_VERSION, true);
+                FormDigitsScript::enqueue(self::SCRIPT, 'forminator-digits.js');
 
                 return;
             }
