@@ -4,6 +4,16 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### WPForms
+
+WPForms forms get the same Persian support as Contact Form 7, Forminator and Gravity Forms (#7), in a new integration (`wpforms`, on by default, WPForms 1.9.1 or newer). Everything works in WPForms Lite:
+
+- An "Iranian fields" group in the builder: mobile number, national ID, postcode, bank card number and IBAN (Sheba), checked when the form is sent and saved in their standard form.
+- A Jalali date field in the same group, since WPForms' own Date / Time field is a paid one. It has the Jalali date picker, a date format (day, month and year in any order, `Y/m/d` by default), and fails on a date that doesn't exist. The entry keeps the Jalali date as its value, so emails and `{all_fields}` show it, and the Gregorian date and its timestamp for add-ons. On pages in another language it is the browser's own date input and saves the Gregorian date.
+- Persian digits become English in Number fields, a price the customer enters and the Iranian fields, as people type and on the server.
+- Turned off, the Iranian fields and the date field stay as plain text inputs, and the card names the forms that use them.
+- Not yet: WPForms' paid Date / Time, Phone and Address fields.
+
 ### Gravity Forms
 
 Gravity Forms forms get the same Persian support as Contact Form 7 and Forminator (#6), in a new integration (`gravityforms`, on by default, Gravity Forms 2.9 or newer):
