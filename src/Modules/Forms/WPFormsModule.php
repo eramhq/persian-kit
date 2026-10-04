@@ -61,6 +61,9 @@ class WPFormsModule extends AbstractModule
         $container->register(WPFormsIranianFields::class, function () {
             return new WPFormsIranianFields();
         });
+        $container->register(WPFormsDateField::class, function () {
+            return new WPFormsDateField();
+        });
     }
 
     /**
@@ -70,15 +73,17 @@ class WPFormsModule extends AbstractModule
     public function boot(ServiceContainer $container): void
     {
         $container->get(WPFormsIranianFields::class)->register();
+        $container->get(WPFormsDateField::class)->register();
     }
 
     /**
-     * While it is off, forms keep showing the Iranian fields, as text
-     * inputs without checks.
+     * While it is off, forms keep showing the Iranian fields and Jalali
+     * date fields, as text inputs without checks.
      */
     public function bootDisabled(ServiceContainer $container): void
     {
         $container->get(WPFormsIranianFields::class)->registerFallback();
+        $container->get(WPFormsDateField::class)->registerFallback();
     }
 
     protected function supportsWPForms(): bool
