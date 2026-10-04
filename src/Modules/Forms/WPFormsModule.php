@@ -67,6 +67,9 @@ class WPFormsModule extends AbstractModule
         $container->register(WPFormsInputNormalizer::class, function () {
             return new WPFormsInputNormalizer();
         });
+        $container->register(WPFormsFieldUsage::class, function () {
+            return new WPFormsFieldUsage();
+        });
     }
 
     /**
@@ -78,16 +81,34 @@ class WPFormsModule extends AbstractModule
         $container->get(WPFormsIranianFields::class)->register();
         $container->get(WPFormsDateField::class)->register();
         $container->get(WPFormsInputNormalizer::class)->register();
+        $container->get(WPFormsFieldUsage::class)->register();
     }
 
     /**
      * While it is off, forms keep showing the Iranian fields and Jalali
-     * date fields, as text inputs without checks.
+     * date fields, as text inputs without checks, and the list of the forms
+     * that use them stays current for the settings page's warning.
      */
     public function bootDisabled(ServiceContainer $container): void
     {
         $container->get(WPFormsIranianFields::class)->registerFallback();
         $container->get(WPFormsDateField::class)->registerFallback();
+        $container->get(WPFormsFieldUsage::class)->register();
+    }
+
+    /**
+     * @return list<array{title: string, url: string}>
+     */
+    public function formsUsingFields(): array
+    {
+        if (!$this->isAvailable()) {
+            return [];
+        }
+
+        return array_map(static fn (array $form): array => [
+            'title' => $form['title'],
+            'url'   => admin_url('admin.php?page=wpforms-builder&view=fields&form_id=' . $form['id']),
+        ], (new WPFormsFieldUsage())->formsUsingFields());
     }
 
     protected function supportsWPForms(): bool

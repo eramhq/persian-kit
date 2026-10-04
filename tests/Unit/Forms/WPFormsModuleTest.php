@@ -9,6 +9,7 @@ use PersianKit\Abstracts\AbstractModule;
 use PersianKit\Container\ServiceContainer;
 use PersianKit\Core\SettingsManager;
 use PersianKit\Modules\Forms\WPFormsDateField;
+use PersianKit\Modules\Forms\WPFormsFieldUsage;
 use PersianKit\Modules\Forms\WPFormsInputNormalizer;
 use PersianKit\Modules\Forms\WPFormsIranianFields;
 use PersianKit\Modules\Forms\WPFormsModule;
@@ -36,21 +37,34 @@ class WPFormsModuleTest extends TestCase
         $this->assertSame(['enabled' => true], WPFormsModule::defaults());
     }
 
-    public function test_boot_registers_the_fields_and_the_digits(): void
+    public function test_boot_registers_the_fields_the_digits_and_the_usage_cache(): void
     {
         $this->assertSame([
             WPFormsIranianFields::class . '::register',
             WPFormsDateField::class . '::register',
             WPFormsInputNormalizer::class . '::register',
+            WPFormsFieldUsage::class . '::register',
         ], $this->listCalls(fn (WPFormsModule $module, ServiceContainer $container) => $module->boot($container)));
     }
 
-    public function test_turned_off_the_fields_stay(): void
+    public function test_turned_off_the_fields_stay_and_the_usage_list_stays_current(): void
     {
         $this->assertSame([
             WPFormsIranianFields::class . '::registerFallback',
             WPFormsDateField::class . '::registerFallback',
+            WPFormsFieldUsage::class . '::register',
         ], $this->listCalls(fn (WPFormsModule $module, ServiceContainer $container) => $module->bootDisabled($container)));
+    }
+
+    public function test_forms_using_the_fields_link_to_the_builder(): void
+    {
+        Functions\when('get_transient')->justReturn([['id' => 12, 'title' => 'Contact']]);
+        Functions\when('admin_url')->alias(fn (string $path) => 'https://example.org/wp-admin/' . $path);
+
+        $this->assertSame(
+            [['title' => 'Contact', 'url' => 'https://example.org/wp-admin/admin.php?page=wpforms-builder&view=fields&form_id=12']],
+            $this->makeModule()->formsUsingFields()
+        );
     }
 
     public function test_it_needs_wpforms_1_9_from_wordpress_org(): void
@@ -71,6 +85,7 @@ class WPFormsModuleTest extends TestCase
 
         $this->assertFalse($without->isAvailable());
         $this->assertSame(AbstractModule::REASON_INACTIVE, $without->unavailableReason()['code'] ?? null);
+        $this->assertSame([], $without->formsUsingFields());
     }
 
     protected function makeModule(): WPFormsModule
