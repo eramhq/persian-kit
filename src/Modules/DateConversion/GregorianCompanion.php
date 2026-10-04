@@ -26,6 +26,12 @@ final class GregorianCompanion
 
     private const YEAR_TOKENS = ['Y', 'y', 'o'];
 
+    /**
+     * Themes ask for these to fill datetime attributes and data; a site
+     * that shows dates this way has it as its date format.
+     */
+    private const DATA_FORMATS = ['Y-m-d', 'Ymd'];
+
     // Left-to-right isolate and its closing mark, both invisible.
     private const LRI = "\u{2066}";
 
@@ -143,6 +149,10 @@ final class GregorianCompanion
     private function appliesTo(string $format): bool
     {
         if (!$this->enabled || DateDisplayGuard::isMachineFormat($format) || !self::isFullDate($format)) {
+            return false;
+        }
+
+        if (in_array($format, self::DATA_FORMATS, true) && $format !== get_option('date_format')) {
             return false;
         }
 

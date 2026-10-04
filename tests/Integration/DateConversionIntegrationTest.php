@@ -224,6 +224,8 @@ class DateConversionIntegrationTest extends WordPressIntegrationTestCase
         $this->assertSame('10 مهر 1405 (' . self::ltr('2026-10-02') . ')', get_comment_date('', $commentId));
         $this->assertSame('10:30', get_the_time('H:i'));
         $this->assertSame('1405', get_the_date('Y'));
+        // Themes ask for Y-m-d to fill a datetime attribute.
+        $this->assertSame('1405-07-10', get_the_date('Y-m-d'));
 
         $block = (new \WP_Block(['blockName' => 'core/post-date', 'attrs' => []], ['postId' => $postId]))->render();
         $this->assertStringContainsString('<time datetime="2026-10-02T10:30:00+03:30">10 مهر 1405 (' . self::ltr('2026-10-02') . ')</time>', $block);
