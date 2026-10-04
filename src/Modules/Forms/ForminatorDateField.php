@@ -326,7 +326,7 @@ class ForminatorDateField
 
         $pageId = (int) ($data['page_id'] ?? 0);
 
-        return $pageId > 0 ? ContentLanguage::postIsPersian($pageId) : ContentLanguage::displaysPersian();
+        return $pageId > 0 ? ContentLanguage::postReadsJalali($pageId) : ContentLanguage::displaysPersian();
     }
 
     /**

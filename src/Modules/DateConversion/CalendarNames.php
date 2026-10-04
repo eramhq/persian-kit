@@ -375,7 +375,7 @@ final class CalendarNames
      */
     public static function isFixedFor(string $locale): bool
     {
-        return isset(self::$localeChoices[$locale]);
+        return isset(self::$localeChoices[$locale]) && ContentLanguage::isMultilingual();
     }
 
     /**

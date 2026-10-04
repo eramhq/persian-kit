@@ -214,11 +214,13 @@ class ForminatorDateFieldTest extends TestCase
     public function test_emails_follow_the_language_of_the_page_the_form_was_sent_from(): void
     {
         $source = $this->inLanguage('fa_IR');
-        $source->posts = [11 => 'en_US', 12 => 'fa_IR'];
+        $source->posts = [11 => 'en_US', 12 => 'fa_IR', 13 => 'ps_AF'];
         $field = new ForminatorDateField(true);
 
         $this->assertSame('02/10/2026', $field->formatMailMacros('02/10/2026', ['date-1' => '02/10/2026', 'page_id' => '11'], '{date-1}'));
         $this->assertSame('1405/07/10', $field->formatMailMacros('02/10/2026', ['date-1' => '02/10/2026', 'page_id' => '12'], '{date-1}'));
+        // A Pashto page shows the Jalali picker too.
+        $this->assertSame('1405/07/10', $field->formatMailMacros('02/10/2026', ['date-1' => '02/10/2026', 'page_id' => '13'], '{date-1}'));
 
         $form = \Forminator_CForm_Front_Action::$module_object;
         $this->assertSame('02/10/2026', $field->formatMailValue('02/10/2026', $form, 'date-1', ['page_id' => 11]));

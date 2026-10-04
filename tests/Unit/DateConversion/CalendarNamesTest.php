@@ -113,6 +113,7 @@ class CalendarNamesTest extends TestCase
 
         CalendarNames::configure('kurdish', ['fa_AF' => 'pashto']);
         $this->assertSame('kurdish', CalendarNames::currentSet(), 'the choices per language are for multilingual sites');
+        $this->assertFalse(CalendarNames::isFixedFor('fa_AF'), 'a choice left from a multilingual plugin');
 
         CalendarNames::configure('roman');
         $this->assertSame('dari', CalendarNames::currentSet(), 'an unknown choice is automatic');
