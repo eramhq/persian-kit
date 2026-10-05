@@ -9,7 +9,6 @@
  * Text Domain: persian-kit
  * Domain Path: /languages
  * Requires at least: 6.8
- * Tested up to: 7.1
  * Requires PHP: 8.1
  * WC requires at least: 9.9
  * WC tested up to: 11.1.2
