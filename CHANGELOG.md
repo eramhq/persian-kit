@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Fixed
+
+- The admin font now also applies to headings, the admin bar, the footer, the media library, the classic editor's tabs, WooCommerce settings tabs, and the block editor and WooCommerce Analytics screens.
+
 ## [1.0.0] - 2026-10-05
 
 The first stable release, and the first on WordPress.org.

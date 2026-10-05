@@ -178,6 +178,11 @@
     unicode-range: U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;
 }
 
+/* Core components that read the design-system token (notices, and more as Gutenberg adopts it). */
+:root {
+    --wpds-typography-font-family-body: var(--persian-kit-admin-font), -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen-Sans, Ubuntu, Cantarell, 'Helvetica Neue', sans-serif;
+}
+
 body,
 #wpcontent,
 #wpbody,
@@ -194,6 +199,54 @@ textarea,
 button,
 .button,
 .components-text-control__input,
-.components-select-control__input {
+.components-select-control__input,
+/* l10n-rtl.css: body.rtl gets Tahoma, .rtl h1–h6 get Arial. */
+body.rtl,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+.rtl h1,
+.rtl h2,
+.rtl h3,
+.rtl h4,
+.rtl h5,
+.rtl h6,
+/* admin-bar-rtl.css: .rtl #wpadminbar * gets Tahoma. Icons keep dashicons (.ab-icon, .blavatar). */
+.rtl #wpadminbar *:not([class*="icon"]):not(.blavatar),
+/* media-views-rtl.css: the media library, the media modal and their fields get Tahoma. */
+.rtl .media-modal,
+.rtl .media-frame,
+.rtl .media-frame .search,
+.rtl .media-frame input[type="text"],
+.rtl .media-frame input[type="password"],
+.rtl .media-frame input[type="number"],
+.rtl .media-frame input[type="search"],
+.rtl .media-frame input[type="email"],
+.rtl .media-frame input[type="url"],
+.rtl .media-frame input[type="tel"],
+.rtl .media-frame textarea,
+.rtl .media-frame select,
+/* editor-rtl.css prints after this file: the Visual/Text tabs, the Text-mode area and quicktags get Tahoma. */
+body.rtl .wp-editor-area,
+body.rtl .wp-switch-editor,
+body.rtl .quicktags-toolbar input,
+/* WooCommerce admin.css: settings tabs get the system font. */
+body.rtl .nav-tab-wrapper .nav-tab {
+    font-family: var(--persian-kit-admin-font), -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen-Sans, Ubuntu, Cantarell, 'Helvetica Neue', sans-serif;
+}
+
+/*
+ * The block editor, the site editor and WooCommerce's React screens (Analytics): each
+ * @wordpress/components part sets its own font, so cover every element there. Icon fonts,
+ * code and monospace fields, and the post content preview (.editor-styles-wrapper, when the
+ * canvas isn't in an iframe) keep theirs.
+ */
+body.rtl.block-editor-page *:not([class*="icon"], .fa, .fas, .far, .fab, [class^="fa-"], [class*=" fa-"], code, pre, kbd, samp, .CodeMirror *, .editor-post-text-editor, .editor-styles-wrapper, .editor-styles-wrapper *),
+body.rtl .woocommerce-layout *:not([class*="icon"], .fa, .fas, .far, .fab, [class^="fa-"], [class*=" fa-"], code, pre, kbd, samp, .CodeMirror *, .editor-post-text-editor, .editor-styles-wrapper, .editor-styles-wrapper *),
+body.rtl .components-popover *:not([class*="icon"], .fa, .fas, .far, .fab, [class^="fa-"], [class*=" fa-"], code, pre, kbd, samp, .CodeMirror *, .editor-post-text-editor, .editor-styles-wrapper, .editor-styles-wrapper *),
+body.rtl .components-modal__frame *:not([class*="icon"], .fa, .fas, .far, .fab, [class^="fa-"], [class*=" fa-"], code, pre, kbd, samp, .CodeMirror *, .editor-post-text-editor, .editor-styles-wrapper, .editor-styles-wrapper *) {
     font-family: var(--persian-kit-admin-font), -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen-Sans, Ubuntu, Cantarell, 'Helvetica Neue', sans-serif;
 }
