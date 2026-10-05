@@ -4,7 +4,7 @@ Tags: persian, farsi, jalali, woocommerce, rtl
 Requires at least: 6.8
 Tested up to: 7.1
 Requires PHP: 8.1
-Stable tag: 1.0.0-beta.6
+Stable tag: 1.0.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -222,6 +222,16 @@ Payment gateways (Persian Kit has none; keep Persian WooCommerce active for them
 
 == Changelog ==
 
+= 1.0.0 =
+* The first stable release.
+* New: WPForms support, also in WPForms Lite: an "Iranian fields" group (mobile number, national ID, postcode, card number, IBAN) and a Jalali date field.
+* New: Gravity Forms support: Jalali dates in Date fields in all three styles and in entries, emails and confirmations, an "Iranian fields" group, an Iran address type, and toman and rial.
+* New: Jalali dates in WooCommerce Analytics: Jalali months, seasons and years, a Jalali calendar for custom ranges, and a Jalali date column in CSV exports.
+* New: Afghan and Kurdish month names (Dari, Pashto and Sorani Kurdish), chosen by the site's language or by hand, also on multilingual sites.
+* New: optionally, the Gregorian date next to post and comment dates: ۱۰ مهر ۱۴۰۵ (2026-10-02).
+* The switch from Parsi Date also imports its month names, dual date and Analytics settings.
+* Persian Kit now needs WordPress 6.8 and WooCommerce 9.9 or newer.
+
 = 1.0.0-beta.6 =
 * New: a guided switch from Parsi Date, Persian WooCommerce and Persian WooCommerce Shipping on the Tools tab. Review shows what happens to each setting, link and kind of data before anything changes; the import brings over settings, widgets and blocks, ACF dates, Iranian provinces and cities, and the shipping plugin's order statuses, with a report and undo. Also from WP-CLI: `wp persian-kit import`.
 * New: "Call for price" (تماس بگیرید) in place of an empty WooCommerce price, with its own text for the shop and an optional phone number or page to link to.
@@ -284,6 +294,9 @@ Payment gateways (Persian Kit has none; keep Persian WooCommerce active for them
 * Added Jalali media library date filters.
 
 == Upgrade Notice ==
+
+= 1.0.0 =
+The first stable release. WPForms and Gravity Forms support, Jalali dates in WooCommerce Analytics, and Afghan and Kurdish month names. Needs WordPress 6.8 and WooCommerce 9.9 or newer. Existing settings are kept.
 
 = 1.0.0-beta.6 =
 Beta release. A guided switch from Parsi Date, Persian WooCommerce and Persian WooCommerce Shipping, "call for price", a shorter checkout for virtual products and a Persian font in WooCommerce emails. Existing settings are kept.
