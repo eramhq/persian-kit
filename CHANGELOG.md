@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [1.0.0] - 2026-10-05
+
+The first stable release, and the first on WordPress.org.
+
 ### WPForms
 
 WPForms forms get the same Persian support as Contact Form 7, Forminator and Gravity Forms (#7), in a new integration (`wpforms`, on by default, WPForms 1.9.1 or newer). Everything works in WPForms Lite:
