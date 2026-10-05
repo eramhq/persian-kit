@@ -4,6 +4,9 @@
 .gitignore
 .gitkeep
 
+# WordPress.org page assets (icon, screenshots), uploaded to SVN assets/
+.wordpress-org/
+
 # This file itself
 .distignore
 
