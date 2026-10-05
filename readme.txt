@@ -209,6 +209,17 @@ Yes. Persian Kit > Tools > Switch from another plugin shows what Persian Kit doe
 
 Payment gateways (Persian Kit has none; keep Persian WooCommerce active for them with its overlapping options off), the shipping plugin's shipping methods, per-city prices, map and text messages, and settings Persian Kit has no match for yet, which the report lists. Theme code that calls Parsi Date's functions needs the code the switch gives you, in your theme's functions.php.
 
+== Screenshots ==
+
+1. Jalali dates and Persian digits across the site: post dates, the calendar and the archive list.
+2. A WooCommerce checkout for Iran: provinces in Persian, city suggestions, checked postcodes and phone numbers, and prices in toman.
+3. WooCommerce Analytics on the Jalali calendar: Jalali months, seasons and years.
+4. Iranian fields and the Jalali date picker in forms, with errors in Persian.
+5. Jalali dates and a Jalali month filter on the admin post list.
+6. Display settings: each part has its own switch.
+7. Works with the plugins you already use: each active one gets its own card.
+8. Switching from Parsi Date: each of its settings next to Persian Kit's, before anything changes.
+
 == Changelog ==
 
 = 1.0.0-beta.6 =
