@@ -1,6 +1,6 @@
 === Persian Kit ===
 Contributors: navidkashani
-Tags: persian, farsi, jalali, woocommerce, rtl
+Tags: persian, farsi, jalali, shamsi, woocommerce
 Requires at least: 6.8
 Tested up to: 7.1
 Requires PHP: 8.1
@@ -8,45 +8,72 @@ Stable tag: 1.0.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
-A modular Persian (Farsi) language toolkit for WordPress: Jalali dates, digit conversion, character normalization, and editor tooling.
+Jalali (Shamsi) dates, Persian digits, an Iranian WooCommerce checkout and Iranian form fields for Persian WordPress sites.
 
 == Description ==
 
-Persian Kit is a modular WordPress plugin for Persian-language sites. It focuses on safe Jalali date display, digit conversion, character normalization, Persian editor tooling, admin typography, and developer-facing PHP utilities.
+Persian Kit makes WordPress and WooCommerce work the way Persian-speaking visitors expect: Jalali (Shamsi) dates, Persian digits, the right Persian letters, a checkout for Iran and form fields that check Iranian mobile numbers and national IDs. Each part has its own switch, so you turn on only what you need.
 
-= Features =
+Your content stays safe. Dates are saved in the Gregorian calendar, as WordPress, WooCommerce and other plugins expect, and shown as Jalali dates. Turn a part off, or deactivate the plugin, and your site is as it was.
 
-* Jalali date conversion at the display layer
-* Optionally, the Gregorian date next to post and comment dates: ۱۰ مهر ۱۴۰۵ (2026-10-02)
+= Jalali dates =
+
+* Jalali dates for posts, comments, the admin screens and the block editor's date panel: ۱۲ مهر ۱۴۰۵
+* Jalali archive pages (/1405/07/ lists the posts of Mehr 1405), and Jalali months and days in the Archives and Calendar widgets and blocks
+* Optional Jalali dates in post links (/1405/07/09/my-post/), with old links redirected
+* Optionally, the Gregorian date next to the Jalali one: ۱۲ مهر ۱۴۰۵ (2026-10-04)
 * Afghan and Kurdish month names: Dari (۱۲ میزان ۱۴۰۵), Pashto (۱۲ تله ۱۴۰۵) or Sorani Kurdish (۱۲ ڕەزبەر ۱۴۰۵), chosen by the site's language or by you
-* Jalali archive pages (/1405/07/ lists the posts of Mehr 1405), and a Jalali archive list and calendar in the Archives and Calendar widgets and blocks
-* Optional Jalali dates in post permalinks (/1405/07/09/my-post/), with old links redirected, and old Jalali links kept working with Jalali dates off
-* A guided switch from Parsi Date, Persian WooCommerce and Persian WooCommerce Shipping: their settings, links, widgets, blocks, ACF dates, Iranian addresses and order statuses, with a review first, a report and undo
-* REST API Jalali companion fields
-* Persian digits in content, titles, the browser tab, widgets, menus, category and tag lists, dates, counts and WooCommerce prices (off until you turn it on)
-* Search that finds words typed with either Arabic (ي ك) or Persian (ی ک) letters, and numbers typed with either Persian (۱۴۰۵) or English (1405) digits
-* Arabic-to-Persian character normalization on save for posts, comments, categories, tags and menus (off until you turn it on), and for existing posts, with a dry-run count and a confirmation step
-* Optional half-spaces (ZWNJ) in compound words when posts are saved
-* Persian admin interface
-* A Persian admin font: Vazirmatn, Noto Sans Arabic or IBM Plex Sans Arabic
-* ZWNJ editor shortcuts for Classic Editor and Gutenberg
-* Persian slugs that keep Persian letters readable (can be turned off)
-* PHP validation and formatting helpers for common Iranian data
-* WooCommerce Jalali date support for supported screens (HPOS-compatible), and Jalali months, seasons and years in WooCommerce Analytics
-* WooCommerce checkout for Iran: Persian digits in phone numbers and postcodes are saved as English digits, Iranian phone numbers and postcodes are checked, an optional national ID (کد ملی) field, and optional city suggestions for each province that find a city however it is typed
-* Persian digits in the WooCommerce cart and checkout blocks' prices
-* Persian digits in WooCommerce emails: order numbers, prices, quantities and dates, while phone numbers, postcodes and links keep English digits (off until you turn it on)
-* A Persian font in WooCommerce emails in Persian, from the fonts already on computers and phones, and block emails that read right to left
-* Thousand toman and thousand rial currencies for WooCommerce, with prices in rials in the product data search engines read
-* A shorter WooCommerce checkout when nothing needs shipping: for courses, files and services, customers give their name, country, phone and email
-* "Call for price" (تماس بگیرید) in place of an empty WooCommerce price, with its own text for the shop and an optional phone number or page to link to
-* Works with Yoast SEO and Rank Math: prices in rials and Gregorian dates in what they give search engines, and Jalali titles on date archives
-* Works with WPML and Polylang: dates, digits and the Persian writing tools follow each page's language, and admin screens each admin's own
-* A Jalali date picker for Contact Form 7 and ACF date fields, WooCommerce's admin date fields and the post date in the classic editor and Quick Edit, which keep saving Gregorian dates
-* Contact Form 7 fields that check Iranian mobile numbers, national IDs, postcodes, card numbers and IBANs
-* Forminator: a Jalali date picker for Calendar date fields, and checks for Iranian values such as mobile number and national ID in fields with a persian-kit class
-* Gravity Forms: Jalali dates in Date fields, in all three styles, an "Iranian fields" group (mobile number, national ID, postcode, card number, IBAN), an Iran address type, and toman and rial
-* WPForms, also Lite: an "Iranian fields" group (mobile number, national ID, postcode, card number, IBAN) and a Jalali date field
+* A Jalali date picker for the post date in the classic editor and Quick Edit, and for WooCommerce's order, product and coupon dates
+
+= Persian digits and letters =
+
+* Persian digits in content, titles, the browser tab, widgets, menus, dates, counts and prices (off until you turn it on)
+* Search that finds words typed with Arabic (ي ك) or Persian (ی ک) letters, and numbers typed with Persian (۱۴۰۵) or English (1405) digits
+* Arabic ي and ك fixed to Persian ی and ک when posts, comments, categories, tags and menus are saved (off until you turn it on), and a tool that fixes existing posts after counting them first
+* Half-space (ZWNJ) shortcuts in the classic and block editors, and optional half-spaces in compound words
+* Persian slugs that keep Persian letters readable
+* A Persian admin, in Vazirmatn, Noto Sans Arabic or IBM Plex Sans Arabic
+
+= WooCommerce =
+
+* A checkout for Iran: Persian digits in phone numbers and postcodes saved as English digits, Iranian phone numbers and postcodes checked, an optional national ID (کد ملی) field, city suggestions for each province, and only the provinces you deliver to
+* A shorter checkout for courses, files and services: name, country, phone and email
+* Thousand toman and thousand rial currencies, with prices in rials for search engines
+* "Call for price" (تماس بگیرید) in place of an empty price
+* Jalali dates on orders, and WooCommerce Analytics by Jalali months, seasons and years
+* Persian digits in the cart and checkout block prices and in emails, and a Persian font in emails
+* Compatible with HPOS (custom order tables) and the block checkout
+
+= Forms =
+
+* Contact Form 7: a Jalali date picker, and mobile, national ID, postcode, card number and IBAN fields that check what is typed
+* Gravity Forms: Jalali Date fields in all three styles, an "Iranian fields" group, an Iran address type, and toman and rial
+* WPForms, also Lite: an "Iranian fields" group and a Jalali date field
+* Forminator: a Jalali date picker, and Iranian checks with a CSS class
+* ACF: a Jalali date picker for Date Picker and Date Time Picker fields
+
+Dates in forms are still saved as Gregorian dates, so entries, exports and add-ons keep working. Emails show the Jalali date.
+
+= Works with your plugins =
+
+* Yoast SEO and Rank Math: search engines still get Gregorian dates and prices in rials, and date archives get Jalali titles
+* WPML and Polylang: Persian pages get Jalali dates and Persian digits, pages in other languages keep Gregorian dates and English digits
+* Each integration turns on by itself when its plugin is active
+
+= Switch from Parsi Date or Persian WooCommerce =
+
+A guided switch from Parsi Date, Persian WooCommerce and Persian WooCommerce Shipping. Before anything changes, it shows each of their settings next to Persian Kit's. Then it brings over settings, widgets and blocks, ACF dates, Iranian provinces and cities and order statuses, keeps old Jalali links working, and gives you a report and an undo.
+
+= For developers =
+
+* PHP helpers for Persian text, digits, dates and Iranian data: `persian_kit_date()`, `persian_kit_to_persian_digits()`, `persian_kit_validate_national_id()`, `persian_kit_validate_iban()` and more
+* Jalali companion fields in the REST API
+* Filters, documented in the [reference](https://github.com/eramhq/persian-kit/blob/main/docs/REFERENCE.md)
+* WP-CLI commands: `wp persian-kit normalize` and `wp persian-kit import`
+
+= Privacy =
+
+Persian Kit doesn't track you or your visitors and sends nothing to other sites. Its fonts, scripts, date picker and city list all ship with the plugin, so nothing is loaded from elsewhere.
 
 = Bundled software =
 
