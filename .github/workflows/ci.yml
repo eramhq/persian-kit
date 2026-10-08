@@ -13,6 +13,28 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  docs:
+    name: Documentation
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.1'
+          extensions: intl, mbstring
+          coverage: none
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 22
+      - name: Install helper dependencies
+        run: composer install --no-interaction --no-progress
+      - name: Check documentation contracts and links
+        run: npm run docs:check
+      - name: Test documentation validator
+        run: npm run docs:test
+      - name: Check and run documentation examples
+        run: npm run docs:examples
+
   php:
     name: PHP ${{ matrix.php }}
     runs-on: ubuntu-latest

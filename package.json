@@ -1,6 +1,6 @@
 {
     "name": "persian-kit",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "private": true,
     "type": "module",
     "scripts": {
@@ -13,7 +13,10 @@
         "build:pot": "wp i18n make-pot . languages/persian-kit.pot --slug=persian-kit --domain=persian-kit --exclude=packages,tests,resources,node_modules,dist,vendor,.wordpress-tests",
         "build:i18n": "bash scripts/make-translations.sh",
         "dist": "bash scripts/dist.sh",
-        "test:js": "node --test 'tests/js/*.test.mjs'"
+        "test:js": "node --test 'tests/js/*.test.mjs'",
+        "docs:check": "node scripts/check-docs.mjs",
+        "docs:examples": "node scripts/check-docs.mjs --examples",
+        "docs:test": "node --test tests/js/docs.test.mjs"
     },
     "dependencies": {
         "@internationalized/date": "3.12.4",

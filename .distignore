@@ -55,6 +55,7 @@ tests/
 # Repository docs (readme.txt is the shipped readme)
 docs/
 README.md
+README.fa.md
 CHANGELOG.md
 
 # Library dev config inside the scoped packages

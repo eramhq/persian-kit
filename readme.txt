@@ -4,7 +4,7 @@ Tags: persian, farsi, jalali, shamsi, woocommerce
 Requires at least: 6.8
 Tested up to: 7.1
 Requires PHP: 8.1
-Stable tag: 1.0.0
+Stable tag: 1.0.1
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -14,7 +14,7 @@ Jalali (Shamsi) dates, Persian digits, an Iranian WooCommerce checkout and Irani
 
 Persian Kit makes WordPress and WooCommerce work the way Persian-speaking visitors expect: Jalali (Shamsi) dates, Persian digits, the right Persian letters, a checkout for Iran and form fields that check Iranian mobile numbers and national IDs. Each part has its own switch, so you turn on only what you need.
 
-Your content stays safe. Dates are saved in the Gregorian calendar, as WordPress, WooCommerce and other plugins expect, and shown as Jalali dates. Turn a part off, or deactivate the plugin, and your site is as it was.
+WordPress dates stay Gregorian in the database and display as Jalali dates. Display-only changes stop when disabled. Normalization, saved slugs and imported data are not automatically reversed. Replace custom form fields and review thousand-unit currencies before deactivating; uninstall removes settings and import undo logs.
 
 = Jalali dates =
 
@@ -52,13 +52,13 @@ Your content stays safe. Dates are saved in the Gregorian calendar, as WordPress
 * Forminator: a Jalali date picker, and Iranian checks with a CSS class
 * ACF: a Jalali date picker for Date Picker and Date Time Picker fields
 
-Dates in forms are still saved as Gregorian dates, so entries, exports and add-ons keep working. Emails show the Jalali date.
+Supported form inputs submit Gregorian dates. WPForms also keeps a formatted display value, which can be Jalali, alongside its Gregorian date and UTC timestamp. Supported email date displays can be Jalali; test exports and add-ons with your form plugin.
 
 = Works with your plugins =
 
 * Yoast SEO and Rank Math: search engines still get Gregorian dates and prices in rials, and date archives get Jalali titles
-* WPML and Polylang: Persian pages get Jalali dates and Persian digits, pages in other languages keep Gregorian dates and English digits
-* Each integration turns on by itself when its plugin is active
+* WPML and Polylang: configured page languages control date and digit display; Persian, Pashto and Sorani Kurdish use Jalali by default, while writing tools follow Persian content
+* Integrations default on and run when the required plugin is active and meets any minimum version
 
 = Switch from Parsi Date or Persian WooCommerce =
 
@@ -98,9 +98,11 @@ All bundled components are GPL-compatible. Their license texts ship with the plu
 Full source, build instructions, and issue tracker:
 [https://github.com/eramhq/persian-kit](https://github.com/eramhq/persian-kit)
 
+Full guides: [English](https://github.com/eramhq/persian-kit/blob/main/docs/en/overview.md) and [فارسی](https://github.com/eramhq/persian-kit/blob/main/docs/fa/overview.md).
+
 == Installation ==
 
-1. Upload the plugin folder to `/wp-content/plugins/`, or install via the Plugins screen in WordPress.
+1. Upload a built `persian-kit.zip` through the Plugins screen, or copy the complete built folder to `/wp-content/plugins/`. A source checkout must have dependencies and assets built first.
 2. Activate the plugin through the **Plugins** menu in WordPress.
 3. Visit **Persian Kit** in the admin sidebar to enable the modules you need.
 
@@ -164,11 +166,11 @@ Yes. Turn on Display > Persian digits > WooCommerce emails. Order numbers, price
 
 = Which font do Persian emails use? =
 
-WooCommerce's emails ask for Helvetica or Arial, fonts made for English, so Persian text was shown in whatever font the mail app picked. With "Persian font in emails" on (WooCommerce > Emails, on by default), emails in Persian use Tahoma, then Segoe UI on newer Windows, the iPhone's own Persian font and Noto Sans Arabic on Android. These are installed fonts, so nothing is downloaded and every mail app shows them. A font you picked under WooCommerce > Settings > Emails, or in the block email editor's styles, is kept, as are emails in other languages. On a right-to-left site, block emails read right to left too.
+WooCommerce's emails ask for Helvetica or Arial, fonts made for English, so Persian text was shown in whatever font the mail app picked. With "Persian font in emails" on (WooCommerce > Emails, on by default), emails in Persian use Tahoma, then Segoe UI on newer Windows, the iPhone's own Persian font and Noto Sans Arabic on Android. These are installed-font preferences, so nothing is downloaded; the mail app uses a font available on the reader’s device. A font you picked under WooCommerce > Settings > Emails, or in the block email editor's styles, is kept, as are emails in other languages. On a right-to-left site, block emails read right to left too.
 
 = Does WooCommerce Analytics show Jalali dates? =
 
-Yes, with "Jalali dates in WooCommerce Analytics" on (WooCommerce > Dates, on by default). "Last month" is the last Jalali month, quarters are Jalali seasons (بهار, تابستان, پاییز, زمستان) and years start on 1 Farvardin, so you can read your sales by the periods you file VAT and income tax for. Bars by month, season or year hold whole Jalali months, not Gregorian ones with Jalali names. Custom ranges are picked on a Jalali calendar, dates in tables and charts are Jalali, and CSV exports keep the Gregorian date with a Jalali date column next to it. Your orders and reports are not changed: turn the option off and Analytics is Gregorian again.
+Yes, with "Jalali dates in WooCommerce Analytics" on (WooCommerce > Dates, on by default). "Last month" is the last Jalali month, quarters are Jalali seasons (بهار, تابستان, پاییز, زمستان) and years start on 1 Farvardin, so reports group sales by Jalali calendar periods. Bars by month, season or year hold whole Jalali months, not Gregorian ones with Jalali names. Custom ranges are picked on a Jalali calendar, dates in tables and charts are Jalali, and CSV exports keep the Gregorian date with a Jalali date column next to it. Stored order dates are not changed; report aggregation uses Jalali periods while enabled. Turn the option off to return to Gregorian periods.
 
 = Can I sell only to some provinces? =
 
@@ -188,7 +190,7 @@ Yes. Under WooCommerce > Prices and currency, tick "Show a text instead of an em
 
 = Does Persian Kit work with Yoast SEO and Rank Math? =
 
-Yes. While either is active, the product prices they give search engines are in rials, because search engines don't accept toman, and their dates in schema, Open Graph tags and sitemaps stay Gregorian, which search engines need. Date archive titles name the Jalali month. With Persian digits on, the browser tab's title gets Persian digits, while the titles in Open Graph tags and schema keep the digits you typed. Nothing needs setting up.
+While the relevant integration is enabled and its plugin is active, supported product structured-data amounts in IRT, IRHT and IRHR are converted to IRR. Other currencies stay unchanged, and machine dates in supported schema, Open Graph and sitemap output remain Gregorian. Date archive titles name the Jalali month. With Persian digits on, the browser tab's title gets Persian digits, while the titles in Open Graph tags and schema keep the digits you typed. Test your actual theme and SEO extensions; these integrations are not a guarantee for every output.
 
 = Does Persian Kit work with WPML and Polylang? =
 
@@ -198,7 +200,7 @@ Weglot isn't supported: it translates finished pages and keeps the site's langua
 
 = Does Persian Kit work with Contact Form 7 and ACF? =
 
-Yes. Each turns on by itself when the plugin is active (Integrations tab). Contact Form 7's date fields and ACF's Date Picker and Date Time Picker fields get a Jalali date picker. The dates are still saved and sent as Gregorian dates, so existing entries, emails and theme code keep working; while Jalali dates is on, Contact Form 7 emails and ACF values in templates show the Jalali date. Contact Form 7 also gets [mobile_ir], [national_id], [postcode_ir], [card_ir] and [iban_ir] fields that check what is typed, with buttons for them in the form editor.
+Yes. Each turns on by itself when the plugin is active (Integrations tab). Contact Form 7's date fields and ACF's Date Picker and Date Time Picker fields get a Jalali date picker. The dates are still saved and sent as Gregorian dates, while code that parses a formatted ACF value should use its unformatted value or the documented opt-out filter; while Jalali dates is on, Contact Form 7 emails and ACF values in templates show the Jalali date. Contact Form 7 also gets [mobile_ir], [national_id], [postcode_ir], [card_ir] and [iban_ir] fields that check what is typed, with buttons for them in the form editor.
 
 = Does Persian Kit work with Forminator? =
 
@@ -248,6 +250,11 @@ Payment gateways (Persian Kit has none; keep Persian WooCommerce active for them
 8. Switching from Parsi Date: each of its settings next to Persian Kit's, before anything changes.
 
 == Changelog ==
+
+= 1.0.1 =
+* Fixed: the admin font now covers headings, the admin bar, footer, media library, classic editor tabs, WooCommerce settings, the block editor and Analytics.
+* Added: complete English and Persian guides, developer references and navigation for the shared Eram website.
+* Improved: documentation checks and explanations of settings, stored-data changes, migration recovery and compatibility limits.
 
 = 1.0.0 =
 * The first stable release.
@@ -321,6 +328,9 @@ Payment gateways (Persian Kit has none; keep Persian WooCommerce active for them
 * Added Jalali media library date filters.
 
 == Upgrade Notice ==
+
+= 1.0.1 =
+Improved admin font coverage and complete bilingual documentation. Existing settings are kept.
 
 = 1.0.0 =
 The first stable release. WPForms and Gravity Forms support, Jalali dates in WooCommerce Analytics, and Afghan and Kurdish month names. Needs WordPress 6.8 and WooCommerce 9.9 or newer. Existing settings are kept.

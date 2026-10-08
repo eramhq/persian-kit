@@ -1,0 +1,45 @@
+{
+  "digit_conversion": {
+    "dates": "Jalali dates",
+    "numbers": "Post and comment counts",
+    "prices": "Shop prices",
+    "emails": "WooCommerce emails"
+  },
+  "date_conversion": {
+    "global_conversion": "Convert every date (advanced)",
+    "jalali_archives": "Jalali archives and calendar",
+    "jalali_permalinks": "Jalali dates in post links",
+    "gregorian_date": "Show the Gregorian date too",
+    "gregorian_style": "Gregorian date",
+    "gregorian_order": "Order",
+    "gregorian_separator": "Between the dates",
+    "month_names": "Month names",
+    "month_names_by_locale": "Month names in %s"
+  },
+  "char_normalization": {
+    "normalize_on_save": "Fix letters on save",
+    "teh_marbuta": "Also replace ة with ه",
+    "half_space_fix": "Add half-spaces on save"
+  },
+  "admin_font": {
+    "font": "Font"
+  },
+  "utilities": {
+    "persian_slugs": "Use Persian slugs"
+  },
+  "woocommerce": {
+    "checkout_normalize": "Fix what customers type",
+    "checkout_validate": "Check phone numbers and postcodes",
+    "national_id": "National ID",
+    "city_select": "City list for Iran",
+    "allowed_states": "Provinces you deliver to",
+    "short_checkout": "Shorter checkout when nothing needs shipping",
+    "dates_admin": "Jalali date picker in the shop admin",
+    "dates_analytics": "Jalali dates in WooCommerce Analytics",
+    "call_for_price": "Show a text instead of an empty price",
+    "call_for_price_text": "Text on the product page",
+    "call_for_price_list_text": "Text in the shop and other lists",
+    "call_for_price_link": "Link",
+    "email_font": "Persian font in emails"
+  }
+}

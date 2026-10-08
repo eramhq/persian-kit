@@ -10,6 +10,10 @@ npm run build
 
 The plugin expects built assets in `public/`. If they are missing, the admin UI will show a notice.
 
+## Documentation
+
+Public guides and translations follow [the maintenance and importer contract](README.md). Run `npm run docs:check`, `npm run docs:test` and `npm run docs:examples` after documentation changes and before tagging a release. CI checks documentation in a separate job without a WordPress database.
+
 ## Common Commands
 
 ### Run unit tests
@@ -91,7 +95,7 @@ npm run dist
 ## Release Flow
 
 1. Update the version in `persian-kit.php` (`Version`), `src/constants.php` (`PERSIAN_KIT_VERSION`), `readme.txt` (`Stable tag`) and `package.json`.
-2. Add the release to `CHANGELOG.md` and the `readme.txt` changelog.
+2. Include both locale trees, navigation and referenced assets in the release commit; run the documentation checks. Add the release to `CHANGELOG.md` and the `readme.txt` changelog.
 3. Run `composer test`, `composer test:integration`, `composer test:integration:polylang`, `composer test:integration:sources`, `composer phpstan` and `composer phpcs`.
 4. Run `npm run dist`.
 5. Run Plugin Check on `dist/persian-kit/`, then install the zip in a clean WordPress site and verify activation.

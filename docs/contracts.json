@@ -1,0 +1,730 @@
+{
+    "modules": {
+        "digit_conversion": {
+            "class": "PersianKit\\Modules\\DigitConversion\\DigitConversionModule",
+            "label": "Persian digits",
+            "defaults": {
+                "enabled": false,
+                "dates": true,
+                "numbers": true,
+                "prices": true,
+                "emails": false
+            },
+            "requirements": []
+        },
+        "date_conversion": {
+            "class": "PersianKit\\Modules\\DateConversion\\DateConversionModule",
+            "label": "Jalali dates",
+            "defaults": {
+                "enabled": true,
+                "global_conversion": false,
+                "jalali_archives": true,
+                "jalali_permalinks": false,
+                "gregorian_date": false,
+                "gregorian_style": "numeric",
+                "gregorian_order": "jalali_first",
+                "gregorian_separator": "parentheses",
+                "month_names": "auto",
+                "month_names_by_locale": []
+            },
+            "requirements": []
+        },
+        "char_normalization": {
+            "class": "PersianKit\\Modules\\CharNormalization\\CharNormalizationModule",
+            "label": "Persian ی and ک",
+            "defaults": {
+                "enabled": true,
+                "normalize_on_save": false,
+                "teh_marbuta": false,
+                "half_space_fix": false
+            },
+            "requirements": []
+        },
+        "admin_font": {
+            "class": "PersianKit\\Modules\\AdminFont\\AdminFontModule",
+            "label": "Admin font",
+            "defaults": {
+                "enabled": true,
+                "font": "vazirmatn"
+            },
+            "requirements": []
+        },
+        "zwnj_editor": {
+            "class": "PersianKit\\Modules\\ZWNJEditor\\ZWNJEditorModule",
+            "label": "Half-space key",
+            "defaults": {
+                "enabled": true
+            },
+            "requirements": []
+        },
+        "woocommerce": {
+            "class": "PersianKit\\Modules\\WooCommerce\\WooCommerceModule",
+            "label": "WooCommerce",
+            "defaults": {
+                "enabled": true,
+                "checkout_normalize": true,
+                "checkout_validate": true,
+                "national_id": "off",
+                "city_select": false,
+                "allowed_states": [],
+                "short_checkout": false,
+                "dates_admin": true,
+                "dates_analytics": true,
+                "call_for_price": false,
+                "call_for_price_text": "",
+                "call_for_price_list_text": "",
+                "call_for_price_link": "",
+                "email_font": true
+            },
+            "requirements": [
+                {
+                    "name": "WooCommerce",
+                    "minVersion": "9.9"
+                }
+            ]
+        },
+        "cf7": {
+            "class": "PersianKit\\Modules\\Forms\\Cf7Module",
+            "label": "Contact Form 7",
+            "defaults": {
+                "enabled": true
+            },
+            "requirements": [
+                {
+                    "name": "Contact Form 7"
+                }
+            ]
+        },
+        "acf": {
+            "class": "PersianKit\\Modules\\Forms\\AcfModule",
+            "label": "ACF",
+            "defaults": {
+                "enabled": true
+            },
+            "requirements": [
+                {
+                    "name": "ACF"
+                }
+            ]
+        },
+        "forminator": {
+            "class": "PersianKit\\Modules\\Forms\\ForminatorModule",
+            "label": "Forminator",
+            "defaults": {
+                "enabled": true
+            },
+            "requirements": [
+                {
+                    "name": "Forminator",
+                    "minVersion": "1.50"
+                }
+            ]
+        },
+        "gravityforms": {
+            "class": "PersianKit\\Modules\\Forms\\GravityFormsModule",
+            "label": "Gravity Forms",
+            "defaults": {
+                "enabled": true
+            },
+            "requirements": [
+                {
+                    "name": "Gravity Forms",
+                    "minVersion": "2.9"
+                }
+            ]
+        },
+        "wpforms": {
+            "class": "PersianKit\\Modules\\Forms\\WPFormsModule",
+            "label": "WPForms",
+            "defaults": {
+                "enabled": true
+            },
+            "requirements": [
+                {
+                    "name": "WPForms",
+                    "minVersion": "1.9.1"
+                }
+            ]
+        },
+        "yoast": {
+            "class": "PersianKit\\Modules\\Seo\\YoastModule",
+            "label": "Yoast SEO",
+            "defaults": {
+                "enabled": true
+            },
+            "requirements": [
+                {
+                    "name": "Yoast SEO"
+                }
+            ]
+        },
+        "rank_math": {
+            "class": "PersianKit\\Modules\\Seo\\RankMathModule",
+            "label": "Rank Math SEO",
+            "defaults": {
+                "enabled": true
+            },
+            "requirements": [
+                {
+                    "name": "Rank Math SEO"
+                }
+            ]
+        },
+        "wpml": {
+            "class": "PersianKit\\Modules\\Multilingual\\WpmlModule",
+            "label": "WPML",
+            "defaults": {
+                "enabled": true
+            },
+            "requirements": [
+                {
+                    "name": "WPML"
+                }
+            ]
+        },
+        "polylang": {
+            "class": "PersianKit\\Modules\\Multilingual\\PolylangModule",
+            "label": "Polylang",
+            "defaults": {
+                "enabled": true
+            },
+            "requirements": [
+                {
+                    "name": "Polylang"
+                }
+            ]
+        },
+        "utilities": {
+            "class": "PersianKit\\Modules\\Utilities\\UtilitiesModule",
+            "label": "Persian slugs",
+            "defaults": {
+                "enabled": true,
+                "persian_slugs": true
+            },
+            "requirements": []
+        }
+    },
+    "functions": {
+        "persian_kit_currency_convert": {
+            "parameters": [
+                {
+                    "name": "amount",
+                    "type": "int|float"
+                },
+                {
+                    "name": "from",
+                    "type": "string"
+                },
+                {
+                    "name": "to",
+                    "type": "string"
+                }
+            ],
+            "return": "int|float"
+        },
+        "persian_kit_currency_format": {
+            "parameters": [
+                {
+                    "name": "amount",
+                    "type": "string|int|float"
+                },
+                {
+                    "name": "unit",
+                    "type": "string",
+                    "default": "toman"
+                },
+                {
+                    "name": "persianDigits",
+                    "type": "bool",
+                    "default": true
+                },
+                {
+                    "name": "withUnit",
+                    "type": "bool",
+                    "default": true
+                }
+            ],
+            "return": "string"
+        },
+        "persian_kit_date": {
+            "parameters": [
+                {
+                    "name": "format",
+                    "type": "string"
+                },
+                {
+                    "name": "timestamp",
+                    "type": "string|int",
+                    "default": ""
+                },
+                {
+                    "name": "timezone",
+                    "type": "?DateTimeZone",
+                    "default": null
+                }
+            ],
+            "return": "string"
+        },
+        "persian_kit_date_field_attributes": {
+            "parameters": [
+                {
+                    "name": "options",
+                    "type": "array",
+                    "default": []
+                }
+            ],
+            "return": "string"
+        },
+        "persian_kit_gregorian_date": {
+            "parameters": [
+                {
+                    "name": "format",
+                    "type": "string"
+                },
+                {
+                    "name": "timestamp",
+                    "type": "string|int",
+                    "default": ""
+                },
+                {
+                    "name": "timezone",
+                    "type": "?DateTimeZone",
+                    "default": null
+                }
+            ],
+            "return": "string"
+        },
+        "persian_kit_half_space_fix": {
+            "parameters": [
+                {
+                    "name": "text",
+                    "type": "string"
+                }
+            ],
+            "return": "string"
+        },
+        "persian_kit_has_arabic": {
+            "parameters": [
+                {
+                    "name": "text",
+                    "type": "string"
+                }
+            ],
+            "return": "bool"
+        },
+        "persian_kit_has_persian": {
+            "parameters": [
+                {
+                    "name": "text",
+                    "type": "string"
+                },
+                {
+                    "name": "complex",
+                    "type": "bool",
+                    "default": false
+                }
+            ],
+            "return": "bool"
+        },
+        "persian_kit_is_arabic": {
+            "parameters": [
+                {
+                    "name": "text",
+                    "type": "string"
+                }
+            ],
+            "return": "bool"
+        },
+        "persian_kit_is_persian": {
+            "parameters": [
+                {
+                    "name": "text",
+                    "type": "string"
+                },
+                {
+                    "name": "complex",
+                    "type": "bool",
+                    "default": false
+                }
+            ],
+            "return": "bool"
+        },
+        "persian_kit_jalali_to_gregorian": {
+            "parameters": [
+                {
+                    "name": "date",
+                    "type": "string"
+                },
+                {
+                    "name": "format",
+                    "type": "string",
+                    "default": "Y-m-d"
+                }
+            ],
+            "return": "?string"
+        },
+        "persian_kit_keyboard_fix": {
+            "parameters": [
+                {
+                    "name": "text",
+                    "type": "string"
+                }
+            ],
+            "return": "string"
+        },
+        "persian_kit_normalize_persian": {
+            "parameters": [
+                {
+                    "name": "text",
+                    "type": "string"
+                }
+            ],
+            "return": "string"
+        },
+        "persian_kit_number_format": {
+            "parameters": [
+                {
+                    "name": "number",
+                    "type": "string|int|float"
+                },
+                {
+                    "name": "separator",
+                    "type": "string",
+                    "default": ","
+                }
+            ],
+            "return": "string"
+        },
+        "persian_kit_number_to_words": {
+            "parameters": [
+                {
+                    "name": "number",
+                    "type": "int|float"
+                }
+            ],
+            "return": "string"
+        },
+        "persian_kit_ordinal_short": {
+            "parameters": [
+                {
+                    "name": "n",
+                    "type": "int"
+                },
+                {
+                    "name": "digits",
+                    "type": "string|bool",
+                    "default": true
+                }
+            ],
+            "return": "string"
+        },
+        "persian_kit_ordinal_word": {
+            "parameters": [
+                {
+                    "name": "n",
+                    "type": "int"
+                }
+            ],
+            "return": "string"
+        },
+        "persian_kit_persian_sort": {
+            "parameters": [
+                {
+                    "name": "items",
+                    "type": "array"
+                },
+                {
+                    "name": "key",
+                    "type": "?callable",
+                    "default": null
+                }
+            ],
+            "return": "array"
+        },
+        "persian_kit_slug": {
+            "parameters": [
+                {
+                    "name": "text",
+                    "type": "string"
+                }
+            ],
+            "return": "string"
+        },
+        "persian_kit_time_ago": {
+            "parameters": [
+                {
+                    "name": "timestamp",
+                    "type": "DateTimeInterface|string|int"
+                },
+                {
+                    "name": "now",
+                    "type": "?int",
+                    "default": null
+                },
+                {
+                    "name": "persianDigits",
+                    "type": "bool",
+                    "default": true
+                }
+            ],
+            "return": "string"
+        },
+        "persian_kit_to_arabic_digits": {
+            "parameters": [
+                {
+                    "name": "text",
+                    "type": "string"
+                }
+            ],
+            "return": "string"
+        },
+        "persian_kit_to_english_digits": {
+            "parameters": [
+                {
+                    "name": "text",
+                    "type": "string"
+                }
+            ],
+            "return": "string"
+        },
+        "persian_kit_to_persian_digits": {
+            "parameters": [
+                {
+                    "name": "text",
+                    "type": "string"
+                }
+            ],
+            "return": "string"
+        },
+        "persian_kit_validate_bill_id": {
+            "parameters": [
+                {
+                    "name": "billId",
+                    "type": "string"
+                },
+                {
+                    "name": "paymentId",
+                    "type": "?string",
+                    "default": null
+                }
+            ],
+            "return": "PersianKit\\Dependencies\\Eram\\Abzar\\Validation\\ValidationResult"
+        },
+        "persian_kit_validate_card_number": {
+            "parameters": [
+                {
+                    "name": "card",
+                    "type": "string"
+                }
+            ],
+            "return": "PersianKit\\Dependencies\\Eram\\Abzar\\Validation\\ValidationResult"
+        },
+        "persian_kit_validate_iban": {
+            "parameters": [
+                {
+                    "name": "iban",
+                    "type": "string"
+                }
+            ],
+            "return": "PersianKit\\Dependencies\\Eram\\Abzar\\Validation\\ValidationResult"
+        },
+        "persian_kit_validate_legal_id": {
+            "parameters": [
+                {
+                    "name": "id",
+                    "type": "string"
+                }
+            ],
+            "return": "PersianKit\\Dependencies\\Eram\\Abzar\\Validation\\ValidationResult"
+        },
+        "persian_kit_validate_national_id": {
+            "parameters": [
+                {
+                    "name": "id",
+                    "type": "string"
+                }
+            ],
+            "return": "PersianKit\\Dependencies\\Eram\\Abzar\\Validation\\ValidationResult"
+        },
+        "persian_kit_validate_phone": {
+            "parameters": [
+                {
+                    "name": "phone",
+                    "type": "string"
+                }
+            ],
+            "return": "PersianKit\\Dependencies\\Eram\\Abzar\\Validation\\ValidationResult"
+        },
+        "persian_kit_validate_plate_number": {
+            "parameters": [
+                {
+                    "name": "plate",
+                    "type": "string"
+                }
+            ],
+            "return": "PersianKit\\Dependencies\\Eram\\Abzar\\Validation\\ValidationResult"
+        },
+        "persian_kit_validate_postal_code": {
+            "parameters": [
+                {
+                    "name": "code",
+                    "type": "string"
+                }
+            ],
+            "return": "PersianKit\\Dependencies\\Eram\\Abzar\\Validation\\ValidationResult"
+        },
+        "persian_kit_words_to_number": {
+            "parameters": [
+                {
+                    "name": "words",
+                    "type": "string"
+                }
+            ],
+            "return": "int|float|null"
+        }
+    },
+    "hooks": {
+        "persian_kit_acf_jalali_value": {
+            "kind": "filter",
+            "arguments": 2
+        },
+        "persian_kit_analytics_jalali_intervals": {
+            "kind": "filter",
+            "arguments": 3
+        },
+        "persian_kit_calendar_names": {
+            "kind": "filter",
+            "arguments": 2
+        },
+        "persian_kit_char_normalization": {
+            "kind": "filter",
+            "arguments": 2
+        },
+        "persian_kit_conflict_policies": {
+            "kind": "filter",
+            "arguments": 1
+        },
+        "persian_kit_content_locale": {
+            "kind": "filter",
+            "arguments": 3
+        },
+        "persian_kit_current_locale": {
+            "kind": "filter",
+            "arguments": 1
+        },
+        "persian_kit_date_display": {
+            "kind": "filter",
+            "arguments": 4
+        },
+        "persian_kit_digit_conversion": {
+            "kind": "filter",
+            "arguments": 2
+        },
+        "persian_kit_email_font_family": {
+            "kind": "filter",
+            "arguments": 1
+        },
+        "persian_kit_gregorian_date": {
+            "kind": "filter",
+            "arguments": 3
+        },
+        "persian_kit_gregorian_date_display": {
+            "kind": "filter",
+            "arguments": 4
+        },
+        "persian_kit_import_sources": {
+            "kind": "filter",
+            "arguments": 1
+        },
+        "persian_kit_import_time_budget": {
+            "kind": "filter",
+            "arguments": 1
+        },
+        "persian_kit_is_persian_locale": {
+            "kind": "filter",
+            "arguments": 2
+        },
+        "persian_kit_jalali_archives": {
+            "kind": "filter",
+            "arguments": 1
+        },
+        "persian_kit_jalali_permalinks": {
+            "kind": "filter",
+            "arguments": 1
+        },
+        "persian_kit_loaded": {
+            "kind": "action",
+            "arguments": 0
+        },
+        "persian_kit_multilingual": {
+            "kind": "filter",
+            "arguments": 1
+        },
+        "persian_kit_reads_jalali": {
+            "kind": "filter",
+            "arguments": 2
+        },
+        "persian_kit_schema_rial_prices": {
+            "kind": "filter",
+            "arguments": 2
+        },
+        "persian_kit_should_normalize": {
+            "kind": "filter",
+            "arguments": 4
+        },
+        "persian_kit_utilities": {
+            "kind": "filter",
+            "arguments": 2
+        },
+        "persian_kit_woocommerce_cities": {
+            "kind": "filter",
+            "arguments": 1
+        },
+        "persian_kit_woocommerce_validate": {
+            "kind": "filter",
+            "arguments": 4
+        }
+    },
+    "requirements": {
+        "Version": "1.0.1",
+        "Requires at least": "6.8",
+        "Requires PHP": "8.1",
+        "WC requires at least": "9.9",
+        "WC tested up to": "11.1.2",
+        "composer": {
+            "php": ">=8.1",
+            "eram/daynum": "^1.0@beta",
+            "eram/abzar": "^0.8@beta"
+        },
+        "bundled": {
+            "eram/abzar": {
+                "ext-mbstring": "*",
+                "php": ">=8.1"
+            },
+            "eram/daynum": {
+                "php": ">=8.1"
+            }
+        }
+    },
+    "coverage": {
+        "versions": [
+            "1.0.279",
+            "1.57.3",
+            "1.9.1.1",
+            "11.1.2",
+            "2.0.2.1",
+            "2.9.31",
+            "3.8.10",
+            "6.4",
+            "6.8.10",
+            "7.1.2",
+            "8.4",
+            "28.2",
+            "28.6",
+            "3.1.3",
+            "6.1.7",
+            "8.1",
+            "9.9.7"
+        ]
+    }
+}

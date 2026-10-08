@@ -4,6 +4,14 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [1.0.1] - 2026-10-08
+
+### Documentation
+
+- Complete English and Persian site-owner guides and developer references, with matching page paths and a shared navigation manifest for the Eram website.
+- Concise bilingual repository READMEs, preserved legacy documentation links, and clearer descriptions of defaults, storage changes, migration recovery and compatibility limits.
+- Documentation checks in CI for navigation, metadata, local links, translations, implementation contracts and executable examples.
+
 ### Fixed
 
 - The admin font now also applies to headings, the admin bar, the footer, the media library, the classic editor's tabs, WooCommerce settings tabs, and the block editor and WooCommerce Analytics screens.

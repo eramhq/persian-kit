@@ -1,45 +1,16 @@
 # Persian Kit
 
-Persian Kit is a modular WordPress plugin for Persian-language sites. It focuses on safe Jalali date display, digit conversion, character normalization, Persian editor tooling, admin typography, and developer-facing PHP utilities.
+[فارسی](README.fa.md)
 
-Current release: `1.0.0`
-
-## What It Includes
-
-- Jalali date conversion at the display layer
-- Afghan and Kurdish month names (Dari, Pashto, Sorani), and optionally the Gregorian date next to the Jalali one
-- Jalali date archive pages (`/1405/07/`), a Jalali archive list and calendar, and optional Jalali dates in post permalinks
-- REST API Jalali companion fields
-- Persian digit conversion for content, dates, counts and WooCommerce prices (off until turned on)
-- Search that matches both Arabic (ي ك) and Persian (ی ک) spellings
-- Arabic-to-Persian character normalization on save (off until turned on), with a batch tool for existing content
-- Persian (fa_IR) admin interface, bundled until a WordPress.org language pack exists
-- A Persian admin font: Vazirmatn, Noto Sans Arabic or IBM Plex Sans Arabic
-- ZWNJ editor shortcuts for Classic Editor and Gutenberg
-- Persian slug generation
-- PHP validation and formatting helpers for common Iranian data
-- WooCommerce: Jalali dates, Jalali months, seasons and years in Analytics, a checkout for Iran (fixed digits, checked phone numbers and postcodes, national ID, cities, provinces you deliver to), thousand toman and thousand rial, and Persian digits in emails
-- A Jalali date picker for Contact Form 7, ACF, Forminator and Gravity Forms date fields, a Jalali date field for WPForms, WooCommerce's admin date fields and the post date in the classic editor and Quick Edit
-- Iranian field checks (mobile, national ID, postcode, card, IBAN) for Contact Form 7, Forminator, Gravity Forms and WPForms
-- Compatibility with Yoast SEO, Rank Math, WPML and Polylang
-- WooCommerce: "call for price" for products with no price, a shorter checkout when nothing needs shipping, and a Persian font in emails
-- A guided switch from Parsi Date, Persian WooCommerce and Persian WooCommerce Shipping, with a review first, a report and undo
+Persian Kit brings Jalali dates, Persian writing tools and optional WooCommerce/form integrations to WordPress. This source tree is version **1.0.1**.
 
 ## Requirements
 
-- PHP `8.1+`
-- WordPress `6.8+`
-- WooCommerce `9.9+`, for the WooCommerce features
+WordPress **6.8+**, PHP **8.1+** with `mbstring`; `intl` for correct Persian sorting. WooCommerce **9.9+** only for shop integration. See [installation](docs/en/installation.md) and [compatibility](docs/en/compatibility.md).
 
 ## Installation
 
-### Production
-
-1. Build the plugin assets.
-2. Create a distributable zip.
-3. Install the zip in WordPress as a normal plugin.
-
-### Development
+Upload a built `persian-kit.zip` through WordPress Plugins, install and activate. A source checkout needs:
 
 ```bash
 composer install
@@ -47,29 +18,15 @@ npm ci
 npm run build
 ```
 
-Then activate the plugin from a local WordPress site.
+`npm run dist` builds the ZIP; see its [prerequisites](docs/en/installation.md).
 
-## Development Commands
+## Quick start
 
-```bash
-composer test
-composer test:integration
-composer phpstan
-composer phpcs
-npm run test:js
-npm run build
-npm run build:pot
-npm run build:i18n   # compile languages/*.po into .mo, .l10n.php and script JSON
-npm run dist
-```
+Open **Persian Kit > Display**. Jalali dates start on; Persian digits start off. Turn on **Persian digits** and save to display `شماره 123` as `شماره ۱۲۳` in supported content without rewriting it. In **Writing**, keep **Fix letters on save** off unless you want saved text changed. Follow the [first-use walkthrough](docs/en/overview.md).
 
-## Project Docs
+## Documentation
 
-- [Changelog](CHANGELOG.md)
-- [Development Guide](docs/DEVELOPMENT.md)
-- [Reference](docs/REFERENCE.md)
-- [Utilities Guide](docs/UTILITIES.md)
-
-## License
-
-GPL-2.0-or-later
+- [English guides](docs/en/overview.md) · [راهنمای فارسی](docs/fa/overview.md)
+- [Settings](docs/en/settings.md) · [Developer API](docs/en/developers/api.md)
+- [Development](docs/DEVELOPMENT.md) · [Documentation maintenance](docs/README.md)
+- [Changelog](CHANGELOG.md) · [License: GPL-2.0-or-later](LICENSE)

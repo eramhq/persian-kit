@@ -65,7 +65,9 @@
             "@php scripts/prepare-bundled-libraries.php"
         ],
         "phpstan": "phpstan analyse --memory-limit=2G",
-        "phpcs": "phpcs"
+        "phpcs": "phpcs",
+        "docs:check": "node scripts/check-docs.mjs",
+        "docs:examples": "node scripts/check-docs.mjs --examples"
     },
     "config": {
         "platform-check": false,

@@ -1,0 +1,61 @@
+{
+  "schemaVersion": 1,
+  "defaultLocale": "en",
+  "locales": [
+    "en",
+    "fa"
+  ],
+  "entry": "overview",
+  "sections": [
+    {
+      "id": "getting-started",
+      "title": {
+        "en": "Getting started",
+        "fa": "شروع استفاده"
+      },
+      "pages": [
+        "overview",
+        "installation"
+      ]
+    },
+    {
+      "id": "guides",
+      "title": {
+        "en": "Site owner guides",
+        "fa": "راهنمای مدیر سایت"
+      },
+      "pages": [
+        "settings",
+        "text",
+        "dates",
+        "links",
+        "woocommerce",
+        "forms"
+      ]
+    },
+    {
+      "id": "maintenance",
+      "title": {
+        "en": "Maintenance and compatibility",
+        "fa": "نگهداری و سازگاری"
+      },
+      "pages": [
+        "maintenance",
+        "switching",
+        "compatibility"
+      ]
+    },
+    {
+      "id": "developers",
+      "title": {
+        "en": "Developer reference",
+        "fa": "راهنمای توسعه‌دهنده"
+      },
+      "pages": [
+        "developers/api",
+        "developers/hooks",
+        "developers/recipes"
+      ]
+    }
+  ]
+}
