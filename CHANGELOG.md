@@ -7,7 +7,7 @@ All notable changes to this project will be documented in this file.
 ### Performance
 
 - The Jalali archives list keeps its post counts between page views until a post changes, so sites without a persistent object cache no longer run its query on every page that shows the Archives widget or block.
-- ACF screens load the Jalali date picker only where a date field is shown, and ahead of time only in the block editor for ACF blocks.
+- ACF screens such as profiles, terms and options pages load the Jalali date picker only where a date field is shown. Edit screens and the media library still load it ahead, for fields ACF adds after the page loads.
 - The checkout's city list is printed with Persian letters instead of `\uXXXX` escapes, so it is about 2.5 times smaller.
 
 ## [1.0.1] - 2026-10-08
