@@ -128,6 +128,30 @@ class JalaliArchiveListTest extends WordPressIntegrationTestCase
         $this->assertSame(3, substr_count($dropdown, "<option value='" . home_url('/14')));
     }
 
+    public function test_the_counts_are_kept_between_requests_until_a_post_changes(): void
+    {
+        $queries = 0;
+        add_filter('query', static function (string $query) use (&$queries): string {
+            $queries += str_contains($query, 'GROUP BY DATE(post_date)') ? 1 : 0;
+
+            return $query;
+        });
+
+        $first = $this->archives(['show_post_count' => true]);
+        // A new request without a persistent object cache.
+        wp_cache_flush();
+        $second = $this->archives(['show_post_count' => true]);
+
+        $this->assertSame(1, $queries);
+        $this->assertSame($first, $second);
+
+        self::factory()->post->create(['post_status' => 'publish', 'post_date' => '2025-03-22 10:00:00']);
+        wp_cache_flush();
+
+        $this->assertContains([home_url('/1404/01/'), 'فروردین 1404', '&nbsp;(2)'], $this->entries($this->archives(['show_post_count' => true])));
+        $this->assertSame(2, $queries);
+    }
+
     public function test_setting_off_keeps_the_gregorian_list(): void
     {
         $this->bootDateConversionWith(['jalali_archives' => false]);

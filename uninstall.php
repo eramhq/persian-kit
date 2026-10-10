@@ -17,6 +17,7 @@ $persianKitDeleteOptions = static function (): void {
     delete_transient('persian_kit_forminator_field_usage');
     delete_transient('persian_kit_gravityforms_field_usage');
     delete_transient('persian_kit_wpforms_field_usage');
+    delete_transient('persian_kit_archive_days');
 };
 
 if (is_multisite()) {
