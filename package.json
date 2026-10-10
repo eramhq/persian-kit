@@ -2,6 +2,8 @@
     "name": "persian-kit",
     "version": "1.0.1",
     "private": true,
+    "homepage": "https://eram.dev/fa/projects/persian-kit/",
+    "author": "Eram",
     "type": "module",
     "scripts": {
         "dev": "ENTRY=admin vite build -c vite.config.entries.mjs --watch",

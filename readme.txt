@@ -68,7 +68,7 @@ A guided switch from Parsi Date, Persian WooCommerce and Persian WooCommerce Shi
 
 * PHP helpers for Persian text, digits, dates and Iranian data: `persian_kit_date()`, `persian_kit_to_persian_digits()`, `persian_kit_validate_national_id()`, `persian_kit_validate_iban()` and more
 * Jalali companion fields in the REST API
-* Filters, documented in the [reference](https://github.com/eramhq/persian-kit/blob/main/docs/REFERENCE.md)
+* Filters, documented in the [reference](https://eram.dev/en/docs/persian-kit/developers/hooks/)
 * WP-CLI commands: `wp persian-kit normalize` and `wp persian-kit import`
 
 = Privacy =
@@ -95,10 +95,12 @@ All bundled components are GPL-compatible. Their license texts ship with the plu
 
 = Source code =
 
+Plugin homepage: [https://eram.dev/fa/projects/persian-kit/](https://eram.dev/fa/projects/persian-kit/)
+
 Full source, build instructions, and issue tracker:
 [https://github.com/eramhq/persian-kit](https://github.com/eramhq/persian-kit)
 
-Full guides: [English](https://github.com/eramhq/persian-kit/blob/main/docs/en/overview.md) and [فارسی](https://github.com/eramhq/persian-kit/blob/main/docs/fa/overview.md).
+Full guides: [English](https://eram.dev/en/docs/persian-kit/overview/) and [فارسی](https://eram.dev/fa/docs/persian-kit/overview/).
 
 == Installation ==
 
@@ -250,6 +252,9 @@ Payment gateways (Persian Kit has none; keep Persian WooCommerce active for them
 8. Switching from Parsi Date: each of its settings next to Persian Kit's, before anything changes.
 
 == Changelog ==
+
+= 1.0.2 =
+* Changed: Persian Kit is made by Eram. The plugin homepage and the Docs links now open the guides on eram.dev.
 
 = 1.0.1 =
 * Fixed: the admin font now covers headings, the admin bar, footer, media library, classic editor tabs, WooCommerce settings, the block editor and Analytics.

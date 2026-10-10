@@ -4,6 +4,8 @@
 
 Persian Kit brings Jalali dates, Persian writing tools and optional WooCommerce/form integrations to WordPress. This source tree is version **1.0.1**.
 
+Made by [Eram](https://eram.dev/en/). Homepage and guides: [eram.dev/en/projects/persian-kit](https://eram.dev/en/projects/persian-kit/) and [eram.dev/en/docs/persian-kit](https://eram.dev/en/docs/persian-kit/overview/).
+
 ## Requirements
 
 WordPress **6.8+**, PHP **8.1+** with `mbstring`; `intl` for correct Persian sorting. WooCommerce **9.9+** only for shop integration. See [installation](docs/en/installation.md) and [compatibility](docs/en/compatibility.md).

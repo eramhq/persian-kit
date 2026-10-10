@@ -4,6 +4,8 @@
 
 Persian Kit تاریخ شمسی، ابزارهای نوشتن فارسی و اتصال اختیاری به WooCommerce و فرم‌سازها را به وردپرس اضافه می‌کند. نسخه این کد **1.0.1** است.
 
+ساخته [ارم](https://eram.dev/fa/). صفحه افزونه و راهنماها: [eram.dev/fa/projects/persian-kit](https://eram.dev/fa/projects/persian-kit/) و [eram.dev/fa/docs/persian-kit](https://eram.dev/fa/docs/persian-kit/overview/).
+
 ## پیش‌نیازها
 
 وردپرس **6.8+** و PHP **8.1+** با `mbstring` لازم است؛ مرتب‌سازی درست فارسی به `intl` نیاز دارد. فقط برای اتصال فروشگاه به WooCommerce **9.9+** نیاز دارید. [نصب](docs/fa/installation.md) و [سازگاری](docs/fa/compatibility.md) را ببینید.

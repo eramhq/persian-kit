@@ -1,11 +1,11 @@
 <?php
 /**
  * Plugin Name: Persian Kit
- * Plugin URI: https://github.com/eramhq/persian-kit
+ * Plugin URI: https://eram.dev/fa/projects/persian-kit/
  * Description: A modular Persian (Farsi) language toolkit for WordPress.
  * Version: 1.0.1
- * Author: Navid Kashani
- * Author URI: https://flavor.dev
+ * Author: Eram
+ * Author URI: https://eram.dev/fa/
  * Text Domain: persian-kit
  * Domain Path: /languages
  * Requires at least: 6.8

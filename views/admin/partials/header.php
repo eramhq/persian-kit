@@ -23,7 +23,7 @@ $tabUrl = static function (string $tab): string {
 
 $links = [
     [AdminPage::REPO_URL . '/blob/main/CHANGELOG.md', 'sparkle', __("What's new", 'persian-kit')],
-    [AdminPage::REPO_URL . '#readme', 'book', __('Docs', 'persian-kit')],
+    [AdminPage::DOCS_URL . 'overview/', 'book', __('Docs', 'persian-kit')],
     [AdminPage::REPO_URL . '/issues', 'chat', __('Support', 'persian-kit')],
 ];
 ?>

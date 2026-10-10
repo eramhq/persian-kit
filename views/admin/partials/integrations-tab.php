@@ -50,7 +50,7 @@ $also = $args['also'] ?? [];
         </ul>
         <p class="persian-kit-also__note">
             <?php esc_html_e('Activate one and Persian Kit works with it by itself.', 'persian-kit'); ?>
-            <a href="<?php echo esc_url(AdminPage::REPO_URL . '/blob/main/docs/REFERENCE.md#integrations'); ?>" target="_blank" rel="noopener noreferrer">
+            <a href="<?php echo esc_url(AdminPage::DOCS_URL . 'compatibility/'); ?>" target="_blank" rel="noopener noreferrer">
                 <?php esc_html_e('Docs', 'persian-kit'); ?>
                 <span class="screen-reader-text"><?php esc_html_e('(opens in a new tab)', 'persian-kit'); ?></span>
             </a>
