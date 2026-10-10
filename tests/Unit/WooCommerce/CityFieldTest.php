@@ -4,6 +4,7 @@ namespace PersianKit\Tests\Unit\WooCommerce;
 
 use Brain\Monkey;
 use Brain\Monkey\Filters;
+use Brain\Monkey\Functions;
 use PersianKit\Modules\WooCommerce\CityField;
 use PersianKit\Modules\WooCommerce\CityNames;
 use PHPUnit\Framework\TestCase;
@@ -134,6 +135,36 @@ class CityFieldTest extends TestCase
         $customer->set_shipping_country('IR');
         $field->nameSavedAddressCity(1, 'shipping', [], $customer);
         $this->assertSame('مشگین شهر', $customer->get_shipping_city());
+    }
+
+    public function test_the_script_gets_the_cities_in_persian_letters_not_escapes(): void
+    {
+        if (!defined('PERSIAN_KIT_URL')) {
+            define('PERSIAN_KIT_URL', 'https://example.com/wp-content/plugins/persian-kit/');
+        }
+
+        if (!defined('PERSIAN_KIT_VERSION')) {
+            define('PERSIAN_KIT_VERSION', '1.0.0');
+        }
+
+        $inline = [];
+        Functions\when('wp_enqueue_style')->justReturn(null);
+        Functions\when('wp_enqueue_script')->justReturn(null);
+        Functions\when('__')->returnArg();
+        Functions\when('wp_json_encode')->alias('json_encode');
+        Functions\when('wp_add_inline_script')->alias(function (string $handle, string $script, string $position) use (&$inline) {
+            $inline[] = [$handle, $script, $position];
+        });
+
+        (new CityField(self::DATA_FILE))->enqueue();
+
+        $this->assertCount(1, $inline);
+        [$handle, $script, $position] = $inline[0];
+        $this->assertSame(['persian-kit-woocommerce-city-select', 'before'], [$handle, $position]);
+        $this->assertStringStartsWith('var persianKitCities = {"cities":{', $script);
+        $this->assertStringContainsString('"تهران"', $script);
+        $this->assertStringNotContainsString('\u', $script);
+        $this->assertStringContainsString('"noResults":"No matching city"', $script);
     }
 
     public function test_the_city_names_use_persian_letters(): void
