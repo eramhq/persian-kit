@@ -607,6 +607,34 @@ class SettingsPageTest extends WordPressIntegrationTestCase
         $this->assertSame('', apply_filters('update_footer', 'Version 7.1'));
     }
 
+    public function test_other_notices_are_hidden_on_the_page_but_ours_stay(): void
+    {
+        $otherPlugin = new \ArrayObject();
+        $otherNotice = static function (): void {
+        };
+        $ownNotice = [\PersianKit\Service\Assets\AssetManager::class, 'renderMissingAssetsNotice'];
+
+        add_action('admin_notices', 'update_nag', 3);
+        add_action('admin_notices', 'maintenance_nag', 10);
+        add_action('admin_notices', [$otherPlugin, 'count']);
+        add_action('all_admin_notices', $otherNotice);
+        add_action('admin_notices', $ownNotice);
+
+        $page = $this->adminPage();
+        $page->hideOtherNotices();
+        $this->assertSame(PHP_INT_MAX, has_action('in_admin_header', [$page, 'removeOtherNotices']));
+
+        $page->removeOtherNotices();
+
+        $this->assertFalse(has_action('admin_notices', 'update_nag'));
+        $this->assertFalse(has_action('admin_notices', 'maintenance_nag'));
+        $this->assertFalse(has_action('admin_notices', [$otherPlugin, 'count']));
+        $this->assertFalse(has_action('all_admin_notices', $otherNotice));
+        $this->assertSame(10, has_action('admin_notices', $ownNotice));
+
+        remove_action('admin_notices', $ownNotice);
+    }
+
     public function test_docs_links_open_the_guides_on_eram_dev(): void
     {
         $xpath = $this->render();
