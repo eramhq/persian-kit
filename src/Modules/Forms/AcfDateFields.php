@@ -46,9 +46,9 @@ class AcfDateFields
             add_action('acf/init', [$this, 'replaceRenderers']);
         }
 
-        // render() loads the picker for the fields it prints; ACF block
-        // fields load later in the block editor, so it is loaded there first.
-        add_action('acf/input/admin_enqueue_scripts', [$this, 'enqueueForBlocks']);
+        // render() loads the picker for the fields it prints. Some fields
+        // arrive later over AJAX, after the page's scripts are printed.
+        add_action('acf/input/admin_enqueue_scripts', [$this, 'enqueueForLaterFields']);
 
         if ($this->jalaliValues) {
             foreach (array_keys(self::TYPES) as $type) {
@@ -58,11 +58,20 @@ class AcfDateFields
         }
     }
 
-    public function enqueueForBlocks(): void
+    /**
+     * Loads the picker ahead where ACF adds fields after the page loads:
+     * ACF blocks in the block editor, field groups ACF fetches on edit
+     * screens when the template, category or format changes, and
+     * attachment fields in the media library.
+     */
+    public function enqueueForLaterFields(): void
     {
         $screen = function_exists('get_current_screen') ? get_current_screen() : null;
+        if ($screen === null || !ContentLanguage::displaysPersian()) {
+            return;
+        }
 
-        if ($screen !== null && $screen->is_block_editor() && ContentLanguage::displaysPersian()) {
+        if ($screen->is_block_editor() || in_array($screen->base, ['post', 'upload'], true)) {
             DatePicker::enqueue();
         }
     }

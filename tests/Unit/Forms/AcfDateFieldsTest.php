@@ -57,18 +57,19 @@ class AcfDateFieldsTest extends TestCase
         $fields->register();
 
         $this->assertNotFalse(has_action('acf/init', [$fields, 'replaceRenderers']));
-        $this->assertNotFalse(has_action('acf/input/admin_enqueue_scripts', [$fields, 'enqueueForBlocks']));
+        $this->assertNotFalse(has_action('acf/input/admin_enqueue_scripts', [$fields, 'enqueueForLaterFields']));
         $this->assertSame(9, has_filter('acf/format_value/type=date_picker', [$fields, 'startJalaliValue']));
         $this->assertSame(11, has_filter('acf/format_value/type=date_time_picker', [$fields, 'stopJalaliValue']));
     }
 
-    public function test_the_picker_loads_ahead_only_in_the_block_editor_for_persian_admins(): void
+    public function test_the_picker_loads_ahead_where_acf_adds_fields_later_for_persian_admins(): void
     {
         $fields = new AcfDateFields(true);
-        $blockEditor = true;
-        Functions\when('get_current_screen')->alias(function () use (&$blockEditor) {
-            return new class ($blockEditor) {
-                public function __construct(private bool $blockEditor)
+        $base = 'post';
+        $blockEditor = false;
+        Functions\when('get_current_screen')->alias(function () use (&$base, &$blockEditor) {
+            return new class ($base, $blockEditor) {
+                public function __construct(public string $base, private bool $blockEditor)
                 {
                 }
 
@@ -80,18 +81,27 @@ class AcfDateFieldsTest extends TestCase
         });
 
         $this->inLanguage('en_US', true);
-        $fields->enqueueForBlocks();
+        $fields->enqueueForLaterFields();
         $this->assertSame([], $this->enqueued);
 
         ContentLanguage::reset();
         $this->inLanguage('fa_IR', true);
-        $fields->enqueueForBlocks();
-        $this->assertSame(['persian-kit-date-field'], $this->enqueued);
+        $loads = [];
+        foreach ([['post', false], ['post', true], ['upload', false], ['site-editor', true], ['profile', false], ['term', false], ['toplevel_page_options', false]] as [$base, $blockEditor]) {
+            $this->enqueued = [];
+            $fields->enqueueForLaterFields();
+            $loads[$base . ($blockEditor ? ' (block editor)' : '')] = $this->enqueued !== [];
+        }
 
-        $this->enqueued = [];
-        $blockEditor = false;
-        $fields->enqueueForBlocks();
-        $this->assertSame([], $this->enqueued);
+        $this->assertSame([
+            'post'                       => true,
+            'post (block editor)'        => true,
+            'upload'                     => true,
+            'site-editor (block editor)' => true,
+            'profile'                    => false,
+            'term'                       => false,
+            'toplevel_page_options'      => false,
+        ], $loads);
     }
 
     public function test_values_stay_gregorian_without_date_conversion(): void
