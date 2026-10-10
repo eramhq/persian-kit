@@ -57,9 +57,41 @@ class AcfDateFieldsTest extends TestCase
         $fields->register();
 
         $this->assertNotFalse(has_action('acf/init', [$fields, 'replaceRenderers']));
-        $this->assertNotFalse(has_action('acf/input/admin_enqueue_scripts', 'PersianKit\Modules\DateConversion\DatePicker::enqueue'));
+        $this->assertNotFalse(has_action('acf/input/admin_enqueue_scripts', [$fields, 'enqueueForBlocks']));
         $this->assertSame(9, has_filter('acf/format_value/type=date_picker', [$fields, 'startJalaliValue']));
         $this->assertSame(11, has_filter('acf/format_value/type=date_time_picker', [$fields, 'stopJalaliValue']));
+    }
+
+    public function test_the_picker_loads_ahead_only_in_the_block_editor_for_persian_admins(): void
+    {
+        $fields = new AcfDateFields(true);
+        $blockEditor = true;
+        Functions\when('get_current_screen')->alias(function () use (&$blockEditor) {
+            return new class ($blockEditor) {
+                public function __construct(private bool $blockEditor)
+                {
+                }
+
+                public function is_block_editor(): bool
+                {
+                    return $this->blockEditor;
+                }
+            };
+        });
+
+        $this->inLanguage('en_US', true);
+        $fields->enqueueForBlocks();
+        $this->assertSame([], $this->enqueued);
+
+        ContentLanguage::reset();
+        $this->inLanguage('fa_IR', true);
+        $fields->enqueueForBlocks();
+        $this->assertSame(['persian-kit-date-field'], $this->enqueued);
+
+        $this->enqueued = [];
+        $blockEditor = false;
+        $fields->enqueueForBlocks();
+        $this->assertSame([], $this->enqueued);
     }
 
     public function test_values_stay_gregorian_without_date_conversion(): void

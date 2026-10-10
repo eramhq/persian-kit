@@ -46,14 +46,24 @@ class AcfDateFields
             add_action('acf/init', [$this, 'replaceRenderers']);
         }
 
-        // Fields loaded later, such as in ACF blocks, need the picker too.
-        add_action('acf/input/admin_enqueue_scripts', [DatePicker::class, 'enqueue']);
+        // render() loads the picker for the fields it prints; ACF block
+        // fields load later in the block editor, so it is loaded there first.
+        add_action('acf/input/admin_enqueue_scripts', [$this, 'enqueueForBlocks']);
 
         if ($this->jalaliValues) {
             foreach (array_keys(self::TYPES) as $type) {
                 add_filter("acf/format_value/type={$type}", [$this, 'startJalaliValue'], 9, 3);
                 add_filter("acf/format_value/type={$type}", [$this, 'stopJalaliValue'], 11);
             }
+        }
+    }
+
+    public function enqueueForBlocks(): void
+    {
+        $screen = function_exists('get_current_screen') ? get_current_screen() : null;
+
+        if ($screen !== null && $screen->is_block_editor() && ContentLanguage::displaysPersian()) {
+            DatePicker::enqueue();
         }
     }
 
