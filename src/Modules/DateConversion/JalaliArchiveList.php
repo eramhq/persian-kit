@@ -21,6 +21,9 @@ class JalaliArchiveList
 {
     private const TYPES = ['monthly', 'yearly', 'daily'];
 
+    /** Post counts by day for each archives query, kept until posts change. */
+    private const TRANSIENT = 'persian_kit_archive_days';
+
     private ?string $where = null;
 
     /** @var array<string, mixed>|null */
@@ -38,6 +41,12 @@ class JalaliArchiveList
         add_filter('getarchives_where', [$this, 'captureWhere'], PHP_INT_MAX, 2);
         add_filter('getarchives_join', [$this, 'captureJoin'], PHP_INT_MAX, 2);
         add_filter('get_archives_link', [$this, 'filterArchivesLink'], PHP_INT_MAX);
+        add_action('clean_post_cache', [self::class, 'forgetDays']);
+    }
+
+    public static function forgetDays(): void
+    {
+        delete_transient(self::TRANSIENT);
     }
 
     public function captureWhere(mixed $where, mixed $args = []): mixed
@@ -93,11 +102,12 @@ class JalaliArchiveList
 
         $periods = [];
         $gregorianPeriods = [];
+        $timezone = wp_timezone();
 
         foreach ($days as $day => $count) {
             $gregorianPeriods[$this->periodKey($type, (int) substr($day, 0, 4), (int) substr($day, 5, 2), (int) substr($day, 8, 2))] = true;
 
-            $jalali = JalaliPeriod::fromGregorian(new \DateTimeImmutable($day . ' 12:00:00', wp_timezone()));
+            $jalali = JalaliPeriod::fromGregorian(new \DateTimeImmutable($day . ' 12:00:00', $timezone));
             $key = $this->periodKey($type, $jalali['jy'], $jalali['jm'], $jalali['jd']);
             $periods[$key] = ($periods[$key] ?? 0) + $count;
         }
@@ -216,11 +226,23 @@ class JalaliArchiveList
         global $wpdb;
 
         $query = "SELECT DATE(post_date) AS post_day, COUNT(ID) AS posts FROM {$wpdb->posts} $join $where GROUP BY DATE(post_date)";
-        $cacheKey = 'archive_days:' . md5($query) . ':' . wp_cache_get_last_changed('posts');
+        $queryKey = md5($query);
+        $cacheKey = 'archive_days:' . $queryKey . ':' . wp_cache_get_last_changed('posts');
 
         $cached = wp_cache_get($cacheKey, 'persian_kit');
         if (is_array($cached)) {
             return $cached;
+        }
+
+        // Without a persistent object cache, the key above is new on every
+        // request, so the counts are also kept in a transient until a post
+        // changes (forgetDays()).
+        $stored = get_transient(self::TRANSIENT);
+        $stored = is_array($stored) ? $stored : [];
+        if (isset($stored[$queryKey]) && is_array($stored[$queryKey])) {
+            wp_cache_set($cacheKey, $stored[$queryKey], 'persian_kit');
+
+            return $stored[$queryKey];
         }
 
         // The JOIN and WHERE are core's own wp_get_archives() clauses, already
@@ -236,6 +258,9 @@ class JalaliArchiveList
         }
 
         wp_cache_set($cacheKey, $days, 'persian_kit');
+
+        $stored[$queryKey] = $days;
+        set_transient(self::TRANSIENT, $stored, DAY_IN_SECONDS);
 
         return $days;
     }
