@@ -187,7 +187,7 @@ class CityField
             true
         );
 
-        wp_localize_script(self::HANDLE, 'persianKitCities', [
+        $data = [
             'cities' => $this->cities(),
             'i18n'   => [
                 'label'     => __('City suggestions', 'persian-kit'),
@@ -196,7 +196,15 @@ class CityField
                 'results'   => __('%d cities suggested.', 'persian-kit'),
                 'noResults' => __('No matching city', 'persian-kit'),
             ],
-        ]);
+        ];
+
+        // Not wp_localize_script(): it escapes each Persian letter as \uXXXX,
+        // which makes the inline list about 2.5 times larger.
+        wp_add_inline_script(
+            self::HANDLE,
+            'var persianKitCities = ' . wp_json_encode($data, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_HEX_TAG) . ';',
+            'before'
+        );
     }
 
     /**

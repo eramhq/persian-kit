@@ -116,9 +116,10 @@ class WooCommerceMyAccountTest extends WordPressIntegrationTestCase
             apply_filters('render_block_woocommerce/checkout', '', [], null);
 
             $this->assertTrue(wp_script_is($handle, 'enqueued'));
-            $data = (string) wp_scripts()->get_data($handle, 'data');
+            $data = implode("\n", (array) wp_scripts()->get_data($handle, 'before'));
             $this->assertSame(1, substr_count($data, 'var persianKitCities'));
-            $this->assertStringContainsString('"THR":["\u062a\u0647\u0631\u0627\u0646"', $data);
+            $this->assertStringContainsString('"THR":["تهران"', $data);
+            $this->assertStringNotContainsString('\u', $data);
             $this->assertStringContainsString('"noResults":', $data);
             $this->assertTrue(wp_style_is($handle, 'enqueued'));
         } finally {
