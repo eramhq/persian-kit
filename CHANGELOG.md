@@ -7,6 +7,7 @@ All notable changes to this project will be documented in this file.
 ### Changed
 
 - Persian Kit is made by Eram. The plugin header names Eram as the author and eram.dev as the plugin homepage, the settings footer credits Eram and links to the homepage, and the Docs links in the settings header, on the Integrations tab and on the Plugins screen open the Persian guides on eram.dev.
+- The Persian Kit settings page no longer shows notices from WordPress and other plugins, such as update reminders, above its header. Other admin pages still show them, and Persian Kit's own notices stay.
 
 ### Performance
 

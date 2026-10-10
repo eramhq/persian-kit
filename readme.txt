@@ -255,6 +255,7 @@ Payment gateways (Persian Kit has none; keep Persian WooCommerce active for them
 
 = 1.0.2 =
 * Changed: Persian Kit is made by Eram. The plugin homepage and the Docs links now open the guides on eram.dev.
+* Changed: the settings page no longer shows notices from WordPress and other plugins above its header. Other admin pages still show them.
 
 = 1.0.1 =
 * Fixed: the admin font now covers headings, the admin bar, footer, media library, classic editor tabs, WooCommerce settings, the block editor and Analytics.

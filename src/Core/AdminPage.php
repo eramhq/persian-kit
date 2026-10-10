@@ -152,6 +152,7 @@ class AdminPage
         );
 
         add_action('load-' . $hook, [$this, 'hideWordPressFooter']);
+        add_action('load-' . $hook, [$this, 'hideOtherNotices']);
 
         // Remove the auto-created duplicate submenu
         remove_submenu_page(self::MENU_SLUG, self::MENU_SLUG);
@@ -166,6 +167,48 @@ class AdminPage
         add_filter('admin_footer_text', '__return_empty_string');
         // After core_update_footer(), which runs at the default priority.
         add_filter('update_footer', '__return_empty_string', 11);
+    }
+
+    /**
+     * Notices from WordPress and other plugins are left out on this page, so
+     * they don't crowd the header. Every other admin page still shows them.
+     * Persian Kit's own notices stay.
+     */
+    public function hideOtherNotices(): void
+    {
+        // After the notices are hooked, before they print.
+        add_action('in_admin_header', [$this, 'removeOtherNotices'], PHP_INT_MAX);
+    }
+
+    public function removeOtherNotices(): void
+    {
+        global $wp_filter;
+
+        foreach (['admin_notices', 'all_admin_notices', 'user_admin_notices', 'network_admin_notices'] as $hookName) {
+            if (!isset($wp_filter[$hookName])) {
+                continue;
+            }
+
+            foreach ($wp_filter[$hookName]->callbacks as $priority => $callbacks) {
+                foreach ($callbacks as $callback) {
+                    if (!self::isOwnCallback($callback['function'])) {
+                        remove_action($hookName, $callback['function'], $priority);
+                    }
+                }
+            }
+        }
+    }
+
+    /** Whether a hooked callback is a method of a Persian Kit class. */
+    private static function isOwnCallback(mixed $function): bool
+    {
+        if (!is_array($function) || !isset($function[0])) {
+            return false;
+        }
+
+        $class = is_object($function[0]) ? get_class($function[0]) : (string) $function[0];
+
+        return str_starts_with($class, 'PersianKit\\');
     }
 
     public function render(): void
