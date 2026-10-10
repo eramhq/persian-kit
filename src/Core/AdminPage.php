@@ -68,6 +68,9 @@ class AdminPage
 
     public const REPO_URL = 'https://github.com/eramhq/persian-kit';
     public const SUPPORT_URL = 'https://wordpress.org/support/plugin/persian-kit/';
+    public const HOMEPAGE_URL = 'https://eram.dev/fa/projects/persian-kit/';
+    public const DOCS_URL = 'https://eram.dev/fa/docs/persian-kit/';
+    public const ERAM_URL = 'https://eram.dev/fa/';
 
     private SettingsManager $settings;
     private ConflictDetector $conflicts;
@@ -94,6 +97,7 @@ class AdminPage
         add_action('admin_post_persian_kit_dismiss_welcome', [$this, 'handleDismissWelcome']);
         add_action('wp_ajax_persian_kit_seen_integrations', [$this, 'handleSeenIntegrations']);
         add_filter('plugin_action_links_' . plugin_basename(PERSIAN_KIT_MAIN_FILE), [$this, 'addSettingsLink']);
+        add_filter('plugin_row_meta', [$this, 'addDocsLink'], 10, 2);
     }
 
     /**
@@ -113,6 +117,26 @@ class AdminPage
                 esc_html__('Settings', 'persian-kit')
             ),
         ], $links);
+    }
+
+    /**
+     * @param array<int|string, string> $meta
+     * @return array<int|string, string>
+     */
+    public function addDocsLink(array $meta, string $file): array
+    {
+        if ($file !== plugin_basename(PERSIAN_KIT_MAIN_FILE)) {
+            return $meta;
+        }
+
+        $meta['docs'] = sprintf(
+            '<a href="%s" target="_blank" rel="noopener noreferrer">%s<span class="screen-reader-text"> %s</span></a>',
+            esc_url(self::DOCS_URL . 'overview/'),
+            esc_html__('Docs', 'persian-kit'),
+            esc_html__('(opens in a new tab)', 'persian-kit')
+        );
+
+        return $meta;
     }
 
     public function addMenu(): void

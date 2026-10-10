@@ -14,11 +14,18 @@ defined('ABSPATH') || exit;
 // phpcs:disable WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound
 
 $links = [
+    [AdminPage::HOMEPAGE_URL, __('Plugin homepage', 'persian-kit')],
     [AdminPage::SUPPORT_URL, __('Send feedback', 'persian-kit')],
     [AdminPage::REPO_URL . '/issues/new', __('Report a bug', 'persian-kit')],
     [AdminPage::REPO_URL, __('Source on GitHub', 'persian-kit')],
 ];
 $newTab = __('(opens in a new tab)', 'persian-kit');
+$eram = sprintf(
+    '<a href="%s" target="_blank" rel="noopener noreferrer">%s<span class="screen-reader-text"> %s</span></a>',
+    esc_url(AdminPage::ERAM_URL),
+    esc_html__('Eram', 'persian-kit'),
+    esc_html($newTab)
+);
 ?>
 <footer class="persian-kit-footer">
     <div class="persian-kit-footer__rule" aria-hidden="true">
@@ -35,7 +42,21 @@ $newTab = __('(opens in a new tab)', 'persian-kit');
         </a>
     </div>
 
-    <p class="persian-kit-footer__tagline"><?php esc_html_e('Made for Persian WordPress. Free and open source.', 'persian-kit'); ?></p>
+    <p class="persian-kit-footer__tagline">
+        <?php
+        echo wp_kses(
+            sprintf(
+                /* translators: %s: a link to Eram, the team that makes Persian Kit. */
+                esc_html__('Made for Persian WordPress by %s. Free and open source.', 'persian-kit'),
+                $eram
+            ),
+            [
+                'a'    => ['href' => [], 'target' => [], 'rel' => []],
+                'span' => ['class' => []],
+            ]
+        );
+        ?>
+    </p>
 
     <nav class="persian-kit-footer__links" aria-label="<?php esc_attr_e('About Persian Kit', 'persian-kit'); ?>">
         <?php foreach ($links as [$url, $label]) : ?>

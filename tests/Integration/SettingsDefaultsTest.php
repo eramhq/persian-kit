@@ -327,6 +327,18 @@ class SettingsDefaultsTest extends WordPressIntegrationTestCase
         $this->assertStringContainsString('admin.php?page=persian-kit', $links['settings']);
     }
 
+    public function test_plugins_screen_row_links_to_the_docs(): void
+    {
+        $this->adminPage()->register();
+
+        $meta = apply_filters('plugin_row_meta', ['version' => 'Version 1.0'], plugin_basename(PERSIAN_KIT_MAIN_FILE));
+        $this->assertSame(['version', 'docs'], array_keys($meta));
+        $this->assertStringContainsString('href="' . AdminPage::DOCS_URL . 'overview/"', $meta['docs']);
+
+        $other = apply_filters('plugin_row_meta', ['version' => 'Version 1.0'], 'akismet/akismet.php');
+        $this->assertSame(['version'], array_keys($other));
+    }
+
     /**
      * Every module as the settings form posts it, with the given overrides.
      *

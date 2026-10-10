@@ -3,11 +3,21 @@
     "description": "A modular Persian (Farsi) language toolkit for WordPress",
     "type": "wordpress-plugin",
     "license": "GPL-2.0-or-later",
+    "homepage": "https://eram.dev/fa/projects/persian-kit/",
     "authors": [
+        {
+            "name": "Eram",
+            "homepage": "https://eram.dev/fa/"
+        },
         {
             "name": "Navid Kashani"
         }
     ],
+    "support": {
+        "issues": "https://github.com/eramhq/persian-kit/issues",
+        "source": "https://github.com/eramhq/persian-kit",
+        "docs": "https://eram.dev/fa/docs/persian-kit/overview/"
+    },
     "require": {
         "php": ">=8.1",
         "eram/daynum": "^1.0@beta",

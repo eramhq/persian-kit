@@ -1,4 +1,4 @@
-# Copyright (C) 2026 Navid Kashani
+# Copyright (C) 2026 Eram
 # This file is distributed under the GPL v2 or later.
 msgid ""
 msgstr ""
@@ -9,19 +9,19 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-10-08T09:23:05+00:00\n"
+"POT-Creation-Date: 2026-10-10T09:20:58+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: persian-kit\n"
 
 #. Plugin Name of the plugin
 #: persian-kit.php
-#: src/Core/AdminPage.php:121
-#: src/Core/AdminPage.php:122
+#: src/Core/AdminPage.php:145
+#: src/Core/AdminPage.php:146
 #: src/Core/ConflictDetector.php:177
 #: src/Service/Assets/AssetManager.php:45
 #: src/Service/Import/PluginsScreenNotice.php:56
-#: views/admin/partials/footer.php:30
+#: views/admin/partials/footer.php:37
 #: views/admin/partials/header.php:35
 #: views/admin/partials/switch-review.php:61
 msgid "Persian Kit"
@@ -29,7 +29,7 @@ msgstr ""
 
 #. Plugin URI of the plugin
 #: persian-kit.php
-msgid "https://github.com/eramhq/persian-kit"
+msgid "https://eram.dev/fa/projects/persian-kit/"
 msgstr ""
 
 #. Description of the plugin
@@ -39,12 +39,13 @@ msgstr ""
 
 #. Author of the plugin
 #: persian-kit.php
-msgid "Navid Kashani"
+#: views/admin/partials/footer.php:26
+msgid "Eram"
 msgstr ""
 
 #. Author URI of the plugin
 #: persian-kit.php
-msgid "https://flavor.dev"
+msgid "https://eram.dev/fa/"
 msgstr ""
 
 #. translators: %s: plugin name, such as "Contact Form 7".
@@ -65,41 +66,55 @@ msgstr ""
 msgid "Needs %1$s %2$s or newer (this site has %3$s)."
 msgstr ""
 
-#: src/Core/AdminPage.php:113
+#: src/Core/AdminPage.php:117
 #: views/admin/partials/switch-review.php:54
 #: public/js/admin.js:4456
 msgid "Settings"
 msgstr ""
 
-#: src/Core/AdminPage.php:296
+#: src/Core/AdminPage.php:135
+#: views/admin/partials/header.php:26
+#: views/admin/partials/integrations-tab.php:54
+msgid "Docs"
+msgstr ""
+
+#: src/Core/AdminPage.php:136
+#: views/admin/partials/footer.php:22
+#: views/admin/partials/header.php:48
+#: views/admin/partials/integration-card.php:53
+#: views/admin/partials/integrations-tab.php:55
+msgid "(opens in a new tab)"
+msgstr ""
+
+#: src/Core/AdminPage.php:320
 msgid "Forms"
 msgstr ""
 
-#: src/Core/AdminPage.php:297
+#: src/Core/AdminPage.php:321
 msgid "Store"
 msgstr ""
 
-#: src/Core/AdminPage.php:298
+#: src/Core/AdminPage.php:322
 #: views/admin/partials/compatibility-guidance.php:16
 msgid "Compatibility"
 msgstr ""
 
-#: src/Core/AdminPage.php:383
+#: src/Core/AdminPage.php:407
 #: src/Service/Import/ReportDownload.php:39
 msgid "You do not have permission to access this page."
 msgstr ""
 
-#: src/Core/AdminPage.php:402
+#: src/Core/AdminPage.php:426
 #: views/admin/partials/woocommerce-settings.php:185
 #: views/admin/partials/woocommerce-settings.php:246
 msgid "Display"
 msgstr ""
 
-#: src/Core/AdminPage.php:403
+#: src/Core/AdminPage.php:427
 msgid "Writing"
 msgstr ""
 
-#: src/Core/AdminPage.php:404
+#: src/Core/AdminPage.php:428
 #: src/Core/ConflictDetector.php:43
 #: src/Core/ConflictDetector.php:87
 #: src/Modules/WooCommerce/WooCommerceModule.php:21
@@ -109,11 +124,11 @@ msgstr ""
 msgid "WooCommerce"
 msgstr ""
 
-#: src/Core/AdminPage.php:405
+#: src/Core/AdminPage.php:429
 msgid "Integrations"
 msgstr ""
 
-#: src/Core/AdminPage.php:406
+#: src/Core/AdminPage.php:430
 msgid "Tools"
 msgstr ""
 
@@ -2201,44 +2216,38 @@ msgid "Also in:"
 msgstr ""
 
 #: views/admin/partials/footer.php:17
-msgid "Send feedback"
+msgid "Plugin homepage"
 msgstr ""
 
 #: views/admin/partials/footer.php:18
-msgid "Report a bug"
+msgid "Send feedback"
 msgstr ""
 
 #: views/admin/partials/footer.php:19
+msgid "Report a bug"
+msgstr ""
+
+#: views/admin/partials/footer.php:20
 msgid "Source on GitHub"
 msgstr ""
 
-#: views/admin/partials/footer.php:21
-#: views/admin/partials/header.php:48
-#: views/admin/partials/integration-card.php:53
-#: views/admin/partials/integrations-tab.php:55
-msgid "(opens in a new tab)"
-msgstr ""
-
-#: views/admin/partials/footer.php:32
+#: views/admin/partials/footer.php:39
 #: views/admin/partials/header.php:38
 msgid "Version"
 msgstr ""
 
-#: views/admin/partials/footer.php:38
-msgid "Made for Persian WordPress. Free and open source."
+#. translators: %s: a link to Eram, the team that makes Persian Kit.
+#: views/admin/partials/footer.php:50
+#, php-format
+msgid "Made for Persian WordPress by %s. Free and open source."
 msgstr ""
 
-#: views/admin/partials/footer.php:40
+#: views/admin/partials/footer.php:61
 msgid "About Persian Kit"
 msgstr ""
 
 #: views/admin/partials/header.php:25
 msgid "What's new"
-msgstr ""
-
-#: views/admin/partials/header.php:26
-#: views/admin/partials/integrations-tab.php:54
-msgid "Docs"
 msgstr ""
 
 #: views/admin/partials/header.php:27

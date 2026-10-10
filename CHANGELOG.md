@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Changed
+
+- Persian Kit is made by Eram. The plugin header names Eram as the author and eram.dev as the plugin homepage, the settings footer credits Eram and links to the homepage, and the Docs links in the settings header, on the Integrations tab and on the Plugins screen open the Persian guides on eram.dev.
+
 ### Performance
 
 - The Jalali archives list keeps its post counts between page views until a post changes, so sites without a persistent object cache no longer run its query on every page that shows the Archives widget or block.

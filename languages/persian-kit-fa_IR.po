@@ -16,36 +16,21 @@ msgstr ""
 
 #. Plugin Name of the plugin
 #: persian-kit.php
-#: src/Core/AdminPage.php:121
-#: src/Core/AdminPage.php:122
+#: src/Core/AdminPage.php:145
+#: src/Core/AdminPage.php:146
 #: src/Core/ConflictDetector.php:177
 #: src/Service/Assets/AssetManager.php:45
 #: src/Service/Import/PluginsScreenNotice.php:56
-#: views/admin/partials/footer.php:30
+#: views/admin/partials/footer.php:37
 #: views/admin/partials/header.php:35
 #: views/admin/partials/switch-review.php:61
 msgid "Persian Kit"
 msgstr "Persian Kit"
 
-#. Plugin URI of the plugin
-#: persian-kit.php
-msgid "https://github.com/eramhq/persian-kit"
-msgstr ""
-
 #. Description of the plugin
 #: persian-kit.php
 msgid "A modular Persian (Farsi) language toolkit for WordPress."
 msgstr "ابزارهای زبان فارسی برای وردپرس، که هر کدام را جداگانه می‌توانید روشن یا خاموش کنید."
-
-#. Author of the plugin
-#: persian-kit.php
-msgid "Navid Kashani"
-msgstr ""
-
-#. Author URI of the plugin
-#: persian-kit.php
-msgid "https://flavor.dev"
-msgstr ""
 
 #. translators: %s: plugin name, such as "Contact Form 7".
 #: src/Abstracts/AbstractModule.php:90
@@ -65,41 +50,41 @@ msgstr "به %s نیاز دارد."
 msgid "Needs %1$s %2$s or newer (this site has %3$s)."
 msgstr "به %1$s نسخه %2$s یا جدیدتر نیاز دارد (نسخه این سایت %3$s است)."
 
-#: src/Core/AdminPage.php:113
+#: src/Core/AdminPage.php:117
 #: views/admin/partials/switch-review.php:54
 #: public/js/admin.js:4456
 msgid "Settings"
 msgstr "تنظیمات"
 
-#: src/Core/AdminPage.php:296
+#: src/Core/AdminPage.php:320
 msgid "Forms"
 msgstr "فرم‌ها"
 
-#: src/Core/AdminPage.php:297
+#: src/Core/AdminPage.php:321
 msgid "Store"
 msgstr "فروشگاه"
 
-#: src/Core/AdminPage.php:298
+#: src/Core/AdminPage.php:322
 #: views/admin/partials/compatibility-guidance.php:16
 msgid "Compatibility"
 msgstr "سازگاری"
 
-#: src/Core/AdminPage.php:383
+#: src/Core/AdminPage.php:407
 #: src/Service/Import/ReportDownload.php:39
 msgid "You do not have permission to access this page."
 msgstr "شما اجازه دسترسی به این صفحه را ندارید."
 
-#: src/Core/AdminPage.php:402
+#: src/Core/AdminPage.php:426
 #: views/admin/partials/woocommerce-settings.php:185
 #: views/admin/partials/woocommerce-settings.php:246
 msgid "Display"
 msgstr "نمایش"
 
-#: src/Core/AdminPage.php:403
+#: src/Core/AdminPage.php:427
 msgid "Writing"
 msgstr "نگارش"
 
-#: src/Core/AdminPage.php:404
+#: src/Core/AdminPage.php:428
 #: src/Core/ConflictDetector.php:43
 #: src/Core/ConflictDetector.php:87
 #: src/Modules/WooCommerce/WooCommerceModule.php:21
@@ -109,11 +94,11 @@ msgstr "نگارش"
 msgid "WooCommerce"
 msgstr "ووکامرس"
 
-#: src/Core/AdminPage.php:405
+#: src/Core/AdminPage.php:429
 msgid "Integrations"
 msgstr "یکپارچه‌سازی"
 
-#: src/Core/AdminPage.php:406
+#: src/Core/AdminPage.php:430
 msgid "Tools"
 msgstr "ابزارها"
 
@@ -704,35 +689,32 @@ msgstr "قیمت‌های فروشگاه"
 msgid "Also in:"
 msgstr "همچنین در:"
 
-#: views/admin/partials/footer.php:17
+#: views/admin/partials/footer.php:18
 msgid "Send feedback"
 msgstr "ارسال بازخورد"
 
-#: views/admin/partials/footer.php:18
+#: views/admin/partials/footer.php:19
 msgid "Report a bug"
 msgstr "گزارش اشکال"
 
-#: views/admin/partials/footer.php:19
+#: views/admin/partials/footer.php:20
 msgid "Source on GitHub"
 msgstr "کد منبع در GitHub"
 
-#: views/admin/partials/footer.php:21
+#: src/Core/AdminPage.php:136
+#: views/admin/partials/footer.php:22
 #: views/admin/partials/header.php:48
 #: views/admin/partials/integration-card.php:53
 #: views/admin/partials/integrations-tab.php:55
 msgid "(opens in a new tab)"
 msgstr "(در زبانه تازه باز می‌شود)"
 
-#: views/admin/partials/footer.php:32
+#: views/admin/partials/footer.php:39
 #: views/admin/partials/header.php:38
 msgid "Version"
 msgstr "نسخه"
 
-#: views/admin/partials/footer.php:38
-msgid "Made for Persian WordPress. Free and open source."
-msgstr "ساخته‌شده برای وردپرس فارسی. رایگان و متن‌باز."
-
-#: views/admin/partials/footer.php:40
+#: views/admin/partials/footer.php:61
 msgid "About Persian Kit"
 msgstr "درباره Persian Kit"
 
@@ -740,6 +722,7 @@ msgstr "درباره Persian Kit"
 msgid "What's new"
 msgstr "تازه‌ها"
 
+#: src/Core/AdminPage.php:135
 #: views/admin/partials/header.php:26
 #: views/admin/partials/integrations-tab.php:54
 msgid "Docs"
@@ -2850,3 +2833,29 @@ msgstr "WPForms"
 #: src/Modules/Forms/WPFormsModule.php:24
 msgid "Iranian fields such as mobile number and national ID, and a Jalali date field, also in WPForms Lite."
 msgstr "فیلدهای ایرانی مثل شماره موبایل و کد ملی، و فیلد تاریخ شمسی؛ در ⁦WPForms Lite⁩ هم کار می‌کند."
+
+#. Plugin URI of the plugin
+#: persian-kit.php
+msgid "https://eram.dev/fa/projects/persian-kit/"
+msgstr ""
+
+#. Author of the plugin
+#: persian-kit.php
+#: views/admin/partials/footer.php:26
+msgid "Eram"
+msgstr "ارم"
+
+#. Author URI of the plugin
+#: persian-kit.php
+msgid "https://eram.dev/fa/"
+msgstr ""
+
+#: views/admin/partials/footer.php:17
+msgid "Plugin homepage"
+msgstr "صفحه افزونه"
+
+#. translators: %s: a link to Eram, the team that makes Persian Kit.
+#: views/admin/partials/footer.php:50
+#, php-format
+msgid "Made for Persian WordPress by %s. Free and open source."
+msgstr "ساخته‌شده برای وردپرس فارسی توسط %s. رایگان و متن‌باز."

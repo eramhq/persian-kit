@@ -596,12 +596,23 @@ class SettingsPageTest extends WordPressIntegrationTestCase
         $xpath = $this->render();
 
         $this->assertSame(1, $xpath->query('//footer[contains(@class, "persian-kit-footer")]//a[@href="' . AdminPage::REPO_URL . '"]')->length);
+        $this->assertSame(1, $xpath->query('//footer[contains(@class, "persian-kit-footer")]//a[@href="' . AdminPage::HOMEPAGE_URL . '"]')->length);
         $this->assertSame(0, $xpath->query('//form//footer')->length);
+
+        $this->assertSame(1, $xpath->query('//*[contains(@class, "persian-kit-footer__tagline")]/a[@href="' . AdminPage::ERAM_URL . '"][@target="_blank"][contains(., "Eram")]')->length);
 
         $this->assertNotSame('', apply_filters('admin_footer_text', 'Thank you'));
         $this->adminPage()->hideWordPressFooter();
         $this->assertSame('', apply_filters('admin_footer_text', 'Thank you'));
         $this->assertSame('', apply_filters('update_footer', 'Version 7.1'));
+    }
+
+    public function test_docs_links_open_the_guides_on_eram_dev(): void
+    {
+        $xpath = $this->render();
+
+        $this->assertSame(1, $xpath->query('//*[contains(@class, "persian-kit-links")]/a[@href="' . AdminPage::DOCS_URL . 'overview/"]')->length);
+        $this->assertSame(1, $xpath->query('//*[contains(@class, "persian-kit-also__note")]/a[@href="' . AdminPage::DOCS_URL . 'compatibility/"]')->length);
     }
 
     public function test_menu_icon_is_a_single_colour_svg(): void
