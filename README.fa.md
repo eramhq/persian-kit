@@ -2,7 +2,7 @@
 
 [English](README.md)
 
-Persian Kit تاریخ شمسی، ابزارهای نوشتن فارسی و اتصال اختیاری به WooCommerce و فرم‌سازها را به وردپرس اضافه می‌کند. نسخه این کد **1.0.1** است.
+Persian Kit تاریخ شمسی، ابزارهای نوشتن فارسی و اتصال اختیاری به WooCommerce و فرم‌سازها را به وردپرس اضافه می‌کند. نسخه این کد **1.0.2** است.
 
 ساخته [ارم](https://eram.dev/fa/). صفحه افزونه و راهنماها: [eram.dev/fa/projects/persian-kit](https://eram.dev/fa/projects/persian-kit/) و [eram.dev/fa/docs/persian-kit](https://eram.dev/fa/docs/persian-kit/overview/).
 

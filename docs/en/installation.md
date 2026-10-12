@@ -15,7 +15,7 @@ See [the tested combinations](compatibility.md), rather than treating minimum ve
 
 ## Install a built ZIP
 
-The repository provides a ZIP builder and CI uploads its result as `persian-kit`. Download `persian-kit.zip` from the [1.0.1 release](https://github.com/eramhq/persian-kit/releases/tag/v1.0.1), or use a built ZIP for your intended version. A GitHub source archive is not the same as that built ZIP. The release asset is the installable build; use the tagged source snapshot for repository documentation.
+The repository provides a ZIP builder and CI uploads its result as `persian-kit`. Download `persian-kit.zip` from the [1.0.2 release](https://github.com/eramhq/persian-kit/releases/tag/v1.0.2), or use a built ZIP for your intended version. A GitHub source archive is not the same as that built ZIP. The release asset is the installable build; use the tagged source snapshot for repository documentation.
 
 1. Back up the site before replacing an existing installation.
 2. In WordPress, open **Plugins > Add New Plugin > Upload Plugin**, select the built ZIP, install it and activate **Persian Kit**.

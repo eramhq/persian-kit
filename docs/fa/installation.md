@@ -15,7 +15,7 @@ description: "افزونه ساخته‌شده را نصب کنید یا محی�
 
 ## نصب ZIP ساخته‌شده
 
-این مخزن ابزار ساخت ZIP دارد و CI خروجی را با نام `persian-kit` نگه می‌دارد. فایل `persian-kit.zip` را از [release نسخه 1.0.1](https://github.com/eramhq/persian-kit/releases/tag/v1.0.1) یا ZIP ساخته‌شده نسخه موردنظرتان بگیرید. فایل source archive در GitHub با ZIP قابل نصب یکی نیست. فایل ZIP در release برای نصب است؛ مستندات مخزن از snapshot کد tag خوانده می‌شوند.
+این مخزن ابزار ساخت ZIP دارد و CI خروجی را با نام `persian-kit` نگه می‌دارد. فایل `persian-kit.zip` را از [release نسخه 1.0.2](https://github.com/eramhq/persian-kit/releases/tag/v1.0.2) یا ZIP ساخته‌شده نسخه موردنظرتان بگیرید. فایل source archive در GitHub با ZIP قابل نصب یکی نیست. فایل ZIP در release برای نصب است؛ مستندات مخزن از snapshot کد tag خوانده می‌شوند.
 
 1. پیش از جایگزین کردن نصب قبلی، از سایت backup بگیرید.
 2. در وردپرس از **افزونه‌ها > افزودن افزونه تازه > بارگذاری افزونه**، ZIP را انتخاب و نصب کنید؛ سپس **Persian Kit** را فعال کنید.
