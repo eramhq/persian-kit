@@ -1,0 +1,82 @@
+name: Deploy to WordPress.org
+
+# Publishing a GitHub release builds the plugin and commits it to the
+# WordPress.org SVN repository: trunk/, tags/<version>/ and the page assets
+# in .wordpress-org/. Run it by hand to deploy an existing tag, or to try a
+# build without committing (dry run).
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: Git tag to deploy, e.g. v1.0.1
+        required: true
+      dry-run:
+        description: Build and prepare the SVN commit, but do not commit
+        type: boolean
+        default: true
+
+permissions:
+  contents: read
+
+concurrency:
+  group: deploy-wordpress-org
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    name: Deploy
+    runs-on: ubuntu-latest
+    # SVN_USERNAME (variable) and SVN_PASSWORD (secret) live here.
+    environment: wordpress-org
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: ${{ github.event.release.tag_name || inputs.tag }}
+
+      - name: Read the version
+        id: version
+        env:
+          TAG: ${{ github.event.release.tag_name || inputs.tag }}
+        run: |
+          version="${TAG#v}"
+          header=$(sed -n 's/^ \* Version: *//p' persian-kit.php)
+          stable=$(sed -n 's/^Stable tag: *//p' readme.txt)
+          if [ "$header" != "$version" ] || [ "$stable" != "$version" ]; then
+            echo "Tag $TAG does not match Version ($header) and Stable tag ($stable)."
+            exit 1
+          fi
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.1'
+          coverage: none
+
+      # Same WP-CLI install as the CI build job; dist.sh needs `wp` for the POT file.
+      - name: Install WP-CLI
+        run: |
+          curl -fsSL -o /tmp/wp-cli.phar https://github.com/wp-cli/wp-cli/releases/download/v2.12.0/wp-cli-2.12.0.phar
+          echo "be928f6b8ca1e8dfb9d2f4b75a13aa4aee0896f8a9a0a1c45cd5d2c98605e6172e6d014dda2e27f88c98befc16c040cbb2bd1bfa121510ea5cdf5f6a30fe8832  /tmp/wp-cli.phar" | sha512sum --check
+          sudo install -m 755 /tmp/wp-cli.phar /usr/local/bin/wp
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Build distributable
+        run: npm run dist
+
+      - name: Deploy to WordPress.org
+        uses: 10up/action-wordpress-plugin-deploy@2.3.0
+        with:
+          dry-run: ${{ github.event_name == 'workflow_dispatch' && inputs.dry-run }}
+        env:
+          SVN_USERNAME: ${{ vars.SVN_USERNAME }}
+          SVN_PASSWORD: ${{ secrets.SVN_PASSWORD }}
+          SLUG: persian-kit
+          VERSION: ${{ steps.version.outputs.version }}
+          BUILD_DIR: dist/persian-kit
+          ASSETS_DIR: .wordpress-org
