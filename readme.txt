@@ -1,4 +1,4 @@
-=== Persian Kit ===
+=== Persian Kit: Jalali Calendar and Persian WooCommerce ===
 Contributors: mostafas1990, kashani
 Tags: persian, farsi, jalali, shamsi, woocommerce
 Requires at least: 6.8
