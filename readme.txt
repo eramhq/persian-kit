@@ -1,5 +1,5 @@
 === Persian Kit ===
-Contributors: navidkashani
+Contributors: mostafas1990, navidkashani
 Tags: persian, farsi, jalali, shamsi, woocommerce
 Requires at least: 6.8
 Tested up to: 7.1
