@@ -4,7 +4,7 @@ description: "Start using Persian dates, text tools and integrations in WordPres
 ---
 # Persian Kit
 
-Persian Kit adds Jalali dates, Persian writing tools and optional integrations to WordPress. Each module has its own switch. This source tree identifies itself as **1.0.1**, a patch release following 1.0.0; a version in source is not proof that a GitHub release has been published. See [compatibility and release status](compatibility.md).
+Persian Kit adds Jalali dates, Persian writing tools and optional integrations to WordPress. Each module has its own switch. This source tree identifies itself as **1.0.2**, a patch release following 1.0.1; a version in source is not proof that a GitHub release has been published. See [compatibility and release status](compatibility.md).
 
 ## First use
 

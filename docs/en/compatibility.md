@@ -6,7 +6,7 @@ description: "Know tested versions, integration limits and what removal preserve
 
 ## Release and test evidence
 
-This tree declares **1.0.1** in the plugin header, constants, package version and WordPress Stable tag; 1.0.0 was the first stable version. No separate formal API/backward-compatibility guarantee is present. Treat documented helpers/hooks as integration points, review the changelog on upgrades and avoid depending on undocumented internals. Bundled Abzar/Daynum dependencies still use beta-compatible constraints; “stable plugin” does not turn every bundled internal class into a stable public API.
+This tree declares **1.0.2** in the plugin header, constants, package version and WordPress Stable tag; 1.0.0 was the first stable version. No separate formal API/backward-compatibility guarantee is present. Treat documented helpers/hooks as integration points, review the changelog on upgrades and avoid depending on undocumented internals. Bundled Abzar/Daynum dependencies still use beta-compatible constraints; “stable plugin” does not turn every bundled internal class into a stable public API.
 
 The [CI configuration](../../.github/workflows/ci.yml) defines these integration rows (configuration is evidence of intended coverage, not proof of a particular run passing):
 

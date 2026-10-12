@@ -4,7 +4,7 @@ Tags: persian, farsi, jalali, shamsi, woocommerce
 Requires at least: 6.8
 Tested up to: 7.1
 Requires PHP: 8.1
-Stable tag: 1.0.1
+Stable tag: 1.0.2
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -256,6 +256,7 @@ Payment gateways (Persian Kit has none; keep Persian WooCommerce active for them
 = 1.0.2 =
 * Changed: Persian Kit is made by Eram. The plugin homepage and the Docs links now open the guides on eram.dev.
 * Changed: the settings page no longer shows notices from WordPress and other plugins above its header. Other admin pages still show them.
+* Faster: the Jalali archives list keeps its post counts between page views, ACF screens load the date picker only where a date field is shown, and the checkout city list is about 2.5 times smaller.
 
 = 1.0.1 =
 * Fixed: the admin font now covers headings, the admin bar, footer, media library, classic editor tabs, WooCommerce settings, the block editor and Analytics.
@@ -334,6 +335,9 @@ Payment gateways (Persian Kit has none; keep Persian WooCommerce active for them
 * Added Jalali media library date filters.
 
 == Upgrade Notice ==
+
+= 1.0.2 =
+Persian Kit is now made by Eram, with its guides on eram.dev. A quieter settings page and faster archives, ACF screens and checkout. Existing settings are kept.
 
 = 1.0.1 =
 Improved admin font coverage and complete bilingual documentation. Existing settings are kept.

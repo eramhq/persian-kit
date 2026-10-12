@@ -686,7 +686,7 @@
         }
     },
     "requirements": {
-        "Version": "1.0.1",
+        "Version": "1.0.2",
         "Requires at least": "6.8",
         "Requires PHP": "8.1",
         "WC requires at least": "9.9",

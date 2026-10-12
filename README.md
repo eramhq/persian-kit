@@ -2,7 +2,7 @@
 
 [فارسی](README.fa.md)
 
-Persian Kit brings Jalali dates, Persian writing tools and optional WooCommerce/form integrations to WordPress. This source tree is version **1.0.1**.
+Persian Kit brings Jalali dates, Persian writing tools and optional WooCommerce/form integrations to WordPress. This source tree is version **1.0.2**.
 
 Made by [Eram](https://eram.dev/en/). Homepage and guides: [eram.dev/en/projects/persian-kit](https://eram.dev/en/projects/persian-kit/) and [eram.dev/en/docs/persian-kit](https://eram.dev/en/docs/persian-kit/overview/).
 
