@@ -1,4 +1,4 @@
-=== Persian Kit: Jalali Calendar and Persian WooCommerce ===
+=== Persian Kit: Jalali Calendar and تقویم جلالی فارسی ===
 Contributors: mostafas1990, kashani
 Tags: persian, farsi, jalali, shamsi, woocommerce
 Requires at least: 6.8
@@ -8,9 +8,11 @@ Stable tag: 1.0.2
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
-Jalali (Shamsi) dates, Persian digits, an Iranian WooCommerce checkout and Iranian form fields for Persian WordPress sites.
+Jalali (Shamsi) dates, Persian digits, an Iranian WooCommerce checkout and Iranian form fields. تقویم جلالی فارسی و ووکامرس ایران.
 
 == Description ==
+
+پرشین کیت وردپرس و ووکامرس را برای کاربران فارسی زبان آماده می کند: تقویم جلالی (شمسی)، ارقام فارسی، حروف درست فارسی، تسویه حساب ایرانی و فیلدهای فرم برای شماره موبایل و کد ملی. هر بخش کلید جدا دارد و فقط همان را که لازم دارید روشن می کنید.
 
 Persian Kit makes WordPress and WooCommerce work the way Persian-speaking visitors expect: Jalali (Shamsi) dates, Persian digits, the right Persian letters, a checkout for Iran and form fields that check Iranian mobile numbers and national IDs. Each part has its own switch, so you turn on only what you need.
 
