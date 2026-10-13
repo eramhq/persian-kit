@@ -1,4 +1,4 @@
-=== Persian Kit: Jalali Calendar and تقویم جلالی فارسی ===
+=== Persian Kit: Complete Persian/Jalali Pack | پیشرفته‌ترین فارسی ساز وردپرس و ووکامرس ===
 Contributors: mostafas1990, kashani
 Tags: persian, farsi, jalali, shamsi, woocommerce
 Requires at least: 6.8
