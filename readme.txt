@@ -12,7 +12,7 @@ Jalali (Shamsi) dates, Persian digits, an Iranian WooCommerce checkout and Irani
 
 == Description ==
 
-پرشین کیت وردپرس و ووکامرس را برای کاربران فارسی زبان آماده می کند: تقویم جلالی (شمسی)، ارقام فارسی، حروف درست فارسی، تسویه حساب ایرانی و فیلدهای فرم برای شماره موبایل و کد ملی. هر بخش کلید جدا دارد و فقط همان را که لازم دارید روشن می کنید.
+با پرشین کیت، دیگر نیازی به نصب چند افزونه مختلف برای فارسی‌سازی وردپرس و ووکامرس ندارید. تقویم شمسی، نمایش اعداد فارسی، اصلاح حروف، تسویه حساب سازگار با ایران و فیلدهای موبایل و کد ملی را یکجا در اختیار دارید و فقط بخش‌های موردنیازتان را روشن می‌کنید.
 
 Persian Kit makes WordPress and WooCommerce work the way Persian-speaking visitors expect: Jalali (Shamsi) dates, Persian digits, the right Persian letters, a checkout for Iran and form fields that check Iranian mobile numbers and national IDs. Each part has its own switch, so you turn on only what you need.
 
