@@ -8,9 +8,11 @@ Stable tag: 1.0.2
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
-Jalali (Shamsi) dates, Persian digits, an Iranian WooCommerce checkout and Iranian form fields. تقویم جلالی فارسی و ووکامرس ایران.
+Persian (Farsi) Jalali (Shamsi) dates, Persian digits, an Iranian WooCommerce checkout and Iranian form fields. تقویم جلالی فارسی و ووکامرس ایران.
 
 == Description ==
+
+Persian Kit adds Jalali (Shamsi) dates, Persian digits, an Iranian WooCommerce checkout and Iranian form fields to WordPress.
 
 با پرشین کیت، دیگر نیازی به نصب چند افزونه مختلف برای فارسی‌سازی وردپرس و ووکامرس ندارید. تقویم شمسی، نمایش اعداد فارسی، اصلاح حروف، تسویه حساب سازگار با ایران و فیلدهای موبایل و کد ملی را یکجا در اختیار دارید و فقط بخش‌های موردنیازتان را روشن می‌کنید.
 
