@@ -159,6 +159,7 @@ class CallForPrice
             if (function_exists('pll_register_string')) {
                 pll_register_string($name, $text, self::STRING_GROUP);
             }
+            // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- WPML's own hook.
             do_action('wpml_register_single_string', self::STRING_GROUP, $name, $text);
         }
     }
@@ -290,6 +291,7 @@ class CallForPrice
             return (string) pll__($text);
         }
 
+        // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- WPML's own hook.
         return (string) apply_filters('wpml_translate_single_string', $text, self::STRING_GROUP, $name);
     }
 }
