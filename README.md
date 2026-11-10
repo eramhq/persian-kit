@@ -32,3 +32,21 @@ Open **Persian Kit > Display**. Jalali dates start on; Persian digits start off.
 - [Settings](docs/en/settings.md) · [Developer API](docs/en/developers/api.md)
 - [Development](docs/DEVELOPMENT.md) · [Documentation maintenance](docs/README.md)
 - [Changelog](CHANGELOG.md) · [License: GPL-2.0-or-later](LICENSE)
+
+## Third-party software
+
+Persian Kit ships these third-party components:
+
+- [eram/abzar](https://eram.dev/fa/projects/abzar-php/): MIT-licensed PHP utilities for Persian text and digit handling.
+- [eram/daynum](https://eram.dev/fa/projects/daynum/): MIT-licensed PHP Jalali date library.
+- [Alpine.js](https://alpinejs.dev): MIT-licensed JavaScript framework, bundled into the admin script together with its MIT-licensed dependencies `@vue/reactivity` and `@vue/shared`.
+- [Vazirmatn](https://github.com/rastikerdar/vazirmatn): Persian font by Saber Rastikerdar, licensed under the SIL Open Font License 1.1.
+- [Noto Sans Arabic](https://github.com/notofonts/arabic): font by Google and the Noto Project Authors, licensed under the SIL Open Font License 1.1.
+- [IBM Plex Sans Arabic](https://github.com/IBM/plex): font by IBM, licensed under the SIL Open Font License 1.1.
+- [intl-datepicker](https://eram.dev/fa/projects/intl-datepicker/): MIT-licensed date picker Web Component, bundled into `public/js/datepicker.js`.
+- [@internationalized/date](https://github.com/adobe/react-spectrum/tree/main/packages/@internationalized/date): Adobe's calendar library, licensed under the Apache License 2.0, bundled into `public/js/datepicker.js`.
+- Tapin's list of provinces and cities, from [Persian WooCommerce Shipping](https://wordpress.org/plugins/persian-woocommerce-shipping/) (GPLv3), in `public/data/pws-tapin.json`. It is only used to read addresses that plugin saved with Tapin's ids.
+
+Because `public/data/pws-tapin.json` is GPLv3, the plugin as distributed is under GPLv3. The plugin's own code stays GPLv2 or later.
+
+All bundled components are GPL-compatible. Their license texts ship with the plugin: `packages/eram/*/LICENSE`, `public/fonts/noto-sans-arabic/OFL.txt`, `public/fonts/vazirmatn/OFL.txt`, `public/fonts/ibm-plex-sans-arabic/OFL.txt`, `public/licenses/` and the header of `public/js/admin.js`.
