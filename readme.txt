@@ -97,14 +97,13 @@ Because `public/data/pws-tapin.json` is GPLv3, the plugin as distributed is unde
 
 All bundled components are GPL-compatible. Their license texts ship with the plugin: `packages/eram/*/LICENSE`, `public/fonts/vazirmatn/OFL.txt`, `public/fonts/noto-sans-arabic/OFL.txt`, `public/fonts/ibm-plex-sans-arabic/OFL.txt`, `public/licenses/` and the header of `public/js/admin.js`.
 
-= Source code =
+== Source Code and Build Instructions ==
+
+**Note:** The plugin works out of the box. No build steps are needed for regular users. This section is for developers who want to modify or contribute to the source code. See the full guides in [English](https://eram.dev/en/docs/persian-kit/overview/) or [فارسی](https://eram.dev/fa/docs/persian-kit/overview/).
+
+The plugin ships the compiled files in `public/js/` and `public/css/`. Their human-readable source is in the `resources/` directory of the [GitHub repository](https://github.com/eramhq/persian-kit), which is not part of the plugin ZIP. Build it with `npm ci` and `npm run build` (the steps are in `docs/DEVELOPMENT.md` in the repository). Issues and pull requests are welcome there.
 
 Plugin homepage: [https://eram.dev/fa/projects/persian-kit/](https://eram.dev/fa/projects/persian-kit/)
-
-Full source, build instructions, and issue tracker:
-[https://github.com/eramhq/persian-kit](https://github.com/eramhq/persian-kit)
-
-Full guides: [English](https://eram.dev/en/docs/persian-kit/overview/) and [فارسی](https://eram.dev/fa/docs/persian-kit/overview/).
 
 == Installation ==
 
