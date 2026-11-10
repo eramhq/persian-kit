@@ -238,6 +238,7 @@ class JalaliPermalinks
         }
 
         // Without the trailing %, the escaped pattern matches the slug exactly.
+        // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- WordPress core's own filter.
         $strict = (bool) apply_filters('strict_redirect_guess_404_permalink', false);
         $namePattern = $wpdb->esc_like($name) . ($strict ? '' : '%');
 

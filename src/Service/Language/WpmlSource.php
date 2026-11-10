@@ -80,6 +80,7 @@ final class WpmlSource implements LanguageSource
 
     public function defaultLocale(): ?string
     {
+        // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- WPML's own hook.
         return $this->localeOf(apply_filters('wpml_default_language', null));
     }
 
@@ -90,6 +91,7 @@ final class WpmlSource implements LanguageSource
             return null;
         }
 
+        // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- WPML's own hook.
         return $this->localeOf(apply_filters('wpml_element_language_code', null, [
             'element_id'   => $postId,
             'element_type' => $postType,
@@ -106,6 +108,7 @@ final class WpmlSource implements LanguageSource
             return null;
         }
 
+        // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- WPML's own hook.
         return $this->localeOf(apply_filters('wpml_element_language_code', null, [
             'element_id'   => (int) $term->term_taxonomy_id,
             'element_type' => $term->taxonomy,
@@ -171,6 +174,7 @@ final class WpmlSource implements LanguageSource
      */
     private function currentCode(): ?string
     {
+        // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- WPML's own hook.
         $code = apply_filters('wpml_current_language', null);
 
         return is_string($code) && $code !== '' && $code !== 'all' ? $code : null;
@@ -196,6 +200,7 @@ final class WpmlSource implements LanguageSource
             return $this->locales;
         }
 
+        // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- WPML's own hook.
         $languages = apply_filters('wpml_active_languages', null, ['skip_missing' => 0]);
         $locales = [];
 
