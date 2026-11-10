@@ -1,4 +1,4 @@
-=== Persian Kit ===
+=== Persian Kit: Complete Persian/Jalali Pack ===
 Contributors: mostafas1990, kashani
 Tags: persian, farsi, jalali, shamsi, woocommerce
 Requires at least: 6.8
@@ -8,7 +8,7 @@ Stable tag: 1.0.2
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
-Persian (Farsi) Jalali (Shamsi) dates, Persian digits, an Iranian WooCommerce checkout and Iranian form fields.
+Persian (Farsi) Jalali (Shamsi) calendar and dates, Persian digits, an Iranian WooCommerce checkout and Iranian form fields for WordPress.
 
 == Description ==
 
