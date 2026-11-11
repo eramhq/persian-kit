@@ -18,6 +18,10 @@ Persian Kit makes WordPress and WooCommerce work the way Persian-speaking visito
 
 Dates stay Gregorian in the database. Persian Kit only changes how they are shown, so turning a display option off puts everything back. Fixed letters, saved slugs and imported data are not reversed automatically. Before you deactivate the plugin, replace custom form fields and check any thousand-unit currency. Uninstalling removes the settings and the import undo logs.
 
+Watch a two-minute video in Persian that shows what Persian Kit does:
+
+https://youtu.be/4gTLy28ysYI
+
 = Jalali dates =
 
 * Jalali dates for posts, comments, the admin screens and the block editor's date panel: ۱۲ مهر ۱۴۰۵
@@ -271,6 +275,22 @@ Yes. It ignores spaces, half-spaces and the letters people type differently, suc
 = Where does the list of cities come from? =
 
 From the Statistical Centre of Iran's country-divisions list for 1403 (amar.org.ir): the 1,454 cities of its 31 provinces.
+
+= How is Persian Kit different from other Persian date plugins? =
+
+Persian Kit changes how dates are shown and leaves the dates that other code reads standard. Dates meant for machines stay Gregorian, and the dates people read are Jalali.
+
+We tested Persian Kit 1.0.2, Parsi Date 6.5.2 and Persian WooCommerce 10.0.7 on the same test site, one at a time, with the same content. The test ran on 11 November 2026 with WordPress 7.1.4, PHP 8.3, WooCommerce 11.2.2 and Yoast SEO 28.8. Each result below is the mean or the median of 3 rounds of 30 requests on 14 pages.
+
+* **Standard dates:** with Persian Kit, the datetime attribute of the `<time>` tag kept a Gregorian ISO date with the right time zone offset (+03:30), `wp_date( 'c' )` and `wp_date( 'U' )` were unchanged, and the date in the Yoast SEO title stayed Gregorian. In the same test Parsi Date wrote +00:00 into the `<time>` tag, and Persian WooCommerce wrote a Jalali date into its datetime attribute.
+* **Search:** a post saved with Arabic ك and a post saved with Persian ک were both found with either spelling. Parsi Date found only the post with the same spelling, and Persian WooCommerce changed the search to ک and did not find the ك post.
+* **Memory:** the peak memory a plugin added to a page, on average over the 14 pages, was 0.31 MB for Persian Kit, 0.59 MB for Parsi Date and 0.82 MB for Persian WooCommerce. Persian Kit added less than both on every page.
+* **Database queries:** the queries a plugin added to a page, on average, were 0.9 for Persian Kit, 2.7 for Parsi Date and 6.2 for Persian WooCommerce. Persian Kit added fewer than Persian WooCommerce on every page, and fewer than Parsi Date on 10 of the 14 pages.
+* **Visitors:** on the pages visitors see in our test (home, posts, search, shop, product, cart and checkout), Persian Kit added no CSS or JavaScript files.
+
+PHP execution time differed by only 1 to 5 percent, so we make no claim about speed. These results are for this setup and may differ on your site, and the plugins keep changing, so test your own site before you switch.
+
+Eram, the maker of Persian Kit, published its own comparisons with [Parsi Date](https://eram.dev/fa/projects/persian-kit/compare/parsi-date/) and [Persian WooCommerce](https://eram.dev/fa/projects/persian-kit/compare/persian-woocommerce/).
 
 = I use Parsi Date, Persian WooCommerce or Persian WooCommerce Shipping. Can I switch? =
 
