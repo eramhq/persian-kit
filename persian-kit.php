@@ -3,7 +3,7 @@
  * Plugin Name: Persian Kit: Complete Persian/Jalali Pack
  * Plugin URI: https://eram.dev/fa/projects/persian-kit/
  * Description: A modular Persian (Farsi) language toolkit for WordPress.
- * Version: 1.0.2
+ * Version: 1.0.3
  * Author: Eram
  * Author URI: https://eram.dev/fa/
  * Text Domain: persian-kit
