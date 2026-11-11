@@ -27,7 +27,7 @@ concurrency:
 jobs:
   deploy:
     name: Deploy
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-latest
     # SVN_USERNAME (variable) and SVN_PASSWORD (secret) live here.
     environment: wordpress-org
     steps:
