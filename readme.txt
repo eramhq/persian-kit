@@ -4,7 +4,7 @@ Tags: persian, farsi, jalali, shamsi, woocommerce
 Requires at least: 6.8
 Tested up to: 7.1
 Requires PHP: 8.1
-Stable tag: 1.0.2
+Stable tag: 1.0.3
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -305,6 +305,9 @@ Theme code that calls Parsi Date's functions needs the code the switch gives you
 
 == Changelog ==
 
+= 1.0.3 =
+* Fixed: Shift+Space now types a half-space (نیم‌فاصله) in the block editor, in the post title and in blocks, as it already did in the classic editor.
+
 = 1.0.2 =
 * Changed: Persian Kit is made by Eram. The plugin homepage and the Docs links now open the guides on eram.dev.
 * Changed: the settings page no longer shows notices from WordPress and other plugins above its header. Other admin pages still show them.
@@ -387,6 +390,9 @@ Theme code that calls Parsi Date's functions needs the code the switch gives you
 * Added Jalali media library date filters.
 
 == Upgrade Notice ==
+
+= 1.0.3 =
+The half-space shortcut (Shift+Space) now works in the block editor. Existing settings are kept.
 
 = 1.0.2 =
 Persian Kit is now made by Eram, with its guides on eram.dev. A quieter settings page and faster archives, ACF screens and checkout. Existing settings are kept.

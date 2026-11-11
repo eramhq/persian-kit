@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.0.3] - 2026-11-11
+
+### Fixed
+
+- Shift+Space now types a half-space (نیم‌فاصله) in the block editor, in the post title and in blocks, as it already did in the classic editor. The block editor shows the text in a frame of its own, and Persian Kit was only listening to the page around it. The key press is also left alone while an input method (IME) is composing text, and the half-space goes in through the browser's own typing, so Undo works.
+
 ## [1.0.2] - 2026-10-12
 
 ### Changed
